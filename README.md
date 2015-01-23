@@ -1,2 +1,2 @@
-* spatialDecisionMaking
+# spatialDecisionMaking
 
