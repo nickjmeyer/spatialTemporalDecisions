@@ -18,6 +18,16 @@ template class M2NmOptim<System<GravityModel,GravityParam>,
 				      GravityModel,GravityParam>,
 			 ToyFeatures0<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
+template class M2NmOptim<System<GravityModel,GravityParam>,
+			 RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
+				      GravityModel,GravityParam>,
+			 ToyFeatures1<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>;
+template class M2NmOptim<System<GravityModel,GravityParam>,
+			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+				      GravityModel,GravityParam>,
+			 ToyFeatures2<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>;
 
 
 
@@ -53,7 +63,7 @@ optim(System system,
   for(i=0; i<dim; i++)
     gsl_vector_set(x,i,par.at(i));
   ss=gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,1);
+  gsl_vector_set_all(ss,10);
 
   gsl_multimin_function minex_func;
   minex_func.n=dim;
@@ -79,15 +89,15 @@ optim(System system,
     curSize=gsl_multimin_fminimizer_size(s);
     status=gsl_multimin_test_size(curSize,size);
 
-    // printf("iter % d: Q() = % 16.6f  ->  [",
-    // 	   (int)iter,s->fval);
-    // for(i=0; i<(dim-1); i++)
-    //   printf(" % 10.6f,",gsl_vector_get(s->x,i));
-    // printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
-    // fflush(stdout);
+    printf("iter % d: Q() = % 16.6f  ->  [",
+    	   (int)iter,s->fval);
+    for(i=0; i<(dim-1); i++)
+      printf(" % 10.6f,",gsl_vector_get(s->x,i));
+    printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
+    fflush(stdout);
 
   }while(status == GSL_CONTINUE && iter < 100);
-  // std::cout << "\033[K";
+  std::cout << "\033[K";
   
   for(i=0; i<dim; i++)
     par.at(i) = gsl_vector_get(s->x,i);
@@ -115,7 +125,8 @@ M2NmEval<System,Agent,Features,Model,ModelParam>::M2NmEval(){
   f.tp.valReps = 100;
   
   tp.gamma = .95;
-  tp.lambda = 450000.0;
+  // tp.lambda = 450000.0;
+  tp.lambda = 10.0;
   
   tp.jitter = .1;
   tp.tol = .005;

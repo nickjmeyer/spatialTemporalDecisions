@@ -19,6 +19,8 @@
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
 #include "rankAgentToy.hpp"
+#include "features.hpp"
+#include "toyFeatures2.hpp"
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SgdOptim.hpp"
