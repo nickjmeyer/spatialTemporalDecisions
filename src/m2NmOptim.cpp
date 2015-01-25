@@ -54,7 +54,7 @@ optim(System system,
   for(i=0; i<dim; i++)
     gsl_vector_set(x,i,par.at(i));
   ss=gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,6);
+  gsl_vector_set_all(ss,1);
 
   gsl_multimin_function minex_func;
   minex_func.n=dim;
@@ -62,7 +62,7 @@ optim(System system,
   minex_func.params=&qData;
 
   const gsl_multimin_fminimizer_type *T=
-    gsl_multimin_fminimizer_nmsimplex2;
+    gsl_multimin_fminimizer_nmsimplex;
   gsl_multimin_fminimizer *s = NULL;
   s=gsl_multimin_fminimizer_alloc(T,dim);
   gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
@@ -80,15 +80,16 @@ optim(System system,
     curSize=gsl_multimin_fminimizer_size(s);
     status=gsl_multimin_test_size(curSize,size);
 
-    // printf("iter % d: Q() = % 16.6f  ->  [",
-    // 	   (int)iter,s->fval);
-    // for(i=0; i<(dim-1); i++)
-    //   printf(" % 10.6f,",gsl_vector_get(s->x,i));
-    // printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
-    // fflush(stdout);
+    printf("iter % d: Q() = % 16.6f  (% 8.6f) ->  [",
+    	   (int)iter,s->fval,curSize);
+    for(i=0; i<(dim-1); i++)
+      printf(" % 10.6f,",gsl_vector_get(s->x,i));
+    printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
+    fflush(stdout);
 
-  }while(status == GSL_CONTINUE && iter < 100);
+  }while(status == GSL_CONTINUE && iter < 1000);
   // std::cout << "\033[K";
+  std::cout << std::endl;
   
   for(i=0; i<dim; i++)
     par.at(i) = gsl_vector_get(s->x,i);
