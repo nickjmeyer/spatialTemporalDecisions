@@ -66,4 +66,4 @@ $(OBJECTS):%.o: %.cpp
 	$(COMPILE_CPP) $(INCLUDE) $*.cpp -MM -MP -MF $*.d $(LINKS)
 
 clean:
-	rm -f $(BINARY) $(OBJECTS) $(DEPENDS) $(BINARY).tar.bz2
+	rm -f ../bin/$(BINARY) $(OBJECTS) $(DEPENDS) ../bin/$(BINARY).tar.bz2

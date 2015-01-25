@@ -16,6 +16,7 @@
 #include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
+#include "featuresInt.hpp"
 
 class M2NmEvalTunePar : public TuneParam{
  public:
@@ -146,7 +147,6 @@ double M2NmObj(const gsl_vector * x, void * params){
   qD->qEval.bellResPolData(qD->s.sD.time,qD->s.fD,
 			   qD->s.model,qD->s.estParam,
 			   qD->a);
-  std::cout << std::endl << qD->qEval.D1.sum() << std::endl;
   qD->qEval.solve();
   return - qD->qEval.qFn(qD->s.sD,qD->s.tD,qD->s.fD,qD->s.dD,
 			 qD->s.model,qD->s.estParam,qD->a);

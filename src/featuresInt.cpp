@@ -30,8 +30,11 @@ void FeaturesInt<Features,Model,ModelParam>::getFeatures(const SimData & sD,
   infFeat.ones(sD.numInfected,numFeatures);
   notFeat.ones(sD.numNotInfec,numFeatures);
 
-  infFeat.submat(0,1,infFeat.n_rows,infFeat.n_cols) = f.infFeat;
-  notFeat.submat(0,1,notFeat.n_rows,notFeat.n_cols) = f.notFeat;
+  infFeat.submat(0,1,infFeat.n_rows-1,infFeat.n_cols-1) = f.infFeat;
+  notFeat.submat(0,1,notFeat.n_rows-1,notFeat.n_cols-1) = f.notFeat;
+
+  infFeat = f.infFeat;
+  notFeat = f.notFeat;
 }
 
 
@@ -48,7 +51,10 @@ FeaturesInt<Features,Model,ModelParam>::updateFeatures(const SimData & sD,
   infFeat.ones(sD.numInfected,numFeatures);
   notFeat.ones(sD.numNotInfec,numFeatures);
 
-  infFeat.submat(0,1,infFeat.n_rows,infFeat.n_cols) = f.infFeat;
-  notFeat.submat(0,1,notFeat.n_rows,notFeat.n_cols) = f.notFeat;
+  infFeat.submat(0,1,infFeat.n_rows-1,infFeat.n_cols-1) = f.infFeat;
+  notFeat.submat(0,1,notFeat.n_rows-1,notFeat.n_cols-1) = f.notFeat;
+
+  infFeat = f.infFeat;
+  notFeat = f.notFeat;
 }
 
