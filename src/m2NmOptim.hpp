@@ -34,6 +34,11 @@ class M2NmEvalTunePar : public TuneParam{
   double tol; // convergence tolerance
   double rate; // learning rate
   double rateDecay; // learning rate decay
+
+  double sdStart;
+  double sdStop;
+  double sdDecay;
+  double sdJump;
 };
 
 
