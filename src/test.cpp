@@ -23,20 +23,20 @@ int main(int argc, char ** argv){
   std::vector<double> sdStart,sdStop,sdDecay,sdJump;
   sdStart.push_back(1.0);
   sdStart.push_back(2.0);
-  // sdStart.push_back(5.0);
+  sdStart.push_back(5.0);
 
-  // sdStop.push_back(0.05);
-  // sdStop.push_back(0.1);
+  sdStop.push_back(0.05);
+  sdStop.push_back(0.1);
   sdStop.push_back(0.5);
 
-  // sdDecay.push_back(0.975);
-  // sdDecay.push_back(0.95);
-  // sdDecay.push_back(0.925);
+  sdDecay.push_back(0.975);
+  sdDecay.push_back(0.95);
+  sdDecay.push_back(0.925);
   sdDecay.push_back(0.9);
     
-  // sdJump.push_back(5.0);
-  // sdJump.push_back(2.0);
-  // sdJump.push_back(1.5);
+  sdJump.push_back(5.0);
+  sdJump.push_back(2.0);
+  sdJump.push_back(1.5);
   sdJump.push_back(1.1);
 
   std::vector<double>::const_iterator start,stop,decay,jump;
