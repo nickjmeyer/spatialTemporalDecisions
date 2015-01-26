@@ -24,14 +24,14 @@ int main(int argc, char ** argv){
   sampVals.push_back(10);
   sampVals.push_back(50);
   sampVals.push_back(100);
-  // sampVals.push_back(250);
-  // sampVals.push_back(500);
-  // sampVals.push_back(1000);
-  // sampVals.push_back(10000);
+  sampVals.push_back(250);
+  sampVals.push_back(500);
+  sampVals.push_back(1000);
+  sampVals.push_back(10000);
 
   std::vector<int>::const_iterator samp;
 
-  int i,n,r,N=2,R=2;
+  int i,n,r,N=12,R=4;
 
   std::vector<System<GravityModel,GravityParam> > sV;
 
