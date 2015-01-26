@@ -41,7 +41,7 @@ int main(int argc, char ** argv){
 
   std::vector<double>::const_iterator start,stop,decay,jump;
 
-  int i,n,r,N=4,R=2;
+  int i,n,r,N=12,R=4;
 
   std::vector<System<GravityModel,GravityParam> > sV;
 
