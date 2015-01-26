@@ -40,64 +40,28 @@ optim(System system,
   qEval.bellResFixData(system.sD,system.tD,system.fD,system.dD,
 		       system.model,system.estParam);
 
-  M2NmData<System,Agent,Features,Model,ModelParam> qData;
-  qData.qEval = qEval;
-  qData.s = system;
-  qData.a = agent;
-
+  double q,bestQ=std::numeric_limits<double>::lowest();
+  std::vector<double> w,bestW;
   
-  std::vector<double> par = agent.tp.getPar();
-  int i,dim=agent.f.numFeatures;
+  int i,j;
+  for(i=0; i<qEval.tp.numSamp; i++){
+    w.clear();
+    for(j=0; j<agent.f.numFeatures; j++)
+      w.push_back(njm::rnorm01());
+    agent.tp.putPar(w);
 
-  gsl_vector *x, *ss;
-  x = gsl_vector_alloc(dim);
-  for(i=0; i<dim; i++)
-    gsl_vector_set(x,i,par.at(i));
-  ss=gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,1);
+    qEval.bellResPolData(system.sD.time,system.fD,system.model,
+			 system.estParam,agent);
+    qEval.solve();
+    q=qEval.qFn(system.sD,system.tD,system.fD,system.dD,system.model,
+		system.estParam,agent);
+    if(q > bestQ){
+      q = bestQ;
+      bestW = w;
+    }
+  }
 
-  gsl_multimin_function minex_func;
-  minex_func.n=dim;
-  minex_func.f=&M2NmObj<System,Agent,Features,Model,ModelParam>;
-  minex_func.params=&qData;
-
-  const gsl_multimin_fminimizer_type *T=
-    gsl_multimin_fminimizer_nmsimplex;
-  gsl_multimin_fminimizer *s = NULL;
-  s=gsl_multimin_fminimizer_alloc(T,dim);
-  gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
-
-  double curSize;
-  double size=.001;
-  size_t iter=0;
-  int status;
-  
-  do{
-    iter++;
-    status=gsl_multimin_fminimizer_iterate(s);
-    if(status)
-      break;
-    curSize=gsl_multimin_fminimizer_size(s);
-    status=gsl_multimin_test_size(curSize,size);
-
-    printf("iter % d: Q() = % 16.6f  (% 8.6f) ->  [",
-    	   (int)iter,s->fval,curSize);
-    for(i=0; i<(dim-1); i++)
-      printf(" % 10.6f,",gsl_vector_get(s->x,i));
-    printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
-    fflush(stdout);
-
-  }while(status == GSL_CONTINUE && iter < 1000);
-  // std::cout << "\033[K";
-  std::cout << std::endl;
-  
-  for(i=0; i<dim; i++)
-    par.at(i) = gsl_vector_get(s->x,i);
-  agent.tp.putPar(par);
-
-  gsl_multimin_fminimizer_free(s);
-  gsl_vector_free(x);
-  gsl_vector_free(ss);
+  agent.tp.putPar(w);
 }
 
 

@@ -8,18 +8,10 @@ int main(int argc, char ** argv){
   s.estParam_r = s.genParam_r;
   s.reset();
 
+
   ProximalAgent<GravityModel,GravityParam> pA;
   RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 	       GravityModel,GravityParam> rA;
-
-  int i;
-  for(i=0; i<12; i++){
-    if(i>=s.fD.trtStart)
-      pA.applyTrt(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
-
-    s.updateStatus();
-    s.nextPoint();
-  }
 
   M2NmOptim<System<GravityModel,GravityParam>,
   	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
@@ -28,111 +20,109 @@ int main(int argc, char ** argv){
   			GravityModel,GravityParam>,
   	    GravityModel,GravityParam> m2;
 
-  // std::string D,P,R,B,Q;
+  std::vector<int> sampVals;
+  sampVals.push_back(10);
+  sampVals.push_back(50);
+  sampVals.push_back(100);
+  // sampVals.push_back(250);
+  // sampVals.push_back(500);
+  // sampVals.push_back(1000);
+  // sampVals.push_back(10000);
 
-  // m2.qEval.preCompData(s.sD,s.fD);
-  // m2.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
-  // m2.qEval.bellResPolData(s.sD.time,s.fD,s.model,s.estParam,rA);
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("one");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
+  std::vector<int>::const_iterator samp;
+
+  int i,n,r,N=2,R=2;
+
+  std::vector<System<GravityModel,GravityParam> > sV;
+
+  for(n=0; n<N; n++){
+
+    s.reset();
+    for(i=0; i<12; i++){
+      if(i>=s.fD.trtStart)
+	pA.applyTrt(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
+
+      s.updateStatus();
+      s.nextPoint();
+    }
+
+    sV.push_back(s);
+  }
+
+  int threads0 = N, threads1 = R;
+
+  int m=0,M = N*R*sampVals.size();
+
+  int t,id,ncol=1+4+rA.f.numFeatures; // start, stop, decay, jump, id, n, q, t
+  double q;
+  int k;
   
+  arma::mat results(0,ncol);
 
-  // for(i=0; i<rA.f.numFeatures; i++)
-  //   rA.tp.weights.at(i)+= njm::rnorm01();
-
-  // m2.qEval.bellResPolData(s.sD.time,s.fD,s.model,s.estParam,rA);
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("two");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
-
-
-  // m2.qEval.preCompData(s.sD,s.fD);
-  // m2.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
-  // m2.qEval.bellResPolData(s.sD.time,s.fD,s.model,s.estParam,rA);
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("two");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
-
-
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("two");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
+  omp_set_nested(1);
   
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("two");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
+#pragma omp parallel for num_threads(threads0)			\
+  shared(results,m,M,N,R,sampVals,ncol)			\
+  firstprivate(sV,m2,rA)					\
+  private(n,r,id,samp,t,q)
+  for(n=0; n<N; n++){
+    
+#pragma omp parallel for num_threads(threads1)			\
+  shared(results,n,m,M,N,R,sampVals,ncol)	\
+  firstprivate(sV,m2,rA)					\
+  private(r,id,samp,t,q)
+    for(r=0; r<R; r++){
+      id=0;
+      for(samp=sampVals.begin(); samp!=sampVals.end(); samp++){
+	rA.tp.weights.ones(rA.f.numFeatures);
 
-  // m2.qEval.solve();
-  // D = njm::toString(m2.qEval.D.sum(),"",8,4);
-  // P = njm::toString(m2.qEval.P.sum(),"",8,4);
-  // R = njm::toString(m2.qEval.R.sum(),"",8,4);
-  // B = njm::toString(m2.qEval.beta.sum(),"",8,4);
-  // Q = njm::toString(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA),
-  // 		    "",8,4);
-  // njm::message("two");
-  // njm::message("D: " + D + " -- P: " + P + " -- R: " + R + " -- B: " + B +
-  // 	       " -- Q: " + Q);
+	m2.qEval.tp.numSamp = (*samp);
+	      
+	t = std::time(NULL);
+	m2.optim(sV.at(n),rA);
+	t = std::time(NULL) - t;
 
-  //////////////////////////////////////////////////////////////////////////////
+	m2.qEval.preCompData(sV.at(n).sD,sV.at(n).fD);
+	m2.qEval.bellResFixData(sV.at(n).sD,sV.at(n).tD,sV.at(n).fD,
+				sV.at(n).dD,sV.at(n).model,
+				sV.at(n).estParam);
+	m2.qEval.bellResPolData(sV.at(n).sD.time,sV.at(n).fD,
+				sV.at(n).model,
+				sV.at(n).estParam,rA);
+	m2.qEval.solve();
+	q = m2.qEval.qFn(sV.at(n).sD,sV.at(n).tD,sV.at(n).fD,sV.at(n).dD,
+			 sV.at(n).model,sV.at(n).estParam,rA);
+	      
+#pragma omp critical
+	{
+	  m++;
+	  results.resize(m,ncol);
+	  for(k=0; k<rA.f.numFeatures; k++)
+	    results(m-1,k) = rA.tp.weights.at(k);
+		
+	  results(m-1,k++) = (*samp);
+		
+	  results(m-1,k++) = id++;
+	  results(m-1,k++) = n;
+	  results(m-1,k++) = q;
+	  results(m-1,k++) = t;
+		
+	  results.save(njm::sett.datExt("results",".txt"),
+		       arma::raw_ascii);
 
-  m2.qEval.preCompData(s.sD,s.fD);
-  m2.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
-  m2.qEval.bellResPolData(s.sD.time,s.fD,s.model,s.estParam,rA);
-  m2.qEval.solve();
+	  printf("\rCompleted %08d out of %08d",m,M);
+	  fflush(stdout);
+	}
+      }
+    }
+  }
+  printf("\n");
+
+
+  results.save(njm::sett.datExt("results",".txt"),
+	       arma::raw_ascii);
 
   
-  njm::message("before");
-  njm::message(rA.tp.getPar());
-  njm::message(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA));
-
-  m2.optim(s,rA);
-
-  m2.qEval.preCompData(s.sD,s.fD);
-  m2.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam);
-  m2.qEval.bellResPolData(s.sD.time,s.fD,s.model,s.estParam,rA);
-  m2.qEval.solve();
-
-  njm::message("after");
-  njm::message(rA.tp.getPar());
-  njm::message(m2.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.model,s.estParam,rA));
-
-
-  njm::sett.clean();
+  // njm::sett.clean();
   return 0;
 }
