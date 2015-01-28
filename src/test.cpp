@@ -41,7 +41,7 @@ int main(int argc, char ** argv){
 
   std::vector<double>::const_iterator start,stop,decay,jump;
 
-  int i,n,r,N=12,R=4;
+  int i,n,r,N=12,R=50;
 
   std::vector<System<GravityModel,GravityParam> > sV;
 
@@ -59,7 +59,7 @@ int main(int argc, char ** argv){
     sV.push_back(s);
   }
 
-  int threads0 = N, threads1 = R;
+  int threads0 = N, threads1 = omp_get_max_threads()/threads0;
 
   int m=0,M = N*R*sdStart.size()*sdStop.size()*sdDecay.size()*sdJump.size();
 
