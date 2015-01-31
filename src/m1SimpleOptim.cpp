@@ -13,22 +13,26 @@ void M1SimpleOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures0<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
 
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures1<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures2<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
 
 
-template class M1SimpleOptim<System<EbolaModel,EbolaParam>,
+template class M1SimpleOptim<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
 			     RankToyAgent<ToyFeatures1<EbolaModel,
 						       EbolaParam>,
 					  EbolaModel,EbolaParam> >;

@@ -145,11 +145,11 @@ double M2NmObj(const gsl_vector * x, void * params){
   for(i=0; i<qD->a.f.numFeatures; i++)
     qD->a.tp.weights(i) = gsl_vector_get(x,i);
   qD->qEval.bellResPolData(qD->s.sD.time,qD->s.fD,
-			   qD->s.model,qD->s.estParam,
+			   qD->s.modelEst,qD->s.paramEst,
 			   qD->a);
   qD->qEval.solve();
   return - qD->qEval.qFn(qD->s.sD,qD->s.tD,qD->s.fD,qD->s.dD,
-			 qD->s.model,qD->s.estParam,qD->a);
+			 qD->s.modelEst,qD->s.paramEst,qD->a);
 }
 
 

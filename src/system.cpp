@@ -1,60 +1,74 @@
 #include "system.hpp"
 
-template class System<GravityModel,GravityParam>;
+template class System<GravityModel,GravityParam,
+		      GravityModel,GravityParam>;
 
-template class System<EbolaModel,EbolaParam>;
+template class System<EbolaModel,EbolaParam,
+		      EbolaModel,EbolaParam>;
 
 
-template<class Model, class ModelParam>
-System<Model, ModelParam>::System(){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+System<ModelGen, ModelParamGen,
+       ModelEst, ModelParamEst>::System(){
   initialize();
 }
 
 
-template<class Model, class ModelParam>
-System<Model, ModelParam>::System(const SimData & sD,
-				  const TrtData & tD,
-				  const FixedData & fD,
-				  const DynamicData & dD,
-				  const Model & model,
-				  const ModelParam & genParam,
-				  const ModelParam & estParam){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+System<ModelGen, ModelParamGen,
+       ModelEst, ModelParamEst>::System(const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD,
+					const ModelGen & modelGen,
+					const ModelEst & modelEst,
+					const ModelParamGen & paramGen,
+					const ModelParamEst & paramEst){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
   this->dD_r = dD;
-  this->model = model;
-  this->genParam_r = genParam;
-  this->estParam_r = estParam;
+  this->modelGen = modelGen;
+  this->modelEst = modelEst;
+  this->paramGen_r = paramGen;
+  this->paramEst_r = paramEst;
 
   reset();
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::reset(){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>::reset(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
 
-  genParam = genParam_r;
-  estParam = estParam_r;
+  paramGen = paramGen_r;
+  paramEst = paramEst_r;
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::checkPoint(){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>::checkPoint(){
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
   
-  genParam_r = genParam;
-  estParam_r = estParam;
+  paramGen_r = paramGen;
+  paramEst_r = paramEst;
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::initialize(){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.dist,njm::sett.srcExt("d.txt"));
@@ -108,8 +122,8 @@ void System<Model, ModelParam>::initialize(){
   // final time step in simulation
   njm::fromFile(fD.finalT,njm::sett.srcExt("finalT.txt"));
 
-  genParam_r.load();
-  model.load(sD_r,tD_r,fD,dD_r,genParam_r);
+  paramGen_r.load();
+  modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
 
   reset();
 
@@ -118,8 +132,10 @@ void System<Model, ModelParam>::initialize(){
 }
 
 
-template<class Model, class ModelParam>
-void System<Model,ModelParam>::preCompData(){
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+void System<ModelGen,ModelParamGen,
+	    ModelEst,ModelParamEst>::preCompData(){
   int i,j,tot;
   
   // subGraph only K steps out
@@ -167,15 +183,20 @@ void System<Model,ModelParam>::preCompData(){
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::nextPoint(){
-  model.infProbs(sD,tD,fD,dD,genParam);
-  nextPoint(genParam.infProbs);
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>::nextPoint(){
+  modelGen.infProbs(sD,tD,fD,dD,paramGen);
+  nextPoint(paramGen.infProbs);
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::nextPoint(const std::vector<double> & infProbs){
+template<class ModelGen, class ModelParamGen,
+	 class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>
+::nextPoint(const std::vector<double> & infProbs){
   int i;
   for(i=0; i<sD.numInfected; i++)
     sD.timeInf.at(sD.infected.at(i))++;
@@ -212,8 +233,10 @@ void System<Model, ModelParam>::nextPoint(const std::vector<double> & infProbs){
 
 
 
-template<class Model, class ModelParam>
-void System<Model,ModelParam>::updateStatus(){
+template<class ModelGen, class ModelParamGen,
+	 class ModelEst, class ModelParamEst>
+void System<ModelGen, ModelParamGen,
+	    ModelEst, ModelParamEst>::updateStatus(){
   int i,j,k,isInf;
   for(i=0,j=0,k=0; i<fD.numNodes; i++){
     if(j == sD.numInfected)
@@ -243,14 +266,17 @@ void System<Model,ModelParam>::updateStatus(){
 }
 
 
-template<class Model, class ModelParam>
-double System<Model, ModelParam>::value(){
+template<class ModelGen, class ModelParamGen,
+	 class ModelEst, class ModelParamEst>
+double System<ModelGen, ModelParamGen,
+	      ModelEst, ModelParamEst>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////
+// System Light
 
 
 
@@ -262,14 +288,14 @@ SystemLight<Model, ModelParam>::SystemLight(const SimData & sD,
 					    const TrtData & tD,
 					    const FixedData & fD,
 					    const DynamicData & dD,
-					    const Model & model,
-					    const ModelParam & genParam){
+					    const Model & modelGen,
+					    const ModelParam & paramGen){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
   this->dD_r = dD;
-  this->model = model;
-  this->genParam_r = genParam;
+  this->modelGen = modelGen;
+  this->paramGen_r = paramGen;
 
   reset();
 }
@@ -281,7 +307,7 @@ void SystemLight<Model, ModelParam>::reset(){
   tD = tD_r;
   dD = dD_r;
 
-  genParam = genParam_r;
+  paramGen = paramGen_r;
 }
 
 
@@ -296,7 +322,7 @@ SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
   int node,numNewInf=0;
   sD.newInfec.clear();
   for(i=0; i<sD.numNotInfec; i++){
-    if(njm::runif01() < genParam.infProbs.at(i)){
+    if(njm::runif01() < paramGen.infProbs.at(i)){
       node = sD.notInfec.at(i);
       sD.infected.push_back(node);
       sD.newInfec.push_back(node);
@@ -316,7 +342,7 @@ SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
   sD.time++; // turn the calendar
 
   if(!isFinal)
-    model.update(sD,tD,fD,dD,genParam);
+    modelGen.update(sD,tD,fD,dD,paramGen);
 }
 
 

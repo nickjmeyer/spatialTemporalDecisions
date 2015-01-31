@@ -13,7 +13,8 @@ void M2NmEvalTunePar::putPar(const std::vector<double> & par){
 
 
 
-template class M2NmOptim<System<GravityModel,GravityParam>,
+template class M2NmOptim<System<GravityModel,GravityParam,
+				GravityModel,GravityParam>,
 			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				      GravityModel,GravityParam>,
 			 FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
@@ -38,7 +39,7 @@ optim(System system,
 
   qEval.preCompData(system.sD,system.fD);
   qEval.bellResFixData(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
 
   M2NmData<System,Agent,Features,Model,ModelParam> qData;
   qData.qEval = qEval;
@@ -101,7 +102,8 @@ optim(System system,
 }
 
 
-template class M2NmEval<System<GravityModel,GravityParam>,
+template class M2NmEval<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
 			RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam>,
 			FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,

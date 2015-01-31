@@ -11,12 +11,12 @@ TrainRunner<System,Agent>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    system.model.assignRand(system.genParam_r,system.estParam_r);
+    system.model.assignRand(system.paramGen_r,system.paramEst_r);
     system.reset();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -30,23 +30,30 @@ TrainRunner<System,Agent>
 
 
 
-template class PlainRunner<System<GravityModel,GravityParam>,
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
 					GravityModel,GravityParam> >;
-template class PlainRunner<System<GravityModel,GravityParam>,
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
 					GravityModel,GravityParam> >;
-template class PlainRunner<System<GravityModel,GravityParam>,
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 					GravityModel,GravityParam> >;
 
-template class PlainRunner<System<EbolaModel,EbolaParam>,
+template class PlainRunner<System<EbolaModel,EbolaParam,
+				  EbolaModel,EbolaParam>,
 			   NoTrt<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
+template class PlainRunner<System<EbolaModel,EbolaParam,
+				  EbolaModel,EbolaParam>,
 			   ProximalAgent<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
+template class PlainRunner<System<EbolaModel,EbolaParam,
+				  EbolaModel,EbolaParam>,
 			   MyopicAgent<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
+template class PlainRunner<System<EbolaModel,EbolaParam,
+				  EbolaModel,EbolaParam>,
 			   RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 					EbolaModel,EbolaParam> >;
 
@@ -64,7 +71,7 @@ PlainRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -90,7 +97,7 @@ PlainRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -106,14 +113,18 @@ PlainRunner<System,Agent>
 }
 
 
-template class VanillaRunner<System<GravityModel,GravityParam>,
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     NoTrt<GravityModel,GravityParam> >;
-template class VanillaRunner<System<GravityModel,GravityParam>,
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     ProximalAgent<GravityModel,GravityParam> >;
 
-template class VanillaRunner<System<EbolaModel,EbolaParam>,
+template class VanillaRunner<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
 			     NoTrt<EbolaModel,EbolaParam> >;
-template class VanillaRunner<System<EbolaModel,EbolaParam>,
+template class VanillaRunner<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
 			     ProximalAgent<EbolaModel,EbolaParam> >;
 
 
@@ -144,7 +155,7 @@ VanillaRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -176,20 +187,25 @@ VanillaRunner<System,Agent>
 
 
 
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     MyopicAgent<GravityModel,GravityParam> >;
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures1<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures2<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
 
-template class FitOnlyRunner<System<EbolaModel,EbolaParam>,
+template class FitOnlyRunner<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
 			     MyopicAgent<EbolaModel,EbolaParam> >;
-template class FitOnlyRunner<System<EbolaModel,EbolaParam>,
+template class FitOnlyRunner<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
 			     RankToyAgent<ToyFeatures1<EbolaModel,
 						       EbolaParam>,
 					  EbolaModel,EbolaParam> >;
@@ -220,12 +236,12 @@ FitOnlyRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) ==0))
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -257,64 +273,78 @@ FitOnlyRunner<System,Agent>
 
 
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1SimpleOptim<System<GravityModel,GravityParam>,
+	    M1SimpleOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures1<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam>
 			  > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1SimpleOptim<System<GravityModel,GravityParam>,
+	    M1SimpleOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam>
 			  > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1SgdOptim<System<GravityModel,GravityParam>,
+	    M1SgdOptim<System<GravityModel,GravityParam,
+			      GravityModel,GravityParam>,
 		       RankToyAgent<ToyFeatures1<GravityModel,
 						 GravityParam>,
 				    GravityModel,GravityParam>
 		       > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1SgdOptim<System<GravityModel,GravityParam>,
+	    M1SgdOptim<System<GravityModel,GravityParam,
+			      GravityModel,GravityParam>,
 		       RankToyAgent<ToyFeatures2<GravityModel,
 						 GravityParam>,
 				    GravityModel,GravityParam>
 		       > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
+	    M1HybridOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures0<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam>
 			  > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
+	    M1HybridOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures1<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam>
 			  > >;
 template class
-OptimRunner<System<GravityModel,GravityParam>,
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
+	    M1HybridOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam>
@@ -324,28 +354,34 @@ OptimRunner<System<GravityModel,GravityParam>,
 
 
 template class
-OptimRunner<System<EbolaModel,EbolaParam>,
+OptimRunner<System<EbolaModel,EbolaParam,
+		   EbolaModel,EbolaParam>,
 	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			 EbolaModel,EbolaParam>,
-	    M1SimpleOptim<System<EbolaModel,EbolaParam>,
+	    M1SimpleOptim<System<EbolaModel,EbolaParam,
+				 EbolaModel,EbolaParam>,
 			  RankToyAgent<ToyFeatures1<EbolaModel,
 						    EbolaParam>,
 				       EbolaModel,EbolaParam>
 			  > >;
 template class
-OptimRunner<System<EbolaModel,EbolaParam>,
+OptimRunner<System<EbolaModel,EbolaParam,
+		   EbolaModel,EbolaParam>,
 	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			 EbolaModel,EbolaParam>,
-	    M1SgdOptim<System<EbolaModel,EbolaParam>,
+	    M1SgdOptim<System<EbolaModel,EbolaParam,
+			      EbolaModel,EbolaParam>,
 		       RankToyAgent<ToyFeatures1<EbolaModel,
 						 EbolaParam>,
 				    EbolaModel,EbolaParam>
 		       > >;
 template class
-OptimRunner<System<EbolaModel,EbolaParam>,
+OptimRunner<System<EbolaModel,EbolaParam,
+		   EbolaModel,EbolaParam>,
 	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			 EbolaModel,EbolaParam>,
-	    M1HybridOptim<System<EbolaModel,EbolaParam>,
+	    M1HybridOptim<System<EbolaModel,EbolaParam,
+				 EbolaModel,EbolaParam>,
 			  RankToyAgent<ToyFeatures1<EbolaModel,
 						    EbolaParam>,
 				       EbolaModel,EbolaParam>
@@ -388,15 +424,15 @@ OptimRunner<System,Agent,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
 	optim.optim(system,agent);
 	weights.push_back(agent.tp.getPar());	
       }
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -470,13 +506,13 @@ OptimRunnerNS<System,Agent,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.model.fit(system.sD,system.fD,system.estParam);
+	system.modelEst.fit(system.sD,system.fD,system.paramEst);
 	optim.optim(system,agent);
       }
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -527,7 +563,7 @@ TestRunner<System,Agent,Optim>
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -564,11 +600,13 @@ TestRunner<System,Agent,Optim>
 
 
 
-template class TimerRunner<System<GravityModel,GravityParam>,
+template class TimerRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures0<GravityModel,
 						     GravityParam>,
 					GravityModel,GravityParam> >;
-template class TimerRunner<System<GravityModel,GravityParam>,
+template class TimerRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures1<GravityModel,
 						     GravityParam>,
 					GravityModel,GravityParam> >;
@@ -607,8 +645,8 @@ TimerRunner<System,Agent>
       tick=std::chrono::high_resolution_clock::now();
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) ==0))
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
       tock=std::chrono::high_resolution_clock::now();
       
       diff=std::chrono::milliseconds::zero();
@@ -623,7 +661,7 @@ TimerRunner<System,Agent>
       tick=std::chrono::high_resolution_clock::now();
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       tock=std::chrono::high_resolution_clock::now();
 
       diff=std::chrono::milliseconds::zero();

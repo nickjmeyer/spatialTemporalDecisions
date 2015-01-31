@@ -14,15 +14,16 @@
 #include "calcCentrality.hpp"
 
 
-template <class Model, class ModelParam>
+template <class ModelGen, class ModelParamGen,
+	  class ModelEst, class ModelParamEst>
 class System {
  public:
 
   System();
   System(const SimData & sD, const TrtData & tD,
 	 const FixedData & fD, const DynamicData & dD,
-	 const Model & model,
-	 const ModelParam & genParam, const ModelParam & estParam);
+	 const ModelGen & modelGen, const ModelEst & modelEst,
+	 const ModelParamGen & paramGen, const ModelParamEst & paramEst);
   
   SimData sD;
   TrtData tD;
@@ -33,12 +34,13 @@ class System {
   TrtData tD_r;
   DynamicData dD_r;
 
-  Model model;
-  ModelParam genParam;
-  ModelParam estParam;
+  ModelGen modelGen;
+  ModelEst modelEst;
+  ModelParamGen paramGen;
+  ModelParamEst paramEst;
 
-  ModelParam genParam_r;
-  ModelParam estParam_r;
+  ModelParamGen paramGen_r;
+  ModelParamEst paramEst_r;
 
 
   virtual void reset();
@@ -66,7 +68,7 @@ class SystemLight {
   SystemLight(const SimData & sD, const TrtData & tD,
 	      const FixedData & fD, const DynamicData & dD,
 	      const Model & model,
-	      const ModelParam & genParam);
+	      const ModelParam & paramGen);
   
   SimData sD;
   TrtData tD;
@@ -77,10 +79,10 @@ class SystemLight {
   TrtData tD_r;
   DynamicData dD_r;
 
-  Model model;
-  ModelParam genParam;
+  Model modelGen;
+  ModelParam paramGen;
 
-  ModelParam genParam_r;
+  ModelParam paramGen_r;
 
 
   virtual void reset();

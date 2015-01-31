@@ -15,7 +15,8 @@ void M1NmOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1NmOptim<System<GravityModel,GravityParam>,
+template class M1NmOptim<System<GravityModel,GravityParam,
+				GravityModel,GravityParam>,
 			 RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
 				      GravityModel,GravityParam> >;
 
