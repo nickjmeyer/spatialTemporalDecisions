@@ -109,7 +109,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
   for(i=0; i<(5+fD.numCovar); i++)
     par.push_back(0);
   mPInit.putPar(par);
-  mPInit.intcp=-3;
+  mPInit.intcp=-3.0;
   fit(sD,tD,fD,dD,mP,mPInit);
 }
 
