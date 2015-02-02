@@ -1,5 +1,5 @@
-#ifndef MODEL_EBOLA_HPP__
-#define MODEL_EBOLA_HPP__
+#ifndef MODEL_RANGE_HPP__
+#define MODEL_RANGE_HPP__
 
 
 #include <armadillo>

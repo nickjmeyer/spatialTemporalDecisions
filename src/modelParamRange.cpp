@@ -31,10 +31,10 @@ void RangeParam::putPar(const std::vector<double> & param){
   trtAct = *it;
 
   --it;
-  power = *it;
+  alpha = *it;
 
   --it;
-  alpha = *it;
+  range = *it;
 
   --it;
   intcp = *it;

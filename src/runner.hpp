@@ -7,6 +7,7 @@
 #include "system.hpp"
 #include "model.hpp"
 #include "modelEbola.hpp"
+#include "modelRange.hpp"
 #include "agent.hpp"
 #include "noTrtAgent.hpp"
 #include "proximalAgent.hpp"

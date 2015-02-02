@@ -8,6 +8,9 @@ template class RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
 template class RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			    GravityModel,GravityParam>;
 
+template class RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			    RangeModel,RangeParam>;
+
 template class RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			    EbolaModel,EbolaParam>;
 

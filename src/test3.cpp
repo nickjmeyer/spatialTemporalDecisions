@@ -3,23 +3,18 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
   
-  System<GravityModel,GravityParam> s;
-  s.estParam_r = s.genParam_r;
+  System<RangeModel,RangeParam,
+	 RangeModel,RangeParam> s;
 
-  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-	       GravityModel,GravityParam> rA1;
+  NoTrt<RangeModel,RangeParam> nT;
 
+  PlainRunner<System<RangeModel,RangeParam,
+		     RangeModel,RangeParam>,
+	      NoTrt<RangeModel,RangeParam> > pR;
 
-  PlainRunner<System<GravityModel,GravityParam>,
-	      RankToyAgent<ToyFeatures2<GravityModel,
-					GravityParam>,
-			   GravityModel,GravityParam> > tR1;
+  njm::message(pR.run(s,nT,1000,15));
+	      
 
-  resetRandomSeed();
-  tR1.run(s,rA1,2000,s.fD.finalT);
-
-
-  njm::message(s.fD.period);
   
   njm::sett.clean();
   return 0;

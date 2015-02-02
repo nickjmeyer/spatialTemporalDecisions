@@ -3,6 +3,8 @@
 
 template class NoTrt<GravityModel,GravityParam>;
 
+template class NoTrt<RangeModel,RangeParam>;
+
 template class NoTrt<EbolaModel,EbolaParam>;
 
 template<class Model, class ModelParam>

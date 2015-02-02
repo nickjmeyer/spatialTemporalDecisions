@@ -3,6 +3,9 @@
 template class System<GravityModel,GravityParam,
 		      GravityModel,GravityParam>;
 
+template class System<RangeModel,RangeParam,
+		      RangeModel,RangeParam>;
+
 template class System<EbolaModel,EbolaParam,
 		      EbolaModel,EbolaParam>;
 
@@ -122,13 +125,12 @@ void System<ModelGen, ModelParamGen,
   // final time step in simulation
   njm::fromFile(fD.finalT,njm::sett.srcExt("finalT.txt"));
 
+  preCompData();
+
   paramGen_r.load();
   modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
 
   reset();
-
-  preCompData();
-
 }
 
 

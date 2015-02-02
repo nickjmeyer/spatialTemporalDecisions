@@ -7,9 +7,11 @@
 #include "utilities.hpp"
 #include "data.hpp"
 #include "modelParam.hpp"
-#include "model.hpp"
 #include "modelParamEbola.hpp"
+#include "modelParamRange.hpp"
+#include "model.hpp"
 #include "modelEbola.hpp"
+#include "modelRange.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

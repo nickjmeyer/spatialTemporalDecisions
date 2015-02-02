@@ -9,6 +9,8 @@
 #include "model.hpp"
 #include "agent.hpp"
 #include "features.hpp"
+#include "modelParamRange.hpp"
+#include "modelRange.hpp"
 
 
 template <class Model, class ModelParam>

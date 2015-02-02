@@ -133,7 +133,7 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
 
   gsl_multimin_function minex_func;
   minex_func.n=dim;
-  minex_func.f=&rangeModelFitObjFn;
+  minex_func.f=&RangeModelFitObjFn;
   minex_func.params=&dat;
 
   const gsl_multimin_fminimizer_type *T=
@@ -181,7 +181,7 @@ RangeModelFitData
   this->history = history;
 }
 
-double rangeModelFitObjFn (const gsl_vector * x, void * params){
+double RangeModelFitObjFn (const gsl_vector * x, void * params){
   RangeModelFitData * dat = static_cast<RangeModelFitData*> (params);
   double llike=0,prob,base;
   int i,j,t,time=dat->history.size(),dim=dat->mP.getPar().size();
@@ -198,7 +198,7 @@ double rangeModelFitObjFn (const gsl_vector * x, void * params){
 	for(j=0; j<dat->fD.numNodes; j++){
 	  if(dat->history.at(t-1).at(j) >= 2){
 	    base=dat->mP.intcp;
-	    if(dat->fD.logDist.at(i*dat->fD.numNodes+j) < mP.range)
+	    if(dat->fD.logDist.at(i*dat->fD.numNodes+j) < dat->mP.range)
 	      base-=dat->mP.alpha;
 
 	    if(dat->history.at(t-1).at(i) == 1)
