@@ -1,16 +1,16 @@
 #include "anchorMan.hpp"
 
 
-template <class System, class Agent>
-AnchorMan::AnchorMan(){
+std::vector<double> AnchorManTunePar::getPar() const{
+  return std::vector<double>();
+}
+
+void AnchorManTunePar(const std::vector<double> & par){
+  // do nothing;
 }
 
 
-
-template <class System, class Agent>
-void AnchorMan::addPar(const std::vector<double> & par){
-  parHist.push_back(par);
+AnchorManTunePar::AnchorManTunePar(){
+  numSamples = 100;
+  cutoff = .95;
 }
-
-
-

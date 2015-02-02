@@ -8,14 +8,26 @@
 #include "m2NmOptim.hpp"
 
 
+class AnchorManTunePar : public TuneParam {
+ public:
+  AnchorManTunePar();
+
+  std::vector<double> getPar() const;
+  void putPar(const std::vector<double> & par);
+
+  int numSamples;
+  double cutoff;
+};
+
 template <class System, class Agent>
-class AnchorMan {
+class AnchorMan : BaseOptim<System,Agent> {
  public:
   AnchorMan();
-  
-  void addPar(const std::vector<double> & par);
-  std::vector<std::vector<double> > parHist;
 
+  virtual void optim(System system,
+		     Agent & agent);
+
+  
 };
 
 
