@@ -17,6 +17,7 @@ class AnchorManTunePar : public TuneParam {
 
   int numSamples;
   double cutoff;
+  int freq;
 };
 
 template <class System, class Agent, class Features,
@@ -28,6 +29,8 @@ class AnchorMan : BaseOptim<System,Agent> {
   M1HybridOptim<Sytem,Agent> m1Opt;
   M2NmOptim<system,Agent,Features,Model,ModelParam> m2Opt;
 
+  std::vector<double> m1W,m2W;
+
   virtual void optim(System system,
 		     Agent & agent);
 
@@ -38,9 +41,7 @@ class AnchorMan : BaseOptim<System,Agent> {
 		    Agent & agent,
 		    const int numYears);
 
-  double getTestStat(System system,
-		     Agent & agent);
-  
+  int switched;
 };
 
 

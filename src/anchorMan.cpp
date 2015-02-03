@@ -14,6 +14,13 @@ void AnchorManTunePar(const std::vector<double> & par){
 AnchorManTunePar::AnchorManTunePar(){
   numSamples = 100;
   cutoff = .95;
+  freq = 6;
+}
+
+template <class System, class Agent, class Features,
+	  class Model, class ModelParam>
+AnchorMan<System,Agent,Features,Model,ModelParam>::AnchorMan(){
+  switched = std::numeric_limits<int>::max();
 }
 
 
@@ -21,9 +28,26 @@ template <class System, class Agent, class Features,
 	  class Model, class ModelParam>
 void AnchorMan<System,Agent,Features,Model,ModelParam>
 ::optim(System system, Agent & agent){
-  if(toSwitch(system,agent))
+  std::vector<double> w = agent.tp.getPar();
+
+  if(switched >= system.sD.time){ // haven't made switch yet
+    switched = system.sD.time;
+  
     m1Opt.optim(system,agent);
-  else
+    m1W = agent.tp.getPar();
+
+    agent.tp.putPar(w);
+    m2Opt.optim(system,agent);
+    m2W = agent.tp.getPar();
+  
+    if(toSwitch(system,agent))
+      agent.putPar(m2W);
+    else{
+      agent.putPar(m1W);
+      switched+=freq;
+    }
+  }
+  else // made switch, use m2
     m2Opt.optim(system,agent);
 }
 
@@ -34,13 +58,13 @@ int AnchorMan<System,Agent,Features,Model,ModelParam>
 ::toSwitch(System system, Agent & agent){
   std::vector<double> samples;
   samples.reserve(tp.numSamples);
-  int i;
+  int i, T = system.sD.time;
   for(i = 0; i < tp.numSamples; i++)
-    samples.push_back(sampleNull(system,agent,system.sD.time));
+    samples.push_back(sampleNull(system,agent,T));
 
   int ind = std::ceil(tp.cutoff*tp.numSamples + 0.5) - 1;
 
-  double testStat = getTestStat(system,agent);
+  double testStat = l2norm(m1W,m2W);
 
   return (testStat > samples.at(ind) ? 1 : 0);
 }
@@ -49,7 +73,7 @@ int AnchorMan<System,Agent,Features,Model,ModelParam>
 template <class System, class Agent, class Features,
 	  class Model, class ModelParam>
 double AnchorMan<System,Agent,Features,Model,ModelParam>
-::sampleNull(System system, Agent & agent,
+::sampleNull(System & system, Agent & agent,
 	     const int numYears){
 
   system.reset();
@@ -69,21 +93,10 @@ double AnchorMan<System,Agent,Features,Model,ModelParam>
     system.nextPoint();
   }
 
-  return getTestStat(system,agent);
+  agent.tp.weights.ones();
+  m2Opt.optim(system,agent);
+  return l2norm(m1W,agent.tp.getPar());
   
 }
 
-
-template <class System, class Agent, class Features,
-	  class Model, class ModelParam>
-double AnchorMan<System,Agent,Features,Model,ModelParam>
-::getTestStat(System system,Agent & agent){
-  m2Opt.qEval.preCompData(system.sD,system.fD);
-  m2Opt.qEval.bellResFixData(system.sD,system.tD,system.fD,system.dD,
-			     system.modelEst,system.paramEst);
-  m2Opt.qEval.bellResPolData(system.sD.time,system.fD,
-			     system.modelEst,system.paramEst,agent);
-  m2Opt.qEval.solve();
-  return m2Opt.qFn(system.sD,system.tD,system.fD,system.dD,
-		   system.modelEst,system.paramEst,agent);
 }
