@@ -19,25 +19,29 @@ class AnchorManTunePar : public TuneParam {
   double cutoff;
 };
 
-template <class System, class Agent>
+template <class System, class Agent, class Features,
+	  class Model, class ModelParam>
 class AnchorMan : BaseOptim<System,Agent> {
  public:
   AnchorMan();
 
+  M1HybridOptim<Sytem,Agent> m1Opt;
+  M2NmOptim<system,Agent,Features,Model,ModelParam> m2Opt;
+
   virtual void optim(System system,
 		     Agent & agent);
 
+  int toSwitch(System system,
+	       Agent & agent);
+  
+  double sampleNull(System system,
+		    Agent & agent,
+		    const int numYears);
+
+  double getTestStat(System system,
+		     Agent & agent);
   
 };
-
-
-
-/* Make a switch optim that will cycle through the parHist as the "optimization"
-   function so that existing runners can be used.  The runner to use would be
-   the OptimRunner, but this class saves results to disk.  Re-write another
-   OptimRunner that does not save any results.
-*/
-
 
 
 
