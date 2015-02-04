@@ -24,8 +24,9 @@ COMPILE_CPP = $(CC) $(CPPFLAGS)
 BINARY = test3
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
-	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgentToy.o rankAgentToyOld.o \
+	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgentToy.o \
 	m1SgdOptim.o m1NmOptim.o m1SimpleOptim.o m1HybridOptim.o m2NmOptim.o \
+	anchorMan.o \
 	features.o featuresInt.o \
 	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
 	modelEbola.o modelParamEbola.o modelRange.o modelParamRange.o \

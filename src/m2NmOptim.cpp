@@ -21,6 +21,14 @@ template class M2NmOptim<System<GravityModel,GravityParam,
 				     GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
+template class M2NmOptim<System<GravityModel,GravityParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
+
 
 
 template <class System, class Agent, class Features,

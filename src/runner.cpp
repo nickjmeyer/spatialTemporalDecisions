@@ -57,6 +57,12 @@ template class PlainRunner<System<RangeModel,RangeParam,
 			   RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 					RangeModel,RangeParam> >;
 
+template class PlainRunner<System<GravityModel,GravityParam,
+				  RangeModel,RangeParam>,
+			   RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+					RangeModel,RangeParam> >;
+
+
 template class PlainRunner<System<EbolaModel,EbolaParam,
 				  EbolaModel,EbolaParam>,
 			   NoTrt<EbolaModel,EbolaParam> >;

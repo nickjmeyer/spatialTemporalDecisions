@@ -3,6 +3,9 @@
 template class System<GravityModel,GravityParam,
 		      GravityModel,GravityParam>;
 
+template class System<GravityModel,GravityParam,
+		      RangeModel,RangeParam>;
+
 template class System<RangeModel,RangeParam,
 		      RangeModel,RangeParam>;
 

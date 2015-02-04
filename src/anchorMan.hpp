@@ -5,7 +5,16 @@
 
 #include <vector>
 #include <algorithm>
+#include "utilities.hpp"
+#include "data.hpp"
+#include "system.hpp"
+#include "model.hpp"
+#include "modelRange.hpp"
+#include "modelParam.hpp"
+#include "modelParamRange.hpp"
+#include "m1HybridOptim.hpp"
 #include "m2NmOptim.hpp"
+#include "rankAgentToy.hpp"
 
 
 class AnchorManTunePar : public TuneParam {
@@ -26,8 +35,8 @@ class AnchorMan : BaseOptim<System,Agent> {
  public:
   AnchorMan();
 
-  M1HybridOptim<Sytem,Agent> m1Opt;
-  M2NmOptim<system,Agent,Features,Model,ModelParam> m2Opt;
+  M1HybridOptim<System,Agent> m1Opt;
+  M2NmOptim<System,Agent,Features,Model,ModelParam> m2Opt;
 
   std::vector<double> m1W,m2W;
 
@@ -37,9 +46,11 @@ class AnchorMan : BaseOptim<System,Agent> {
   int toSwitch(System system,
 	       Agent & agent);
   
-  double sampleNull(System system,
+  double sampleNull(System & system,
 		    Agent & agent,
 		    const int numYears);
+
+  AnchorManTunePar tp;
 
   int switched;
 };

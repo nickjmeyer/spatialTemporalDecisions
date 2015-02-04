@@ -34,11 +34,19 @@ template class M1HybridOptim<System<GravityModel,GravityParam,
 			     RankToyAgent<ToyFeatures1<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
+
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures2<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam> >;
+
+template class M1HybridOptim<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     RankToyAgent<ToyFeatures2<RangeModel,
+						       RangeParam>,
+					  RangeModel,RangeParam> >;
+
 
 template class M1HybridOptim<System<EbolaModel,EbolaParam,
 				    EbolaModel,EbolaParam>,

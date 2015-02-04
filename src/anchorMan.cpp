@@ -6,7 +6,7 @@ std::vector<double> AnchorManTunePar::getPar() const{
 }
 
 
-void AnchorManTunePar(const std::vector<double> & par){
+void AnchorManTunePar::putPar(const std::vector<double> & par){
   // do nothing;
 }
 
@@ -17,9 +17,27 @@ AnchorManTunePar::AnchorManTunePar(){
   freq = 6;
 }
 
+template class AnchorMan<System<GravityModel,GravityParam,
+				GravityModel,GravityParam>,
+			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+				      GravityModel,GravityParam>,
+			 FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
+				     GravityModel,GravityParam>,
+			 GravityModel,GravityParam>;
+
+template class AnchorMan<System<GravityModel,GravityParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
+
+
 template <class System, class Agent, class Features,
 	  class Model, class ModelParam>
 AnchorMan<System,Agent,Features,Model,ModelParam>::AnchorMan(){
+  // set switched time to max
   switched = std::numeric_limits<int>::max();
 }
 
@@ -41,10 +59,10 @@ void AnchorMan<System,Agent,Features,Model,ModelParam>
     m2W = agent.tp.getPar();
   
     if(toSwitch(system,agent))
-      agent.putPar(m2W);
+      agent.tp.putPar(m2W);
     else{
-      agent.putPar(m1W);
-      switched+=freq;
+      agent.tp.putPar(m1W);
+      switched+=tp.freq;
     }
   }
   else // made switch, use m2
@@ -64,7 +82,7 @@ int AnchorMan<System,Agent,Features,Model,ModelParam>
 
   int ind = std::ceil(tp.cutoff*tp.numSamples + 0.5) - 1;
 
-  double testStat = l2norm(m1W,m2W);
+  double testStat = njm::l2norm(m1W,m2W);
 
   return (testStat > samples.at(ind) ? 1 : 0);
 }
@@ -81,22 +99,20 @@ double AnchorMan<System,Agent,Features,Model,ModelParam>
   for(t = 0; t < numYears; t++){
     if(t >= system.fD.trtStart &&
        (((t - system.fD.trtStart) % system.fD.period) == 0)){
-      system.modelEst.fit(system.sD.system.tD,system.fD,system.dD,
+      system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
 			  system.paramEst);
       m1Opt.optim(system,agent);
     }
 
     if(t >= system.fD.trtStart)
       agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		     system.modelEstl,system.paramEst);
+		     system.modelEst,system.paramEst);
     system.updateStatus();
     system.nextPoint();
   }
 
   agent.tp.weights.ones();
   m2Opt.optim(system,agent);
-  return l2norm(m1W,agent.tp.getPar());
-  
+  return njm::l2norm(m1W,agent.tp.getPar());
 }
 
-}

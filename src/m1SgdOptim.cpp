@@ -38,6 +38,11 @@ template class M1SgdOptim<System<GravityModel,GravityParam,
 			  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				       GravityModel,GravityParam> >;
 
+template class M1SgdOptim<System<GravityModel,GravityParam,
+				 RangeModel,RangeParam>,
+			  RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				       RangeModel,RangeParam> >;
+
 template class M1SgdOptim<System<EbolaModel,EbolaParam,
 				 EbolaModel,EbolaParam>,
 			  RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,

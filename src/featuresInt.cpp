@@ -3,6 +3,10 @@
 template class FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 			   GravityModel,GravityParam>;
 
+template class FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+			   RangeModel,RangeParam>;
+
+
 template <class Features, class Model, class ModelParam>
 int FeaturesInt<Features,Model,ModelParam>::numFeatures =
   Features::numFeatures + 1;
