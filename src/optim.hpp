@@ -9,11 +9,11 @@
 #include "agent.hpp"
 #include "rankAgent.hpp"
 
-template <class System, class Agent>
+template <class S, class A, class M, class MP>
 class BaseOptim {
  public:
-  virtual void optim(System system,
-		     Agent & agent)=0;
+  virtual void optim(const S & system,
+		     A & agent)=0;
 
   std::string name;
 };

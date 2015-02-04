@@ -8,16 +8,16 @@ template class MyopicAgent<RangeModel,RangeParam>;
 template class MyopicAgent<EbolaModel,EbolaParam>;
 
 
-template <class Model, class ModelParam>
-const std::string MyopicAgent<Model,ModelParam>::name = "myopic";
+template <class M, class MP>
+const std::string MyopicAgent<M,MP>::name = "myopic";
 
-template <class Model, class ModelParam>
-void MyopicAgent<Model,ModelParam>::applyTrt(const SimData & sD,
-					     TrtData & tD,
-					     const FixedData & fD,
-					     const DynamicData & dD,
-					     const Model & m,
-					     ModelParam & mP){
+template <class M, class MP>
+void MyopicAgent<M,MP>::applyTrt(const SimData & sD,
+				 TrtData & tD,
+				 const FixedData & fD,
+				 const DynamicData & dD,
+				 const M & m,
+				 MP & mP){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 

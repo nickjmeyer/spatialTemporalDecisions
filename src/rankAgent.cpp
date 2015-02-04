@@ -5,8 +5,8 @@ template class RankAgent<ToyFeatures0<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
 
-template < class Features, class Model, class ModelParam>
-RankAgent<Features,Model,ModelParam>::RankAgent(){
+template < class F, class M, class MP>
+RankAgent<F,M,MP>::RankAgent(){
   tp.weights.ones(4);
   tp.numChunks = 3;
   tp.valReps=10;
@@ -14,17 +14,17 @@ RankAgent<Features,Model,ModelParam>::RankAgent(){
 }
 
   
-template < class Features, class Model, class ModelParam>
-int RankAgent<Features,Model,ModelParam>::numFeatures = 4;
+template < class F, class M, class MP>
+int RankAgent<F,M,MP>::numFeatures = 4;
 
 
-template < class Features, class Model, class ModelParam>
-void RankAgent<Features,Model,ModelParam>::applyTrt(const SimData & sD,
-						    TrtData & tD,
-						    const FixedData & fD,
-						    const DynamicData & dD,
-						    const Model & m,
-						    ModelParam & mP){
+template < class F, class M, class MP>
+void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
+				 TrtData & tD,
+				 const FixedData & fD,
+				 const DynamicData & dD,
+				 const M & m,
+				 MP & mP){
   if(sD.notInfec.empty())
     return;
   
@@ -72,7 +72,7 @@ void RankAgent<Features,Model,ModelParam>::applyTrt(const SimData & sD,
     }
     
     addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
-      (int)(i*numPre/std::min(tp.numChunks,numPre)); 
+	     (int)(i*numPre/std::min(tp.numChunks,numPre)); 
     for(; cN<(cN+addPre) && cN<numPre; cN++){
       node0=sortNotInfec.top().second;
       tD.p.at(sD.notInfec.at(node0)) = 1;
@@ -92,13 +92,13 @@ void RankAgent<Features,Model,ModelParam>::applyTrt(const SimData & sD,
 
 
 
-template < class Features, class Model, class ModelParam>
-void RankAgent<Features,Model,ModelParam>::getFeatures(const SimData & sD,
-					      const TrtData & tD,
-					      const FixedData & fD,
-					      const DynamicData & dD,
-					      const Model & m,
-					      const ModelParam & mP){
+template < class F, class M, class MP>
+void RankAgent<F,M,MP>::getFeatures(const SimData & sD,
+				    const TrtData & tD,
+				    const FixedData & fD,
+				    const DynamicData & dD,
+				    const M & m,
+				    const MP & mP){
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
 
@@ -113,7 +113,7 @@ void RankAgent<Features,Model,ModelParam>::getFeatures(const SimData & sD,
   featNum++;
   
   // feature 1
-  SystemLight<Model,ModelParam> s(sD,tD,fD,dD,m,mP);
+  SystemLight<M,MP> s(sD,tD,fD,dD,m,mP);
   std::vector<int> newInfec;
   int k,numNewInfec;
   for(i=0; i<tp.valReps; i++){

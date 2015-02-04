@@ -1,12 +1,12 @@
 #include "model.hpp"
 
 
-template<class ModelParam>
-void BaseModel<ModelParam>::load(const SimData & sD,
-				 const TrtData & tD,
-				 const FixedData & fD,
-				 const DynamicData & dD,
-				 ModelParam & mP) const{
+template<class MP>
+void BaseModel<MP>::load(const SimData & sD,
+			 const TrtData & tD,
+			 const FixedData & fD,
+			 const DynamicData & dD,
+			 MP & mP) const{
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -27,12 +27,12 @@ void BaseModel<ModelParam>::load(const SimData & sD,
 }
 
 
-template <class ModelParam>
-void BaseModel<ModelParam>::infProbs(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     ModelParam & mP) const {
+template <class MP>
+void BaseModel<MP>::infProbs(const SimData & sD,
+			     const TrtData & tD,
+			     const FixedData & fD,
+			     const DynamicData & dD,
+			     MP & mP) const {
   mP.infProbs.clear();
   int i,j,node0;
   double prob;
@@ -47,12 +47,12 @@ void BaseModel<ModelParam>::infProbs(const SimData & sD,
 
 
 
-template <class ModelParam>
-void BaseModel<ModelParam>::update(const SimData & sD,
-				   const TrtData & tD,
-				   const FixedData & fD,
-				   const DynamicData & dD,
-				   ModelParam & mP){
+template <class MP>
+void BaseModel<MP>::update(const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD,
+			   MP & mP){
   int i,j,k,node0,numNewInfec=sD.newInfec.size();
   double prob;
   std::vector<double> newInfProbs;

@@ -22,17 +22,17 @@ template class ToyFeatures2<EbolaModel,EbolaParam>;
 
 
 
-template <class Model, class ModelParam>
-int ToyFeatures2<Model,ModelParam>::numFeatures = 4;
+template <class M, class MP>
+int ToyFeatures2<M,MP>::numFeatures = 4;
 
 
-template <class Model, class ModelParam>
-void ToyFeatures2<Model,ModelParam>::preCompData(const SimData & sD,
-						 const TrtData & tD,
-						 const FixedData & fD,
-						 const DynamicData & dD,
-						 const Model & m,
-						 ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     const M & m,
+				     MP & mP){
   // pre compute stuff
 
   // ////////////////////////////////////////
@@ -154,13 +154,13 @@ void ToyFeatures2<Model,ModelParam>::preCompData(const SimData & sD,
 
 
 
-template <class Model, class ModelParam>
-void ToyFeatures2<Model,ModelParam>::getFeatures(const SimData & sD,
-						 const TrtData & tD,
-						 const FixedData & fD,
-						 const DynamicData & dD,
-						 const Model & m,
-						 ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     const M & m,
+				     MP & mP){
   // ////////////////////////////////////////
   // // temporary timing stuff
   // static std::vector<std::chrono::milliseconds> featTime(numFeatures);
@@ -355,13 +355,13 @@ void ToyFeatures2<Model,ModelParam>::getFeatures(const SimData & sD,
 
 
 
-template <class Model, class ModelParam>
-void ToyFeatures2<Model,ModelParam>::updateFeatures(const SimData & sD,
-						    const TrtData & tD,
-						    const FixedData & fD,
-						    const DynamicData & dD,
-						    const Model & m,
-						    ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD,
+					const M & m,
+					MP & mP){
 
   // ////////////////////////////////////////
   // // temporary timing stuff

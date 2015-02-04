@@ -26,8 +26,8 @@ class RankTuneParam : public TuneParam {
 };
 
 
-template < class Features, class Model, class ModelParam>
-class RankAgent : BaseAgent<Model,ModelParam> {
+template < class F, class M, class MP>
+class RankAgent : BaseAgent<M,MP> {
  public:
   RankAgent();
   
@@ -35,15 +35,15 @@ class RankAgent : BaseAgent<Model,ModelParam> {
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const Model & m,
-			ModelParam & mP);
+			const M & m,
+			MP & mP);
 
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const Model & m,
-			   const ModelParam & mP);
+			   const M & m,
+			   const MP & mP);
 
   arma::mat infFeat;
   arma::mat notFeat;

@@ -15,8 +15,8 @@ template class RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			    EbolaModel,EbolaParam>;
 
 
-template <class Features, class Model, class ModelParam>
-RankToyAgent<Features,Model,ModelParam>::RankToyAgent(){
+template <class F, class M, class MP>
+RankToyAgent<F,M,MP>::RankToyAgent(){
   tp.weights.ones(4);
   tp.numChunks = 3;
   
@@ -26,13 +26,13 @@ RankToyAgent<Features,Model,ModelParam>::RankToyAgent(){
 }
 
   
-template <class Features, class Model, class ModelParam>
-void RankToyAgent<Features,Model,ModelParam>::applyTrt(const SimData & sD,
-					      TrtData & tD,
-					      const FixedData & fD,
-					      const DynamicData & dD,
-					      const Model & m,
-					      ModelParam & mP){
+template <class F, class M, class MP>
+void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
+				    TrtData & tD,
+				    const FixedData & fD,
+				    const DynamicData & dD,
+				    const M & m,
+				    MP & mP){
   if(sD.notInfec.empty())
     return;
   
@@ -79,7 +79,7 @@ void RankToyAgent<Features,Model,ModelParam>::applyTrt(const SimData & sD,
     }
     
     addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
-      (int)(i*numPre/std::min(tp.numChunks,numPre)); 
+	     (int)(i*numPre/std::min(tp.numChunks,numPre)); 
     for(; cN<(cN+addPre) && cN<numPre; cN++){
       node0=sortNotInfec.top().second;
       tD.p.at(sD.notInfec.at(node0)) = 1;

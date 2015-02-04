@@ -28,6 +28,7 @@
 #include "m1SgdOptim.hpp"
 #include "m1NmOptim.hpp"
 #include "m2NmOptim.hpp"
+#include "anchorMan.hpp"
 #include "toyFeatures0.hpp"
 #include "toyFeatures1.hpp"
 #include "toyFeatures2.hpp"

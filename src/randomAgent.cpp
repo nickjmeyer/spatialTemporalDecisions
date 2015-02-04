@@ -3,16 +3,16 @@
 
 template class RandomAgent<GravityModel,GravityParam>;
 
-template<class Model, class ModelParam>
-const std::string RandomAgent<Model,ModelParam>::name = "random";
+template<class M, class MP>
+const std::string RandomAgent<M,MP>::name = "random";
 
-template <class Model, class ModelParam>
-void RandomAgent<Model,ModelParam>::applyTrt(const SimData & sD,
-					       TrtData & tD,
-					       const FixedData & fD,
-					       const DynamicData & dD,
-					       const Model & m,
-					       ModelParam & mP){
+template <class M, class MP>
+void RandomAgent<M,MP>::applyTrt(const SimData & sD,
+				 TrtData & tD,
+				 const FixedData & fD,
+				 const DynamicData & dD,
+				 const M & m,
+				 MP & mP){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 

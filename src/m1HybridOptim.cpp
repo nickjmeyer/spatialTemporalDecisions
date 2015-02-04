@@ -28,44 +28,60 @@ template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures0<GravityModel,
 						       GravityParam>,
-					  GravityModel,GravityParam> >;
+					  GravityModel,GravityParam>,
+			     GravityModel,GravityParam>;
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures1<GravityModel,
 						       GravityParam>,
-					  GravityModel,GravityParam> >;
+					  GravityModel,GravityParam>,
+			     GravityModel,GravityParam>;
 
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures2<GravityModel,
 						       GravityParam>,
-					  GravityModel,GravityParam> >;
+					  GravityModel,GravityParam>,
+			     GravityModel,GravityParam>;
+
+template class M1HybridOptim<System<RangeModel,RangeParam,
+				    RangeModel,RangeParam>,
+			     RankToyAgent<ToyFeatures2<RangeModel,
+						       RangeParam>,
+					  RangeModel,RangeParam>,
+			     RangeModel,RangeParam>;
 
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    RangeModel,RangeParam>,
 			     RankToyAgent<ToyFeatures2<RangeModel,
 						       RangeParam>,
-					  RangeModel,RangeParam> >;
+					  RangeModel,RangeParam>,
+			     RangeModel,RangeParam>;
 
 
 template class M1HybridOptim<System<EbolaModel,EbolaParam,
 				    EbolaModel,EbolaParam>,
 			     RankToyAgent<ToyFeatures1<EbolaModel,
 						       EbolaParam>,
-					  EbolaModel,EbolaParam> >;
+					  EbolaModel,EbolaParam>,
+			     EbolaModel,EbolaParam>;
 
 
-template <class System, class Agent>
-M1HybridOptim<System,Agent>::M1HybridOptim(){
+template <class S, class A, class M, class MP>
+M1HybridOptim<S,A,M,MP>::M1HybridOptim(){
   name = "M1Hybrid";
 }
 
-template <class System, class Agent>
-void M1HybridOptim<System,Agent>
-::optim(System system,
-	Agent & agent){
-  
-  PlainRunner<System,Agent> runner;
+template <class S, class A, class M, class MP>
+void M1HybridOptim<S,A,M,MP>
+::optim(const S & system,
+	A & agent){
+
+  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
+
+  PlainRunner<System<M,MP,M,MP>,A> runner;
   
 
   int i,j,k;
@@ -106,19 +122,17 @@ void M1HybridOptim<System,Agent>
   std::fill(w.begin(),w.end(),-1);
   weights.push_back(w);
 
-  system.checkPoint(); // don't want to go back to original state
-
   int N=weights.size();
   std::priority_queue< std::pair<double,int> > p;
   for(i=0; i<N; i++){
     agent.tp.putPar(weights.at(i));
-    p.push(std::pair<double,int>(-runner.run(system,agent,tp.mcRepsSimple,
-					     system.fD.finalT),
+    p.push(std::pair<double,int>(-runner.run(s,agent,tp.mcRepsSimple,
+					     s.fD.finalT),
 				 i));
   }
 
   // create the optimzation object and set tuning parameters
-  M1SgdOptim<System,Agent> sO;
+  M1SgdOptim<System<M,MP,M,MP>,A,M,MP> sO;
   sO.tp.a = tp.aSgd;
   sO.tp.b = tp.bSgd;
   sO.tp.mcReps = tp.mcRepsSgd;
@@ -133,12 +147,12 @@ void M1HybridOptim<System,Agent>
     pC.pop(); // pop the top
     
     agent.tp.putPar(weights.at(top)); // assign weights
-    sO.optim(system,agent); // optimize weights
+    sO.optim(s,agent); // optimize weights
     
     weights.push_back(agent.tp.getPar()); // add weights to vector
     
-    p.push(std::pair<double,int>(-runner.run(system,agent,tp.mcRepsSimple,
-					     system.fD.finalT),
+    p.push(std::pair<double,int>(-runner.run(s,agent,tp.mcRepsSimple,
+					     s.fD.finalT),
 				 i)); // i starts at N
   }
 

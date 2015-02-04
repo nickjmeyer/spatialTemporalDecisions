@@ -1,12 +1,13 @@
 #include "runner.hpp"
+#include "anchorMan.hpp"
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 double
-TrainRunner<System,Agent>
-::run(System system,
-      Agent agent,
+TrainRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   double value=0;
   int r,t;
@@ -30,6 +31,9 @@ TrainRunner<System,Agent>
 
 
 
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
+			   NoTrt<GravityModel,GravityParam> >;
 template class PlainRunner<System<GravityModel,GravityParam,
 				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
@@ -78,11 +82,11 @@ template class PlainRunner<System<EbolaModel,EbolaParam,
 					EbolaModel,EbolaParam> >;
 
 
-template <class System, class Agent>
+template <class S, class A>
 double
-PlainRunner<System,Agent>
-::run(System system,
-      Agent agent,
+PlainRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   double value=0;
   int r,t;
@@ -104,11 +108,11 @@ PlainRunner<System,Agent>
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 std::pair<double,double>
-PlainRunner<System,Agent>
-::runEx(System system,
-	Agent agent,
+PlainRunner<S,A>
+::runEx(S system,
+	A agent,
 	const int numReps, const int numPoints){
   double value=0,valueSq=0;
   int r,t;
@@ -149,11 +153,11 @@ template class VanillaRunner<System<EbolaModel,EbolaParam,
 
 
 
-template<class System, class Agent>
+template<class S, class A>
 double
-VanillaRunner<System,Agent>
-::run(System system,
-      Agent agent,
+VanillaRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
   
@@ -230,11 +234,11 @@ template class FitOnlyRunner<System<EbolaModel,EbolaParam,
 						       EbolaParam>,
 					  EbolaModel,EbolaParam> >;
 
-template <class System, class Agent>
+template <class S, class A>
 double
-FitOnlyRunner<System,Agent>
-::run(System system,
-      Agent agent,
+FitOnlyRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
   
@@ -295,36 +299,15 @@ FitOnlyRunner<System,Agent>
 template class
 OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SimpleOptim<System<GravityModel,GravityParam,
-				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam,
-		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
 	    M1SimpleOptim<System<GravityModel,GravityParam,
 				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,
 						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam,
-		   GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SgdOptim<System<GravityModel,GravityParam,
-			      GravityModel,GravityParam>,
-		       RankToyAgent<ToyFeatures1<GravityModel,
-						 GravityParam>,
-				    GravityModel,GravityParam>
-		       > >;
+				       GravityModel,GravityParam>,
+			  GravityModel,GravityParam> >;
+
 template class
 OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
@@ -334,30 +317,9 @@ OptimRunner<System<GravityModel,GravityParam,
 			      GravityModel,GravityParam>,
 		       RankToyAgent<ToyFeatures2<GravityModel,
 						 GravityParam>,
-				    GravityModel,GravityParam>
-		       > >;
-template class
-OptimRunner<System<GravityModel,GravityParam,
-		   GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam,
-				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures0<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam,
-		   GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam,
-				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
+				    GravityModel,GravityParam>,
+		       GravityModel,GravityParam> >;
+
 template class
 OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
@@ -367,34 +329,27 @@ OptimRunner<System<GravityModel,GravityParam,
 				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,
 						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-
-
-
+				       GravityModel,GravityParam>,
+			  GravityModel,GravityParam> >;
 
 template class
-OptimRunner<System<EbolaModel,EbolaParam,
-		   EbolaModel,EbolaParam>,
-	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>,
-	    M1SimpleOptim<System<EbolaModel,EbolaParam,
-				 EbolaModel,EbolaParam>,
-			  RankToyAgent<ToyFeatures1<EbolaModel,
-						    EbolaParam>,
-				       EbolaModel,EbolaParam>
-			  > >;
-template class
-OptimRunner<System<EbolaModel,EbolaParam,
-		   EbolaModel,EbolaParam>,
-	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>,
-	    M1SgdOptim<System<EbolaModel,EbolaParam,
-			      EbolaModel,EbolaParam>,
-		       RankToyAgent<ToyFeatures1<EbolaModel,
-						 EbolaParam>,
-				    EbolaModel,EbolaParam>
-		       > >;
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
+	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>,
+	    AnchorMan<System<GravityModel,GravityParam,
+			     GravityModel,GravityParam>,
+		      RankToyAgent<ToyFeatures2<GravityModel,
+						GravityParam>,
+				   GravityModel,GravityParam>,
+		      FeaturesInt<ToyFeatures2<GravityModel,
+					       GravityParam>,
+				  GravityModel,GravityParam>,
+		      GravityModel,GravityParam> >;
+
+
+
+// Ebola model
 template class
 OptimRunner<System<EbolaModel,EbolaParam,
 		   EbolaModel,EbolaParam>,
@@ -404,15 +359,68 @@ OptimRunner<System<EbolaModel,EbolaParam,
 				 EbolaModel,EbolaParam>,
 			  RankToyAgent<ToyFeatures1<EbolaModel,
 						    EbolaParam>,
-				       EbolaModel,EbolaParam>
-			  > >;
+				       EbolaModel,EbolaParam>,
+			  EbolaModel,EbolaParam> >;
+
+// Range model (misspecified)
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   RangeModel,RangeParam>,
+	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>,
+	    M1SimpleOptim<System<GravityModel,GravityParam,
+				 RangeModel,RangeParam>,
+			  RankToyAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
+			  RangeModel,RangeParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   RangeModel,RangeParam>,
+	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>,
+	    M1SgdOptim<System<GravityModel,GravityParam,
+			      RangeModel,RangeParam>,
+		       RankToyAgent<ToyFeatures2<RangeModel,
+						 RangeParam>,
+				    RangeModel,RangeParam>,
+		       RangeModel,RangeParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   RangeModel,RangeParam>,
+	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>,
+	    M1HybridOptim<System<GravityModel,GravityParam,
+				 RangeModel,RangeParam>,
+			  RankToyAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
+			  RangeModel,RangeParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   RangeModel,RangeParam>,
+	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>,
+	    AnchorMan<System<GravityModel,GravityParam,
+			     RangeModel,RangeParam>,
+		      RankToyAgent<ToyFeatures2<RangeModel,
+						RangeParam>,
+				   RangeModel,RangeParam>,
+		      FeaturesInt<ToyFeatures2<RangeModel,
+					       RangeParam>,
+				  RangeModel,RangeParam>,
+		      RangeModel,RangeParam> >;
 
 
-template <class System, class Agent, class Optim>
+
+template <class S, class A, class Optim>
 double
-OptimRunner<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+OptimRunner<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
 
@@ -426,10 +434,13 @@ OptimRunner<System,Agent,Optim>
   int r,t;
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
-  int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
-#pragma omp parallel for num_threads(threads)			\
-  shared(value,valueAll)					\
-  firstprivate(system,agent,optim,weights)			\
+  
+  // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
+  int threads = omp_get_max_threads();
+  
+#pragma omp parallel for num_threads(threads)	\
+  shared(value,valueAll)			\
+  firstprivate(system,agent,optim,weights)	\
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
@@ -509,11 +520,11 @@ OptimRunner<System,Agent,Optim>
 
 
 
-template <class System, class Agent, class Optim>
+template <class S, class A, class Optim>
 double
-OptimRunnerNS<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+OptimRunnerNS<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
 
@@ -551,11 +562,11 @@ OptimRunnerNS<System,Agent,Optim>
 
 
 
-template <class System, class Agent, class Optim>
+template <class S, class A, class Optim>
 double
-TestRunner<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+TestRunner<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
   double value=0;
@@ -563,9 +574,9 @@ TestRunner<System,Agent,Optim>
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
   int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
-#pragma omp parallel for num_threads(threads)			\
-  shared(value,valueAll)					\
-  firstprivate(system,agent,optim,weights)			\
+#pragma omp parallel for num_threads(threads)	\
+  shared(value,valueAll)			\
+  firstprivate(system,agent,optim,weights)	\
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
@@ -633,11 +644,11 @@ template class TimerRunner<System<GravityModel,GravityParam,
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 double
-TimerRunner<System,Agent>
-::run(System system,
-      Agent agent,
+TimerRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
 

@@ -29,30 +29,29 @@ class AnchorManTunePar : public TuneParam {
   int freq;
 };
 
-template <class System, class Agent, class Features,
-	  class Model, class ModelParam>
-class AnchorMan : BaseOptim<System,Agent> {
+
+template <class S, class A, class F,
+	  class M, class MP>
+class AnchorMan : BaseOptim<S,A,M,MP> {
  public:
   AnchorMan();
 
-  M1HybridOptim<System,Agent> m1Opt;
-  M2NmOptim<System,Agent,Features,Model,ModelParam> m2Opt;
+  M1HybridOptim<System<M,MP,M,MP>,A,M,MP> m1Opt;
+  M2NmOptim<System<M,MP,M,MP>,A,F,M,MP> m2Opt;
 
   std::vector<double> m1W,m2W;
 
-  virtual void optim(System system,
-		     Agent & agent);
+  virtual void optim(const S & system,
+		     A & agent);
 
-  int toSwitch(System system,
-	       Agent & agent);
+  int toSwitch(System<M,MP,M,MP> & system,
+	       A & agent, const int T);
   
-  double sampleNull(System & system,
-		    Agent & agent,
-		    const int numYears);
-
   AnchorManTunePar tp;
 
   int switched;
+
+  std::string name;
 };
 
 

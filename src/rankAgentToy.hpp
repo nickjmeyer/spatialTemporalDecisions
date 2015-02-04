@@ -28,8 +28,8 @@ class RankToyTuneParam : public TuneParam {
 };
 
 
-template < class Features, class Model, class ModelParam>
-class RankToyAgent : BaseAgent<Model,ModelParam> {
+template < class F, class M, class MP>
+class RankToyAgent : BaseAgent<M,MP> {
  public:
   RankToyAgent();
   
@@ -37,10 +37,10 @@ class RankToyAgent : BaseAgent<Model,ModelParam> {
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const Model & m,
-			ModelParam & mP);
+			const M & m,
+			MP & mP);
 
-  Features f;
+  F f;
 
   arma::colvec infRanks;
   arma::colvec notRanks;
