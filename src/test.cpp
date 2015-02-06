@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
 
   std::vector<int>::const_iterator samp;
 
-  int i,n,r,N=12,R=4;
+  int i,n,r,N=12,R=20;
 
   std::vector<System<GravityModel,GravityParam> > sV;
 
