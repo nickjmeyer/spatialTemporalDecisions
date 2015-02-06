@@ -49,7 +49,7 @@ int main(int argc, char ** argv){
     sV.push_back(s);
   }
 
-  int threads0 = N, threads1 = R;
+  int threads0 = N, threads1 = 5;
 
   int m=0,M = N*R*sampVals.size();
 
