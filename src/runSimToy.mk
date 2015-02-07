@@ -25,8 +25,10 @@ OBJECTS = $(BINARY).o
 OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgent.o rankAgentToy.o \
 	m1SgdOptim.o m2NmOptim.o m1SimpleOptim.o m1HybridOptim.o \
-	features.o toyFeatures0.o toyFeatures1.o toyFeatures2.o \
-	modelEbola.o modelParamEbola.o \
+	anchorMan.o \
+	features.o featuresInt.o \
+	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
+	modelEbola.o modelParamEbola.o modelRange.o modelParamRange.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o mcmc.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
@@ -57,6 +59,7 @@ $(BINARY): $(OBJECTS)
 	@tar -cjf $(BINARY).tar.bz2 $(BINARY).mk \
 	$$(awk -F: '{gsub(/\\/,"",$$2); gsub(/{\s}+/," ",$$2); printf $$2}' \
 	$(DEPENDS) | awk '{for(i=1; i<=NF; i++) print $$i}' | sort | uniq)
+	mv $(BINARY) $(BINARY).tar.bz2 ../bin/
 
 
 -include $(DEPENDS)
