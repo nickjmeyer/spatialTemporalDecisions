@@ -120,6 +120,8 @@ void M1HybridOptim<S,A,M,MP>
   std::fill(w.begin(),w.end(),-1);
   weights.push_back(w);
 
+  weights.push_back(agent.tp.getPar());
+
   int N=weights.size();
   std::priority_queue< std::pair<double,int> > p;
   for(i=0; i<N; i++){
