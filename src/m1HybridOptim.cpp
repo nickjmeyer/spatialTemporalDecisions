@@ -22,8 +22,6 @@ void M1HybridOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-
-
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures0<GravityModel,

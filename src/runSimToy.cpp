@@ -57,26 +57,57 @@ int main(int argc, char ** argv){
   
 
   int mcReps=300,numPoints = s.fD.finalT;
-  njm::message("No Treatment");
-  njm::message(r_an.run(s,an,mcReps,numPoints));
+  // njm::message("No Treatment");
+  // njm::message(r_an.run(s,an,mcReps,numPoints));
   
-  njm::message("Proximal");
-  njm::message(r_ap.run(s,ap,mcReps,numPoints));
+  // njm::message("Proximal");
+  // njm::message(r_ap.run(s,ap,mcReps,numPoints));
   
-  njm::message("Myopic");
-  njm::message(r_am.run(s,am,mcReps,numPoints));
+  // njm::message("Myopic");
+  // njm::message(r_am.run(s,am,mcReps,numPoints));
   
-  njm::message("Rank");
-  njm::message(r_ar_fix.run(s,ar,mcReps,numPoints));
+  // njm::message("Rank");
+  // njm::message(r_ar_fix.run(s,ar,mcReps,numPoints));
   
-  njm::message("Rank Simple");
-  njm::message(r_ar_simple.run(s,ar,om1_simple,mcReps,numPoints));
+  // njm::message("Rank Simple");
+  // njm::message(r_ar_simple.run(s,ar,om1_simple,mcReps,numPoints));
 
-  njm::message("Rank Sgd");
-  njm::message(r_ar_sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+  std::vector<double> aVals,bVals;
+  std::vector<double>::const_iterator aIt;
+  std::vector<double>::const_iterator bIt;
+  aVals.push_back(5);
+  aVals.push_back(15);
+  aVals.push_back(30);
+  aVals.push_back(50);
+  aVals.push_back(100);
+
+  bVals.push_back(1);
+  bVals.push_back(5);
+
+  omp_set_num_threads(63);
   
-  njm::message("Rank Hybrid");
-  njm::message(r_ar_hybrid.run(s,ar,om1_hybrid,mcReps,numPoints));
+  for(aIt = aVals.begin(); aIt != aVals.end(); aIt++){
+    for(bIt = bVals.begin(); bIt != bVals.end(); bIt++){
+
+      om1_sgd.tp.a = (*aIt);
+      om1_hybrid.tp.aSgd = (*aIt);
+
+      om1_sgd.tp.b = (*bIt);
+      om1_hybrid.tp.bSgd = (*bIt);
+
+      om1_sgd.name = "Rank_Sgd_"+njm::toString(om1_sgd.tp.a,"",0,0) +
+	"_"+njm::toString(om1_sgd.tp.b,"",0,0);
+
+      om1_hybrid.name= "Rank_Hybrid_"+njm::toString(om1_hybrid.tp.aSgd,"",0,0) +
+	"_"+njm::toString(om1_hybrid.tp.bSgd,"",0,0);
+
+      njm::message(om1_sgd.name);
+      njm::message(r_ar_sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+  
+      njm::message(om1_hybrid.name);
+      njm::message(r_ar_hybrid.run(s,ar,om1_hybrid,mcReps,numPoints));
+    }
+  }
 
 
   // njm::sett.clean();

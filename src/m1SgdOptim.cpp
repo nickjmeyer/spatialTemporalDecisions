@@ -14,7 +14,7 @@ M1SgdOptimTunePar::M1SgdOptimTunePar(){
   momRate=.5;
 
   a=5;
-  b=5;
+  b=1;
 }
 
 std::vector<double> M1SgdOptimTunePar::getPar() const{
