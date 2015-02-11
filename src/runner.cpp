@@ -152,6 +152,14 @@ template class VanillaRunner<System<EbolaModel,EbolaParam,
 			     ProximalAgent<EbolaModel,EbolaParam> >;
 
 
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     NoTrt<RangeModel,RangeParam> >;
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     ProximalAgent<RangeModel,RangeParam> >;
+
+
 
 template<class S, class A>
 double
@@ -233,6 +241,11 @@ template class FitOnlyRunner<System<EbolaModel,EbolaParam,
 			     RankToyAgent<ToyFeatures1<EbolaModel,
 						       EbolaParam>,
 					  EbolaModel,EbolaParam> >;
+
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     MyopicAgent<RangeModel,RangeParam> >;
+
 
 template <class S, class A>
 double
@@ -337,7 +350,7 @@ OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
-	    M2RandOptim<System<GravityModel,GravityParam,
+	    M2SaOptim<System<GravityModel,GravityParam,
 			       GravityModel,GravityParam>,
 			RankToyAgent<ToyFeatures2<GravityModel,
 						  GravityParam>,
@@ -419,7 +432,7 @@ OptimRunner<System<GravityModel,GravityParam,
 		   RangeModel,RangeParam>,
 	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 			 RangeModel,RangeParam>,
-	    M2RandOptim<System<GravityModel,GravityParam,
+	    M2SaOptim<System<GravityModel,GravityParam,
 			       RangeModel,RangeParam>,
 			RankToyAgent<ToyFeatures2<RangeModel,
 						  RangeParam>,

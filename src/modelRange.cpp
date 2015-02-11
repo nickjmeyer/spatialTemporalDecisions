@@ -104,7 +104,10 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
   RangeParam mPInit;
   std::vector<double> par;
   par.push_back(-3.0);
-  par.push_back(0.025);
+  par.push_back(0.0);
+  par.push_back(0.0);
+  par.push_back(0.0);
+  par.push_back(0.0);
   
   mPInit.putPar(par);
   fit(sD,tD,fD,dD,mP,mPInit);

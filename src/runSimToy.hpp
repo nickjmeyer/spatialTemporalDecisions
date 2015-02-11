@@ -24,7 +24,7 @@
 #include "m1SimpleOptim.hpp"
 #include "m1SgdOptim.hpp"
 #include "m1HybridOptim.hpp"
-#include "m2NmOptim.hpp"
+#include "m2SaOptim.hpp"
 #include "toyFeatures0.hpp"
 #include "toyFeatures1.hpp"
 #include "toyFeatures2.hpp"

@@ -13,7 +13,7 @@
 #include "modelParam.hpp"
 #include "modelParamRange.hpp"
 #include "m1SgdOptim.hpp"
-#include "m2RandOptim.hpp"
+#include "m2SaOptim.hpp"
 #include "rankAgentToy.hpp"
 
 
@@ -37,7 +37,7 @@ class AnchorMan : BaseOptim<S,A,M,MP> {
   AnchorMan();
 
   M1SgdOptim<System<M,MP,M,MP>,A,M,MP> m1Opt;
-  M2RandOptim<System<M,MP,M,MP>,A,F,M,MP> m2Opt;
+  M2SaOptim<System<M,MP,M,MP>,A,F,M,MP> m2Opt;
 
   std::vector<double> m1W,m2W;
 
