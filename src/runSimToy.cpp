@@ -5,8 +5,10 @@ int main(int argc, char ** argv){
 
   typedef GravityModel MG;
   typedef GravityParam PG;
-  typedef GravityModel ME;
-  typedef GravityParam PE;
+  // typedef GravityModel ME;
+  // typedef GravityParam PE;
+  typedef RangeModel ME;
+  typedef RangeParam PE;
 
   typedef System<MG,PG,ME,PE> S;
   
