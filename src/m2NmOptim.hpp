@@ -34,6 +34,8 @@ class M2NmEvalTunePar : public TuneParam{
   double tol; // convergence tolerance
   double rate; // learning rate
   double rateDecay; // learning rate decay
+
+  int numSamp; // number of gaussian samples
 };
 
 
