@@ -1,19 +1,19 @@
-#include "m2NmOptim.hpp"
+#include "m2RandOptim.hpp"
 
 
 
-std::vector<double> M2NmEvalTunePar::getPar() const{
+std::vector<double> M2RandEvalTunePar::getPar() const{
   return std::vector<double> (0);
 }
 
 
 
-void M2NmEvalTunePar::putPar(const std::vector<double> & par){
+void M2RandEvalTunePar::putPar(const std::vector<double> & par){
 }
 
 
 
-template class M2NmOptim<System<GravityModel,GravityParam,
+template class M2RandOptim<System<GravityModel,GravityParam,
 				GravityModel,GravityParam>,
 			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				      GravityModel,GravityParam>,
@@ -21,7 +21,7 @@ template class M2NmOptim<System<GravityModel,GravityParam,
 				     GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
-template class M2NmOptim<System<RangeModel,RangeParam,
+template class M2RandOptim<System<RangeModel,RangeParam,
 				RangeModel,RangeParam>,
 			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 				      RangeModel,RangeParam>,
@@ -29,7 +29,7 @@ template class M2NmOptim<System<RangeModel,RangeParam,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
-template class M2NmOptim<System<GravityModel,GravityParam,
+template class M2RandOptim<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,
 			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 				      RangeModel,RangeParam>,
@@ -41,15 +41,15 @@ template class M2NmOptim<System<GravityModel,GravityParam,
 
 template <class S, class A, class F,
 	  class M,class MP>
-M2NmOptim<S,A,F,M,MP>::M2NmOptim(){
-  name = "M2Nm";
+M2RandOptim<S,A,F,M,MP>::M2RandOptim(){
+  name = "M2Rand";
 }
 
 
 
 template <class S, class A, class F,
 	  class M,class MP>
-void M2NmOptim<S,A,F,M,MP>::
+void M2RandOptim<S,A,F,M,MP>::
 optim(const S & system,
       A & agent){
 
@@ -86,7 +86,7 @@ optim(const S & system,
 }
 
 
-template class M2NmEval<System<GravityModel,GravityParam,
+template class M2RandEval<System<GravityModel,GravityParam,
 			       GravityModel,GravityParam>,
 			RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam>,
@@ -96,7 +96,7 @@ template class M2NmEval<System<GravityModel,GravityParam,
 
 template <class S, class A, class F,
 	  class M,class MP>
-M2NmEval<S,A,F,M,MP>::M2NmEval(){
+M2RandEval<S,A,F,M,MP>::M2RandEval(){
   tp.polReps = 1;
   // radius = 50;
   tp.numNeigh = 5;
@@ -111,13 +111,15 @@ M2NmEval<S,A,F,M,MP>::M2NmEval(){
   tp.tol = .005;
   tp.rate = 5;
   tp.rateDecay = .975;
+
+  tp.numSamp = 100;
 }
 
 
 
 template <class S, class A, class F,
 	  class M,class MP>
-void M2NmEval<S,A,F,M,MP>::
+void M2RandEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
   int i,j;
   
@@ -145,7 +147,7 @@ preCompData(const SimData & sD, const FixedData & fD){
 
 template <class S, class A, class F,
 	  class M,class MP>
-void M2NmEval<S,A,F,M,MP>::
+void M2RandEval<S,A,F,M,MP>::
 bellResFixData(const SimData & sD,
 	       const TrtData & tD,
 	       const FixedData & fD,
@@ -265,7 +267,7 @@ bellResFixData(const SimData & sD,
 
 template <class S, class A, class F,
 	  class M,class MP>
-Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
+Eigen::SparseMatrix<double> M2RandEval<S,A,F,M,MP>::
 buildSpatialPen(const SimData & sD, const FixedData & fD){
   int i,j,k,node0,node1;
   Eigen::SparseMatrix<double> H,G,spatP;
@@ -300,7 +302,7 @@ buildSpatialPen(const SimData & sD, const FixedData & fD){
 
 template <class S, class A, class F,
 	  class M,class MP>
-Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
+Eigen::SparseMatrix<double> M2RandEval<S,A,F,M,MP>::
 buildL2Pen(const int numNodes){
   Eigen::SparseMatrix<double> l2P((2*K-1)*numNodes,(2*K-1)*numNodes);
   int i,j;
@@ -315,7 +317,7 @@ buildL2Pen(const int numNodes){
 
 template <class S, class A, class F,
 	  class M,class MP>
-std::vector<double> M2NmEval<S,A,F,M,MP>::
+std::vector<double> M2RandEval<S,A,F,M,MP>::
 feat2Vec(const int numNodes,
 	 const std::vector<int> & status){
 
@@ -350,7 +352,7 @@ feat2Vec(const int numNodes,
 template <class S, class A, class F,
 	  class M,class MP>
 inline Eigen::SparseMatrix<double>
-M2NmEval<S,A,F,M,MP>::
+M2RandEval<S,A,F,M,MP>::
 featToPhi(const std::vector<double> & feat, const int numNodes){
 
   int n,i,j,dim=(2*K-1)*numNodes;
@@ -403,7 +405,7 @@ featToPhi(const std::vector<double> & feat, const int numNodes){
 
 template <class S, class A, class F,
 	  class M,class MP>
-void M2NmEval<S,A,F,M,MP>::
+void M2RandEval<S,A,F,M,MP>::
 bellResPolData(const int time,
 	       const FixedData & fD,
 	       const M & m,
@@ -475,7 +477,7 @@ bellResPolData(const int time,
 
 template <class S, class A, class F,
 	  class M,class MP>
-void M2NmEval<S,A,F,M,MP>::
+void M2RandEval<S,A,F,M,MP>::
 solve(){
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > simplicialLDLT;
   simplicialLDLT.compute(D.transpose()*D + tp.lambda*P);
@@ -487,7 +489,7 @@ solve(){
 
 template <class S, class A, class F,
 	  class M,class MP>
-double M2NmEval<S,A,F,M,MP>::
+double M2RandEval<S,A,F,M,MP>::
 bellRes(){
   return (R + D*beta).squaredNorm();
 }
@@ -496,7 +498,7 @@ bellRes(){
 
 template <class S, class A, class F,
 	  class M,class MP>
-double M2NmEval<S,A,F,M,MP>::
+double M2RandEval<S,A,F,M,MP>::
 qFn(const SimData & sD,
     TrtData & tD,
     const FixedData & fD,

@@ -337,6 +337,21 @@ OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
+	    M2RandOptim<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
+			RankToyAgent<ToyFeatures2<GravityModel,
+						  GravityParam>,
+				     GravityModel,GravityParam>,
+			FeaturesInt<ToyFeatures2<GravityModel,
+						 GravityParam>,
+				    GravityModel,GravityParam>,
+			GravityModel,GravityParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
+	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>,
 	    AnchorMan<System<GravityModel,GravityParam,
 			     GravityModel,GravityParam>,
 		      RankToyAgent<ToyFeatures2<GravityModel,
@@ -398,6 +413,21 @@ OptimRunner<System<GravityModel,GravityParam,
 						    RangeParam>,
 				       RangeModel,RangeParam>,
 			  RangeModel,RangeParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   RangeModel,RangeParam>,
+	    RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>,
+	    M2RandOptim<System<GravityModel,GravityParam,
+			       RangeModel,RangeParam>,
+			RankToyAgent<ToyFeatures2<RangeModel,
+						  RangeParam>,
+				     RangeModel,RangeParam>,
+			FeaturesInt<ToyFeatures2<RangeModel,
+						 RangeParam>,
+				    RangeModel,RangeParam>,
+			RangeModel,RangeParam> >;
 
 template class
 OptimRunner<System<GravityModel,GravityParam,

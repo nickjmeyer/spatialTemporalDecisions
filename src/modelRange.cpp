@@ -158,8 +158,8 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
     par.at(i) = gsl_vector_get(s->x,i);
   mP.putPar(par);
 
-  if(sD.time <= fD.trtStart)
-    mP.trtPre = mP.trtAct = 4.0;
+  // if(sD.time <= fD.trtStart)
+  //   mP.trtPre = mP.trtAct = 4.0;
 
   gsl_multimin_fminimizer_free(s);
   gsl_vector_free(x);

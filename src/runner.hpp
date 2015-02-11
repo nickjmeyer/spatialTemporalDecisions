@@ -16,7 +16,7 @@
 #include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "m1SgdOptim.hpp"
-#include "m2NmOptim.hpp"
+#include "m2RandOptim.hpp"
 #include "m1SimpleOptim.hpp"
 #include "m1HybridOptim.hpp"
 
