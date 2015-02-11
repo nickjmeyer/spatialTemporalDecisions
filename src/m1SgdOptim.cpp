@@ -13,7 +13,7 @@ M1SgdOptimTunePar::M1SgdOptimTunePar(){
 
   momRate=.5;
 
-  a=5;
+  a=30;
   b=1;
 }
 
