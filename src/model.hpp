@@ -10,7 +10,7 @@
 #include "modelParam.hpp"
 #include "mcmc.hpp"
 
-template<class ModelParam>
+template<class MP>
 class BaseModel {
  public:
 
@@ -18,26 +18,26 @@ class BaseModel {
 		    const TrtData & tD,
 		    const FixedData & fD,
 		    const DynamicData & dD,
-		    ModelParam & mP) const;
+		    MP & mP) const;
 
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD,
-			  const ModelParam & mP) const = 0;
+			  const MP & mP) const = 0;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			ModelParam & mP) const;
+			MP & mP) const;
   
   virtual void update(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD,
-		      ModelParam & mP);
+		      MP & mP);
 };
 
 

@@ -5,27 +5,54 @@
 
 #include <vector>
 #include <algorithm>
+#include "utilities.hpp"
+#include "data.hpp"
+#include "system.hpp"
+#include "model.hpp"
+#include "modelRange.hpp"
+#include "modelParam.hpp"
+#include "modelParamRange.hpp"
+#include "m1HybridOptim.hpp"
 #include "m2NmOptim.hpp"
+#include "rankAgentToy.hpp"
 
 
-template <class System, class Agent>
-class AnchorMan {
+class AnchorManTunePar : public TuneParam {
  public:
-  AnchorMan();
-  
-  void addPar(const std::vector<double> & par);
-  std::vector<std::vector<double> > parHist;
+  AnchorManTunePar();
 
+  std::vector<double> getPar() const;
+  void putPar(const std::vector<double> & par);
+
+  int numSamples;
+  double cutoff;
+  int freq;
 };
 
 
+template <class S, class A, class F,
+	  class M, class MP>
+class AnchorMan : BaseOptim<S,A,M,MP> {
+ public:
+  AnchorMan();
 
-/* Make a switch optim that will cycle through the parHist as the "optimization"
-   function so that existing runners can be used.  The runner to use would be
-   the OptimRunner, but this class saves results to disk.  Re-write another
-   OptimRunner that does not save any results.
-*/
+  M1HybridOptim<System<M,MP,M,MP>,A,M,MP> m1Opt;
+  M2NmOptim<System<M,MP,M,MP>,A,F,M,MP> m2Opt;
 
+  std::vector<double> m1W,m2W;
+
+  virtual void optim(const S & system,
+		     A & agent);
+
+  int toSwitch(System<M,MP,M,MP> & system,
+	       A & agent, const int T);
+  
+  AnchorManTunePar tp;
+
+  int switched;
+
+  std::string name;
+};
 
 
 

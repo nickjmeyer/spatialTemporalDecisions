@@ -3,6 +3,9 @@
 template class System<GravityModel,GravityParam,
 		      GravityModel,GravityParam>;
 
+template class System<GravityModel,GravityParam,
+		      RangeModel,RangeParam>;
+
 template class System<RangeModel,RangeParam,
 		      RangeModel,RangeParam>;
 
@@ -10,25 +13,25 @@ template class System<EbolaModel,EbolaParam,
 		      EbolaModel,EbolaParam>;
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-System<ModelGen, ModelParamGen,
-       ModelEst, ModelParamEst>::System(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(){
   initialize();
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-System<ModelGen, ModelParamGen,
-       ModelEst, ModelParamEst>::System(const SimData & sD,
-					const TrtData & tD,
-					const FixedData & fD,
-					const DynamicData & dD,
-					const ModelGen & modelGen,
-					const ModelEst & modelEst,
-					const ModelParamGen & paramGen,
-					const ModelParamEst & paramEst){
+template <class MG, class MPG,
+	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD,
+			const MG & modelGen,
+			const ME & modelEst,
+			const MPG & paramGen,
+			const MPE & paramEst){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
@@ -37,15 +40,14 @@ System<ModelGen, ModelParamGen,
   this->modelEst = modelEst;
   this->paramGen_r = paramGen;
   this->paramEst_r = paramEst;
-
   reset();
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>::reset(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::reset(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
@@ -55,10 +57,10 @@ void System<ModelGen, ModelParamGen,
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>::checkPoint(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::checkPoint(){
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
@@ -68,10 +70,10 @@ void System<ModelGen, ModelParamGen,
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>::initialize(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.dist,njm::sett.srcExt("d.txt"));
@@ -134,10 +136,10 @@ void System<ModelGen, ModelParamGen,
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-void System<ModelGen,ModelParamGen,
-	    ModelEst,ModelParamEst>::preCompData(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG,MPG,
+	    ME,MPE>::preCompData(){
   int i,j,tot;
   
   // subGraph only K steps out
@@ -185,19 +187,19 @@ void System<ModelGen,ModelParamGen,
 }
 
 
-template <class ModelGen, class ModelParamGen,
-	  class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>::nextPoint(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::nextPoint(){
   modelGen.infProbs(sD,tD,fD,dD,paramGen);
   nextPoint(paramGen.infProbs);
 }
 
 
-template<class ModelGen, class ModelParamGen,
-	 class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>
+template<class MG, class MPG,
+	 class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>
 ::nextPoint(const std::vector<double> & infProbs){
   int i;
   for(i=0; i<sD.numInfected; i++)
@@ -235,10 +237,10 @@ void System<ModelGen, ModelParamGen,
 
 
 
-template<class ModelGen, class ModelParamGen,
-	 class ModelEst, class ModelParamEst>
-void System<ModelGen, ModelParamGen,
-	    ModelEst, ModelParamEst>::updateStatus(){
+template<class MG, class MPG,
+	 class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::updateStatus(){
   int i,j,k,isInf;
   for(i=0,j=0,k=0; i<fD.numNodes; i++){
     if(j == sD.numInfected)
@@ -268,10 +270,10 @@ void System<ModelGen, ModelParamGen,
 }
 
 
-template<class ModelGen, class ModelParamGen,
-	 class ModelEst, class ModelParamEst>
-double System<ModelGen, ModelParamGen,
-	      ModelEst, ModelParamEst>::value(){
+template<class MG, class MPG,
+	 class ME, class MPE>
+double System<MG, MPG,
+	      ME, MPE>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 
@@ -285,13 +287,13 @@ double System<ModelGen, ModelParamGen,
 template class SystemLight<GravityModel,GravityParam>;
 
 
-template<class Model, class ModelParam>
-SystemLight<Model, ModelParam>::SystemLight(const SimData & sD,
-					    const TrtData & tD,
-					    const FixedData & fD,
-					    const DynamicData & dD,
-					    const Model & modelGen,
-					    const ModelParam & paramGen){
+template<class M, class MP>
+SystemLight<M, MP>::SystemLight(const SimData & sD,
+				const TrtData & tD,
+				const FixedData & fD,
+				const DynamicData & dD,
+				const M & modelGen,
+				const MP & paramGen){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
@@ -303,8 +305,8 @@ SystemLight<Model, ModelParam>::SystemLight(const SimData & sD,
 }
 
 
-template<class Model, class ModelParam>
-void SystemLight<Model, ModelParam>::reset(){
+template<class M, class MP>
+void SystemLight<M, MP>::reset(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
@@ -314,9 +316,9 @@ void SystemLight<Model, ModelParam>::reset(){
 
 
 
-template<class Model, class ModelParam>
+template<class M, class MP>
 void
-SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
+SystemLight<M, MP>::nextPoint(const int isFinal){
   int i;
   for(i=0; i<sD.numInfected; i++)
     sD.timeInf.at(sD.infected.at(i))++;
@@ -349,8 +351,8 @@ SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
 
 
 
-template<class Model, class ModelParam>
-double SystemLight<Model, ModelParam>::value(){
+template<class M, class MP>
+double SystemLight<M, MP>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 

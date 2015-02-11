@@ -21,25 +21,45 @@ template class M2NmOptim<System<GravityModel,GravityParam,
 				     GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
+template class M2NmOptim<System<RangeModel,RangeParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
+
+template class M2NmOptim<System<GravityModel,GravityParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-M2NmOptim<System,Agent,Features,Model,ModelParam>::M2NmOptim(){
+
+template <class S, class A, class F,
+	  class M,class MP>
+M2NmOptim<S,A,F,M,MP>::M2NmOptim(){
   name = "M2Nm";
 }
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmOptim<System,Agent,Features,Model,ModelParam>::
-optim(System system,
-      Agent & agent){
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmOptim<S,A,F,M,MP>::
+optim(const S & system,
+      A & agent){
 
-  qEval.preCompData(system.sD,system.fD);
-  qEval.bellResFixData(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
+
+  qEval.preCompData(s.sD,s.fD);
+  qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,
+		       s.modelEst,s.paramEst);
 
   double q,bestQ=std::numeric_limits<double>::lowest();
   std::vector<double> w,bestW;
@@ -74,9 +94,9 @@ template class M2NmEval<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			GravityModel,GravityParam>;
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-M2NmEval<System,Agent,Features,Model,ModelParam>::M2NmEval(){
+template <class S, class A, class F,
+	  class M,class MP>
+M2NmEval<S,A,F,M,MP>::M2NmEval(){
   tp.polReps = 1;
   // radius = 50;
   tp.numNeigh = 5;
@@ -95,9 +115,9 @@ M2NmEval<System,Agent,Features,Model,ModelParam>::M2NmEval(){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
   int i,j;
   
@@ -123,15 +143,15 @@ preCompData(const SimData & sD, const FixedData & fD){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 bellResFixData(const SimData & sD,
 	       const TrtData & tD,
 	       const FixedData & fD,
 	       const DynamicData & dD,
-	       const Model & m,
-	       ModelParam & mP){
+	       const M & m,
+	       MP & mP){
   int dim = (2*K-1)*fD.numNodes;
   // prep containers
   R.resize(dim);
@@ -243,9 +263,9 @@ bellResFixData(const SimData & sD,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-Eigen::SparseMatrix<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
 buildSpatialPen(const SimData & sD, const FixedData & fD){
   int i,j,k,node0,node1;
   Eigen::SparseMatrix<double> H,G,spatP;
@@ -278,9 +298,9 @@ buildSpatialPen(const SimData & sD, const FixedData & fD){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-Eigen::SparseMatrix<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
 buildL2Pen(const int numNodes){
   Eigen::SparseMatrix<double> l2P((2*K-1)*numNodes,(2*K-1)*numNodes);
   int i,j;
@@ -293,9 +313,9 @@ buildL2Pen(const int numNodes){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-std::vector<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+std::vector<double> M2NmEval<S,A,F,M,MP>::
 feat2Vec(const int numNodes,
 	 const std::vector<int> & status){
 
@@ -327,10 +347,10 @@ feat2Vec(const int numNodes,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
+template <class S, class A, class F,
+	  class M,class MP>
 inline Eigen::SparseMatrix<double>
-M2NmEval<System,Agent,Features,Model,ModelParam>::
+M2NmEval<S,A,F,M,MP>::
 featToPhi(const std::vector<double> & feat, const int numNodes){
 
   int n,i,j,dim=(2*K-1)*numNodes;
@@ -381,14 +401,14 @@ featToPhi(const std::vector<double> & feat, const int numNodes){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 bellResPolData(const int time,
 	       const FixedData & fD,
-	       const Model & m,
-	       ModelParam & mP,
-	       Agent a){
+	       const M & m,
+	       MP & mP,
+	       A a){
 
   int dim = (2*K-1)*fD.numNodes;
   Eigen::SparseMatrix<double> phi;
@@ -453,9 +473,9 @@ bellResPolData(const int time,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 solve(){
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > simplicialLDLT;
   simplicialLDLT.compute(D.transpose()*D + tp.lambda*P);
@@ -465,25 +485,25 @@ solve(){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-double M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+double M2NmEval<S,A,F,M,MP>::
 bellRes(){
   return (R + D*beta).squaredNorm();
 }
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-double M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+double M2NmEval<S,A,F,M,MP>::
 qFn(const SimData & sD,
     TrtData & tD,
     const FixedData & fD,
     const DynamicData & dD,
-    const Model & m,
-    ModelParam & mP,
-    Agent a){
+    const M & m,
+    MP & mP,
+    A a){
   // now evaluate Q-function
   Eigen::SparseMatrix<double> phi;
   phi.resize(fD.numNodes,fD.numNodes*(2*K-1));
