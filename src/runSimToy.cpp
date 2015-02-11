@@ -65,7 +65,7 @@ int main(int argc, char ** argv){
   njm::message(r_ar_m2rand.run(s,ar,om2_rand,mcReps,numPoints));
 
 
-  njm::sett.clean();
+  // njm::sett.clean();
   
   return 0;
 }
