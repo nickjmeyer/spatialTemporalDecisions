@@ -47,14 +47,14 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
     for(j=0; j<sD.numInfected; j++){
       if(tD.a.at(sD.infected.at(j)))
 	sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
-						::min(),j));
+						::lowest(),j));
       else
 	sortInfected.push(std::pair<double,int>(infRanks(j),j));
     }
     for(j=0; j<sD.numNotInfec; j++){
       if(tD.p.at(sD.notInfec.at(j)))
 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
-						::min(),j));
+						::lowest(),j));
       else
 	sortNotInfec.push(std::pair<double,int>(notRanks(j),j));
     }

@@ -7,7 +7,7 @@ Design::Design(){
 
 
 void Design::add(const std::string var, const double val, const double inc,
-		 const double lower = std::numeric_limits<double>::min(),
+		 const double lower = std::numeric_limits<double>::lower(),
 		 const double upper = std::numeric_limits<double>::max()){
   numVar++;
   vars.push_back(var);

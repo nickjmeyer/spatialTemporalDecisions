@@ -57,32 +57,38 @@ optim(const S & system,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  qEval.preCompData(s.sD,s.fD);
-  qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,
-		       s.modelEst,s.paramEst);
-
-  double q,bestQ=std::numeric_limits<double>::lowest();
-  std::vector<double> w,bestW;
-  
-  int i,j;
-  for(i=0; i<qEval.tp.numSamp; i++){
+  double sd = qEval.tp.sdStart;
+  std::vector<double> w;
+  std::vector<double> bestW;
+  double q,bestQ;
+  bestQ = std::numeric_limits<double>::lowest();
+  bestW.resize(agent.f.numFeatures);
+  std::fill(bestW.begin(),bestW.end(),0.0);
+  int i;  
+  while(sd > qEval.tp.sdStop){
     w.clear();
-    for(j=0; j<agent.f.numFeatures; j++)
-      w.push_back(njm::rnorm01());
+    for(i=0; i<agent.f.numFeatures; i++)
+      w.push_back(bestW.at(i) +sd*njm::rnorm01());
+    njm::l2norm(w);
     agent.tp.putPar(w);
 
-    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,
-			 s.paramEst,agent);
+    qEval.bellResPolData(system.sD.time,system.fD,
+			 system.model,system.estParam,agent);
     qEval.solve();
-    q=qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,
-		s.paramEst,agent);
+    q=qEval.qFn(system.sD,system.tD,system.fD,system.dD,
+		system.model,system.estParam,agent);
+    
     if(q > bestQ){
-      q = bestQ;
+      bestQ = q;
       bestW = w;
+      sd*=qEval.tp.sdJump;
+    }
+    else{
+      sd*=qEval.tp.sdDecay;
     }
   }
-
-  agent.tp.putPar(w);
+  
+  agent.tp.putPar(bestW);
 }
 
 

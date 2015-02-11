@@ -35,7 +35,10 @@ class M2NmEvalTunePar : public TuneParam{
   double rate; // learning rate
   double rateDecay; // learning rate decay
 
-  int numSamp; // number of gaussian samples
+  double sdStart;
+  double sdStop;
+  double sdDecay;
+  double sdJump;
 };
 
 

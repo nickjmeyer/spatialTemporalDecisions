@@ -127,7 +127,7 @@ namespace njm{
 
 
   double l2norm(const std::vector<double> & v0,
-		  const std::vector<double> & v1);
+		const std::vector<double> & v1);
 
   double l2norm(std::vector<double> & v);
 
