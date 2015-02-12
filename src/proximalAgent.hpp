@@ -26,7 +26,7 @@ class ProximalAgent : BaseAgent<M, MP> {
   int numAct;
   int numPre;
 
-  static const std::string name;
+  static std::string name;
 };
 
 

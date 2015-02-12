@@ -9,7 +9,7 @@ template class MyopicAgent<EbolaModel,EbolaParam>;
 
 
 template <class M, class MP>
-const std::string MyopicAgent<M,MP>::name = "myopic";
+std::string MyopicAgent<M,MP>::name = "myopic";
 
 template <class M, class MP>
 void MyopicAgent<M,MP>::applyTrt(const SimData & sD,

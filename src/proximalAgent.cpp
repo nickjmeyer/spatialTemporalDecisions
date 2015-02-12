@@ -8,7 +8,7 @@ template class ProximalAgent<RangeModel,RangeParam>;
 template class ProximalAgent<EbolaModel,EbolaParam>;
 
 template<class M, class MP>
-const std::string ProximalAgent<M,MP>::name = "proximal";
+std::string ProximalAgent<M,MP>::name = "proximal";
 
 template <class M, class MP>
 void ProximalAgent<M,MP>::applyTrt(const SimData & sD,

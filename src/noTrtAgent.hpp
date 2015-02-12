@@ -15,7 +15,7 @@ class NoTrt : public BaseAgent<M,MP> {
 		const M & model,
 		MP & modelParam);
 
-  static const std::string name;
+  static std::string name;
 };
 
 
