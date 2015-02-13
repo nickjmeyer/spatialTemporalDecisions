@@ -19,6 +19,8 @@ template <class F, class M, class MP>
 RankToyAgent<F,M,MP>::RankToyAgent(){
   tp.weights.ones(4);
   tp.numChunks = 3;
+
+  tp.jitter = 0.25;
   
   f.tp.valReps = 10;
   
@@ -44,14 +46,22 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 
   
   std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
+
+  arma::colvec jitter;
+  jitter.zeros(f.numFeatures);
   
   int i,j,node0,addPre,addAct;
   int cI=0,cN=0;
   for(i=0; i<tp.numChunks; i++){
 
-    infRanks = f.infFeat * tp.weights;
-    notRanks = f.notFeat * tp.weights;
+    for(j=0; j<f.numFeatures; j++)
+      jitter(j) = tp.jitter*njm::rnorm01();
+    
+    infRanks = f.infFeat * (tp.weights + jitter);
+    notRanks = f.notFeat * (tp.weights + jitter);
 
+    sortInfected = std::priority_queue<std::pair<double,int> > ();
+    sortNotInfec = std::priority_queue<std::pair<double,int> > ();
 
     for(j=0; j<sD.numInfected; j++){
       if(tD.a.at(sD.infected.at(j)))
@@ -60,6 +70,7 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
       else
 	sortInfected.push(std::pair<double,int>(infRanks(j),j));
     }
+    
     for(j=0; j<sD.numNotInfec; j++){
       if(tD.p.at(sD.notInfec.at(j)))
 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
@@ -71,7 +82,7 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 
     addAct = (int)((i+1)*numAct/std::min(tp.numChunks,numAct)) -
       (int)(i*numAct/std::min(tp.numChunks,numAct));
-    for(; cI<(cI+addAct) && cI<numAct; cI++){
+    for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=sortInfected.top().second;
       tD.a.at(sD.infected.at(node0)) = 1;
       sortInfected.pop();
@@ -79,8 +90,8 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
     }
     
     addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
-	     (int)(i*numPre/std::min(tp.numChunks,numPre)); 
-    for(; cN<(cN+addPre) && cN<numPre; cN++){
+	     (int)(i*numPre/std::min(tp.numChunks,numPre));
+    for(j = 0; j < addPre && cN<numPre; cN++,j++){
       node0=sortNotInfec.top().second;
       tD.p.at(sD.notInfec.at(node0)) = 1;
       sortNotInfec.pop();

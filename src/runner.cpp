@@ -159,6 +159,12 @@ template class VanillaRunner<System<GravityModel,GravityParam,
 				    RangeModel,RangeParam>,
 			     ProximalAgent<RangeModel,RangeParam> >;
 
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     RankToyAgent<ToyFeatures2<GravityModel,
+						       GravityParam>,
+					  GravityModel,GravityParam> >;
+
 
 
 template<class S, class A>

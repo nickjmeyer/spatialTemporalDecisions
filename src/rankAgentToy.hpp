@@ -25,6 +25,8 @@ class RankToyTuneParam : public TuneParam {
   arma::colvec weights;
 
   int numChunks;
+
+  double jitter;
 };
 
 

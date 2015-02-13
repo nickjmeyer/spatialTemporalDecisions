@@ -115,7 +115,7 @@ template class M2SaEval<System<GravityModel,GravityParam,
 template <class S, class A, class F,
 	  class M,class MP>
 M2SaEval<S,A,F,M,MP>::M2SaEval(){
-  tp.polReps = 1;
+  tp.polReps = 10;
   // radius = 50;
   tp.numNeigh = 5;
 

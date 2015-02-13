@@ -12,7 +12,6 @@
 #include "noTrtAgent.hpp"
 #include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
-#include "rankAgent.hpp"
 #include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "m1SgdOptim.hpp"
