@@ -6,6 +6,9 @@ template class FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 template class FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 			   RangeModel,RangeParam>;
 
+template class FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
+			   CaveModel,CaveParam>;
+
 
 template <class F, class M, class MP>
 int FeaturesInt<F,M,MP>::numFeatures = F::numFeatures + 1;

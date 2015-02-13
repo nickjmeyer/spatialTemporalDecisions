@@ -5,6 +5,8 @@ template class NoTrt<GravityModel,GravityParam>;
 
 template class NoTrt<RangeModel,RangeParam>;
 
+template class NoTrt<CaveModel,CaveParam>;
+
 template class NoTrt<EbolaModel,EbolaParam>;
 
 template<class M, class MP>

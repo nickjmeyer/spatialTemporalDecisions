@@ -11,6 +11,9 @@ template class RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 template class RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 			    RangeModel,RangeParam>;
 
+template class RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			    CaveModel,CaveParam>;
+
 template class RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
 			    EbolaModel,EbolaParam>;
 

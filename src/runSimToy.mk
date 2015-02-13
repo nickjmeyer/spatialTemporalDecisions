@@ -28,7 +28,9 @@ OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
 	anchorMan.o \
 	features.o featuresInt.o \
 	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
-	modelEbola.o modelParamEbola.o modelRange.o modelParamRange.o \
+	modelEbola.o modelParamEbola.o \
+	modelRange.o modelParamRange.o \
+	modelCave.o modelParamCave.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o mcmc.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))

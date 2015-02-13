@@ -41,6 +41,14 @@ template class AnchorMan<System<GravityModel,GravityParam,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
+template class AnchorMan<System<GravityModel,GravityParam,
+				CaveModel,CaveParam>,
+			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				      CaveModel,CaveParam>,
+			 FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
+				     CaveModel,CaveParam>,
+			 CaveModel,CaveParam>;
+
 
 template <class S, class A, class F,
 	  class M, class MP>

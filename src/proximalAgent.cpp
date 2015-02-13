@@ -5,6 +5,8 @@ template class ProximalAgent<GravityModel,GravityParam>;
 
 template class ProximalAgent<RangeModel,RangeParam>;
 
+template class ProximalAgent<CaveModel,CaveParam>;
+
 template class ProximalAgent<EbolaModel,EbolaParam>;
 
 template<class M, class MP>

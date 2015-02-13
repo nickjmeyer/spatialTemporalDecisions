@@ -84,7 +84,7 @@ int main(int argc, char ** argv){
   }
 
 
-  // misspecified models
+  // misspecified models (Range)
   {
 
     typedef GravityModel MG;
@@ -127,30 +127,101 @@ int main(int argc, char ** argv){
 
 
     int mcReps=300,numPoints = s.fD.finalT;
-    am.name += "_miss";
+    am.name += "_range";
     njm::message("Myopic");
     njm::message(r_am.run(s,am,mcReps,numPoints));
   
-    ar.name = name + "_miss";
+    ar.name = name + "_range";
     ar.tp.jitter = 0.00;
     njm::message("Rank M1");
     njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
-    ar.name = name + "_rand" + "_miss";
+    ar.name = name + "_rand" + "_range";
     ar.tp.jitter = 0.25;
     njm::message("Rank M1 random");
     njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
-    ar.name = name + "_miss";
+    ar.name = name + "_range";
     ar.tp.jitter = 0.00;
     njm::message("Rank M2");
     njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
 
-    ar.name = name + "_rand" + "_miss";
+    ar.name = name + "_rand" + "_range";
     ar.tp.jitter = 0.25;
     njm::message("Rank M2 random");
     njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
   }
+
+
+
+  // misspecified models (Cave)
+  {
+
+    typedef GravityModel MG;
+    typedef GravityParam PG;
+  
+    typedef CaveModel ME;
+    typedef CaveParam PE;
+
+    typedef System<MG,PG,ME,PE> S;
+  
+    typedef ToyFeatures2<ME,PE> F;
+    typedef FeaturesInt<F,ME,PE> FI;
+  
+    typedef MyopicAgent<ME,PE>  AM;
+    typedef RankToyAgent<F,ME,PE> AR;
+
+    typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
+    typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+
+    typedef FitOnlyRunner<S,AM> R_AM;
+    typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
+    typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+
+    // system
+    S s;
+
+    // agents
+    AM am;
+    AR ar;
+    std::string name = ar.name;
+    
+    // optim
+    OM1_Sgd om1_sgd;
+    OM2_Sa om2_sa;
+
+    // runners
+    R_AM r_am;
+    R_AR_M1Sgd r_ar_m1sgd;
+    R_AR_M2Sa r_ar_m2sa;
+
+
+    int mcReps=300,numPoints = s.fD.finalT;
+    am.name += "_cave";
+    njm::message("Myopic");
+    njm::message(r_am.run(s,am,mcReps,numPoints));
+  
+    ar.name = name + "_cave";
+    ar.tp.jitter = 0.00;
+    njm::message("Rank M1");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    ar.name = name + "_rand" + "_cave";
+    ar.tp.jitter = 0.25;
+    njm::message("Rank M1 random");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    ar.name = name + "_cave";
+    ar.tp.jitter = 0.00;
+    njm::message("Rank M2");
+    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+
+    ar.name = name + "_rand" + "_cave";
+    ar.tp.jitter = 0.25;
+    njm::message("Rank M2 random");
+    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+  }
+  
 
   // njm::sett.clean();
   

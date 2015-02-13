@@ -53,6 +53,18 @@ template class M1SgdOptim<System<GravityModel,GravityParam,
 				       RangeModel,RangeParam>,
 			  RangeModel,RangeParam>;
 
+template class M1SgdOptim<System<GravityModel,GravityParam,
+				 CaveModel,CaveParam>,
+			  RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				       CaveModel,CaveParam>,
+			  CaveModel,CaveParam>;
+
+template class M1SgdOptim<System<CaveModel,CaveParam,
+				 CaveModel,CaveParam>,
+			  RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				       CaveModel,CaveParam>,
+			  CaveModel,CaveParam>;
+
 template class M1SgdOptim<System<EbolaModel,EbolaParam,
 				 EbolaModel,EbolaParam>,
 			  RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,

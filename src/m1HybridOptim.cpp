@@ -56,6 +56,13 @@ template class M1HybridOptim<System<GravityModel,GravityParam,
 					  RangeModel,RangeParam>,
 			     RangeModel,RangeParam>;
 
+template class M1HybridOptim<System<GravityModel,GravityParam,
+				    CaveModel,CaveParam>,
+			     RankToyAgent<ToyFeatures2<CaveModel,
+						       CaveParam>,
+					  CaveModel,CaveParam>,
+			     CaveModel,CaveParam>;
+
 
 template class M1HybridOptim<System<EbolaModel,EbolaParam,
 				    EbolaModel,EbolaParam>,

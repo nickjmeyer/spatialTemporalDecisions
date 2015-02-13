@@ -29,6 +29,14 @@ template class M2SaOptim<System<RangeModel,RangeParam,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
+template class M2SaOptim<System<CaveModel,CaveParam,
+				CaveModel,CaveParam>,
+			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				      CaveModel,CaveParam>,
+			 FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
+				     CaveModel,CaveParam>,
+			 CaveModel,CaveParam>;
+
 template class M2SaOptim<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,
 			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
@@ -36,6 +44,14 @@ template class M2SaOptim<System<GravityModel,GravityParam,
 			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
+
+template class M2SaOptim<System<GravityModel,GravityParam,
+				CaveModel,CaveParam>,
+			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				      CaveModel,CaveParam>,
+			 FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
+				     CaveModel,CaveParam>,
+			 CaveModel,CaveParam>;
 
 
 

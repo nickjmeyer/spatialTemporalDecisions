@@ -6,8 +6,14 @@ template class System<GravityModel,GravityParam,
 template class System<GravityModel,GravityParam,
 		      RangeModel,RangeParam>;
 
+template class System<GravityModel,GravityParam,
+		      CaveModel,CaveParam>;
+
 template class System<RangeModel,RangeParam,
 		      RangeModel,RangeParam>;
+
+template class System<CaveModel,CaveParam,
+		      CaveModel,CaveParam>;
 
 template class System<EbolaModel,EbolaParam,
 		      EbolaModel,EbolaParam>;

@@ -8,7 +8,6 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "rankAgent.hpp"
 #include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"

@@ -9,9 +9,11 @@
 #include "modelParam.hpp"
 #include "modelParamEbola.hpp"
 #include "modelParamRange.hpp"
+#include "modelParamCave.hpp"
 #include "model.hpp"
 #include "modelEbola.hpp"
 #include "modelRange.hpp"
+#include "modelCave.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

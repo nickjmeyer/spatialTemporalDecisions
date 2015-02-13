@@ -3,6 +3,8 @@
 
 template class MyopicAgent<GravityModel,GravityParam>;
 
+template class MyopicAgent<CaveModel,CaveParam>;
+
 template class MyopicAgent<RangeModel,RangeParam>;
 
 template class MyopicAgent<EbolaModel,EbolaParam>;

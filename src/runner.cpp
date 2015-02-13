@@ -36,6 +36,9 @@ template class PlainRunner<System<GravityModel,GravityParam,
 			   NoTrt<GravityModel,GravityParam> >;
 template class PlainRunner<System<GravityModel,GravityParam,
 				  GravityModel,GravityParam>,
+			   ProximalAgent<GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
 			   RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
 					GravityModel,GravityParam> >;
 template class PlainRunner<System<GravityModel,GravityParam,
@@ -65,6 +68,18 @@ template class PlainRunner<System<GravityModel,GravityParam,
 				  RangeModel,RangeParam>,
 			   RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
 					RangeModel,RangeParam> >;
+
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   NoTrt<CaveModel,CaveParam> >;
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   ProximalAgent<CaveModel,CaveParam> >;
+
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+					CaveModel,CaveParam> >;
 
 
 template class PlainRunner<System<EbolaModel,EbolaParam,
@@ -228,6 +243,9 @@ VanillaRunner<S,A>
 template class FitOnlyRunner<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     MyopicAgent<GravityModel,GravityParam> >;
+template class FitOnlyRunner<System<CaveModel,CaveParam,
+				    CaveModel,CaveParam>,
+			     MyopicAgent<CaveModel,CaveParam> >;
 template class FitOnlyRunner<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures1<GravityModel,
@@ -251,6 +269,9 @@ template class FitOnlyRunner<System<EbolaModel,EbolaParam,
 template class FitOnlyRunner<System<GravityModel,GravityParam,
 				    RangeModel,RangeParam>,
 			     MyopicAgent<RangeModel,RangeParam> >;
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    CaveModel,CaveParam>,
+			     MyopicAgent<CaveModel,CaveParam> >;
 
 
 template <class S, class A>
@@ -462,6 +483,73 @@ OptimRunner<System<GravityModel,GravityParam,
 					       RangeParam>,
 				  RangeModel,RangeParam>,
 		      RangeModel,RangeParam> >;
+///
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   CaveModel,CaveParam>,
+	    RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>,
+	    M1SimpleOptim<System<GravityModel,GravityParam,
+				 CaveModel,CaveParam>,
+			  RankToyAgent<ToyFeatures2<CaveModel,
+						    CaveParam>,
+				       CaveModel,CaveParam>,
+			  CaveModel,CaveParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   CaveModel,CaveParam>,
+	    RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>,
+	    M1SgdOptim<System<GravityModel,GravityParam,
+			      CaveModel,CaveParam>,
+		       RankToyAgent<ToyFeatures2<CaveModel,
+						 CaveParam>,
+				    CaveModel,CaveParam>,
+		       CaveModel,CaveParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   CaveModel,CaveParam>,
+	    RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>,
+	    M1HybridOptim<System<GravityModel,GravityParam,
+				 CaveModel,CaveParam>,
+			  RankToyAgent<ToyFeatures2<CaveModel,
+						    CaveParam>,
+				       CaveModel,CaveParam>,
+			  CaveModel,CaveParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   CaveModel,CaveParam>,
+	    RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>,
+	    M2SaOptim<System<GravityModel,GravityParam,
+			       CaveModel,CaveParam>,
+			RankToyAgent<ToyFeatures2<CaveModel,
+						  CaveParam>,
+				     CaveModel,CaveParam>,
+			FeaturesInt<ToyFeatures2<CaveModel,
+						 CaveParam>,
+				    CaveModel,CaveParam>,
+			CaveModel,CaveParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   CaveModel,CaveParam>,
+	    RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>,
+	    AnchorMan<System<GravityModel,GravityParam,
+			     CaveModel,CaveParam>,
+		      RankToyAgent<ToyFeatures2<CaveModel,
+						CaveParam>,
+				   CaveModel,CaveParam>,
+		      FeaturesInt<ToyFeatures2<CaveModel,
+					       CaveParam>,
+				  CaveModel,CaveParam>,
+		      CaveModel,CaveParam> >;
 
 
 
