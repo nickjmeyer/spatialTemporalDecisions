@@ -12,9 +12,12 @@ int main(int argc, char ** argv){
   typedef FeaturesInt<F,GM,GP> FI;
   typedef RankToyAgent<F,GM,GP> RA;
   typedef M2SaOptim<S,RA,FI,GM,GP> M2;
-  
+
   std::vector<S> s(numSys);
-  RA rA;  
+  RA rA;
+
+  rA.tp.jitter = 2.0;
+  
   for(i=0; i<numSys; i++){
     s.at(i).paramEst_r = s.at(i).paramGen_r;
     s.at(i).reset();
@@ -55,6 +58,8 @@ int main(int argc, char ** argv){
       errOrr=0;
       for(j=0; j<numSys; j++){
 	jp1 = (j+1 == numSys ? 0 : j+1);
+
+	
 	
 	// train data set j
 	qO.qEval.preCompData(s.at(j).sD,s.at(j).fD);
