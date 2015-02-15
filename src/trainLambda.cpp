@@ -16,8 +16,6 @@ int main(int argc, char ** argv){
   std::vector<S> s(numSys);
   RA rA;
 
-  rA.tp.jitter = 2.0;
-  
   for(i=0; i<numSys; i++){
     s.at(i).paramEst_r = s.at(i).paramGen_r;
     s.at(i).reset();
