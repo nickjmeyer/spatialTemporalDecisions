@@ -138,8 +138,7 @@ M2SaEval<S,A,F,M,MP>::M2SaEval(){
   f.f.tp.valReps = 100;
   
   tp.gamma = .95;
-  tp.lambda = 100.0;
-  // tp.lambda = 10.0;
+  tp.lambda = 3000.0;
   
   tp.jitter = .1;
   tp.tol = .005;
