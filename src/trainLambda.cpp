@@ -44,9 +44,9 @@ int main(int argc, char ** argv){
     double err,errOrr,minErr=-1;
 
     std::vector<double> lambdaVals;
-    for(i=2; i<13; i++)
-      for(j=1; j<10; j+=2)
-	lambdaVals.push_back(j*std::pow(10,i));
+    double count,tol = 0.000001;
+    for(count = -3.0; count < (16.0 + tol); count += 0.1)
+      lambdaVals.push_back(std::pow(2.0,count));
 
 	  
     int I = lambdaVals.size();
@@ -71,6 +71,8 @@ int main(int argc, char ** argv){
 
 	errOrr += qO.qEval.bellRes();
 
+
+	
 	// test data set j+1
 	qO.qEval.preCompData(s.at(jp1).sD,s.at(jp1).fD);
 	qO.qEval.bellResFixData(s.at(jp1).sD,s.at(jp1).tD,s.at(jp1).fD,
