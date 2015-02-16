@@ -63,6 +63,15 @@ class VanillaRunner : BaseRunner<S,A> {
 };
 
 
+template <class S, class A>
+class VanillaRunnerNS : BaseRunner<S,A> {
+ public:
+  virtual double run(S system,
+		     A agent,
+		     const int numReps, const int numPoints);
+};
+
+
 
 template <class S, class A>
 class FitOnlyRunner : BaseRunner<S,A> {

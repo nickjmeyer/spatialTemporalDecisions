@@ -158,6 +158,9 @@ template class VanillaRunner<System<GravityModel,GravityParam,
 template class VanillaRunner<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     ProximalAgent<GravityModel,GravityParam> >;
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     MyopicAgent<GravityModel,GravityParam> >;
 
 template class VanillaRunner<System<EbolaModel,EbolaParam,
 				    EbolaModel,EbolaParam>,
@@ -237,6 +240,82 @@ VanillaRunner<S,A>
 			       "_values_",".txt"));
   return value/((double)numReps);
 }
+
+
+
+
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     NoTrt<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     ProximalAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     MyopicAgent<GravityModel,GravityParam> >;
+
+template class VanillaRunnerNS<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
+			     NoTrt<EbolaModel,EbolaParam> >;
+template class VanillaRunnerNS<System<EbolaModel,EbolaParam,
+				    EbolaModel,EbolaParam>,
+			     ProximalAgent<EbolaModel,EbolaParam> >;
+
+
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     NoTrt<RangeModel,RangeParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     ProximalAgent<RangeModel,RangeParam> >;
+
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     RankToyAgent<ToyFeatures2<GravityModel,
+						       GravityParam>,
+					  GravityModel,GravityParam> >;
+
+
+
+template<class S, class A>
+double
+VanillaRunnerNS<S,A>
+::run(S system,
+      A agent,
+      const int numReps, const int numPoints){
+  resetRandomSeed();
+  
+  double value=0;
+  int r,t;
+
+#pragma omp parallel for num_threads(8)		\
+  shared(value)					\
+  firstprivate(system,agent)			\
+  private(r,t)
+  for(r=0; r<numReps; r++){
+    system.reset();
+    for(t=system.sD.time; t<numPoints; t++){
+      if(t>=system.fD.trtStart)
+	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+		       system.modelEst,system.paramEst);
+      
+      system.updateStatus();
+      
+      system.nextPoint();
+
+    }
+
+#pragma omp critical
+    {
+      value += system.value();
+    }
+
+  }
+  return value/((double)numReps);
+}
+
+
+
 
 
 

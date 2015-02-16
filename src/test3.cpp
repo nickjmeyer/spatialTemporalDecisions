@@ -1,5 +1,6 @@
 #include "test3.hpp"
 
+
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
@@ -54,7 +55,7 @@ int main(int argc, char ** argv){
       
       value = o1.run(s,ra,m1,600,15);
     
-      printf("reps: %3d, a: %3.0f  >>>  %6.4f",*mcRepsIt,*aIt,value);
+      printf("reps: %3d, a: %3.0f  >>>  %6.4f\n",*mcRepsIt,*aIt,value);
     }
   }
 
