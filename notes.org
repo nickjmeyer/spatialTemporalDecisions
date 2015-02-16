@@ -1,0 +1,37 @@
+#+title Notes
+#+author Nicholas J Meyer
+
+
+* Debugging
+** DONE Rank Agent
+   CLOSED: [2015-02-15 Sun 23:46]
+   - [X] Default parameters
+   - [X] Toy Features 2
+     - [X] Individual features
+     - [X] Rankings
+     - [X] Feature logic
+       - [X] Pre computing
+       - [X] Get features
+       - [X] Update features
+   - [X] Treatment allocation
+     - [X] Number of chunks
+   - [X] Add debugging code
+** TODO M1 Optim 
+   - [ ] Default parameters
+   - [ ] New system with potulated model
+   - [ ] Runner
+   - [ ] Updating agent parameters
+** TODO M2 Optim
+   - [ ] Default parameters
+   - [ ] New system with postulated model
+   - [ ] Features Int
+     - [ ] Toy Features 2
+     - [ ] Transfer into feature wrapper
+   - [ ] Penalty
+   - [ ] R
+   - [ ] D0
+   - [ ] D1
+   - [ ] Beta
+   - [ ] Bellman Residual
+   - [ ] Optimization routine
+   - [ ] Updating agent parameters

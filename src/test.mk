@@ -20,15 +20,17 @@ HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
 PROF = $(DEBUG) -pg 
-COMPILE_CPP = $(CC) $(CPPFLAGS)
 BINARY = test
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
-	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgentToy.o rankAgentToyOld.o \
-	m1SgdOptim.o m1NmOptim.o m1SimpleOptim.o m1HybridOptim.o m2NmOptim.o \
+	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgentToy.o \
+	m1SgdOptim.o m1SimpleOptim.o m1HybridOptim.o m2SaOptim.o \
+	anchorMan.o \
 	features.o featuresInt.o \
 	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
 	modelEbola.o modelParamEbola.o \
+	modelRange.o modelParamRange.o \
+	modelCave.o modelParamCave.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o mcmc.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
@@ -36,6 +38,9 @@ DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
 endif
+
+COMPILE_CPP = $(CC) $(CPPFLAGS)
+
 
 all: $(BINARY)
 
@@ -66,4 +71,4 @@ $(OBJECTS):%.o: %.cpp
 	$(COMPILE_CPP) $(INCLUDE) $*.cpp -MM -MP -MF $*.d $(LINKS)
 
 clean:
-	rm -f ../bin/$(BINARY) $(OBJECTS) $(DEPENDS) ../bin/$(BINARY).tar.bz2
+	rm -f $(BINARY) $(OBJECTS) $(DEPENDS) $(BINARY).tar.bz2

@@ -53,7 +53,6 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   // timeReps++;
 
   // int curTimer=0;
-
   // ////////////////////////////////////////
 
   
@@ -61,7 +60,8 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   // ////////////////////////////////////////
   // tick=std::chrono::high_resolution_clock::now();
   // ////////////////////////////////////////
-    
+
+  // load estimated probabilities of infection
   m.load(sD,tD,fD,dD,mP);
 
   // ////////////////////////////////////////
@@ -79,11 +79,12 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   // ////////////////////////////////////////
   // tick=std::chrono::high_resolution_clock::now();
   // ////////////////////////////////////////
-  
+
+  // extract subgraph connectiviy for not infected
   int i;
   subGraphNotInfec.resize(sD.numNotInfec);
   for(i=0; i<sD.numNotInfec; i++)
-    subGraphNotInfec(i)=fD.subGraph.at(sD.notInfec.at(i));
+    subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
 
   // ////////////////////////////////////////
   // tock=std::chrono::high_resolution_clock::now();
@@ -100,7 +101,9 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   // tick=std::chrono::high_resolution_clock::now();
   // ////////////////////////////////////////
 
-  
+
+  // obtain neighbors and probabilities not infected infects other not infected
+  // initialize containers
   notNeigh.resize(sD.numNotInfec);
   notNeighOf.resize(sD.numNotInfec);
   std::fill(notNeigh.begin(),notNeigh.end(),
@@ -120,10 +123,14 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
     for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++)
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
+	// neighbors of i
 	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD0,*itD1,sD,tD,fD,dD,mP)));
+				 (j,m.oneOnOne(*itD1,*itD0,sD,tD,fD,dD,mP)));
+	
+	// i is a neighbor of j
 	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
-				   
+
+	// increment totals
 	notNeighNum.at(i)++;
 	notNeighOfNum.at(j)++;
       }
@@ -198,6 +205,7 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // ////////////////////////////////////////
   
   // feature 0
+  // probability of infection or infecting
   infFeat.col(featNum) = 1 - arma::prod(mP.infProbsSep,1);
   notFeat.col(featNum) = 1 - arma::prod(mP.infProbsSep,0).t();
   
@@ -222,13 +230,15 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   
   
   // feature 1
+  // joint probability of infection between not infected and not infected
+  // weighted average of joint probabilities
   int num;
   double modProbTot,modProb;
   std::pair<int,double> neigh;
-  for(i=0; i<sD.numNotInfec; i++){
-    modProbTot=0;
+  for(i = 0; i < sD.numNotInfec; i++){
+    modProbTot = 0;
     num = notNeighNum.at(i);
-    for(j=0; j<num; j++){
+    for(j = 0; j < num; j++){
       neigh=notNeigh.at(i).at(j);
       
       modProb = 1.0 - notFeat(neigh.first,0);
@@ -252,7 +262,6 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // ////////////////////////////////////////
 
   
-  
   featNum++;
 
 
@@ -263,6 +272,7 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   
   
   // feature 2
+  // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
 
   infFeat.col(featNum) = (1.0 - mP.infProbsSep) * notFeat.col(0);
@@ -291,22 +301,25 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   
 
   // feature 3
+  // density estimate
   std::vector<int>::const_iterator itD2,itD3;
   std::priority_queue<double> p; 
   itD2 = sD.notInfec.begin();
   itD3 = sD.infected.begin();
   double totalDist;
-  for(i=0,itD0 = itD2; i<sD.numNotInfec; i++,itD0++){
+  for(i = 0,itD0 = itD2; i < sD.numNotInfec; i++, itD0++){
+    // density estimates for not infected
     totalDist=0;
-    for(j=0,itD1 = itD3; j<sD.numInfected; j++,itD1++)
+    for(j = 0,itD1 = itD3; j < sD.numInfected; j++, itD1++)
       totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
     totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
     notFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
-  for(i=0,itD0 = itD3; i<sD.numInfected; i++,itD0++){
+  for(i = 0,itD0 = itD3; i < sD.numInfected; i++, itD0++){
+    // density estimates for infected
     totalDist=0;
-    for(j=0,itD1 = itD2; j<sD.numNotInfec; j++,itD1++)
+    for(j = 0,itD1 = itD2; j < sD.numNotInfec; j++, itD1++)
       totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
     totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
     infFeat(i,featNum) = std::log(1.0+totalDist);
@@ -341,17 +354,19 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // fflush(stdout);
   // std::cout << std::string(40,'-') << std::endl	<< std::endl;
   // ////////////////////////////////////////
-
+  
   
   featNum++;
 
   tDPre = tD;
 
+#ifdef NJM_DEBUG
   if(featNum != numFeatures){
     std::cout << "Error: in getFeatures: featNum != numFeatures"
 	      << std::endl;
     throw 1;
   }
+#endif
     
 }
 
@@ -373,7 +388,6 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
   // std::chrono::milliseconds diff;
   // static int timeReps = 0;
   // timeReps++;
-  
   // ////////////////////////////////////////
 
 
@@ -386,29 +400,29 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
   std::pair<int,int> neighOf;
 
   // update not infected probabilities
-  for(i=0; i<sD.numNotInfec; i++){
+  for(i = 0; i < sD.numNotInfec; i++){
     node0 = sD.notInfec.at(i);
     now = tD.p.at(node0);
     pre = tDPre.p.at(node0);
     
-    if(now != pre && pre == 1){ // adding trt
+    if(now != pre && now == 1){ // adding trt
       mP.infProbsBase.col(i) -= mP.trtPre;
       mP.setCol(i);
 
       num=notNeighOfNum.at(i);
-      for(j=0; j<num; j++){
+      for(j = 0; j < num; j++){
 	neighOf = notNeighOf.at(i).at(j);
 
 	notNeigh.at(neighOf.first).at(neighOf.second).second -= mP.trtPre;
       }
     }
     
-    else if(now != pre && pre == 0){ // removing trt
+    else if(now != pre && now == 0){ // removing trt
       mP.infProbsBase.col(i) += mP.trtPre;
       mP.setCol(i);
 
       num=notNeighOfNum.at(i);
-      for(j=0; j<num; j++){
+      for(j = 0; j < num; j++){
 	neighOf = notNeighOf.at(i).at(j);
 
 	notNeigh.at(neighOf.first).at(neighOf.second).second += mP.trtPre;
@@ -417,17 +431,17 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
   }
 
   // update infected probabilities
-  for(i=0; i<sD.numInfected; i++){
+  for(i = 0; i < sD.numInfected; i++){
     node0 = sD.infected.at(i);
     now = tD.a.at(node0);
     pre = tDPre.a.at(node0);
     
-    if(now != pre && pre == 1){ // adding trt
+    if(now != pre && now == 1){ // adding trt
       mP.infProbsBase.row(i) -= mP.trtAct;
       mP.setRow(i);
     }
-    else if(now != pre && pre == 0){ // removing trt
-      mP.infProbsBase.row(i) += mP.trtPre;
+    else if(now != pre && now == 0){ // removing trt
+      mP.infProbsBase.row(i) += mP.trtAct;
       mP.setRow(i);
     }
   }

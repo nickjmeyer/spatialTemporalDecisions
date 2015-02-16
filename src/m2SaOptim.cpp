@@ -135,8 +135,6 @@ M2SaEval<S,A,F,M,MP>::M2SaEval(){
   // radius = 50;
   tp.numNeigh = 5;
 
-  f.f.tp.valReps = 100;
-  
   tp.gamma = .95;
   tp.lambda = 3000.0;
   

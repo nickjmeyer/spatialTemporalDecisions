@@ -25,8 +25,6 @@ RankToyAgent<F,M,MP>::RankToyAgent(){
 
   tp.jitter = 0.25;
   
-  f.tp.valReps = 10;
-  
   name="rank";
 }
 
@@ -40,32 +38,36 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 				    MP & mP){
   if(sD.notInfec.empty())
     return;
-  
+
+  // number of each type of treatment to give
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
-  
+
+  // precompute data and get baseline features
   f.preCompData(sD,tD,fD,dD,m,mP);
   f.getFeatures(sD,tD,fD,dD,m,mP);
 
-  
-  std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
-
+  // jitter the current weights
   arma::colvec jitter;
   jitter.zeros(f.numFeatures);
   
   int i,j,node0,addPre,addAct;
-  int cI=0,cN=0;
-  for(i=0; i<tp.numChunks; i++){
+  int cI = 0,cN = 0;
+  for(i = 0; i < tp.numChunks; i++){
 
-    for(j=0; j<f.numFeatures; j++)
+    // get jitter
+    for(j = 0; j < f.numFeatures; j++)
       jitter(j) = tp.jitter*njm::rnorm01();
-    
+
+    // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
     notRanks = f.notFeat * (tp.weights + jitter);
 
-    sortInfected = std::priority_queue<std::pair<double,int> > ();
-    sortNotInfec = std::priority_queue<std::pair<double,int> > ();
 
+    // sort the locations by their ranks
+    // if treated, get lowest value possible
+    std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
+    
     for(j=0; j<sD.numInfected; j++){
       if(tD.a.at(sD.infected.at(j)))
 	sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
@@ -83,29 +85,75 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
     }
 
 
+    // number of locations to add treatment too for this iteration
+    addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
+      (int)(i*numPre/std::min(tp.numChunks,numPre));
     addAct = (int)((i+1)*numAct/std::min(tp.numChunks,numAct)) -
       (int)(i*numAct/std::min(tp.numChunks,numAct));
-    for(j = 0; j < addAct && cI < numAct; cI++,j++){
-      node0=sortInfected.top().second;
-      tD.a.at(sD.infected.at(node0)) = 1;
-      sortInfected.pop();
-      
-    }
-    
-    addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
-	     (int)(i*numPre/std::min(tp.numChunks,numPre));
-    for(j = 0; j < addPre && cN<numPre; cN++,j++){
+
+    // add preventative treatment
+    for(j = 0; j < addPre && cN < numPre; cN++,j++){
       node0=sortNotInfec.top().second;
       tD.p.at(sD.notInfec.at(node0)) = 1;
       sortNotInfec.pop();
     }
 
-    
+    // add active treatment
+    for(j = 0; j < addAct && cI < numAct; cI++,j++){
+      node0=sortInfected.top().second;
+      tD.a.at(sD.infected.at(node0)) = 1;
+      sortInfected.pop();
+    }
+
+    // if more iterations, update features
     if((i+1) < tp.numChunks){
-      
       f.updateFeatures(sD,tD,fD,dD,m,mP);
     }
+    
   }
+
+#ifdef NJM_DEBUG
+  int totPre = 0,totAct = 0;
+  // check if valid treatments are given to valid locations
+  for(i = 0; i < fD.numNodes; i++){
+    if(tD.p.at(i) != 1 || tD.p.at(i) != 0){
+      std::cout << "Prevenative treatment not 1 or 0"
+		<< std::endl;
+      throw(1);
+    }
+    else if(tD.a.at(i) != 1 || tD.a.at(i) != 0){
+      std::cout << "Active treatment not 1 or 0"
+		<< std::endl;
+      throw(1);
+    }
+    else if(tD.a.at(i) == 1 && sD.status.at(i) < 2){
+      std::cout << "Not infected receiving active treatment"
+		<< std::endl;
+      throw(1);
+    }
+    else if(tD.p.at(i) == 1 && sD.status.at(i) >= 2){
+      std::cout << "Infected receiving preventative treament"
+		<< std::endl;
+      throw(1);
+    }
+    else if(tD.a.at(i) == 1)
+      totAct++;
+    else if(tD.p.at(i) == 1)
+      totPre++;
+  }
+
+  // check if total number of treatments are correct
+  if(totAct != numAct){
+    std::cout << "Not correct amount of active treatments"
+	      << std::endl;
+    throw(1);
+  }
+  else if(totPre != numPre){
+    std::cout << "Not correct amount of preventative treatments"
+	      << std::endl;
+    throw(1);
+  }
+#endif
 }
 
 

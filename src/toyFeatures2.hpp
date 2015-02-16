@@ -11,8 +11,6 @@ class ToyFeatures2TuneParam : public TuneParam {
  public:
   virtual std::vector<double> getPar() const ;
   virtual void putPar(const std::vector<double> & par);
-
-  int valReps;
 };
 
 template<class M, class MP>
