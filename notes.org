@@ -1,6 +1,7 @@
 #+title Notes
 #+author Nicholas J Meyer
 
+#+startup: showeverything
 
 * Debugging
 ** DONE Rank Agent
@@ -35,3 +36,5 @@
    - [ ] Bellman Residual
    - [ ] Optimization routine
    - [ ] Updating agent parameters
+
+

@@ -1,0 +1,32 @@
+#+title M1 Writeup
+
+#+startup: showeverything
+
+* M1 Write up
+** Structure generation
+   - [ ] coordinates
+   - [ ] networks
+   - [ ] covariates
+   - [ ] model coefficients
+** Spread dynamics models
+   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
+   - [ ] Gravity model
+   - [ ] Range model
+   - [ ] Cave model
+** Simulation details
+   - [ ] Start settings
+   - [ ] Significant points
+     - [ ] Model estimation
+     - [ ] Strategy estimation
+   - [ ] Number of time points
+   - [ ] Objective function
+** Priority scores
+   - [ ] Form of the scores
+   - [ ] Selection process
+   - [ ] Features
+** M1 Optimization
+   - [ ] Runners
+   - [ ] SGD
+** Competing policies
+   - [ ] Proximal
+   - [ ] Myopic
