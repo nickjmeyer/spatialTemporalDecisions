@@ -116,12 +116,13 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
   int totPre = 0,totAct = 0;
   // check if valid treatments are given to valid locations
   for(i = 0; i < fD.numNodes; i++){
-    if(tD.p.at(i) != 1 || tD.p.at(i) != 0){
+    if(tD.p.at(i) != 1 && tD.p.at(i) != 0){
       std::cout << "Prevenative treatment not 1 or 0"
+		<< ": " << tD.p.at(i)
 		<< std::endl;
       throw(1);
     }
-    else if(tD.a.at(i) != 1 || tD.a.at(i) != 0){
+    else if(tD.a.at(i) != 1 && tD.a.at(i) != 0){
       std::cout << "Active treatment not 1 or 0"
 		<< std::endl;
       throw(1);

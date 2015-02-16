@@ -120,11 +120,12 @@ void M1SgdOptim<S,A,M,MP>
     agent.tp.putPar(parJit);
     curr = runner.runEx(s,agent,tp.mcReps,s.fD.finalT);    
 
-    // njm::message("iter: " + njm::toString(iter,"",4,0) +
-    // 		 " || " + njm::toString(prev.first,"",6,4) + " - " +
-    // 		 njm::toString(curr.first,"",6,4) + " -> " +
-    // 		 njm::toString(curr.second,"",6,4) + " || " +
-    // 		 njm::toString(par,", ",""));
+    if(omp_get_thread_num() == 0)
+      std::cout << "iter: " + njm::toString(iter,"",4,0) +
+	" || " + njm::toString(prev.first,"",6,4) + " - " +
+	njm::toString(curr.first,"",6,4) + " -> " +
+	njm::toString(curr.second,"",6,4) + " || " +
+	njm::toString(par,", ","") << "\r" << std::flush;
     
 
     for(i=0; i<numPar; i++)

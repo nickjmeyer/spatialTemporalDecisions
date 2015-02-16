@@ -354,11 +354,37 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // fflush(stdout);
   // std::cout << std::string(40,'-') << std::endl	<< std::endl;
   // ////////////////////////////////////////
-  
-  
+
   featNum++;
 
   tDPre = tD;
+
+  // ////////////////////////////////////////
+  // static arma::mat cInf = arma::zeros<arma::mat>(numFeatures,numFeatures);
+  // static arma::mat cNot = arma::zeros<arma::mat>(numFeatures,numFeatures);
+  // static int countInf=0,countNot=0;
+  // if(infFeat.n_rows > 1){
+  //   countInf++;
+  //   cInf += arma::cor(infFeat);
+  // }
+  // if(notFeat.n_rows > 1){
+  //   countNot++;
+  //   cNot += arma::cor(notFeat);
+  // }
+  
+  // std::cout << "Count : " << "(" << countInf << ", " << countNot << ")"
+  // 	    << std::endl << std::endl
+  // 	    << "Infected: "
+  // 	    << std::endl
+  // 	    << (cInf / arma::as_scalar(double(countInf)))
+  // 	    << std::endl
+  // 	    << "Not Infected: "
+  // 	    << std::endl
+  // 	    << (cNot / arma::as_scalar(double(countNot)))
+  // 	    << std::endl
+  // 	    << std::string(64,'-')
+  // 	    << std::endl << std::endl;
+  // ////////////////////////////////////////
 
 #ifdef NJM_DEBUG
   if(featNum != numFeatures){

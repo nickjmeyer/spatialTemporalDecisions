@@ -3,7 +3,7 @@
 
 #+startup: showeverything
 
-* Debugging
+* TODO Debugging
 ** DONE Rank Agent
    CLOSED: [2015-02-15 Sun 23:46]
    - [X] Default parameters
@@ -38,3 +38,27 @@
    - [ ] Updating agent parameters
 
 
+
+
+* TODO Simulations
+** DONE Check feature correlations
+   CLOSED: [2015-02-16 Mon 12:36]
+   - [X] Check sample correlations for a simulated run
+     - The sample correlations are pretty high
+#+name: Infected average feature correlations
+| 1.0000 | 0.8296 | 0.9183 | 0.5787 |
+| 0.8296 | 1.0000 | 0.8423 | 0.3936 |
+| 0.9183 | 0.8423 | 1.0000 | 0.3932 |
+| 0.5787 | 0.3936 | 0.3932 | 1.0000 |
+   
+#+name: Not Infected average feature correlations
+| 1.0000 | 0.7429 | 0.9852 | 0.5560 |
+| 0.7429 | 1.0000 | 0.7205 | 0.2056 |
+| 0.9852 | 0.7205 | 1.0000 | 0.5653 |
+| 0.5560 | 0.2056 | 0.5653 | 1.0000 |
+
+** TODO Check SGD
+   - [ ] Make sure SGD is still improving the policy
+** TODO Create tuning file
+   - [ ] Tune the intercept to be 0.7 for no treatment
+   - [ ] Tune the treatment effect sizes to be 0.5 for myopic
