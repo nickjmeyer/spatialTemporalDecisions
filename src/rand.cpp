@@ -3,11 +3,14 @@
 // static unsigned randomSeed=std::time(NULL);
 static unsigned randomSeed=8;
 static boost::mt19937 rng( randomSeed );
-static boost::uniform_01< boost::mt19937 > genUnif01(rng);
-static boost::normal_distribution<> stdNorm(0.0, 1.0);
-static boost::variate_generator<boost::mt19937 ,
+static boost::uniform_real<> unif01(0.0,1.0);
+static boost::normal_distribution<> norm01(0.0, 1.0);
+static boost::variate_generator<boost::mt19937,
+				boost::uniform_real<>
+				> genUnif01(rng, unif01);
+static boost::variate_generator<boost::mt19937,
 				boost::normal_distribution<> 
-				> genNorm01(rng, stdNorm);
+				> genNorm01(rng, norm01);
 
 static RandParr randParr(1000000);
 
@@ -20,16 +23,12 @@ RandParr::RandParr(int numRand_){
 
 
 void RandParr::reset(){
-  boost::mt19937 rng_(randomSeed);
-  boost::uniform_01< boost::mt19937 > genUnif01_(rng_);
-  boost::normal_distribution<> stdNorm_(0.0, 1.0);
-  boost::variate_generator<boost::mt19937,
-			   boost::normal_distribution<>
-			   > genNorm01_(rng_,stdNorm_);
-  rng=rng_;
-  genUnif01=genUnif01_;
-  stdNorm=stdNorm_;
-  genNorm01=genNorm01_;
+  genUnif01.engine().seed(randomSeed);
+  genUnif01.distribution().reset();
+  
+  genNorm01.engine().seed(randomSeed);
+  genNorm01.distribution().reset();
+  
   initialize();
 }
 
@@ -50,10 +49,10 @@ void RandParr::initialize(){
   std::vector<double> threadRnorm01(numRand), threadRnorm01_fixed(numRand);
 
   // allocate containers sizes
-  runif01Vals.reserve(numThreads);
-  runif01Vals_fixed.reserve(numThreads);
-  rnorm01Vals.reserve(numThreads);
-  rnorm01Vals_fixed.reserve(numThreads);
+  runif01Vals.resize(numThreads);
+  runif01Vals_fixed.resize(numThreads);
+  rnorm01Vals.resize(numThreads);
+  rnorm01Vals_fixed.resize(numThreads);
   
   // sample values for each thread
   for(i=0; i<numThreads; i++){
@@ -64,13 +63,14 @@ void RandParr::initialize(){
       threadRnorm01_fixed.at(j)=genNorm01();
     }
     // load the samples into the thread slots
-    runif01Vals.push_back(threadRunif01);
-    runif01Vals_fixed.push_back(threadRunif01_fixed);
+    runif01Vals.at(i) = threadRunif01;
+    runif01Vals_fixed.at(i) = threadRunif01_fixed;
 
-    rnorm01Vals.push_back(threadRnorm01);
-    rnorm01Vals_fixed.push_back(threadRnorm01_fixed);
+    rnorm01Vals.at(i) = threadRnorm01;
+    rnorm01Vals_fixed.at(i) = threadRnorm01_fixed;
   }
 
+  // store iterators
   runif01Iter.clear();
   runif01End.clear();
   rnorm01Iter.clear();

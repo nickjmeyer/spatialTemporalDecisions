@@ -51,8 +51,10 @@ namespace njm{
       ofs.close();
       return 0;
     }
-    else
+    else{
+      std::cout << "Faild to write " << file << std::endl;
       return 1;
+    }
   };
   template<class T>
   int toFile(const std::vector<T> & n,
@@ -68,8 +70,10 @@ namespace njm{
       ofs.close();
       return 0;
     }
-    else
+    else{
+      std::cout << "Faild to write " << file << std::endl;
       return 1;
+    }
   };
 
   

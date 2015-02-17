@@ -9,6 +9,17 @@ void CaveParam::load(){
   njm::fromFile(trtPre,njm::sett.srcExt("./CaveParam/trtPre.txt"));
 }
 
+void CaveParam::save(){
+  njm::toFile(intcp,njm::sett.srcExt("./CaveParam/intcp.txt"),
+	      std::ios_base::out);
+  njm::toFile(cave,njm::sett.srcExt("./CaveParam/cave.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtAct,njm::sett.srcExt("./CaveParam/trtAct.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtPre,njm::sett.srcExt("./CaveParam/trtPre.txt"),
+	      std::ios_base::out);
+}
+
 std::vector<double> CaveParam::getPar() const {
   std::vector<double> param;
   param.push_back(intcp);

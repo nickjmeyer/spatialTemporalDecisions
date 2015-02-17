@@ -10,6 +10,19 @@ void RangeParam::load(){
   njm::fromFile(trtPre,njm::sett.srcExt("./RangeParam/trtPre.txt"));
 }
 
+void RangeParam::save(){
+  njm::toFile(intcp,njm::sett.srcExt("./RangeParam/intcp.txt"),
+	      std::ios_base::out);
+  njm::toFile(range,njm::sett.srcExt("./RangeParam/range.txt"),
+	      std::ios_base::out);
+  njm::toFile(alpha,njm::sett.srcExt("./RangeParam/alpha.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtAct,njm::sett.srcExt("./RangeParam/trtAct.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtPre,njm::sett.srcExt("./RangeParam/trtPre.txt"),
+	      std::ios_base::out);
+}
+
 std::vector<double> RangeParam::getPar() const {
   std::vector<double> param;
   param.push_back(intcp);

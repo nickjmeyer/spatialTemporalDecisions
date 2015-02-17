@@ -41,7 +41,7 @@ typedef System<GM,GP,EM,EP> S;
 typedef NoTrt<EM,EP> NT;
 typedef MyopicAgent<EM,EP> MA;
 
-typedef PlainRunner<S,NT> RN;
+typedef VanillaRunnerNS<S,NT> RN;
 typedef VanillaRunnerNS<S,MA> RM;
 
 

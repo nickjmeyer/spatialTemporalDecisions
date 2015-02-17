@@ -288,9 +288,9 @@ VanillaRunnerNS<S,A>
   double value=0;
   int r,t;
 
-#pragma omp parallel for num_threads(8)		\
-  shared(value)					\
-  firstprivate(system,agent)			\
+#pragma omp parallel for num_threads(omp_get_max_threads())	\
+  shared(value)							\
+  firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();

@@ -23,6 +23,7 @@ class CaveParam : public BaseParam {
   arma::mat infProbsSep;
 
   virtual void load();
+  virtual void save();
   
   virtual std::vector<double> getPar() const;
 

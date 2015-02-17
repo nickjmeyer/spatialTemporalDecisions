@@ -1,7 +1,6 @@
 #include "tuneGen.hpp"
 
-void TuneGenNT(){
-  S s;
+double TuneGenNT(S & s){
   NT nt;
   RN rn;
 
@@ -16,7 +15,7 @@ void TuneGenNT(){
   int above = int(val > goal);
   int iter = 0;
 
-  printf("Iter: %05d  >>>  Current value: %012.6f  @  %08.4f\r",
+  printf("Iter: %05d  >>>  Current value: %08.6f  @  %08.4f\r",
 	 ++iter, val, par);
 
   while(std::abs(val - goal) > tol){
@@ -42,18 +41,20 @@ void TuneGenNT(){
     }
 
     val = rn.run(s,nt,numReps,numYears);
-    printf("Iter: %05d  >>>  Current value: %012.6f  @  %08.4f\r",
+    printf("Iter: %05d  >>>  Current value: %08.6f  @  %08.4f\r",
 	   ++iter, val, par);
     fflush(stdout);
   }
+
+  return(val);
 }
 
 
-void TuneGenMA(){
-  S s;
-  s.paramEst_r = s.paramGen_r;
-  MA ma;
-  RM rm;
+double TuneGenMA(S & s){
+  // MA ma;
+  // RM rm;
+  RankToyAgent<ToyFeatures2<EM,EP>,EM,EP> ma;
+  VanillaRunnerNS<S,RankToyAgent<ToyFeatures2<EM,EP>,EM,EP> >rm;
 
   double goal = 0.5;
   int numReps = 500;
@@ -79,6 +80,7 @@ void TuneGenMA(){
       s.paramEst_r.trtPre = par;
       s.paramGen_r.trtAct = par;
       s.paramEst_r.trtAct = par;
+      s.reset();
 
       above = 1;
     }
@@ -91,6 +93,7 @@ void TuneGenMA(){
       s.paramEst_r.trtPre = par;
       s.paramGen_r.trtAct = par;
       s.paramEst_r.trtAct = par;
+      s.reset();
       
       above = 0;
     }
@@ -100,20 +103,36 @@ void TuneGenMA(){
 	   ++iter, val, par);
     fflush(stdout);
   }
+  return(val);
 }
 
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
+  S s;
+  s.paramEst_r = s.paramGen_r;
+  s.reset();
+
   njm::message("Tuning Intercept");
 
-  TuneGenNT();
+  double valNT = TuneGenNT(s);
 
   njm::message("Tuning Treatment");
 
-  TuneGenMA();
+  double valMA = TuneGenMA(s);
 
+  njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
+	       "\n" +
+	       "trtPre: " + njm::toString(s.paramGen_r.trtPre,"") +
+	       "\n" +
+	       "trtAct: " + njm::toString(s.paramGen_r.trtAct,"") +
+	       "\n" +
+	       " valNT: " + njm::toString(valNT,"") +
+	       "\n" +
+	       " valMA: " + njm::toString(valMA,""));
+
+  // s.paramGen_r.save();
   
   njm::sett.clean();
   

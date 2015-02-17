@@ -4,6 +4,7 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
+
   typedef GravityModel GM;
   typedef GravityParam GP;
   typedef GravityModel EM;
