@@ -246,34 +246,37 @@ VanillaRunner<S,A>
 
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
-			     NoTrt<GravityModel,GravityParam> >;
+			       NoTrt<GravityModel,GravityParam> >;
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     ProximalAgent<GravityModel,GravityParam> >;
+				      GravityModel,GravityParam>,
+			       RandomAgent<GravityModel,GravityParam> >;
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     MyopicAgent<GravityModel,GravityParam> >;
+				      GravityModel,GravityParam>,
+			       ProximalAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       MyopicAgent<GravityModel,GravityParam> >;
 
 template class VanillaRunnerNS<System<EbolaModel,EbolaParam,
-				    EbolaModel,EbolaParam>,
-			     NoTrt<EbolaModel,EbolaParam> >;
+				      EbolaModel,EbolaParam>,
+			       NoTrt<EbolaModel,EbolaParam> >;
 template class VanillaRunnerNS<System<EbolaModel,EbolaParam,
-				    EbolaModel,EbolaParam>,
-			     ProximalAgent<EbolaModel,EbolaParam> >;
+				      EbolaModel,EbolaParam>,
+			       ProximalAgent<EbolaModel,EbolaParam> >;
 
 
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				    RangeModel,RangeParam>,
-			     NoTrt<RangeModel,RangeParam> >;
+				      RangeModel,RangeParam>,
+			       NoTrt<RangeModel,RangeParam> >;
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				    RangeModel,RangeParam>,
-			     ProximalAgent<RangeModel,RangeParam> >;
+				      RangeModel,RangeParam>,
+			       ProximalAgent<RangeModel,RangeParam> >;
 
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures2<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
+				      GravityModel,GravityParam>,
+			       RankToyAgent<ToyFeatures2<GravityModel,
+							 GravityParam>,
+					    GravityModel,GravityParam> >;
 
 
 

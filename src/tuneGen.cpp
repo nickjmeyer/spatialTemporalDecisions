@@ -50,60 +50,16 @@ double TuneGenNT(S & s){
 }
 
 
-double TuneGenMA(S & s){
-  // MA ma;
-  // RM rm;
-  RankToyAgent<ToyFeatures2<EM,EP>,EM,EP> ma;
-  VanillaRunnerNS<S,RankToyAgent<ToyFeatures2<EM,EP>,EM,EP> >rm;
+double TuneGenPA(S & s){
+  double trtSize = s.modelGen.tuneTrt(s.fD,s.paramGen);
 
-  double goal = 0.5;
-  int numReps = 500;
-  int numYears = s.fD.finalT;
-  double tol = 0.001;
+  s.paramGen_r.trtPre = s.paramGen_r.trtAct = trtSize;
+  s.paramEst_r.trtPre = s.paramEst_r.trtAct = trtSize;
 
-  double par = s.paramGen_r.trtPre;
-  double val = rm.run(s,ma,numReps,numYears);
-  double add = 1.0, scale = .975;
-  int above = int(val > goal);
-  int iter = 0;
+  PA pa;
+  RP rp;
 
-  printf("Iter: %05d  >>>  Current value: %012.6f  @  %08.4f\r",
-	 ++iter, val, par);
-
-  while(std::abs(val - goal) > tol){
-    if(val > goal){
-      if(!above)
-	add*=scale;
-      
-      par += add;
-      s.paramGen_r.trtPre = par;
-      s.paramEst_r.trtPre = par;
-      s.paramGen_r.trtAct = par;
-      s.paramEst_r.trtAct = par;
-      s.reset();
-
-      above = 1;
-    }
-    else{
-      if(above)
-	add*=scale;
-
-      par -= add;
-      s.paramGen_r.trtPre = par;
-      s.paramEst_r.trtPre = par;
-      s.paramGen_r.trtAct = par;
-      s.paramEst_r.trtAct = par;
-      s.reset();
-      
-      above = 0;
-    }
-
-    val = rm.run(s,ma,numReps,numYears);
-    printf("Iter: %05d  >>>  Current value: %012.6f  @  %08.4f\r",
-	   ++iter, val, par);
-    fflush(stdout);
-  }
-  return(val);
+  return rp.run(s,pa,500,s.fD.finalT);
 }
 
 
@@ -120,7 +76,7 @@ int main(int argc, char ** argv){
 
   njm::message("Tuning Treatment");
 
-  double valMA = TuneGenMA(s);
+  double valPA = TuneGenPA(s);
 
   njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
 	       "\n" +
@@ -130,9 +86,9 @@ int main(int argc, char ** argv){
 	       "\n" +
 	       " valNT: " + njm::toString(valNT,"") +
 	       "\n" +
-	       " valMA: " + njm::toString(valMA,""));
+	       " valPA: " + njm::toString(valPA,""));
 
-  // s.paramGen_r.save();
+  s.paramGen_r.save();
   
   njm::sett.clean();
   

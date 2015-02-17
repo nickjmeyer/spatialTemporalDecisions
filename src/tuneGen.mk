@@ -23,7 +23,8 @@ PROF = $(DEBUG) -pg
 BINARY = tuneGen
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
-	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgentToy.o \
+	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
+	rankAgentToy.o \
 	m1SgdOptim.o m1SimpleOptim.o m1HybridOptim.o m2SaOptim.o \
 	anchorMan.o \
 	features.o featuresInt.o \

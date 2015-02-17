@@ -10,6 +10,7 @@
 #include "modelRange.hpp"
 #include "agent.hpp"
 #include "noTrtAgent.hpp"
+#include "randomAgent.hpp"
 #include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgentToy.hpp"

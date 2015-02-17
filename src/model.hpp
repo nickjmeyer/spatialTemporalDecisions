@@ -58,6 +58,8 @@ class GravityModel : public BaseModel<GravityParam> {
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
 	   GravityParam & mP, const GravityParam & mPInit);
+
+  double tuneTrt(const FixedData & fD, const GravityParam & gP);
 };
 
 

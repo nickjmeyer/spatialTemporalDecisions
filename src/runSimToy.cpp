@@ -29,7 +29,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunner<S,AP> R_AP;
     typedef FitOnlyRunner<S,AM> R_AM;
     typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
-    typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
 
     // system
     S s;
@@ -50,7 +50,7 @@ int main(int argc, char ** argv){
     R_AP r_ap;
     R_AM r_am;
     R_AR_M1Sgd r_ar_m1sgd;
-    R_AR_M2Sa r_ar_m2sa;
+    // R_AR_M2Sa r_ar_m2sa;
 
     int mcReps=300,numPoints = s.fD.finalT;
     njm::message("No Trt");
@@ -72,15 +72,15 @@ int main(int argc, char ** argv){
     njm::message("Rank M1 random");
     njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
-    ar.name = name;
-    ar.tp.jitter = 0.00;
-    njm::message("Rank M2");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+    // ar.name = name;
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
 
-    ar.name = name+"_rand";
-    ar.tp.jitter = 0.25;
-    njm::message("Rank M2 random");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+    // ar.name = name+"_rand";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
   }
 
 
@@ -123,7 +123,7 @@ int main(int argc, char ** argv){
     // runners
     R_AM r_am;
     R_AR_M1Sgd r_ar_m1sgd;
-    R_AR_M2Sa r_ar_m2sa;
+    // R_AR_M2Sa r_ar_m2sa;
 
 
     int mcReps=300,numPoints = s.fD.finalT;
@@ -141,15 +141,15 @@ int main(int argc, char ** argv){
     njm::message("Rank M1 random");
     njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
-    ar.name = name + "_range";
-    ar.tp.jitter = 0.00;
-    njm::message("Rank M2");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+    // ar.name = name + "_range";
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
 
-    ar.name = name + "_rand" + "_range";
-    ar.tp.jitter = 0.25;
-    njm::message("Rank M2 random");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+    // ar.name = name + "_rand" + "_range";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
   }
 
 
@@ -211,15 +211,15 @@ int main(int argc, char ** argv){
     njm::message("Rank M1 random");
     njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
-    ar.name = name + "_cave";
-    ar.tp.jitter = 0.00;
-    njm::message("Rank M2");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+    // ar.name = name + "_cave";
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
 
-    ar.name = name + "_rand" + "_cave";
-    ar.tp.jitter = 0.25;
-    njm::message("Rank M2 random");
-    njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+    // ar.name = name + "_rand" + "_cave";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
   }
   
 

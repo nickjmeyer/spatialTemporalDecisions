@@ -74,6 +74,26 @@ void BaseModel<MP>::update(const SimData & sD,
 }
 
 
+double GravityModel::tuneTrt(const FixedData & fD,
+			     const GravityParam & gP){
+  int i,j;
+  double avgCaves = 0.0;
+  for(i = 0; i < fD.numNodes; i++)
+    avgCaves += fD.caves.at(i);
+  avgCaves /= double(fD.numNodes);
+
+  double minDist = std::numeric_limits<double>::max();
+  for(i = 0; i < fD.numNodes; i++)
+    for(j = (i+1); j < fD.numNodes; j++)
+      if(minDist > fD.dist.at(i*fD.numNodes + j))
+	minDist = fD.dist.at(i*fD.numNodes + j);
+
+  double base = gP.intcp;
+  base -= gP.alpha * minDist/std::pow(avgCaves*avgCaves,gP.power);
+
+   return -(std::log(0.005) - base)/2.0;
+}
+
 
 double GravityModel::oneOnOne(const int notNode,
 			      const int infNode,

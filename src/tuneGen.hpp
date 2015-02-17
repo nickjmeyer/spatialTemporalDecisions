@@ -20,8 +20,7 @@
 #include "modelCave.hpp"
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
-#include "myopicAgent.hpp"
-#include "rankAgentToy.hpp"
+#include "randomAgent.hpp"
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SgdOptim.hpp"
@@ -39,10 +38,10 @@ typedef GP EP;
 
 typedef System<GM,GP,EM,EP> S;
 typedef NoTrt<EM,EP> NT;
-typedef MyopicAgent<EM,EP> MA;
+typedef ProximalAgent<EM,EP> PA;
 
 typedef VanillaRunnerNS<S,NT> RN;
-typedef VanillaRunnerNS<S,MA> RM;
+typedef VanillaRunnerNS<S,PA> RP;
 
 
 double TuneGenNTObj(const gsl_vector * x, void * param);

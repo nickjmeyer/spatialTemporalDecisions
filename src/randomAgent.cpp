@@ -19,15 +19,16 @@ void RandomAgent<M,MP>::applyTrt(const SimData & sD,
 
   std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
 
+  int i,node0;
   for(i=0; i<sD.numNotInfec; i++){
     node0=sD.notInfec.at(i);
-    sortNotInfec.push(std::pair<double,int>(njm::runif(),node0));
+    sortNotInfec.push(std::pair<double,int>(njm::runif01(),node0));
   }    
 
   
   for(i=0; i<sD.numInfected; i++){
     node0=sD.infected.at(i);
-    sortInfected.push(std::pair<double,int>(njm::runif(),node0));
+    sortInfected.push(std::pair<double,int>(njm::runif01(),node0));
   }    
 	 
 
