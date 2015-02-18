@@ -1,5 +1,4 @@
-#include "test.hpp"
-#include "omp.h"
+#include "fitModel.hpp"
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);

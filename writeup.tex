@@ -1,62 +1,43 @@
-#+title: M1 Writeup
-#+author: 
+% Created 2015-02-18 Wed 09:38
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\usepackage{amsmath,amssymb,fullpage}
+\newcommand{\bs}{\boldsymbol}
+\newcommand{\attn}[1]{\textbf{***{#1}***}}
+\newcommand{\src}{\attn{source}}
+\setlength{\parskip}{\baselineskip}
+\date{\today}
+\title{M1 Writeup}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 24.4.1 (Org mode 8.2.10)}}
+\begin{document}
 
-#+startup: showeverything
-
-#+latex_header: \usepackage{amsmath,amssymb,fullpage}
-#+latex_header: \newcommand{\bs}{\boldsymbol}
-#+latex_header: \newcommand{\attn}[1]{\textbf{***{#1}***}}
-#+latex_header: \newcommand{\src}{\attn{source}}
-#+latex_header: \setlength{\parskip}{\baselineskip}
-
-* Checklist							   :noexport:
-** Notation
-   - [ ] Locations
-     - [ ] Coordinates
-     - [ ] Covariates
-     - [ ] Neighbors
-   - [ ] Dynamics model
-     - [ ] Gravity model
-** Structure generation
-   - [X] Covariates
-   - [ ] Network distance
-   - [-] Structures
-     - [X] Alley
-     - [ ] Bowtie
-     - [ ] Grid
-     - [X] Random
-     - [ ] Ring
-     - [ ] Scalefree
-** Spread dynamics models
-   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
-   - [ ] Gravity model
-   - [ ] Range model
-   - [ ] Cave model
-   - [ ] Setting generative model parameters
-** Simulation details
-   - [ ] Start settings
-   - [ ] Significant points
-     - [ ] Model estimation
-     - [ ] Strategy estimation
-   - [ ] Number of time points
-   - [ ] Objective function
-** Priority scores
-   - [ ] Form of the scores
-   - [ ] Selection process
-   - [ ] Features
-** M1 Optimization
-   - [ ] Runners
-   - [ ] SGD
-** Competing policies
-   - [ ] Proximal
-   - [ ] Myopic
+\maketitle
+\tableofcontents
 
 
-# begin writing...
+\section{Structure generation}
+\label{sec-1}
 
-* Structure generation
-
-** Covariates
+\subsection{Covariates}
+\label{sec-1-1}
 
 Define $X$ to be a $n \times p$ centered and scaled covariate matrix.
 The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
@@ -74,7 +55,8 @@ mass of the node.  Define $M_i = \lfloor X_{i,1} - X_{[1],1} \rfloor +
 1$ to be the mass of location $i$.
 
 
-** Network distance
+\subsection{Network distance}
+\label{sec-1-2}
 
 In order for the structure of the network to have a strong impact on
 the disease spread, we define distance as the geodesic distance raised
@@ -87,16 +69,16 @@ have geodesic distance $1$.  Let $p^{(2)}_{i,j}$ be the hypothetical
 probability if infection if $i$ and $j$ have geodesic distance $2$.
 For their mass, use the mean mass of the network.  The log odds-ratio
 is equal to
-#+begin_latex
-  \begin{equation*}
-    - \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
-  \end{equation*}
-#+end_latex
+\begin{equation*}
+  - \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
+\end{equation*}
 Set this equation equal to $\log(0.5)$ and solve for $z$.
 
-** Structures
+\subsection{Structures}
+\label{sec-1-3}
 
-*** Random Network
+\subsubsection{Random Network}
+\label{sec-1-3-1}
 
 The random network generates location coordinates uniformly on $[0,1]
 \times [0,1]$.  Let $C$ denote the set of coordinate pairs.  For any
@@ -112,18 +94,20 @@ E_{i,j} <= E_{i,[k]} \rbrace$.  Now, the adjacency matrix is defined
 as $A_{i,j} = 1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
 
 
-#+caption: A random network with 25 locations
-#+name: fig:rand25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/rand25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/rand25.pdf}
+\caption{\label{fig:rand25}A random network with 25 locations}
+\end{figure}
 
 
 
-*** Starred Alley
+\subsubsection{Starred Alley}
+\label{sec-1-3-2}
 
 The starred alleyway was produced to incorporate the importance of
 network centrality metrics.  An example of a starred alleyway can be
-found in figure [[fig:alley25]].  By looking at the structure, the goal is
+found in figure \ref{fig:alley25}.  By looking at the structure, the goal is
 to identify the locations along the main horizontal line.  If these
 locations are treated, it helps to contain the spread of the disease.
 
@@ -132,48 +116,56 @@ node on the outer points, the distance to the closest node on the main
 horizontal line is $0.9$ instead of $1.0$.
 
 
-#+caption: The starred alleyway network with 25 locations
-#+name: fig:alley25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/alley25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/alley25.pdf}
+\caption{\label{fig:alley25}The starred alleyway network with 25 locations}
+\end{figure}
 
 
 
-*** Ring
+\subsubsection{Ring}
+\label{sec-1-3-3}
 
 The ring is a simple circle of locations with a concetrated group in one
 section.  To form the ring, place the locations evenly on the circle
 then between one pair of locations insert more locations evenly.  An
-example can be seen in figure [[fig:ring25]].
+example can be seen in figure \ref{fig:ring25}.
 
-#+caption: The ring network with 25 locations
-#+name: fig:ring25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/ring25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/ring25.pdf}
+\caption{\label{fig:ring25}The ring network with 25 locations}
+\end{figure}
 
 
-*** Grid
+\subsubsection{Grid}
+\label{sec-1-3-4}
 
 The grid is a checkerboard-like structure.
 
-#+caption: The grid network with 25 locations
-#+name: fig:grid25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/grid25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/grid25.pdf}
+\caption{\label{fig:grid25}The grid network with 25 locations}
+\end{figure}
 
-*** Bowtie
+\subsubsection{Bowtie}
+\label{sec-1-3-5}
 
 The bowtie combines two grid networks with a random network in
 between.  Spread of the disease begins in one grid and travels through
 the random network and into the other grid.
 
-#+caption: The bowtie network with 25 locations
-#+name: fig:bowtie25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/bowtie25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/bowtie25.pdf}
+\caption{\label{fig:bowtie25}The bowtie network with 25 locations}
+\end{figure}
 
 
-*** Scalefree
+\subsubsection{Scalefree}
+\label{sec-1-3-6}
 
 The scalefree network is designed so that some locations are highly
 connected while others are only connected by a couple edges.  This
@@ -184,7 +176,10 @@ personal webpage).
 
 \attn{Describe the probabilities of having an edge}
 
-#+caption: The scalefree network with 25 locations
-#+name: fig:scalefree25
-#+attr_latex: :width 0.5\textwidth
-[[./data/toy/scalefree25.pdf]]
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{./data/toy/scalefree25.pdf}
+\caption{\label{fig:scalefree25}The scalefree network with 25 locations}
+\end{figure}
+% Emacs 24.4.1 (Org mode 8.2.10)
+\end{document}

@@ -20,7 +20,7 @@ HOST = $(shell hostname)
 DEBUG = -g3 -ggdb -DNJM_DEBUG
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG
 PROF = $(DEBUG) -pg 
-BINARY = test
+BINARY = fitModel
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \

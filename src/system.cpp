@@ -52,6 +52,101 @@ System<MG, MPG,
 
 template <class MG, class MPG,
 	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(const std::string file){
+  initialize();
+
+  std::vector<int> historyFile;
+  njm::fromFile(historyFile,njm::sett.srcExt(file));
+
+  int size = int(historyFile.size());
+  int numPoints = size/fD.numNodes;
+
+
+  // history
+  sD_r.history.clear();
+  sD_r.history.resize(numPoints - 1);
+  
+  int i,j,k;
+  for(i = 0, k = 0; i < (numPoints - 1); i++){
+    sD_r.history.at(i).clear();
+    for(j = 0; j < fD.numNodes; j++, k++){
+      sD_r.history.at(i).push_back(historyFile.at(k));
+    }
+  }
+
+
+  // status
+  sD_r.status.clear();
+  for(j = 0; j < fD.numNodes; j++, k++)
+    sD_r.status.push_back(historyFile.at(k));
+
+  // current treatments
+  for(j = 0; j < fD.numNodes; j++){
+    tD_r.a.at(j) = tD_r.p.at(j) = 0;
+    if(sD_r.status.at(j) == 1)
+      tD_r.p.at(j) = 1;
+    else if(sD_r.status.at(j) == 3)
+      tD_r.a.at(j) = 1;
+  }
+
+  // past treatments
+  if(numPoints > 1)
+    for(j = 0; j < fD.numNodes; j++){
+      tD_r.aPast.at(j) = tD_r.pPast.at(j) = 0;
+      if(sD_r.history.at(numPoints - 2).at(j) == 1)
+	tD_r.pPast.at(j) = 1;
+      else if(sD_r.history.at(numPoints - 2).at(j) == 3)
+	tD_r.aPast.at(j) = 1;
+    }
+  else{
+    std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
+    std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
+  }
+	
+  // infected & not infected
+  sD_r.infected.clear();
+  sD_r.notInfec.clear();
+  for(j = 0; j < fD.numNodes; j++)
+    if(sD_r.status.at(j) < 2)
+      sD_r.notInfec.push_back(j);
+    else
+      sD_r.infected.push_back(j);
+  sD_r.numInfected = sD_r.infected.size();
+  sD_r.numNotInfec = sD_r.notInfec.size();
+
+  // newly infected
+  sD_r.newInfec.clear();
+  if(numPoints > 1){
+    for(j = 0; j < fD.numNodes; j++)
+      if(sD_r.status.at(j) >= 2 && sD_r.history.at(numPoints - 2).at(j) < 2)
+	sD_r.newInfec.push_back(j);
+  }
+  else{
+    sD_r.newInfec = sD_r.infected;
+  }
+
+
+  // time infected
+  sD_r.timeInf.resize(fD.numNodes);
+  std::fill(sD_r.timeInf.begin(),sD_r.timeInf.end(),0);
+  for(i = 0; i < (numPoints - 1); i++)
+    for(j = 0; j < fD.numNodes; j++)
+      if(sD_r.history.at(i).at(j) >= 2)
+	sD_r.timeInf.at(j)++;
+  for(j = 0; j < fD.numNodes; j++)
+    if(sD_r.status.at(j) >= 2)
+      sD_r.timeInf.at(j)++;
+  
+  // current time
+  sD_r.time = numPoints - 1;
+
+  reset();
+}
+
+
+template <class MG, class MPG,
+	  class ME, class MPE>
 void System<MG, MPG,
 	    ME, MPE>::reset(){
   sD = sD_r;
@@ -97,6 +192,7 @@ void System<MG, MPG,
 
   
   sD_r.time=0;
+  sD_r.history.clear();
   sD_r.status.resize(fD.numNodes);
   std::fill(sD_r.status.begin(),sD_r.status.end(),0);
   int i;

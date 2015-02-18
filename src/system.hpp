@@ -28,6 +28,7 @@ class System {
 	 const FixedData & fD, const DynamicData & dD,
 	 const MG & modelGen, const ME & modelEst,
 	 const MPG & paramGen, const MPE & paramEst);
+  System(const std::string file);
   
   SimData sD;
   TrtData tD;
