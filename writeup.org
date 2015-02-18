@@ -60,10 +60,10 @@
 
 Define $X$ to be a $n \times p$ centered and scaled covariate matrix.
 The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
-$\mu_i = 2*\widetilde{C}_{i,1}^2 + 1*\widetilde{C}_{i,2}$ and
+$\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
 $\widetilde{C}$ are the centered and scaled coordinates.  The
-covariance matrix has the structure $\Sigma_{i*p + s, j*p + t} =
-\rho * exp(-\tau * E_{i,j} - \eta*|s-t|)$.  Thus, the variance of the
+covariance matrix has the structure $\Sigma_{ip + s, jp + t} =
+\rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
 individual covariates are $1$ and the correlation decays as $E_{i,j}$
 increases and as $|s-t|$ increases.
 

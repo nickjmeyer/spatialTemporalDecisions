@@ -15,7 +15,7 @@ int main(int argc, char ** argv){
     typedef System<MG,PG,ME,PE> S;
   
     typedef ToyFeatures2<ME,PE> F;
-    typedef FeaturesInt<F,ME,PE> FI;
+    // typedef FeaturesInt<F,ME,PE> FI;
   
     typedef NoTrt<ME,PE> AN;
     typedef ProximalAgent<ME,PE> AP;
@@ -23,7 +23,7 @@ int main(int argc, char ** argv){
     typedef RankToyAgent<F,ME,PE> AR;
 
     typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
-    typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
 
     typedef VanillaRunner<S,AN> R_AN;
     typedef VanillaRunner<S,AP> R_AP;
@@ -43,7 +43,7 @@ int main(int argc, char ** argv){
 
     // optim
     OM1_Sgd om1_sgd;
-    OM2_Sa om2_sa;
+    // OM2_Sa om2_sa;
     
     // runners
     R_AN r_an;
@@ -96,17 +96,17 @@ int main(int argc, char ** argv){
     typedef System<MG,PG,ME,PE> S;
   
     typedef ToyFeatures2<ME,PE> F;
-    typedef FeaturesInt<F,ME,PE> FI;
+    // typedef FeaturesInt<F,ME,PE> FI;
   
     typedef MyopicAgent<ME,PE>  AM;
     typedef RankToyAgent<F,ME,PE> AR;
 
     typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
-    typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
 
     typedef FitOnlyRunner<S,AM> R_AM;
     typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
-    typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
 
     // system
     S s;
@@ -118,7 +118,7 @@ int main(int argc, char ** argv){
     
     // optim
     OM1_Sgd om1_sgd;
-    OM2_Sa om2_sa;
+    // OM2_Sa om2_sa;
 
     // runners
     R_AM r_am;
@@ -166,17 +166,17 @@ int main(int argc, char ** argv){
     typedef System<MG,PG,ME,PE> S;
   
     typedef ToyFeatures2<ME,PE> F;
-    typedef FeaturesInt<F,ME,PE> FI;
+    // typedef FeaturesInt<F,ME,PE> FI;
   
     typedef MyopicAgent<ME,PE>  AM;
     typedef RankToyAgent<F,ME,PE> AR;
 
     typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
-    typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
 
     typedef FitOnlyRunner<S,AM> R_AM;
     typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
-    typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
 
     // system
     S s;
@@ -188,12 +188,12 @@ int main(int argc, char ** argv){
     
     // optim
     OM1_Sgd om1_sgd;
-    OM2_Sa om2_sa;
+    // OM2_Sa om2_sa;
 
     // runners
     R_AM r_am;
     R_AR_M1Sgd r_ar_m1sgd;
-    R_AR_M2Sa r_ar_m2sa;
+    // R_AR_M2Sa r_ar_m2sa;
 
 
     int mcReps=300,numPoints = s.fD.finalT;
