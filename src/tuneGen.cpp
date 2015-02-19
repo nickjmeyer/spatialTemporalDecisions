@@ -26,6 +26,7 @@ double TuneGenNT(S & s){
       par -= add;
       s.paramGen_r.intcp = par;
       s.paramEst_r.intcp = par;
+      s.reset();
 
       above = 1;
     }
@@ -36,6 +37,7 @@ double TuneGenNT(S & s){
       par += add;
       s.paramGen_r.intcp = par;
       s.paramEst_r.intcp = par;
+      s.reset();
       
       above = 0;
     }

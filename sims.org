@@ -1,0 +1,40 @@
+#+title: simulation details
+
+* Simulations
+  - [ ] Models
+    - [ ] Gravity
+    - [ ] Gravity with time infected
+    - [ ] Range (only depends on distance)
+    - [ ] Cave (only depends on number of caves)
+  - [ ] Model specification (generative model is gravity model with best fit)
+    - [ ] Correctly specified
+    - [ ] Misspecified with range model
+    - [ ] Misspecified with cave model
+  - [ ] Model fitting
+    - [ ] MLE
+    - [ ] MCMC
+  - [ ] Policies
+    - [ ] Stochastic weights
+    - [ ] Stohastic weights
+      
+
+
+* Tuning
+  - [ ] Model fitting diagnostics (for Gravity models w/ and w/out time
+    infected)
+    - [ ] MLE
+      - [ ] LRT
+    - [ ] MCMC
+      - [ ] DIC
+    - [ ] Both
+      - [ ] AIC or BIC
+      - [ ] $\sum_{t,i} \| P_M(X_{t,i} = 1) - X^o_{t,i} \|_2$ where
+        $t$ is time, $i$ is location, $X$ is infection status, and $M$
+        is one of the spread models above.  $P_M(X_{t,i} = 1)$ would
+        be estimated empirically and $X^o_{t,i}$ is the observed
+        value.
+  - [ ] Variance for stochastic weights
+    - [ ] For feature $f_i$ let the jitter be $j_i \sim
+      N(0,Var(f_i)/c)$.
+    - [ ] Compare $c = 2,...,8$ for grid network size 100 and select the
+        one that performs the best in terms of estimated value.
