@@ -16,6 +16,8 @@
   - [ ] Policies
     - [ ] Stochastic weights
     - [ ] Stohastic weights
+  - Only run ALL the settings for network size 100.  For larger
+    networks, select the best performing settings.
       
 
 
