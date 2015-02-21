@@ -26,7 +26,7 @@ class RankToyTuneParam : public TuneParam {
 
   int numChunks;
 
-  double jitter;
+  double jitterScale;
 };
 
 

@@ -4,62 +4,70 @@
 #include <armadillo>
 #include "rand.hpp"
 #include "data.hpp"
-// #include "model.hpp"
 
 
 class GravitySamples{
  public:
-  arma::mat beta;
-  arma::colvec intcp,alpha,power,trtPre,trtAct;
+  int numSamples;
+  int numCovar;
+  
+  std::vector<double> intcp,beta,alpha,power,trtPre,trtAct;
 
-  double intcpMean;
-  arma::colvec betaMean;
-  double alphaMean;
-  double powerMean;
-  double trtPreMean;
-  double trtActMean;
+  double intcpSet;
+  std::vector<double> betaSet;
+  double alphaSet;
+  double powerSet;
+  double trtPreSet;
+  double trtActSet;
 
-  arma::colvec ll;
+  std::vector<double> ll;
   double llPt,pD,Dbar,DIC;
+
+  void setMean();
+  void setRand();
 };
 
 
 class GravityMcmc{
  public:
 
-  void load(const SimData & sD, const TrtData & tD,
-	    const FixedData & fD, const DynamicData & dD);
+  void load(const std::vector<std::vector<int> > & history,
+	    const std::vector<int> & status,
+	    const FixedData & fD);
+  void load(const std::vector<std::vector<int> > & history,
+	    const FixedData & fD);
   
   // MCMC samples
   GravitySamples samples;
 
   // history information of simulation
   int numNodes,T;
-  arma::Mat<int> infHist;
-  arma::Mat<int> trtPreHist;
-  arma::Mat<int> trtActHist;
-  arma::Mat<double> timeInf;
+  std::vector<int> infHist;
+  std::vector<int> trtPreHist;
+  std::vector<int> trtActHist;
+  std::vector<int> timeInf;
 
   // information about each county
-  int covar;
-  arma::mat d;
-  arma::mat cc;
-  arma::mat Xcov;
-  arma::colvec XcovBeta_cur;
-  arma::colvec XcovBeta_can;
-  arma::mat alphaW_cur;
-  arma::mat alphaW_can;
+  std::vector<double> d;
+  std::vector<double> cc;
+  std::vector<double> covar;
+  int numCovar;
+  
+  std::vector<double> covarBeta_cur;
+  std::vector<double> covarBeta_can;
+  std::vector<double> alphaW_cur;
+  std::vector<double> alphaW_can;
 
   // current iteration of the parameters
   double intcp_cur;
-  arma::colvec beta_cur;
+  std::vector<double> beta_cur;
   double alpha_cur;
   double power_cur;
   double trtPre_cur;
   double trtAct_cur;
 
   double intcp_can;
-  arma::colvec beta_can;
+  std::vector<double> beta_can;
   double alpha_can;
   double power_can;
   double trtPre_can;
@@ -68,26 +76,36 @@ class GravityMcmc{
   // likelihood values
   double ll_cur;
   double ll_can;
-  arma::colvec llVec_cur;
-  arma::colvec llVec_can;
 
   // MH step
-  arma::colvec mh;
-  arma::colvec acc;
-  arma::colvec att;
-  arma::colvec tau;
+  std::vector<double> mh;
+  std::vector<double> acc;
+  std::vector<double> att;
+  std::vector<double> tau;
 
   // variables used for priors and such
-  arma::colvec mu;
+  std::vector<double> mu;
 
   //functions
   void sample(int const numSamples, int const numBurn);
-  double ll(int const b, int const B);
   double ll();
-  void update_alphaW(std::string const par, int const b, int const B);
-  int block2Time(int const b, int const B);
-
 };
+
+
+void updateAlphaW(std::vector<double> & alphaW,
+		  const double & alphaOld,
+		  const double & alphaNew);
+void updateAlphaW(std::vector<double> & alphaW,
+		  const std::vector<double> & d,
+		  const std::vector<double> & cc,
+		  const double & alpha,
+		  const double & powerNew);
+void updateCovarBeta(std::vector<double> & covarBeta,
+		     const std::vector<double> & covar,
+		     const std::vector<double> & beta,
+		     const int numNodes,
+		     const int numCovar);
+
 
 
 #endif

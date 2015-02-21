@@ -645,7 +645,7 @@ OptimRunner<S,A,Optim>
 
   resetRandomSeed();
   
-  int tick,tock,done=0;
+  int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
   double hours;
   
@@ -653,15 +653,20 @@ OptimRunner<S,A,Optim>
   int r,t;
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
+
+  std::vector<int> times(numReps);
   
   // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
   int threads = omp_get_max_threads();
   
 #pragma omp parallel for num_threads(threads)	\
-  shared(value,valueAll)			\
+  shared(value,valueAll,tock,tick)		\
   firstprivate(system,agent,optim,weights)	\
-  private(r,t)
+  private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
+    // record time for each replication
+    tickR=std::time(NULL);
+    
     system.reset();
 #pragma omp critical
     {    
@@ -700,6 +705,13 @@ OptimRunner<S,A,Optim>
       value += system.value();
     }
 
+    // store time for iteration
+    tockR = std::time(NULL);
+#pragma omp critical
+    {
+      times.at(r) = tockR - tickR;
+    }
+
     // write history to file
     system.sD.history.push_back(system.sD.status);
     njm::toFile(njm::toString(system.sD.history,"\n","")
@@ -727,12 +739,21 @@ OptimRunner<S,A,Optim>
 		  " in " + njm::toString(hours,"",8,4) + " hours" +
 		  " with value " + njm::toString(value/((double)done),"",6,4) +
 		  "\n",
-		  njm::sett.datExt(agent.name+"_"+optim.name+"_",".txt"));
+		  njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
+				   ".txt"));
     }
+    
   }
+
   njm::toFile(njm::toString(valueAll,"\n",""),
 	      njm::sett.datExt(agent.name+"_"+optim.name+
 			       "_values_",".txt"));
+
+  njm::toFile(njm::toString(times,"\n",""),
+	      njm::sett.datExt(agent.name+"_"+optim.name+
+			       "_times_",".txt"));
+
+
   return value/((double)numReps);
 }
 

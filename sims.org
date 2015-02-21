@@ -1,5 +1,7 @@
 #+title: simulation details
 
+#+startup: showeverything
+
 * Simulations
   - [ ] Models
     - [ ] Gravity
@@ -12,10 +14,13 @@
     - [ ] Misspecified with cave model
   - [ ] Model fitting
     - [ ] MLE
-    - [ ] MCMC
+    - [ ] Posterior Mean
   - [ ] Policies
     - [ ] Stochastic weights
-    - [ ] Stohastic weights
+    - [ ] Non-stochastic weights
+  - [ ] Sweep iterations
+    - [ ] Number of groups $1,...,10$
+  - [X] Track computation time
   - Only run ALL the settings for network size 100.  For larger
     networks, select the best performing settings.
       
@@ -26,8 +31,8 @@
     infected)
     - [ ] MLE
       - [ ] LRT
-    - [ ] MCMC
-      - [ ] DIC
+    - [ ] Posterior Mean
+      - [ ] DIC (using MCMC samples)
     - [ ] Both
       - [ ] AIC or BIC
       - [ ] $\sum_{t,i} \| P_M(X_{t,i} = 1) - X^o_{t,i} \|_2$ where
@@ -40,3 +45,7 @@
       N(0,Var(f_i)/c)$.
     - [ ] Compare $c = 2,...,8$ for grid network size 100 and select the
         one that performs the best in terms of estimated value.
+
+* Fix
+  - [X] Add uniform selection to priority score
+  - [ ] Make toy structures completely deterministic

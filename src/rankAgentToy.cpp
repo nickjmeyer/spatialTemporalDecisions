@@ -23,7 +23,7 @@ RankToyAgent<F,M,MP>::RankToyAgent(){
   tp.weights.ones(4);
   tp.numChunks = 3;
 
-  tp.jitter = 0.25;
+  tp.jitterScale = 4.0;
   
   name="rank";
 }
@@ -51,13 +51,46 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
   arma::colvec jitter;
   jitter.zeros(f.numFeatures);
   
-  int i,j,node0,addPre,addAct;
+  int i,j,k,node0,addPre,addAct;
   int cI = 0,cN = 0;
+  
+  double fBar,fSq,fVar;
+  int fN;
+  
   for(i = 0; i < tp.numChunks; i++){
 
     // get jitter
-    for(j = 0; j < f.numFeatures; j++)
-      jitter(j) = tp.jitter*njm::rnorm01();
+    for(j = 0; j < f.numFeatures; j++){
+      fBar = 0.0;
+      fSq = 0.0;
+      fN = 0;
+      
+      for(k = 0; k < sD.numNotInfec; k++){
+	if(tD.p.at(sD.notInfec.at(k)) == 0){
+	  fBar += f.notFeat(k,j);
+	  fSq += f.notFeat(k,j)*f.notFeat(k,j);
+	  fN++;
+	}
+      }
+      for(k = 0; k < sD.numInfected; k++){
+	if(tD.a.at(sD.infected.at(k)) == 0){
+	  fBar += f.infFeat(k,j);
+	  fSq += f.infFeat(k,j)*f.notFeat(k,j);
+	  fN++;
+	}
+      }
+
+      if(fN > 1){
+	fBar/=double(fN);
+	fSq/=double(fN);
+	
+	fVar = (double(fN)/double(fN - 1))*(fSq - fBar);
+      }
+      else
+	fVar = 1.0;
+      
+      jitter(j) = std::sqrt(fVar)*njm::rnorm01()/tp.jitterScale;
+    }
 
     // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
@@ -85,24 +118,39 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
     }
 
 
+    std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
+    for(j = 0; j < (numPre - cN); j++){
+      selInfected.push(std::pair<double,int>(njm::runif01(),
+					     sortInfected.top().second));
+      sortInfected.pop();
+    }
+
+    for(j = 0; j < (numAct - cI); j++){
+      selNotInfec.push(std::pair<double,int>(njm::runif01(),
+					     sortNotInfec.top().second));
+      sortNotInfec.pop();
+    }
+    
+
     // number of locations to add treatment too for this iteration
     addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
       (int)(i*numPre/std::min(tp.numChunks,numPre));
     addAct = (int)((i+1)*numAct/std::min(tp.numChunks,numAct)) -
       (int)(i*numAct/std::min(tp.numChunks,numAct));
 
+
     // add preventative treatment
     for(j = 0; j < addPre && cN < numPre; cN++,j++){
-      node0=sortNotInfec.top().second;
+      node0=selNotInfec.top().second;
       tD.p.at(sD.notInfec.at(node0)) = 1;
-      sortNotInfec.pop();
+      selNotInfec.pop();
     }
 
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
-      node0=sortInfected.top().second;
+      node0=selInfected.top().second;
       tD.a.at(sD.infected.at(node0)) = 1;
-      sortInfected.pop();
+      selInfected.pop();
     }
 
     // if more iterations, update features

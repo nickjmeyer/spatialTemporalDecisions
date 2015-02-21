@@ -47,7 +47,7 @@ namespace njm{
   double runif(double a, double b);
   
   int runifInterv(int min, int max);
-  // REQUIRES: max, min are positive integers, max>=min
+  // REQUIRES: max, min are positive integers, max>min
   // MODIFIES: nothing
   // EFFECTS: returns a random integer from the set {0,1,...,max-1}
   

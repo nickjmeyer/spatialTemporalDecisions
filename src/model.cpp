@@ -283,47 +283,47 @@ inline double multOneMinus(double a, double b){
 
 
 
-void GravityModelMcmc::assignMean(GravityParam & mP){
-  mP.intcp = arma::mean(mcmc.samples.intcp);
-  mP.beta = arma::conv_to<std::vector<double> >
-    ::from(arma::mean(mcmc.samples.beta));
-  mP.alpha = arma::mean(mcmc.samples.alpha);
-  mP.power = arma::mean(mcmc.samples.power);
-  mP.trtPre = arma::mean(mcmc.samples.trtPre);
-  mP.trtAct = arma::mean(mcmc.samples.trtAct);
-}
+// void GravityModelMcmc::assignMean(GravityParam & mP){
+//   mP.intcp = arma::mean(mcmc.samples.intcp);
+//   mP.beta = arma::conv_to<std::vector<double> >
+//     ::from(arma::mean(mcmc.samples.beta));
+//   mP.alpha = arma::mean(mcmc.samples.alpha);
+//   mP.power = arma::mean(mcmc.samples.power);
+//   mP.trtPre = arma::mean(mcmc.samples.trtPre);
+//   mP.trtAct = arma::mean(mcmc.samples.trtAct);
+// }
 
-void GravityModelMcmc::assignMean(GravityParam & mP0, GravityParam & mP1){
-  mP0.intcp = arma::mean(mcmc.samples.intcp);
-  mP0.beta = arma::conv_to<std::vector<double> >
-    ::from(arma::mean(mcmc.samples.beta));
-  mP0.alpha = arma::mean(mcmc.samples.alpha);
-  mP0.power = arma::mean(mcmc.samples.power);
-  mP0.trtPre = arma::mean(mcmc.samples.trtPre);
-  mP0.trtAct = arma::mean(mcmc.samples.trtAct);
-  mP1 = mP0;
-}
+// void GravityModelMcmc::assignMean(GravityParam & mP0, GravityParam & mP1){
+//   mP0.intcp = arma::mean(mcmc.samples.intcp);
+//   mP0.beta = arma::conv_to<std::vector<double> >
+//     ::from(arma::mean(mcmc.samples.beta));
+//   mP0.alpha = arma::mean(mcmc.samples.alpha);
+//   mP0.power = arma::mean(mcmc.samples.power);
+//   mP0.trtPre = arma::mean(mcmc.samples.trtPre);
+//   mP0.trtAct = arma::mean(mcmc.samples.trtAct);
+//   mP1 = mP0;
+// }
 
-void GravityModelMcmc::assignRand(GravityParam & mP){
-  int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
-  mP.intcp = mcmc.samples.intcp(ind);
-  mP.beta = arma::conv_to<std::vector<double> >
-    ::from(mcmc.samples.beta.row(ind));
-  mP.alpha = mcmc.samples.alpha(ind);
-  mP.power = mcmc.samples.power(ind);
-  mP.trtPre = mcmc.samples.trtPre(ind);
-  mP.trtAct = mcmc.samples.trtAct(ind);
-}
+// void GravityModelMcmc::assignRand(GravityParam & mP){
+//   int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
+//   mP.intcp = mcmc.samples.intcp(ind);
+//   mP.beta = arma::conv_to<std::vector<double> >
+//     ::from(mcmc.samples.beta.row(ind));
+//   mP.alpha = mcmc.samples.alpha(ind);
+//   mP.power = mcmc.samples.power(ind);
+//   mP.trtPre = mcmc.samples.trtPre(ind);
+//   mP.trtAct = mcmc.samples.trtAct(ind);
+// }
 
-void GravityModelMcmc::assignRand(GravityParam & mP0, GravityParam & mP1){
-  int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
-  mP0.intcp = mcmc.samples.intcp(ind);
-  mP0.beta = arma::conv_to<std::vector<double> >
-    ::from(mcmc.samples.beta.row(ind));
-  mP0.alpha = mcmc.samples.alpha(ind);
-  mP0.power = mcmc.samples.power(ind);
-  mP0.trtPre = mcmc.samples.trtPre(ind);
-  mP0.trtAct = mcmc.samples.trtAct(ind);
-  mP1 = mP0;
-}
+// void GravityModelMcmc::assignRand(GravityParam & mP0, GravityParam & mP1){
+//   int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
+//   mP0.intcp = mcmc.samples.intcp(ind);
+//   mP0.beta = arma::conv_to<std::vector<double> >
+//     ::from(mcmc.samples.beta.row(ind));
+//   mP0.alpha = mcmc.samples.alpha(ind);
+//   mP0.power = mcmc.samples.power(ind);
+//   mP0.trtPre = mcmc.samples.trtPre(ind);
+//   mP0.trtAct = mcmc.samples.trtAct(ind);
+//   mP1 = mP0;
+// }
 
