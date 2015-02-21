@@ -50,42 +50,6 @@ void GravitySamples::setRand(){
 
 
 
-void updateAlphaW(std::vector<double> & alphaW,
-		  const double & alphaOld,
-		  const double & alphaNew){
-  double scale = alphaNew/alphaOld;
-  std::for_each(alphaW.begin(),alphaW.end(),
-		[&scale](double & x){x *= scale;});
-}
-
-void updateAlphaW(std::vector<double> & alphaW,
-		  const std::vector<double> & d,
-		  const std::vector<double> & cc,
-		  const double & alpha,
-		  const double & powerNew){
-  int i = 0;
-  std::for_each(alphaW.begin(),alphaW.end(),
-		[&](double & x){x = alpha * d.at(i)/
-		    std::pow(cc.at(i),powerNew);
-		  ++i;});
-}
-
-void updateCovarBeta(std::vector<double> & covarBeta,
-		     const std::vector<double> & covar,
-		     const std::vector<double> & beta,
-		     const int numNodes,
-		     const int numCovar){
-  int i,j;
-  double prod;
-  for(i = 0; i < numNodes; ++i){
-    prod = 0;
-    for(j = 0; j < numCovar; ++j){
-      prod += covar.at(i*numCovar + j) * beta.at(j);
-    }
-    covarBeta.at(i) = prod;
-  }
-}
-
 void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 		       const std::vector<int> & status,
 		       const FixedData & fD){

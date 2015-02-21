@@ -1,7 +1,8 @@
-#ifndef MCMC_HPP__
-#define MCMC_HPP__
+#ifndef GRAVITY_MCMC_HPP__
+#define GRAVITY_MCMC_HPP__
 
-#include <armadillo>
+#include <vector>
+#include <algorithm>
 #include "rand.hpp"
 #include "data.hpp"
 
@@ -89,22 +90,61 @@ class GravityMcmc{
   //functions
   void sample(int const numSamples, int const numBurn);
   double ll();
+
+  inline static void updateAlphaW(std::vector<double> & alphaW,
+				  const double & alphaOld,
+				  const double & alphaNew);
+  inline static void updateAlphaW(std::vector<double> & alphaW,
+				  const std::vector<double> & d,
+				  const std::vector<double> & cc,
+				  const double & alpha,
+				  const double & powerNew);
+  inline static void updateCovarBeta(std::vector<double> & covarBeta,
+				     const std::vector<double> & covar,
+				     const std::vector<double> & beta,
+				     const int numNodes,
+				     const int numCovar);
 };
 
 
-void updateAlphaW(std::vector<double> & alphaW,
-		  const double & alphaOld,
-		  const double & alphaNew);
-void updateAlphaW(std::vector<double> & alphaW,
-		  const std::vector<double> & d,
-		  const std::vector<double> & cc,
-		  const double & alpha,
-		  const double & powerNew);
-void updateCovarBeta(std::vector<double> & covarBeta,
-		     const std::vector<double> & covar,
-		     const std::vector<double> & beta,
-		     const int numNodes,
-		     const int numCovar);
+
+inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
+				      const double & alphaOld,
+				      const double & alphaNew){
+  double scale = alphaNew/alphaOld;
+  std::for_each(alphaW.begin(),alphaW.end(),
+		[&scale](double & x){x *= scale;});
+}
+
+inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
+				      const std::vector<double> & d,
+				      const std::vector<double> & cc,
+				      const double & alpha,
+				      const double & powerNew){
+  int i = 0;
+  std::for_each(alphaW.begin(),alphaW.end(),
+		[&](double & x){x = alpha * d.at(i)/
+		    std::pow(cc.at(i),powerNew);
+		  ++i;});
+}
+
+inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
+					 const std::vector<double> & covar,
+					 const std::vector<double> & beta,
+					 const int numNodes,
+					 const int numCovar){
+  int i,j;
+  double prod;
+  for(i = 0; i < numNodes; ++i){
+    prod = 0;
+    for(j = 0; j < numCovar; ++j){
+      prod += covar.at(i*numCovar + j) * beta.at(j);
+    }
+    covarBeta.at(i) = prod;
+  }
+}
+
+
 
 
 
