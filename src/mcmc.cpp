@@ -1,7 +1,7 @@
 #include "mcmc.hpp"
 
 
-enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4,XI_=5};
+enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
 
 void GravitySamples::setMean(){
   intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
@@ -49,6 +49,18 @@ void GravitySamples::setRand(){
 }
 
 
+std::vector<double> GravitySamples::getPar() const {
+  std::vector<double> par = betaSet;
+  par.push_back(intcpSet);
+  par.push_back(alphaSet);
+  par.push_back(powerSet);
+  par.push_back(trtActSet);
+  par.push_back(trtPreSet);
+  
+  return par;
+}
+
+
 
 void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 		       const std::vector<int> & status,
@@ -74,6 +86,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
   d = fD.dist;
   cc.resize(numNodes*numNodes);
   covar = fD.covar;
+  timeInf.resize(numNodes*T);
   int i,j;
   for(i = 0; i < numNodes; ++i){
     for(j = 0; j < T; ++j){// get the histories of infection and treatments
@@ -88,11 +101,14 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
     }
   }
 
+
+  int val;
   for(i = 0; i < numNodes; ++i){
-    timeInf.at(i) = 0;
+    val = 0;
     for(j = 0; j < T; ++j){
       if(infHist.at(i*T + j) == 1)
-	++timeInf.at(i);
+	++val;
+      timeInf.at(i*T + j) = val;
     }
   }
   
@@ -129,30 +145,32 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
   samples.ll = std::vector<double>(numSamples-numBurn,0.0);
 
+  covarBeta_cur.resize(numNodes*numCovar);
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
   covarBeta_can = covarBeta_cur;
 
-  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
+  alphaW_cur.resize(numNodes*numNodes);
+  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur);
   alphaW_can = alphaW_cur;
   
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
 
   // set the MH tuning parameters
-  acc=att= std::vector<double>(numCovar+5,0.5);
+  acc=att= std::vector<int>(numCovar+5,0);
   mh=std::vector<double>(numCovar+5,0.5);
-  tau=std::vector<double>(numCovar+2,0.0);
+  // tau=std::vector<double>(numCovar+2,0.0);
   
-  mu=std::vector<double>(numCovar+2,0.0);
-  mu.at(numCovar+INTCP_) = -3;
+  // mu=std::vector<double>(numCovar+2,0.0);
+  // mu.at(numCovar+INTCP_) = -3;
   
   double upd;
   double R;
   
   double logAlpha_cur,logAlpha_can;
 
-  int displayOn=50;
-  int display=0;
+  int displayOn=5;
+  int display=1;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; i++){
@@ -405,7 +423,7 @@ double GravityMcmc::ll(){
 	if(trtPreHist.at(j*T + i-1)==0)
 	  baseProbInit=intcp_can+covarBeta_can.at(j);
 	else
-	  baseProbInit=intcp_can+covarBeta_can.at(j)+trtPre_can;
+	  baseProbInit=intcp_can+covarBeta_can.at(j) - trtPre_can;
 
 	for(k=0; k<numNodes; k++){
 	  // if county is infected it affects the infProb
@@ -418,9 +436,9 @@ double GravityMcmc::ll(){
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 	    
 	    if(trtActHist.at(k*T + i-1)==1)
-	      baseProb+=trtAct_can;
+	      baseProb -= trtAct_can;
 
-	    expProb=std::exp(-baseProb);
+	    expProb=std::exp(baseProb);
 
 	    wontProb*=1.0/(1.0+expProb);
 	  }
@@ -428,8 +446,11 @@ double GravityMcmc::ll(){
 	
 	prob=1.0-wontProb;
 
-	if(!(prob>0))
+	if(!(prob > 0.0))
 	  prob=std::exp(-30.0);
+	else if(!(prob < 1.0))
+	  prob=1.0 - std::exp(-30.0);
+	
 	if(infHist.at(j*T + i)==0)
 	  llVal+=std::log(1-prob);
 	else
@@ -437,7 +458,7 @@ double GravityMcmc::ll(){
       }
     }
   }
-  
+
   return llVal;
 }
 

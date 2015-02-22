@@ -26,6 +26,8 @@ class GravitySamples{
 
   void setMean();
   void setRand();
+
+  std::vector<double> getPar() const;
 };
 
 
@@ -80,12 +82,12 @@ class GravityMcmc{
 
   // MH step
   std::vector<double> mh;
-  std::vector<double> acc;
-  std::vector<double> att;
-  std::vector<double> tau;
+  std::vector<int> acc;
+  std::vector<int> att;
+  // std::vector<double> tau;
 
-  // variables used for priors and such
-  std::vector<double> mu;
+  // // variables used for priors and such
+  // std::vector<double> mu;
 
   //functions
   void sample(int const numSamples, int const numBurn);
