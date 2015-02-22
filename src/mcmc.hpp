@@ -93,16 +93,24 @@ class GravityMcmc{
 
   inline static void updateAlphaW(std::vector<double> & alphaW,
 				  const double & alphaOld,
-				  const double & alphaNew);
+				  const double & alphaNew,
+				  const int numNodes);
   inline static void updateAlphaW(std::vector<double> & alphaW,
 				  const std::vector<double> & d,
 				  const std::vector<double> & cc,
 				  const double & alpha,
-				  const double & powerNew);
+				  const double & powerNew,
+				  const int numNodes);
   inline static void updateCovarBeta(std::vector<double> & covarBeta,
 				     const std::vector<double> & covar,
 				     const std::vector<double> & beta,
 				     const int numNodes,
+				     const int numCovar);
+  inline static void updateCovarBeta(std::vector<double> & covarBeta,
+				     const std::vector<double> & covar,
+				     const double & betaOld,
+				     const double & betaNew,
+				     const int covarInd,
 				     const int numCovar);
 };
 
@@ -110,23 +118,29 @@ class GravityMcmc{
 
 inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
 				      const double & alphaOld,
-				      const double & alphaNew){
+				      const double & alphaNew,
+				      const int numNodes){
   double scale = alphaNew/alphaOld;
-  std::for_each(alphaW.begin(),alphaW.end(),
-		[&scale](double & x){x *= scale;});
+  int i,j;
+  for(i = 0; i < numNodes; ++i)
+    for(j = i; j < numNodes; ++j)
+      alphaW.at(i*numNodes + j) *= scale;
 }
+
 
 inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
 				      const std::vector<double> & d,
 				      const std::vector<double> & cc,
 				      const double & alpha,
-				      const double & powerNew){
-  int i = 0;
-  std::for_each(alphaW.begin(),alphaW.end(),
-		[&](double & x){x = alpha * d.at(i)/
-		    std::pow(cc.at(i),powerNew);
-		  ++i;});
+				      const double & powerNew,
+				      const int numNodes){
+  int i,j;
+  for(i = 0; i < numNodes; ++i)
+    for(j = i; j < numNodes; ++j)
+      alphaW.at(i*numNodes + j) = alpha * d.at(i*numNodes + j)/
+	std::pow(cc.at(i*numNodes + j),powerNew);
 }
+
 
 inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 					 const std::vector<double> & covar,
@@ -142,6 +156,22 @@ inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
     }
     covarBeta.at(i) = prod;
   }
+}
+
+
+inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
+					 const std::vector<double> & covar,
+					 const double & betaOld,
+					 const double & betaNew,
+					 const int covarInd,
+					 const int numCovar){
+  int i = 0;
+  double diff = betaNew - betaOld;
+  std::for_each(covarBeta.begin(),covarBeta.end(),
+		[&covar,&numCovar,&covarInd,&i,&diff](double & x){
+		  x *= covar.at(i*numCovar + covarInd)*diff;
+		  ++i;
+		});
 }
 
 

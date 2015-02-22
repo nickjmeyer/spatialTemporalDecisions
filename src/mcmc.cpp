@@ -59,6 +59,8 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
   load(all,fD);
 }
 
+
+
 void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 		       const FixedData & fD){
   numNodes=fD.numNodes;
@@ -130,7 +132,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
   covarBeta_can = covarBeta_cur;
 
-  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur);
+  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
   alphaW_can = alphaW_cur;
   
   // get the likelihood with the current parameters
@@ -191,7 +193,9 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
       upd=beta_cur.at(j)+mh.at(j)*njm::rnorm01();
       beta_can.at(j)=upd;
 
-      updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
+      updateCovarBeta(covarBeta_can,covar,
+		      beta_cur.at(j),beta_can.at(j),
+		      j,numCovar);
       
       // get new likelihood
       ll_can=ll();
@@ -275,7 +279,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     logAlpha_can=std::log(alpha_can);
 
     // update alphaW
-    updateAlphaW(alphaW_can,alpha_cur,alpha_can);
+    updateAlphaW(alphaW_can,alpha_cur,alpha_can,numNodes);
 
     // get new likelihood
     ll_can=ll();
@@ -306,7 +310,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     power_can=upd;
 
     // update alphaW
-    updateAlphaW(alphaW_can,d,cc,alpha_cur,power_can);
+    updateAlphaW(alphaW_can,d,cc,alpha_cur,power_can,numNodes);
 
     // get new likelihood
     ll_can=ll();
@@ -371,7 +375,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   trtAct_can = samples.trtActSet;
 
   updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
-  updateAlphaW(alphaW_can,d,cc,alpha_can,power_can);
+  updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
   samples.llPt = ll();
 
@@ -408,8 +412,11 @@ double GravityMcmc::ll(){
 	  if(infHist.at(k*T + i-1)==1){
 	    // calculate infProb
 	    baseProb=baseProbInit;
-	    baseProb -= alphaW_can.at(j*numNodes + k);
-
+	    if(j < k)
+	      baseProb -= alphaW_can.at(j*numNodes + k);
+	    else
+	      baseProb -= alphaW_can.at(k*numNodes + j);
+	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb+=trtAct_can;
 
