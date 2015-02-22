@@ -12,12 +12,12 @@ int main(int argc, char ** argv){
 
   GravityMcmc mcmc;
 
-  // mcmc.load(s.sD.history,s.sD.status,s.fD);
-  // mcmc.sample(5000,1000);
+  mcmc.load(s.sD.history,s.sD.status,s.fD);
+  mcmc.sample(5000,1000);
 
-  // mcmc.samples.setMean();
+  mcmc.samples.setMean();
   
-  // njm::message(mcmc.samples.getPar());
+  njm::message(mcmc.samples.getPar());
   
   njm::message(s.paramGen.getPar());
 

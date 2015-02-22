@@ -143,7 +143,7 @@ inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
 	std::pow(cc.at(i*numNodes + j),powerNew);
 }
 
-
+// add intercept into covarBeta
 inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 					 const std::vector<double> & covar,
 					 const std::vector<double> & beta,
@@ -171,7 +171,7 @@ inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
   double diff = betaNew - betaOld;
   std::for_each(covarBeta.begin(),covarBeta.end(),
 		[&covar,&numCovar,&covarInd,&i,&diff](double & x){
-		  x *= covar.at(i*numCovar + covarInd)*diff;
+		  x += covar.at(i*numCovar + covarInd)*diff;
 		  ++i;
 		});
 }

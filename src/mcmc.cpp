@@ -136,21 +136,27 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   trtAct_cur=trtAct_can=0;
 
   // set containers for storing all non-burned samples
-  samples.intcp = std::vector<double>(numSamples-numBurn,0.0);
-  samples.beta = std::vector<double>((numSamples-numBurn)*numCovar,0.0);
-  samples.alpha = std::vector<double>(numSamples-numBurn,0.0);
-  samples.power = std::vector<double>(numSamples-numBurn,0.0);
-  samples.trtPre = std::vector<double>(numSamples-numBurn,0.0);
-  samples.trtAct = std::vector<double>(numSamples-numBurn,0.0);
+  samples.intcp.reserve(numSamples-numBurn);
+  samples.intcp.clear();
+  samples.beta.reserve((numSamples-numBurn)*numCovar);
+  samples.beta.clear();
+  samples.alpha.reserve(numSamples-numBurn);
+  samples.alpha.clear();
+  samples.power.reserve(numSamples-numBurn);
+  samples.power.clear();
+  samples.trtPre.reserve(numSamples-numBurn);
+  samples.trtPre.clear();
+  samples.trtAct.reserve(numSamples-numBurn);
+  samples.trtAct.clear();
 
   samples.ll = std::vector<double>(numSamples-numBurn,0.0);
 
-  covarBeta_cur.resize(numNodes*numCovar);
+  covarBeta_cur.resize(numNodes);
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
   covarBeta_can = covarBeta_cur;
 
   alphaW_cur.resize(numNodes*numNodes);
-  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur);
+  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
   alphaW_can = alphaW_cur;
   
   // get the likelihood with the current parameters
@@ -169,11 +175,11 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   
   double logAlpha_cur,logAlpha_can;
 
-  int displayOn=5;
+  int displayOn=1;
   int display=1;
 
   // do a bunch of nonsense...
-  for(i=0; i<numSamples; i++){
+  for(i=0; i<numSamples; ++i){
     if(display && i%displayOn==0){
       printf("SLM...%6s: %6d\r","iter",i);
       fflush(stdout);
@@ -370,16 +376,14 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     }
     else if(i%thin==0){
       // save the samples
-      samples.intcp.at(i-numBurn)=intcp_cur;
-      for(j = 0; j < numCovar; j++)
-	samples.beta.at((i-numBurn)*numCovar + j)=beta_cur.at(j);
-      samples.alpha.at(i-numBurn)=alpha_cur;
-      samples.power.at(i-numBurn)=power_cur;
-      samples.trtPre.at(i-numBurn)=trtPre_cur;
-      samples.trtAct.at(i-numBurn)=trtAct_cur;
-      // samples.xi(i-numBurn)=0; // don't sample here
+      samples.intcp.push_back(intcp_cur);
+      samples.beta.insert(samples.beta.end(),beta_cur.begin(),beta_cur.end());
+      samples.alpha.push_back(alpha_cur);
+      samples.power.push_back(power_cur);
+      samples.trtPre.push_back(trtPre_cur);
+      samples.trtAct.push_back(trtAct_cur);
       
-      samples.ll.at(i-numBurn)=ll_cur;
+      samples.ll.push_back(ll_cur);
     }
   }
 

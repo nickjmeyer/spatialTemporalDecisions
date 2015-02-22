@@ -49,3 +49,8 @@
 * Fix
   - [X] Add uniform selection to priority score
   - [ ] Make toy structures completely deterministic
+
+
+* Add
+  - [ ] Simultaneous Perturbation (SP)
+  - [ ] Online tuning of SGD or SP
