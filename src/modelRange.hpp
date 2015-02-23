@@ -10,6 +10,7 @@
 #include "model.hpp"
 #include "modelParam.hpp"
 #include "modelParamRange.hpp"
+#include "mcmcRange.hpp"
 
 
 class RangeModel {
@@ -46,6 +47,10 @@ class RangeModel {
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
 	   RangeParam & mP, const RangeParam & mPInit);
+
+  RangeMcmc mcmc;
+
+  Estimation fitType;
 };
 
 

@@ -1,59 +1,43 @@
-#include "mcmc.hpp"
+#include "mcmcRange.hpp"
 
 
-enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
+enum parInd{INTCP_=0,ALPHA_=1,RANGE_=2,TRTP_=3,TRTA_=4};
 
-void GravitySamples::setMean(){
-  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
-  betaSet.resize(numCovar);
-  std::fill(betaSet.begin(),betaSet.end(),0.0);
+void RangeSamples::setMean(){
+  intcpSet = rangeSet = alphaSet = trtPreSet = trtActSet = 0.0;
 
   intcpSet = std::accumulate(intcp.begin(),intcp.end(),0.0);
   intcpSet /= double(numSamples);
+  rangeSet = std::accumulate(range.begin(),range.end(),0.0);
+  rangeSet /= double(numSamples);
   alphaSet = std::accumulate(alpha.begin(),alpha.end(),0.0);
   alphaSet /= double(numSamples);
-  powerSet = std::accumulate(power.begin(),power.end(),0.0);
-  powerSet /= double(numSamples);
   trtPreSet = std::accumulate(trtPre.begin(),trtPre.end(),0.0);
   trtPreSet /= double(numSamples);
   trtActSet = std::accumulate(trtAct.begin(),trtAct.end(),0.0);
   trtActSet /= double(numSamples);
-
-  int j = 0;
-  std::for_each(beta.begin(),beta.end(),
-		[this,&j](const double & x){
-		  betaSet.at(j++ % numCovar) += x;
-		});
-  std::for_each(beta.begin(),beta.end(),
-		[this](double & x){x /= double(numSamples);});
 }
 
 
-void GravitySamples::setRand(){
-  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
-  betaSet.resize(numCovar);
-  std::fill(betaSet.begin(),betaSet.end(),0.0);
+void RangeSamples::setRand(){
+  intcpSet = rangeSet = alphaSet = trtPreSet = trtActSet = 0.0;
 
   int i = njm::runifInterv(0,numSamples);
   
   intcpSet = intcp.at(i);
+  rangeSet = range.at(i);
   alphaSet = alpha.at(i);
-  powerSet = power.at(i);
   trtPreSet = trtPre.at(i);
   trtActSet = trtAct.at(i);
 
-  int j = 0;
-  std::for_each(betaSet.begin(),betaSet.end(),
-		[this,&i,&j](double & x){
-		  x = beta.at(i*numCovar + j++);});
 }
 
 
-std::vector<double> GravitySamples::getPar() const {
-  std::vector<double> par = betaSet;
+std::vector<double> RangeSamples::getPar() const {
+  std::vector<double> par;
   par.push_back(intcpSet);
+  par.push_back(rangeSet);
   par.push_back(alphaSet);
-  par.push_back(powerSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
   
@@ -62,7 +46,7 @@ std::vector<double> GravitySamples::getPar() const {
 
 
 
-void GravityMcmc::load(const std::vector<std::vector<int> > & history,
+void RangeMcmc::load(const std::vector<std::vector<int> > & history,
 		       const std::vector<int> & status,
 		       const FixedData & fD){
   std::vector<std::vector<int> > all;
@@ -73,7 +57,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 
-void GravityMcmc::load(const std::vector<std::vector<int> > & history,
+void RangeMcmc::load(const std::vector<std::vector<int> > & history,
 		       const FixedData & fD){
   numNodes=fD.numNodes;
   T=(int)history.size();
@@ -116,34 +100,31 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 
-void GravityMcmc::sample(int const numSamples, int const numBurn){
+void RangeMcmc::sample(int const numSamples, int const numBurn){
   samples.numSamples = numSamples;
   
   // priors
   int thin=1;
-  double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
-    alpha_var=1,power_mean=0,power_var=1,trtPre_mean=0,trtPre_var=100,
+  double intcp_mean=0,intcp_var=100,alpha_mean=0,
+    alpha_var=1,range_mean=100,range_var=100,trtPre_mean=0,trtPre_var=100,
     trtAct_mean=0,trtAct_var=100;
 
 
   int i,j;
   // set containers for current and candidate samples
   intcp_cur=intcp_can=-3;
-  beta_cur=beta_can=std::vector<double>(numCovar,0.0);
+  range_cur=range_can=.1;
   alpha_cur=alpha_can=.1;
-  power_cur=power_can=.1;
   trtPre_cur=trtPre_can=0;
   trtAct_cur=trtAct_can=0;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
   samples.intcp.reserve(numSamples-numBurn);
-  samples.beta.clear();
-  samples.beta.reserve((numSamples-numBurn)*numCovar);
+  samples.range.clear();
+  samples.range.reserve(numSamples-numBurn);
   samples.alpha.clear();
   samples.alpha.reserve(numSamples-numBurn);
-  samples.power.clear();
-  samples.power.reserve(numSamples-numBurn);
   samples.trtPre.clear();
   samples.trtPre.reserve(numSamples-numBurn);
   samples.trtAct.clear();
@@ -151,20 +132,12 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
   samples.ll = std::vector<double>(numSamples-numBurn,0.0);
 
-  covarBeta_cur.resize(numNodes);
-  updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
-  covarBeta_can = covarBeta_cur;
-
-  alphaW_cur.resize(numNodes*numNodes);
-  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
-  alphaW_can = alphaW_cur;
-  
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
 
   // set the MH tuning parameters
-  acc=att= std::vector<int>(numCovar+5,0);
-  mh=std::vector<double>(numCovar+5,0.5);
+  acc=att= std::vector<int>(5,0);
+  mh=std::vector<double>(5,0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
   
   // mu=std::vector<double>(numCovar+2,0.0);
@@ -187,8 +160,8 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
 
     // sample intcp
-    ++att.at(numCovar+INTCP_);
-    upd=intcp_cur+mh.at(numCovar+INTCP_)*njm::rnorm01();
+    ++att.at(INTCP_);
+    upd=intcp_cur+mh.at(INTCP_)*njm::rnorm01();
     intcp_can=upd;
     
     // get new likelihood
@@ -201,7 +174,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+INTCP_);
+      ++acc.at(INTCP_);
       intcp_cur=intcp_can;
       ll_cur=ll_can;
     }
@@ -210,41 +183,10 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
       ll_can=ll_cur;
     }
 
-    // sample beta
-    for(j = 0; j < numCovar; ++j){
-      ++att.at(j);
-      
-      upd=beta_cur.at(j)+mh.at(j)*njm::rnorm01();
-      beta_can.at(j)=upd;
-
-      updateCovarBeta(covarBeta_can,covar,
-		      beta_cur.at(j),beta_can.at(j),
-		      j,numCovar);
-      
-      // get new likelihood
-      ll_can=ll();
-
-      R=ll_can + (-.5/beta_var)*std::pow(beta_can.at(j) - beta_mean,2.0)
-	- ll_cur - (-.5/beta_var)*std::pow(beta_cur.at(j) - beta_mean,2.0);
-      
-      // accept?
-      if(std::log(njm::runif01()) < R){
-	++acc.at(j);
-	beta_cur.at(j)=beta_can.at(j);
-	ll_cur=ll_can;
-	covarBeta_cur=covarBeta_can;
-      }
-      else{
-	beta_can.at(j)=beta_cur.at(j);
-	covarBeta_can=covarBeta_cur;
-	ll_can=ll_cur;
-      }
-    }
-
 
     // sample trtPre
-    ++att.at(numCovar+TRTP_);
-    upd=trtPre_cur+mh.at(numCovar+TRTP_)*njm::rnorm01();
+    ++att.at(TRTP_);
+    upd=trtPre_cur+mh.at(TRTP_)*njm::rnorm01();
     trtPre_can=upd;
 
 
@@ -256,7 +198,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+TRTP_);
+      ++acc.at(TRTP_);
       trtPre_cur=trtPre_can;
       ll_cur=ll_can;
     }
@@ -268,8 +210,8 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
 
     // sample trtAct
-    ++att.at(numCovar+TRTA_);
-    upd=trtAct_cur+mh.at(numCovar+TRTA_)*njm::rnorm01();
+    ++att.at(TRTA_);
+    upd=trtAct_cur+mh.at(TRTA_)*njm::rnorm01();
     trtAct_can=upd;
 
     // get new likelihood
@@ -281,7 +223,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+TRTA_);
+      ++acc.at(TRTA_);
       trtAct_cur=trtAct_can;
       ll_cur=ll_can;
     }
@@ -293,17 +235,44 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
 
 
+    // sample range
+    ++att.at(RANGE_);
+    upd=std::exp(std::log(range_cur)+mh.at(RANGE_)*njm::rnorm01());
+    range_can=upd;
+
+
+    // get new likelihood
+    ll_can=ll();
+
+
+    R=ll_can + (-.5/range_var)*std::pow(std::log(range_can) - range_mean,2.0)
+      - ll_cur - (-.5/range_var)*std::pow(std::log(range_cur) - range_mean,2.0);
+
+
+    // accept?
+    if(std::log(njm::runif01()) < R){
+      ++acc.at(RANGE_);
+      range_cur=range_can;
+      ll_cur=ll_can;
+    }
+    else{
+      range_can=range_cur;
+      ll_can=ll_cur;
+    }
+    
+
+
+
+
     // sample alpha
-    ++att.at(numCovar+ALPHA_);
+    ++att.at(ALPHA_);
     
     logAlpha_cur=std::log(alpha_cur);
 
-    upd=std::exp(logAlpha_cur + mh.at(numCovar+ALPHA_)*njm::rnorm01());
+    upd=std::exp(logAlpha_cur + mh.at(ALPHA_)*njm::rnorm01());
     alpha_can=upd;
     logAlpha_can=std::log(alpha_can);
 
-    // update alphaW
-    updateAlphaW(alphaW_can,alpha_cur,alpha_can,numNodes);
 
     // get new likelihood
     ll_can=ll();
@@ -314,48 +283,18 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+ALPHA_);
+      ++acc.at(ALPHA_);
       alpha_cur=alpha_can;
-      alphaW_cur=alphaW_can;
       ll_cur=ll_can;
     }
     else{
       alpha_can=alpha_cur;
-      alphaW_can=alphaW_cur;
       ll_can=ll_cur;
     }
 
 
 
 
-    // sample power
-    ++att.at(numCovar+POWER_);
-    upd=std::exp(std::log(power_cur)+mh.at(numCovar+POWER_)*njm::rnorm01());
-    power_can=upd;
-
-    // update alphaW
-    updateAlphaW(alphaW_can,d,cc,alpha_cur,power_can,numNodes);
-
-    // get new likelihood
-    ll_can=ll();
-
-
-    R=ll_can + (-.5/power_var)*std::pow(std::log(power_can) - power_mean,2.0)
-      - ll_cur - (-.5/power_var)*std::pow(std::log(power_cur) - power_mean,2.0);
-
-
-    // accept?
-    if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+POWER_);
-      power_cur=power_can;
-      alphaW_cur=alphaW_can;
-      ll_cur=ll_can;
-    }
-    else{
-      power_can=power_cur;
-      alphaW_can=alphaW_cur;
-      ll_can=ll_cur;
-    }
 
     if(i<numBurn){
       // time for tuning!
@@ -377,9 +316,8 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
     else if(i%thin==0){
       // save the samples
       samples.intcp.push_back(intcp_cur);
-      samples.beta.insert(samples.beta.end(),beta_cur.begin(),beta_cur.end());
+      samples.range.push_back(range_cur);
       samples.alpha.push_back(alpha_cur);
-      samples.power.push_back(power_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
       
@@ -390,14 +328,10 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   // get likelihood evaluated at posterior mean
   samples.setMean();
   intcp_can = samples.intcpSet;
-  beta_can = samples.betaSet;
+  range_can = samples.rangeSet;
   alpha_can = samples.alphaSet;
-  power_can = samples.powerSet;
   trtPre_can = samples.trtPreSet;
   trtAct_can = samples.trtActSet;
-
-  updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
-  updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
   samples.llPt = ll();
 
@@ -414,7 +348,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 
 
 
-double GravityMcmc::ll(){
+double RangeMcmc::ll(){
   int i,j,k;
   double llVal,wontProb,prob,expProb,baseProb,baseProbInit;
 
@@ -425,19 +359,17 @@ double GravityMcmc::ll(){
 	wontProb=1.0;
 	// set a base number to decrease floating point operations
 	if(trtPreHist.at(j*T + i-1)==0)
-	  baseProbInit=intcp_can+covarBeta_can.at(j);
+	  baseProbInit=intcp_can;
 	else
-	  baseProbInit=intcp_can+covarBeta_can.at(j) - trtPre_can;
+	  baseProbInit=intcp_can - trtPre_can;
 
 	for(k=0; k<numNodes; k++){
 	  // if county is infected it affects the infProb
 	  if(infHist.at(k*T + i-1)==1){
 	    // calculate infProb
 	    baseProb=baseProbInit;
-	    if(j < k)
-	      baseProb -= alphaW_can.at(j*numNodes + k);
-	    else
-	      baseProb -= alphaW_can.at(k*numNodes + j);
+	    if(d.at(j*numNodes + k < range_can))
+	      baseProb -= alpha_can;
 	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;

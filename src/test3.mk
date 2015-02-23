@@ -33,7 +33,7 @@ OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
 	modelCave.o modelParamCave.o \
-	mcmc.o \
+	mcmc.o mcmcRange.o mcmcCave.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))

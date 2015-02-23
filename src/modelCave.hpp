@@ -10,6 +10,7 @@
 #include "model.hpp"
 #include "modelParam.hpp"
 #include "modelParamCave.hpp"
+#include "mcmcCave.hpp"
 
 
 class CaveModel {
@@ -46,6 +47,10 @@ class CaveModel {
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
 	   CaveParam & mP, const CaveParam & mPInit);
+
+  CaveMcmc mcmc;
+
+  Estimation fitType;
 };
 
 

@@ -116,59 +116,74 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
 void RangeModel::fit(const SimData & sD, const TrtData & tD,
 		     const FixedData & fD, const DynamicData & dD,
 		     RangeParam & mP, const RangeParam & mPInit){
-  size_t iter=0;
-  int status;
+  if(fitType == MLE){
+    size_t iter=0;
+    int status;
 
-  gsl_vector *x,*ss;
-  std::vector<double> par = mPInit.getPar();
-  int i,dim=par.size();
-  std::vector< std::vector<int> > history;
-  history=sD.history;
-  history.push_back(sD.status);
-  RangeModelFitData dat(*this,mPInit,sD,fD,history);
+    gsl_vector *x,*ss;
+    std::vector<double> par = mPInit.getPar();
+    int i,dim=par.size();
+    std::vector< std::vector<int> > history;
+    history=sD.history;
+    history.push_back(sD.status);
+    RangeModelFitData dat(*this,mPInit,sD,fD,history);
 
-  x = gsl_vector_alloc(dim);
-  for(i=0; i<dim; i++)
-    gsl_vector_set(x,i,par.at(i));
-  ss=gsl_vector_alloc(dim);
-  for(i=0; i<dim; i++)
-    gsl_vector_set(ss,i,1.0);
+    x = gsl_vector_alloc(dim);
+    for(i=0; i<dim; i++)
+      gsl_vector_set(x,i,par.at(i));
+    ss=gsl_vector_alloc(dim);
+    for(i=0; i<dim; i++)
+      gsl_vector_set(ss,i,1.0);
 
-  gsl_multimin_function minex_func;
-  minex_func.n=dim;
-  minex_func.f=&RangeModelFitObjFn;
-  minex_func.params=&dat;
+    gsl_multimin_function minex_func;
+    minex_func.n=dim;
+    minex_func.f=&RangeModelFitObjFn;
+    minex_func.params=&dat;
 
-  const gsl_multimin_fminimizer_type *T=
-    gsl_multimin_fminimizer_nmsimplex2;
-  gsl_multimin_fminimizer *s = NULL;
-  s=gsl_multimin_fminimizer_alloc(T,dim);
-  gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
+    const gsl_multimin_fminimizer_type *T=
+      gsl_multimin_fminimizer_nmsimplex2;
+    gsl_multimin_fminimizer *s = NULL;
+    s=gsl_multimin_fminimizer_alloc(T,dim);
+    gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
-  double curSize;
-  double size=.001;
+    double curSize;
+    double size=.001;
   
-  do{
-    iter++;
-    status=gsl_multimin_fminimizer_iterate(s);
-    if(status)
-      break;
-    curSize=gsl_multimin_fminimizer_size(s);
-    status=gsl_multimin_test_size(curSize,size);
-  }while(status==GSL_CONTINUE && iter < 500);
+    do{
+      iter++;
+      status=gsl_multimin_fminimizer_iterate(s);
+      if(status)
+	break;
+      curSize=gsl_multimin_fminimizer_size(s);
+      status=gsl_multimin_test_size(curSize,size);
+    }while(status==GSL_CONTINUE && iter < 500);
 
-  for(i=0; i<dim; i++)
-    par.at(i) = gsl_vector_get(s->x,i);
-  mP.putPar(par);
+    for(i=0; i<dim; i++)
+      par.at(i) = gsl_vector_get(s->x,i);
+    mP.putPar(par);
 
-  // if(sD.time <= fD.trtStart)
-  //   mP.trtPre = mP.trtAct = 4.0;
+    // if(sD.time <= fD.trtStart)
+    //   mP.trtPre = mP.trtAct = 4.0;
 
-  gsl_multimin_fminimizer_free(s);
-  gsl_vector_free(x);
-  gsl_vector_free(ss);
+    gsl_multimin_fminimizer_free(s);
+    gsl_vector_free(x);
+    gsl_vector_free(ss);
 
-  load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD,mP);
+  }
+  else if(fitType == MCMC){
+    mcmc.load(sD.history,sD.status,fD);
+    mcmc.sample(5000,1000);
+
+    mcmc.samples.setMean();
+    mP.putPar(mcmc.samples.getPar());
+
+    load(sD,tD,fD,dD,mP);
+  }
+  else{
+    std::cout << "Not a valid Estimation" << std::endl;
+    throw(1);
+  }
 }
 
 

@@ -14,7 +14,8 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
 
   A = 10;
   B = 100;
-  
+
+  tune = 1;
 }
 
 std::vector<double> M1SpOptimTunePar::getPar() const{
@@ -27,19 +28,21 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1SpOptim<System<GravityModel,GravityParam,
 				GravityModel,GravityParam>,
-			 RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-				      GravityModel,GravityParam>,
-			 GravityModel,GravityParam>;
-template class M1SpOptim<System<GravityModel,GravityParam,
-				GravityModel,GravityParam>,
-			 RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-				      GravityModel,GravityParam>,
-			 GravityModel,GravityParam>;
-template class M1SpOptim<System<GravityModel,GravityParam,
-				GravityModel,GravityParam>,
 			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				      GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
+
+template class M1SpOptim<System<GravityModel,GravityParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
+
+template class M1SpOptim<System<GravityModel,GravityParam,
+				CaveModel,CaveParam>,
+			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+				      CaveModel,CaveParam>,
+			 CaveModel,CaveParam>;
 
 template class M1SpOptim<System<RangeModel,RangeParam,
 				RangeModel,RangeParam>,
@@ -47,29 +50,11 @@ template class M1SpOptim<System<RangeModel,RangeParam,
 				      RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
-template class M1SpOptim<System<GravityModel,GravityParam,
-				RangeModel,RangeParam>,
-			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				      RangeModel,RangeParam>,
-			 RangeModel,RangeParam>;
-
-template class M1SpOptim<System<GravityModel,GravityParam,
-				CaveModel,CaveParam>,
-			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				      CaveModel,CaveParam>,
-			 CaveModel,CaveParam>;
-
 template class M1SpOptim<System<CaveModel,CaveParam,
 				CaveModel,CaveParam>,
 			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
 				      CaveModel,CaveParam>,
 			 CaveModel,CaveParam>;
-
-template class M1SpOptim<System<EbolaModel,EbolaParam,
-				EbolaModel,EbolaParam>,
-			 RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-				      EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>;
 
 
 template <class S, class A, class M, class MP>
@@ -149,12 +134,19 @@ void M1SpOptim<S,A,M,MP>
 
 template <class S, class A, class M, class MP>
 void M1SpOptim<S,A,M,MP>
-::tune(S system,
-       A & agent){
+::tune(const S & system,
+       A agent){
 
   System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst_r);
+  s.modelEst.fitType = MLE;
+
+  M1SpOptim<System<M,MP,M,MP>,A,M,MP> o;
+  o.tp.tune = 0;
+  
+  OptimRunnerNS<System<M,MP,M,MP>,A,
+		M1SpOptim<System<M,MP,M,MP>,A,M,MP> > r;
   
   std::vector<double> scale;
   scale.push_back(0.5);
@@ -169,19 +161,16 @@ void M1SpOptim<S,A,M,MP>
       abVals.push_back(std::pair<double,double>(10*scale.at(i),
 						100*scale.at(j)));
 
-  // THIS RUNNER NEEDS TO CHANGE!  It doesn't depend on TP!!!!
-  PlainRunner<System<M,MP,M,MP>,A> pR;
-  
   int numAbVals=abVals.size();
   double val,minVal=1.0,bestA=10,bestB=100;
   for(i=0; i<numAbVals; i++){
-    tp.A=abVals.at(i).first;
-    tp.B=abVals.at(i).second;
+    o.tp.A=abVals.at(i).first;
+    o.tp.B=abVals.at(i).second;
 
-    val=pR.run(s,agent,150,s.fD.finalT);
+    val = r.run(s,agent,o,150,s.fD.finalT);
     if(val < minVal){
-      bestA = abVals.at(i).first;
-      bestB = abVals.at(i).second;
+      bestA = o.tp.A;
+      bestB = o.tp.B;
 
       minVal = val;
     }

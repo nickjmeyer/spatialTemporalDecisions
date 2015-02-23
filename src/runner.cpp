@@ -759,6 +759,43 @@ OptimRunner<S,A,Optim>
 
 
 
+template class
+OptimRunnerNS<System<GravityModel,GravityParam,
+		     GravityModel,GravityParam>,
+	      RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+			   GravityModel,GravityParam>,
+	      M1SpOptim<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
+			RankToyAgent<ToyFeatures2<GravityModel,
+						  GravityParam>,
+				     GravityModel,GravityParam>,
+			GravityModel,GravityParam> >;
+
+template class
+OptimRunnerNS<System<RangeModel,RangeParam,
+		     RangeModel,RangeParam>,
+	      RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			   RangeModel,RangeParam>,
+	      M1SpOptim<System<RangeModel,RangeParam,
+			       RangeModel,RangeParam>,
+			RankToyAgent<ToyFeatures2<RangeModel,
+						  RangeParam>,
+				     RangeModel,RangeParam>,
+			RangeModel,RangeParam> >;
+
+template class
+OptimRunnerNS<System<CaveModel,CaveParam,
+		     CaveModel,CaveParam>,
+	      RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			   CaveModel,CaveParam>,
+	      M1SpOptim<System<CaveModel,CaveParam,
+			       CaveModel,CaveParam>,
+			RankToyAgent<ToyFeatures2<CaveModel,
+						  CaveParam>,
+				     CaveModel,CaveParam>,
+			CaveModel,CaveParam> >;
+
+
 
 template <class S, class A, class Optim>
 double
@@ -772,12 +809,17 @@ OptimRunnerNS<S,A,Optim>
   int r,t;
   for(r=0; r<numReps; r++){
     system.reset();
+    if(system.modelGen.fitType == MCMC){
+      system.modelGen.mcmc.samples.setRand();
+      system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
+    }
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.modelEst.fit(system.sD,system.fD,system.paramEst);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
 	optim.optim(system,agent);
       }
       

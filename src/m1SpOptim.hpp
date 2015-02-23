@@ -22,6 +22,8 @@ class M1SpOptimTunePar : public TuneParam{
   int mcReps;
 
   double C,t,ell,muMin,A,B;
+
+  int tune;
 };
 
 
@@ -31,8 +33,8 @@ class M1SpOptim : BaseOptim<S,A,M,MP>{
   M1SpOptim();
   virtual void optim(const S & system,
 		     A & agent);
-  virtual void tune(S system,
-		    A & agent);
+  virtual void tune(const S & system,
+		    A agent);
   
   M1SpOptimTunePar tp;
 
