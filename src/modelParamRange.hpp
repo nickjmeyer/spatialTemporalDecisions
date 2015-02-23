@@ -13,7 +13,6 @@ class RangeParam : public BaseParam {
  public:
   std::vector<double> infProbs;
   
-  std::vector<double> beta;
   double intcp;
   double range;
   double alpha;

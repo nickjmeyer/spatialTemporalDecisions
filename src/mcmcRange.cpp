@@ -368,7 +368,7 @@ double RangeMcmc::ll(){
 	  if(infHist.at(k*T + i-1)==1){
 	    // calculate infProb
 	    baseProb=baseProbInit;
-	    if(d.at(j*numNodes + k < range_can))
+	    if(d.at(j*numNodes + k) < range_can)
 	      baseProb -= alpha_can;
 	    
 	    if(trtActHist.at(k*T + i-1)==1)

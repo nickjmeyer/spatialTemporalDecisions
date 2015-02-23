@@ -13,7 +13,6 @@ class CaveParam : public BaseParam {
  public:
   std::vector<double> infProbs;
   
-  std::vector<double> beta;
   double intcp;
   double cave;
   double trtAct;
