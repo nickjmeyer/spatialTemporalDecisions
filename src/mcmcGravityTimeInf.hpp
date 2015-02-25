@@ -49,7 +49,7 @@ class GravityTimeInfMcmc{
   std::vector<int> infHist;
   std::vector<int> trtPreHist;
   std::vector<int> trtActHist;
-  std::vector<double> timeInf;
+  std::vector<double> timeInfMinOne; // time infected minus 1.0
 
   // information about each county
   std::vector<double> d;
@@ -61,8 +61,8 @@ class GravityTimeInfMcmc{
   std::vector<double> covarBeta_can;
   std::vector<double> alphaW_cur;
   std::vector<double> alphaW_can;
-  std::vector<double> xiTimeInf_cur;
-  std::vector<double> xiTimeInf_can;
+  std::vector<double> xiTimeInfMinOne_cur;
+  std::vector<double> xiTimeInfMinOne_can;
 
   // current iteration of the parameters
   double intcp_cur;

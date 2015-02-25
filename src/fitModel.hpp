@@ -12,6 +12,8 @@
 #include "system.hpp"
 #include "modelParam.hpp"
 #include "model.hpp"
+#include "modelParamGravityTimeInf.hpp"
+#include "modelGravityTimeInf.hpp"
 #include "modelParamEbola.hpp"
 #include "modelEbola.hpp"
 #include "dataDepth.hpp"

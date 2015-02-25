@@ -37,7 +37,7 @@ double GravityTimeInfModel::oneOnOne(const int notNode,
   base -= gP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
     std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),gP.power);
 
-  base += gP.xi * sD.timeInf.at(infNode);
+  base += gP.xi * (sD.timeInf.at(infNode) - 1.0);
   
   if(tD.p.at(notNode))
     base -= gP.trtPre;
@@ -84,7 +84,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
     for(i=0; i<dim; i++)
       gsl_vector_set(x,i,par.at(i));
     ss=gsl_vector_alloc(dim);
-    gsl_vector_set_all(ss,.1);
+    gsl_vector_set_all(ss,.5);
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
@@ -98,7 +98,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
     gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
     double curSize;
-    double size=.001;
+    double size=.0001;
   
     do{
       iter++;
@@ -107,7 +107,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
 	break;
       curSize=gsl_multimin_fminimizer_size(s);
       status=gsl_multimin_test_size(curSize,size);
-    }while(status==GSL_CONTINUE && iter < 500);
+    }while(status==GSL_CONTINUE);
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
@@ -188,7 +188,7 @@ double gravityTimeInfModelFitObjFn (const gsl_vector * x, void * params){
 			       dat->mP.power);
 	    base-=dat->mP.alpha*caveTerm;
 
-	    base+=dat->mP.xi*dat->timeInf.at(t-1).at(j);
+	    base+=dat->mP.xi*(dat->timeInf.at(t-1).at(j) - 1.0);
 	    
 	    if(dat->history.at(t-1).at(i) == 1)
 	      base-=dat->mP.trtPre;

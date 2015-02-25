@@ -6,8 +6,8 @@ int main(int argc, char ** argv){
   typedef GravityModel MG;
   typedef GravityParam PG;
   
-  typedef GravityModel ME;
-  typedef GravityParam PE;
+  typedef MG ME;
+  typedef PG PE;
 
   typedef System<MG,PG,ME,PE> S;
   
@@ -15,61 +15,32 @@ int main(int argc, char ** argv){
   
   typedef RankToyAgent<F,ME,PE> AR;
 
-  typedef VanillaRunner<S,AR> R_AR;
+  typedef M1SpOptim<S,AR,ME,PE> SPO;
+  typedef M1SgdOptim<S,AR,ME,PE> SGDO;
+
+  typedef OptimRunner<S,AR,SPO> SPR;
+  typedef OptimRunner<S,AR,SGDO> SGDR;
 
   // system
   S s;
-  s.modelEst = s.modelGen;
-  s.paramEst_r = s.paramGen_r;
-  s.paramEst = s.paramGen;
 
-  // agents
   AR ar;
 
-  // runners
-  R_AR r_ar;
+  SPO spo;
+  spo.tp.tune = 0;
+  SGDO sgdo;
 
+  SPR spr;
+  SGDR sgdr;
 
-  std::vector<double> jitterVals;
-  jitterVals.push_back(0.00);
-  jitterVals.push_back(0.05);
-  jitterVals.push_back(0.10);
-  jitterVals.push_back(0.25);
-  jitterVals.push_back(0.50);
-  jitterVals.push_back(0.75);
-  jitterVals.push_back(1.00);
-  jitterVals.push_back(1.25);
-  jitterVals.push_back(1.50);
-  jitterVals.push_back(1.75);
-  jitterVals.push_back(2.00);
-  jitterVals.push_back(2.25);
-  jitterVals.push_back(2.50);
-  jitterVals.push_back(2.75);
-  jitterVals.push_back(3.00);
-  jitterVals.push_back(4.00);
-  jitterVals.push_back(4.25);
-  jitterVals.push_back(4.50);
-  jitterVals.push_back(4.75);
-  jitterVals.push_back(5.00);
+  int numYears = 15;
+  int numReps = 300;
 
+  
+  njm::message(spr.run(s,ar,spo,numReps,numYears));
+  njm::message(sgdr.run(s,ar,sgdo,numReps,numYears));
 
-  std::vector<double> values;
-
-  int mcReps=2000,numPoints = s.fD.finalT;
-
-  for(int i=0; i<(int)jitterVals.size(); i++){
-    printf("done %03d / %03d\r",i,(int)jitterVals.size());
-    fflush(stdout);
-    
-    ar.tp.jitter = jitterVals.at(i);
-    
-    values.push_back(r_ar.run(s,ar,mcReps,numPoints));
-  }
-
-  for(int i=0; i<(int)jitterVals.size(); i++){
-    printf("jitter: %05.3f  -->  value: %06.4f\n",
-	   jitterVals.at(i),values.at(i));
-  }
+  
 
   
   njm::sett.clean();

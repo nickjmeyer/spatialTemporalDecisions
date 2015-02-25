@@ -447,6 +447,18 @@ OptimRunner<System<GravityModel,GravityParam,
 		   GravityModel,GravityParam>,
 	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>,
+	    M1SpOptim<System<GravityModel,GravityParam,
+			     GravityModel,GravityParam>,
+		      RankToyAgent<ToyFeatures2<GravityModel,
+						GravityParam>,
+				   GravityModel,GravityParam>,
+		      GravityModel,GravityParam> >;
+
+template class
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
+	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>,
 	    M1HybridOptim<System<GravityModel,GravityParam,
 				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,

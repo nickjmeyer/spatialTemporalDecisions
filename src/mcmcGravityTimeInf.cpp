@@ -90,7 +90,7 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
   d = fD.dist;
   cc.resize(numNodes*numNodes);
   covar = fD.covar;
-  timeInf.resize(numNodes*T);
+  timeInfMinOne.resize(numNodes*T);
   int i,j;
   for(i = 0; i < numNodes; ++i){
     for(j = 0; j < T; ++j){// get the histories of infection and treatments
@@ -112,7 +112,7 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
     for(j = 0; j < T; ++j){
       if(infHist.at(i*T + j) == 1)
 	++val;
-      timeInf.at(i*T + j) = val;
+      timeInfMinOne.at(i*T + j) = val - 1.0;
     }
   }
   
@@ -168,9 +168,9 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
   updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
   alphaW_can = alphaW_cur;
 
-  xiTimeInf_cur = timeInf;
-  updateXiTimeInf(xiTimeInf_cur,xi_cur);
-  xiTimeInf_can = xiTimeInf_cur;
+  xiTimeInfMinOne_cur = timeInfMinOne;
+  updateXiTimeInf(xiTimeInfMinOne_cur,xi_cur);
+  xiTimeInfMinOne_can = xiTimeInfMinOne_cur;
   
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
@@ -377,7 +377,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
     upd=xi_cur+mh.at(numCovar+XI_)*njm::rnorm01();
     xi_can=upd;
 
-    updateXiTimeInf(xiTimeInf_can,xi_can/xi_cur);
+    updateXiTimeInf(xiTimeInfMinOne_can,xi_can/xi_cur);
     
     // get new likelihood
     ll_can=ll();
@@ -392,12 +392,12 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+XI_);
       xi_cur=xi_can;
-      xiTimeInf_cur = xiTimeInf_can;
+      xiTimeInfMinOne_cur = xiTimeInfMinOne_can;
       ll_cur=ll_can;
     }
     else{
       xi_can=xi_cur;
-      xiTimeInf_can=xiTimeInf_cur;
+      xiTimeInfMinOne_can=xiTimeInfMinOne_cur;
       ll_can=ll_cur;
     }
 
@@ -447,8 +447,8 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
   updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
   updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
-  xiTimeInf_can = timeInf;
-  updateXiTimeInf(xiTimeInf_can,xi_can);
+  xiTimeInfMinOne_can = timeInfMinOne;
+  updateXiTimeInf(xiTimeInfMinOne_can,xi_can);
 
   samples.llPt = ll();
 
@@ -490,7 +490,7 @@ double GravityTimeInfMcmc::ll(){
 	    else
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 
-	    baseProb += xiTimeInf_can.at(k*T + i-1);
+	    baseProb += xiTimeInfMinOne_can.at(k*T + i-1);
 	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;
