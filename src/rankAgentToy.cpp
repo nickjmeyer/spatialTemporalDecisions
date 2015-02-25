@@ -193,12 +193,22 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 
   // check if total number of treatments are correct
   if(totAct != numAct){
-    std::cout << "Not correct amount of active treatments"
+    std::cout << "Not correct amount of active treatments."
+	      << std::endl
+	      << "Should be " << numAct << " but is " << totAct << "."
+	      << std::endl
+	      << "Number of infected nodes is " << sD.numInfected
+	      << "(" << sD.infected.size() << ")"
 	      << std::endl;
     throw(1);
   }
   else if(totPre != numPre){
-    std::cout << "Not correct amount of preventative treatments"
+    std::cout << "Not correct amount of preventative treatments."
+	      << std::endl
+	      << "Should be " << numPre << " but is " << totPre << "."
+	      << std::endl
+	      << "Number of not infected nodes is " << sD.numNotInfec
+	      << "(" << sD.notInfec.size() << ")"
 	      << std::endl;
     throw(1);
   }
