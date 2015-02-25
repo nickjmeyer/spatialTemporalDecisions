@@ -4,16 +4,16 @@
 M1SpOptimTunePar::M1SpOptimTunePar(){
   mcReps = 100;
 
-  C = 0.1;
+  C = 2.0;
 
-  t = 0.5;
+  t = 0.3;
 
   ell = 1.0;
 
-  muMin = 0.001;
+  muMin = 0.1;
 
-  A = 10;
-  B = 100;
+  A = 30;
+  B = 1;
 
   tune = 1;
 }
@@ -106,16 +106,16 @@ void M1SpOptim<S,A,M,MP>
     valM = runner.run(s,agent,tp.mcReps,s.fD.finalT);
 
     
-    // if(omp_get_thread_num() == 0)
-    //   std::cout << "iter: " + njm::toString(iter,"",4,0) +
-    // 	" || " + njm::toString(prev.first,"",6,4) + " - " +
-    // 	njm::toString(curr.first,"",6,4) + " -> " +
-    // 	njm::toString(curr.second,"",6,4) + " || " +
-    // 	njm::toString(par,", ","") << "\r" << std::flush;
-    
-    
     for(i=0; i<numPar; i++)
       par.at(i) = par.at(i) - mu*(valP - valM)/(2.0*h.at(i));
+
+    
+    if(omp_get_thread_num() == 0)
+      std::cout << "iter: " + njm::toString(iter,"",4,0) +
+    	" || " + njm::toString(valP,"",6,4) + " - " +
+    	njm::toString(valM,"",6,4) + " -> " +
+    	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
+	" || " + njm::toString(par,", ","") << "\r" << std::flush;
 
 
     ++iter;
