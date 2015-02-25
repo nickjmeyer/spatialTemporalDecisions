@@ -680,6 +680,8 @@ OptimRunner<S,A,Optim>
     tickR=std::time(NULL);
     
     system.reset();
+    agent.tp.weights.ones();
+    
 #pragma omp critical
     {    
       valueAll.at(r).clear();
@@ -821,6 +823,8 @@ OptimRunnerNS<S,A,Optim>
   int r,t;
   for(r=0; r<numReps; r++){
     system.reset();
+    agent.tp.weights.ones();
+    
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
       system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
@@ -907,6 +911,8 @@ TuneRunner<S,A,Optim>
   int r,t;
   for(r=0; r<numReps; r++){
     system.reset();
+    agent.tp.weights.ones();
+    
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
       system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
