@@ -57,8 +57,6 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
   double fBar,fSq,fVar;
   int fN;
   
-  std::cout << "apply trt" << std::endl;
-  
   for(i = 0; i < tp.numChunks; i++){
 
     // get jitter
