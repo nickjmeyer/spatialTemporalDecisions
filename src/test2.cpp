@@ -37,15 +37,15 @@ int main(int argc, char ** argv){
   int numReps = 300;
 
   
-  // njm::message(spr.run(s,ar,spo,numReps,numYears));
-  // njm::message(sgdr.run(s,ar,sgdo,numReps,numYears));
+  njm::message(spr.run(s,ar,spo,numReps,numYears));
+  njm::message(sgdr.run(s,ar,sgdo,numReps,numYears));
 
 
-  s.paramEst_r = s.paramGen_r;
+  // s.paramEst_r = s.paramGen_r;
 
-  PlainRunner<S,AR> pr;
+  // PlainRunner<S,AR> pr;
 
-  pr.run(s,ar,66,15);
+  // pr.run(s,ar,66,15);
   
 
   
