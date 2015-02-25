@@ -149,7 +149,8 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   samples.trtAct.clear();
   samples.trtAct.reserve(numSamples-numBurn);
 
-  samples.ll = std::vector<double>(numSamples-numBurn,0.0);
+  samples.ll.clear();
+  samples.ll.reserve(numSamples-numBurn);
 
   covarBeta_cur.resize(numNodes);
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
@@ -372,7 +373,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 	  acc.at(j)=0;
 	  att.at(j)=0;
 	}
-      }      
+      }     
     }
     else if(i%thin==0){
       // save the samples

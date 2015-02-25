@@ -844,6 +844,93 @@ OptimRunnerNS<S,A,Optim>
 
 
 
+
+template class
+TuneRunner<System<GravityModel,GravityParam,
+		     GravityModel,GravityParam>,
+	      RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
+			   GravityModel,GravityParam>,
+	      M1SpOptim<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
+			RankToyAgent<ToyFeatures2<GravityModel,
+						  GravityParam>,
+				     GravityModel,GravityParam>,
+			GravityModel,GravityParam> >;
+
+template class
+TuneRunner<System<RangeModel,RangeParam,
+		     RangeModel,RangeParam>,
+	      RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+			   RangeModel,RangeParam>,
+	      M1SpOptim<System<RangeModel,RangeParam,
+			       RangeModel,RangeParam>,
+			RankToyAgent<ToyFeatures2<RangeModel,
+						  RangeParam>,
+				     RangeModel,RangeParam>,
+			RangeModel,RangeParam> >;
+
+template class
+TuneRunner<System<CaveModel,CaveParam,
+		     CaveModel,CaveParam>,
+	      RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
+			   CaveModel,CaveParam>,
+	      M1SpOptim<System<CaveModel,CaveParam,
+			       CaveModel,CaveParam>,
+			RankToyAgent<ToyFeatures2<CaveModel,
+						  CaveParam>,
+				     CaveModel,CaveParam>,
+			CaveModel,CaveParam> >;
+
+
+
+template <class S, class A, class Optim>
+double
+TuneRunner<S,A,Optim>
+::run(S system,
+      A agent,
+      Optim optim,
+      const int numReps, const int numPoints){
+
+  double value=0;
+  int r,t;
+  for(r=0; r<numReps; r++){
+    system.reset();
+    if(system.modelGen.fitType == MCMC){
+      system.modelGen.mcmc.samples.setRand();
+      system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
+    }
+
+    // begin rep r
+    for(t=system.sD.time; t<numPoints; t++){
+      if(t>=system.fD.trtStart &&
+	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
+	optim.optim(system,agent);
+      }
+      
+      if(t>=system.fD.trtStart)
+	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+		       system.modelEst,system.paramEst);
+      
+      system.updateStatus();
+      
+      system.nextPoint();
+
+    }
+    // end rep r
+
+    value += system.value();
+  }
+
+  return value/((double)numReps);
+}
+
+
+
+
+
+
 template <class S, class A, class Optim>
 double
 TestRunner<S,A,Optim>

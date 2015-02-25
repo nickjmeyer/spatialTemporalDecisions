@@ -70,6 +70,9 @@ void M1SpOptim<S,A,M,MP>
   System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
+
+  if(tp.tune == 1)
+    tune(s,agent);
   
   PlainRunner<System<M,MP,M,MP>,A> runner;
 
@@ -134,19 +137,19 @@ void M1SpOptim<S,A,M,MP>
 
 template <class S, class A, class M, class MP>
 void M1SpOptim<S,A,M,MP>
-::tune(const S & system,
+::tune(const System<M,MP,M,MP> & system,
        A agent){
 
   System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
 		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst_r);
+		      system.paramEst,system.paramEst);
   s.modelEst.fitType = MLE;
 
   M1SpOptim<System<M,MP,M,MP>,A,M,MP> o;
   o.tp.tune = 0;
   
-  OptimRunnerNS<System<M,MP,M,MP>,A,
-		M1SpOptim<System<M,MP,M,MP>,A,M,MP> > r;
+  TuneRunner<System<M,MP,M,MP>,A,
+	     M1SpOptim<System<M,MP,M,MP>,A,M,MP> > r;
   
   std::vector<double> scale;
   scale.push_back(0.5);

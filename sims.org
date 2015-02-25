@@ -46,11 +46,32 @@
     - [ ] Compare $c = 2,...,8$ for grid network size 100 and select the
         one that performs the best in terms of estimated value.
 
+
+
 * Fix
   - [X] Add uniform selection to priority score
   - [ ] Make toy structures completely deterministic
+  - [ ] Prior mean for treatment effects
+
 
 
 * Add
   - [ ] Simultaneous Perturbation (SP)
   - [ ] Online tuning of SGD or SP
+
+
+
+* Test
+  - Simultaneous perturbation (SP)
+  - Tuning of (SP)
+    - Is MLE being used in tuning?
+    - Is the posterior distribution being sampled as generative model
+  - Compare SP to SGD
+  - Run full simulation on grid 25
+
+
+* Checklist before starting full sim
+  - Fiter new WNS data
+  - Fit model on new WNS data
+  - Regenerate networks
+  - Calibrate simulation models for networks

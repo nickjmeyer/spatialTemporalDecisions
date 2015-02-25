@@ -123,7 +123,8 @@ void CaveMcmc::sample(int const numSamples, int const numBurn){
   samples.trtAct.clear();
   samples.trtAct.reserve(numSamples-numBurn);
 
-  samples.ll = std::vector<double>(numSamples-numBurn,0.0);
+  samples.ll.clear();
+  samples.ll.reserve(numSamples-numBurn);
 
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();

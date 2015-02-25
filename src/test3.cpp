@@ -4,6 +4,7 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
+  int numSamples = 5000, numBurn = 1000;
 
   typedef GravityModel GM;
   typedef GravityParam GP;
@@ -14,7 +15,18 @@ int main(int argc, char ** argv){
   GravityMcmc mcmc;
 
   mcmc.load(s.sD.history,s.sD.status,s.fD);
-  mcmc.sample(5000,1000);
+  mcmc.sample(numSamples,numBurn);
+
+  mcmc.samples.setMean();
+  njm::message(mcmc.samples.getPar());
+
+  GravityTimeInfMcmc mcmc2;
+
+  mcmc2.load(s.sD.history,s.sD.status,s.fD);
+  mcmc2.sample(numSamples,numBurn);
+
+  mcmc2.samples.setMean();
+  njm::message(mcmc2.samples.getPar());
 
   // {
   //   typedef GravityModel GM;

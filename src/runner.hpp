@@ -108,6 +108,17 @@ class OptimRunnerNS : BaseRunner<S,A> {
 
 
 template <class S, class A, class Optim>
+class TuneRunner : BaseRunner<S,A> {
+ public:
+  virtual double run(S system,
+		     A agent,
+		     Optim optim,
+		     const int numReps, const int numPoints);
+};
+
+
+
+template <class S, class A, class Optim>
 class TestRunner : BaseRunner<S,A> {
  public:
   virtual double run(S system,

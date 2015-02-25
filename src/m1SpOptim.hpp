@@ -33,7 +33,7 @@ class M1SpOptim : BaseOptim<S,A,M,MP>{
   M1SpOptim();
   virtual void optim(const S & system,
 		     A & agent);
-  virtual void tune(const S & system,
+  virtual void tune(const System<M,MP,M,MP> & system,
 		    A agent);
   
   M1SpOptimTunePar tp;

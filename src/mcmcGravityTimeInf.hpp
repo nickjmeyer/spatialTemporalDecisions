@@ -1,5 +1,5 @@
-#ifndef GRAVITY_MCMC_HPP__
-#define GRAVITY_MCMC_HPP__
+#ifndef GRAVITY_TIME_INF_MCMC_HPP__
+#define GRAVITY_TIME_INF_MCMC_HPP__
 
 #include <vector>
 #include <algorithm>
@@ -7,17 +7,18 @@
 #include "data.hpp"
 
 
-class GravitySamples{
+class GravityTimeInfSamples{
  public:
   int numSamples;
   int numCovar;
   
-  std::vector<double> intcp,beta,alpha,power,trtPre,trtAct;
+  std::vector<double> intcp,beta,alpha,power,xi,trtPre,trtAct;
 
   double intcpSet;
   std::vector<double> betaSet;
   double alphaSet;
   double powerSet;
+  double xiSet;
   double trtPreSet;
   double trtActSet;
 
@@ -31,7 +32,7 @@ class GravitySamples{
 };
 
 
-class GravityMcmc{
+class GravityTimeInfMcmc{
  public:
 
   void load(const std::vector<std::vector<int> > & history,
@@ -41,7 +42,7 @@ class GravityMcmc{
 	    const FixedData & fD);
   
   // MCMC samples
-  GravitySamples samples;
+  GravityTimeInfSamples samples;
 
   // history information of simulation
   int numNodes,T;
@@ -60,12 +61,15 @@ class GravityMcmc{
   std::vector<double> covarBeta_can;
   std::vector<double> alphaW_cur;
   std::vector<double> alphaW_can;
+  std::vector<double> xiTimeInf_cur;
+  std::vector<double> xiTimeInf_can;
 
   // current iteration of the parameters
   double intcp_cur;
   std::vector<double> beta_cur;
   double alpha_cur;
   double power_cur;
+  double xi_cur;
   double trtPre_cur;
   double trtAct_cur;
 
@@ -73,6 +77,7 @@ class GravityMcmc{
   std::vector<double> beta_can;
   double alpha_can;
   double power_can;
+  double xi_can;
   double trtPre_can;
   double trtAct_can;
 
@@ -114,14 +119,16 @@ class GravityMcmc{
 				     const double & betaNew,
 				     const int covarInd,
 				     const int numCovar);
+  inline static void updateXiTimeInf(std::vector<double> & xiTimeInf,
+				     const double & scale);
 };
 
 
 
-inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
-				      const double & alphaOld,
-				      const double & alphaNew,
-				      const int numNodes){
+inline void GravityTimeInfMcmc::updateAlphaW(std::vector<double> & alphaW,
+					     const double & alphaOld,
+					     const double & alphaNew,
+					     const int numNodes){
   double scale = alphaNew/alphaOld;
   int i,j;
   for(i = 0; i < numNodes; ++i)
@@ -130,12 +137,12 @@ inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
 }
 
 
-inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
-				      const std::vector<double> & d,
-				      const std::vector<double> & cc,
-				      const double & alpha,
-				      const double & powerNew,
-				      const int numNodes){
+inline void GravityTimeInfMcmc::updateAlphaW(std::vector<double> & alphaW,
+					     const std::vector<double> & d,
+					     const std::vector<double> & cc,
+					     const double & alpha,
+					     const double & powerNew,
+					     const int numNodes){
   int i,j;
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
@@ -144,7 +151,8 @@ inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
 }
 
 // add intercept into covarBeta
-inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
+inline
+void GravityTimeInfMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 					 const std::vector<double> & covar,
 					 const std::vector<double> & beta,
 					 const int numNodes,
@@ -161,7 +169,8 @@ inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 }
 
 
-inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
+inline
+void GravityTimeInfMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 					 const std::vector<double> & covar,
 					 const double & betaOld,
 					 const double & betaNew,
@@ -178,6 +187,12 @@ inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 
 
 
+inline
+void GravityTimeInfMcmc::updateXiTimeInf(std::vector<double> & xiTimeInf,
+					 const double & scale){
+  std::for_each(xiTimeInf.begin(),xiTimeInf.end(),
+		[&scale](double & x){x *= scale;});
+}
 
 
 #endif

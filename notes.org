@@ -19,7 +19,7 @@
    - [X] Add debugging code
 ** TODO M1 Optim 
    - [ ] Default parameters
-   - [ ] New system with potulated model
+   - [ ] New system with postulated model
    - [ ] Runner
    - [ ] Updating agent parameters
 ** TODO M2 Optim
@@ -63,3 +63,5 @@
 ** TODO Create tuning file
    - [ ] Tune the intercept to be 0.7 for no treatment
    - [ ] Tune the treatment effect sizes to be 0.5 for myopic
+
+ 

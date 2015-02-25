@@ -16,6 +16,7 @@
 #include "modelParamRange.hpp"
 #include "modelParamCave.hpp"
 #include "model.hpp"
+#include "modelGravityTimeInf.hpp"
 #include "modelEbola.hpp"
 #include "modelRange.hpp"
 #include "modelCave.hpp"

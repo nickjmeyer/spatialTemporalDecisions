@@ -1,84 +1,8 @@
-#include "model.hpp"
-
-template class BaseModel<GravityParam>;
-
-template class BaseModel<GravityTimeInfParam>;
-
-template<class MP>
-void BaseModel<MP>::load(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD,
-			 MP & mP) const{
-  mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
-  mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
-
-  arma::mat::iterator itBase;
-  itBase = mP.infProbsBase.begin();
-  
-  int i,j,notNode;
-  for(i=0; i<sD.numNotInfec; i++){
-    notNode = sD.notInfec.at(i);
-    for(j=0; j<sD.numInfected; j++,itBase++)
-      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD,mP);
-  }
-
-  mP.setAll();
-  
-  mP.infProbs = arma::conv_to<std::vector<double> >
-    ::from(1-arma::prod(mP.infProbsSep,0));
-}
+#include "modelGravityTimeInf.hpp"
 
 
-template <class MP>
-void BaseModel<MP>::infProbs(const SimData & sD,
-			     const TrtData & tD,
-			     const FixedData & fD,
-			     const DynamicData & dD,
-			     MP & mP) const {
-  mP.infProbs.clear();
-  int i,j,node0;
-  double prob;
-  for(i=0; i<sD.numNotInfec; i++){
-    node0 = sD.notInfec.at(i);
-    prob=1.0;
-    for(j=0; j<sD.numInfected; j++)
-      prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),sD,tD,fD,dD,mP)));
-    mP.infProbs.push_back(1-prob);
-  }
-}
-
-
-
-template <class MP>
-void BaseModel<MP>::update(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   MP & mP){
-  int i,j,k,node0,numNewInfec=sD.newInfec.size();
-  double prob;
-  std::vector<double> newInfProbs;
-  for(i=0,j=0; i < sD.numNotInfec; ){ // purposely don't increment i or j here
-    node0 = sD.notInfec.at(i);
-    if(j == numNewInfec || node0 < sD.newInfec.at(j)){
-      prob = 1 - mP.infProbs.at(i+j);
-      for(k=0; k<numNewInfec; k++)
-	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),sD,tD,fD,dD,mP)));
-      newInfProbs.push_back(1.0 - prob);
-      i++;
-    }
-    else{
-      j++;
-    }
-  }
-
-  mP.infProbs = newInfProbs;
-}
-
-
-double GravityModel::tuneTrt(const FixedData & fD,
-			     const GravityParam & gP){
+double GravityTimeInfModel::tuneTrt(const FixedData & fD,
+				    const GravityTimeInfParam & gP){
   int i,j;
   double avgCaves = 0.0;
   for(i = 0; i < fD.numNodes; i++)
@@ -94,17 +18,17 @@ double GravityModel::tuneTrt(const FixedData & fD,
   double base = gP.intcp;
   base -= gP.alpha * minDist/std::pow(avgCaves*avgCaves,gP.power);
 
-   return -(std::log(0.005) - base)/2.0;
+  return -(std::log(0.005) - base)/2.0;
 }
 
 
-double GravityModel::oneOnOne(const int notNode,
-			      const int infNode,
-			      const SimData & sD,
-			      const TrtData & tD,
-			      const FixedData & fD,
-			      const DynamicData & dD,
-			      const GravityParam & gP) const{
+double GravityTimeInfModel::oneOnOne(const int notNode,
+				     const int infNode,
+				     const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     const GravityTimeInfParam & gP) const{
   double base = gP.intcp;
   int len = gP.beta.size();
   for(int i=0; i<len; i++)
@@ -113,6 +37,8 @@ double GravityModel::oneOnOne(const int notNode,
   base -= gP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
     std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),gP.power);
 
+  base += gP.xi * sD.timeInf.at(infNode);
+  
   if(tD.p.at(notNode))
     base -= gP.trtPre;
   if(tD.a.at(infNode))
@@ -123,22 +49,23 @@ double GravityModel::oneOnOne(const int notNode,
 
 
 
-void GravityModel::fit(const SimData & sD, const TrtData & tD,
-		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP){
-  GravityParam mPInit;
+void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
+			      const FixedData & fD, const DynamicData & dD,
+			      GravityTimeInfParam & mP){
+  GravityTimeInfParam mPInit;
   std::vector<double> par;
   int i;
-  for(i=0; i<(5+fD.numCovar); i++)
+  for(i=0; i<(6+fD.numCovar); i++)
     par.push_back(0);
   mPInit.putPar(par);
   mPInit.intcp=-3.0;
   fit(sD,tD,fD,dD,mP,mPInit);
 }
 
-void GravityModel::fit(const SimData & sD, const TrtData & tD,
-		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP, const GravityParam & mPInit){
+void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
+			      const FixedData & fD, const DynamicData & dD,
+			      GravityTimeInfParam & mP,
+			      const GravityTimeInfParam & mPInit){
 
   if(fitType == MLE){
   
@@ -151,7 +78,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    GravityModelFitData dat(*this,mPInit,sD,fD,history);
+    GravityTimeInfModelFitData dat(*this,mPInit,sD,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -161,7 +88,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&gravityModelFitObjFn;
+    minex_func.f=&gravityTimeInfModelFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -212,20 +139,33 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-GravityModelFitData
-::GravityModelFitData(const GravityModel & m,
-		      const GravityParam & mP,
-		      const SimData & sD,
-		      const FixedData & fD,
-		      const std::vector<std::vector<int> > & history){
+GravityTimeInfModelFitData
+::GravityTimeInfModelFitData(const GravityTimeInfModel & m,
+			     const GravityTimeInfParam & mP,
+			     const SimData & sD,
+			     const FixedData & fD,
+			     const std::vector<std::vector<int> > & history){
   this->m = m;
   this->mP = mP;
+  this->sD = sD;
   this->fD = fD;
   this->history = history;
+
+  this->timeInf.clear();
+  std::vector<int> timeInf(fD.numNodes,0);
+  int i,j;
+  for(i = 0; i < (int)history.size(); ++i){
+    for(j = 0; j < fD.numNodes; j++){
+      if(history.at(i).at(j) == 1)
+	++timeInf.at(j);
+    }
+    this->timeInf.push_back(timeInf);
+  }
 }
 
-double gravityModelFitObjFn (const gsl_vector * x, void * params){
-  GravityModelFitData * dat = static_cast<GravityModelFitData*> (params);
+double gravityTimeInfModelFitObjFn (const gsl_vector * x, void * params){
+  GravityTimeInfModelFitData * dat =
+    static_cast<GravityTimeInfModelFitData*> (params);
   double llike=0,prob,base,caveTerm;
   int i,j,k,t,time=dat->history.size(),dim=dat->mP.getPar().size();
   std::vector<double> par;
@@ -247,10 +187,14 @@ double gravityModelFitObjFn (const gsl_vector * x, void * params){
 	    caveTerm/=std::pow(dat->fD.caves.at(i)*dat->fD.caves.at(j),
 			       dat->mP.power);
 	    base-=dat->mP.alpha*caveTerm;
+
+	    base+=dat->mP.xi*dat->timeInf.at(t-1).at(j);
+	    
 	    if(dat->history.at(t-1).at(i) == 1)
 	      base-=dat->mP.trtPre;
 	    if(dat->history.at(t-1).at(j) == 3)
 	      base-=dat->mP.trtAct;
+	    
 	    prob*=1/(1+std::exp(base));
 	  }
 	}
