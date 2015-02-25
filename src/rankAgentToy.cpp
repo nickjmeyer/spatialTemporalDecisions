@@ -75,7 +75,7 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
       for(k = 0; k < sD.numInfected; k++){
 	if(tD.a.at(sD.infected.at(k)) == 0){
 	  fBar += f.infFeat(k,j);
-	  fSq += f.infFeat(k,j)*f.notFeat(k,j);
+	  fSq += f.infFeat(k,j)*f.infFeat(k,j);
 	  fN++;
 	}
       }
@@ -84,13 +84,14 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 	fBar/=double(fN);
 	fSq/=double(fN);
 	
-	fVar = (double(fN)/double(fN - 1))*(fSq - fBar);
+	fVar = (double(fN)/double(fN - 1))*(fSq - fBar*fBar);
       }
       else
 	fVar = 1.0;
-      
+
       jitter(j) = std::sqrt(fVar)*njm::rnorm01()/tp.jitterScale;
     }
+
 
     // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
