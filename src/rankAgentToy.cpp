@@ -57,6 +57,8 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
   double fBar,fSq,fVar;
   int fN;
   
+  std::cout << "apply trt" << std::endl;
+  
   for(i = 0; i < tp.numChunks; i++){
 
     // get jitter
@@ -120,13 +122,13 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 
 
     std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
-    for(j = 0; j < (numPre - cN); j++){
+    for(j = 0; j < (numAct - cI); j++){
       selInfected.push(std::pair<double,int>(njm::runif01(),
 					     sortInfected.top().second));
       sortInfected.pop();
     }
 
-    for(j = 0; j < (numAct - cI); j++){
+    for(j = 0; j < (numPre - cN); j++){
       selNotInfec.push(std::pair<double,int>(njm::runif01(),
 					     sortNotInfec.top().second));
       sortNotInfec.pop();
@@ -140,18 +142,18 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
       (int)(i*numAct/std::min(tp.numChunks,numAct));
 
 
-    // add preventative treatment
-    for(j = 0; j < addPre && cN < numPre; cN++,j++){
-      node0=selNotInfec.top().second;
-      tD.p.at(sD.notInfec.at(node0)) = 1;
-      selNotInfec.pop();
-    }
-
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=selInfected.top().second;
       tD.a.at(sD.infected.at(node0)) = 1;
       selInfected.pop();
+    }
+
+    // add preventative treatment
+    for(j = 0; j < addPre && cN < numPre; cN++,j++){
+      node0=selNotInfec.top().second;
+      tD.p.at(sD.notInfec.at(node0)) = 1;
+      selNotInfec.pop();
     }
 
     // if more iterations, update features
