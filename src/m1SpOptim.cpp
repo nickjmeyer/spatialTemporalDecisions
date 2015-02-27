@@ -140,6 +140,9 @@ void M1SpOptim<S,A,M,MP>
 ::tune(const System<M,MP,M,MP> & system,
        A agent){
 
+  std::cout << "thread "
+	    << omp_get_thread_num()
+	    << " is tuning!!!!!!!" << std::endl;
   System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);

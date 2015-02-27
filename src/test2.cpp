@@ -23,6 +23,9 @@ int main(int argc, char ** argv){
 
   // system
   S s;
+  s.modelGen.fitType = MLE;
+  s.modelEst.fitType = MLE;
+  s.reset();
 
   AR ar;
 
