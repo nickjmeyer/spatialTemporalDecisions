@@ -180,7 +180,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 	break;
       curSize=gsl_multimin_fminimizer_size(s);
       status=gsl_multimin_test_size(curSize,size);
-    }while(status==GSL_CONTINUE);
+    }while(status==GSL_CONTINUE && iter < 1000);
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
