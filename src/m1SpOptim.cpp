@@ -71,7 +71,7 @@ void M1SpOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  if(tp.tune == 1)
+  if(tp.tune == 1 && system.sD.time == system.fD.trtStart)
     tune(s,agent);
   
   PlainRunner<System<M,MP,M,MP>,A> runner;
@@ -147,6 +147,7 @@ void M1SpOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
   s.modelEst.fitType = MLE;
+  s.fD.finalT = s.sD.time + 2;
 
   M1SpOptim<System<M,MP,M,MP>,A,M,MP> o;
   o.tp.tune = 0;
@@ -164,8 +165,8 @@ void M1SpOptim<S,A,M,MP>
   std::vector<std::pair<double,double> > abVals;
   for(i = 0; i < (int)scale.size(); ++i)
     for(j = 0; j < (int)scale.size(); ++j)
-      abVals.push_back(std::pair<double,double>(10*scale.at(i),
-						100*scale.at(j)));
+      abVals.push_back(std::pair<double,double>(30*scale.at(i),
+						1*scale.at(j)));
 
   int numAbVals=abVals.size();
   double val,minVal=1.0,bestA=10,bestB=100;
@@ -173,7 +174,7 @@ void M1SpOptim<S,A,M,MP>
     o.tp.A=abVals.at(i).first;
     o.tp.B=abVals.at(i).second;
 
-    val = r.run(s,agent,o,150,s.fD.finalT);
+    val = r.run(s,agent,o,10,s.fD.finalT);
     if(val < minVal){
       bestA = o.tp.A;
       bestB = o.tp.B;
@@ -184,4 +185,5 @@ void M1SpOptim<S,A,M,MP>
 
   tp.A = bestA;
   tp.B = bestB;
+
 }

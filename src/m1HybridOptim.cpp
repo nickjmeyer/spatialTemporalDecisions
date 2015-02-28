@@ -24,19 +24,6 @@ void M1HybridOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1HybridOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures0<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam>,
-			     GravityModel,GravityParam>;
-template class M1HybridOptim<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures1<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam>,
-			     GravityModel,GravityParam>;
-
-template class M1HybridOptim<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
 			     RankToyAgent<ToyFeatures2<GravityModel,
 						       GravityParam>,
 					  GravityModel,GravityParam>,
@@ -63,13 +50,6 @@ template class M1HybridOptim<System<GravityModel,GravityParam,
 					  CaveModel,CaveParam>,
 			     CaveModel,CaveParam>;
 
-
-template class M1HybridOptim<System<EbolaModel,EbolaParam,
-				    EbolaModel,EbolaParam>,
-			     RankToyAgent<ToyFeatures1<EbolaModel,
-						       EbolaParam>,
-					  EbolaModel,EbolaParam>,
-			     EbolaModel,EbolaParam>;
 
 
 template <class S, class A, class M, class MP>

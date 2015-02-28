@@ -26,6 +26,8 @@ class M1SgdOptimTunePar : public TuneParam{
   double rateDecay; // learning rate decay
 
   double momRate,a,b;
+  
+  int tune;
 };
 
 
@@ -35,8 +37,8 @@ class M1SgdOptim : BaseOptim<S,A,M,MP>{
   M1SgdOptim();
   virtual void optim(const S & system,
 		     A & agent);
-  virtual void tune(S system,
-		    A & agent);
+  virtual void tune(const System<M,MP,M,MP> & system,
+		    A agent);
   
   M1SgdOptimTunePar tp;
 

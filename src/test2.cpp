@@ -23,14 +23,11 @@ int main(int argc, char ** argv){
 
   // system
   S s;
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
-  s.reset();
 
   AR ar;
 
   SPO spo;
-  spo.tp.tune = 0;
+
   SGDO sgdo;
 
   SPR spr;

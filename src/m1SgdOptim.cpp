@@ -15,6 +15,8 @@ M1SgdOptimTunePar::M1SgdOptimTunePar(){
 
   a=30;
   b=1;
+
+  tune=1;
 }
 
 std::vector<double> M1SgdOptimTunePar::getPar() const{
@@ -25,16 +27,6 @@ void M1SgdOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SgdOptim<System<GravityModel,GravityParam,
-				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-				       GravityModel,GravityParam>,
-			  GravityModel,GravityParam>;
-template class M1SgdOptim<System<GravityModel,GravityParam,
-				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-				       GravityModel,GravityParam>,
-			  GravityModel,GravityParam>;
 template class M1SgdOptim<System<GravityModel,GravityParam,
 				 GravityModel,GravityParam>,
 			  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
@@ -65,11 +57,6 @@ template class M1SgdOptim<System<CaveModel,CaveParam,
 				       CaveModel,CaveParam>,
 			  CaveModel,CaveParam>;
 
-template class M1SgdOptim<System<EbolaModel,EbolaParam,
-				 EbolaModel,EbolaParam>,
-			  RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-				       EbolaModel,EbolaParam>,
-			  EbolaModel,EbolaParam>;
 
 
 template <class S, class A, class M, class MP>
@@ -85,6 +72,10 @@ void M1SgdOptim<S,A,M,MP>
   System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
+
+  if(tp.tune == 1 && system.sD.time == system.fD.trtStart)
+    tune(s,agent);
+  
   
   PlainRunner<System<M,MP,M,MP>,A> runner;
 
@@ -159,42 +150,47 @@ void M1SgdOptim<S,A,M,MP>
 
 template <class S, class A, class M, class MP>
 void M1SgdOptim<S,A,M,MP>
-::tune(S system,
-       A & agent){
+::tune(const System<M,MP,M,MP> & system,
+       A agent){
 
+  std::cout << "thread "
+	    << omp_get_thread_num()
+	    << " is tuning!!!!!!!" << std::endl;
   System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
 		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst_r);
+		      system.paramEst,system.paramEst);
+  s.modelEst.fitType = MLE;
+  s.fD.finalT = s.sD.time + 2;
+
+  M1SgdOptim<System<M,MP,M,MP>,A,M,MP> o;
+  o.tp.tune = 0;
   
-  std::vector<double> aVals;
-  aVals.push_back(1);
-  aVals.push_back(3);
-  aVals.push_back(7);
-  aVals.push_back(10);
-  aVals.push_back(13);
-  aVals.push_back(17);
-  aVals.push_back(20);
-  aVals.push_back(40);
+  TuneRunner<System<M,MP,M,MP>,A,
+	     M1SgdOptim<System<M,MP,M,MP>,A,M,MP> > r;
   
-  int i;
+  std::vector<double> scale;
+  scale.push_back(0.5);
+  scale.push_back(1.0);
+  scale.push_back(2.0);
+
+  
+  int i,j;
   std::vector<std::pair<double,double> > abVals;
-  for(i=0; i<(int)aVals.size(); i++)
-    abVals.push_back(std::pair<double,double>(aVals.at(i),1));
-  abVals.push_back(std::pair<double,double>(1,40));
-  abVals.push_back(std::pair<double,double>(40,40));
+  for(i = 0; i < (int)scale.size(); ++i)
+    for(j = 0; j < (int)scale.size(); ++j)
+      abVals.push_back(std::pair<double,double>(30*scale.at(i),
+						1*scale.at(j)));
 
-  PlainRunner<System<M,MP,M,MP>,A> pR;
-  
   int numAbVals=abVals.size();
-  double val,minVal=1.0,bestA=40,bestB=1;
+  double val,minVal=1.0,bestA=10,bestB=100;
   for(i=0; i<numAbVals; i++){
-    tp.a=abVals.at(i).first;
-    tp.b=abVals.at(i).second;
+    o.tp.a=abVals.at(i).first;
+    o.tp.b=abVals.at(i).second;
 
-    val=pR.run(s,agent,150,s.fD.finalT);
-    if(val<=minVal){
-      bestA = abVals.at(i).first;
-      bestB = abVals.at(i).second;
+    val = r.run(s,agent,o,10,s.fD.finalT);
+    if(val < minVal){
+      bestA = o.tp.a;
+      bestB = o.tp.b;
 
       minVal = val;
     }

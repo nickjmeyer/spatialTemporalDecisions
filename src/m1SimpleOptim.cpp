@@ -41,12 +41,6 @@ template class M1SimpleOptim<System<GravityModel,GravityParam,
 					  CaveModel,CaveParam>,
 			     CaveModel,CaveParam>;
 
-template class M1SimpleOptim<System<EbolaModel,EbolaParam,
-				    EbolaModel,EbolaParam>,
-			     RankToyAgent<ToyFeatures1<EbolaModel,
-						       EbolaParam>,
-					  EbolaModel,EbolaParam>,
-			     EbolaModel,EbolaParam>;
 
 template <class S, class A, class M , class MP>
 M1SimpleOptim<S,A,M,MP>::M1SimpleOptim(){
