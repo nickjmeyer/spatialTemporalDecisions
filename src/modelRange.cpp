@@ -115,7 +115,7 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
 
 void RangeModel::fit(const SimData & sD, const TrtData & tD,
 		     const FixedData & fD, const DynamicData & dD,
-		     RangeParam & mP, const RangeParam & mPInit){
+		     RangeParam & mP, const RangeParam mPInit){
   if(fitType == MLE){
     size_t iter=0;
     int status;

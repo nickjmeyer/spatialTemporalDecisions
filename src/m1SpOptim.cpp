@@ -71,8 +71,9 @@ void M1SpOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  if(tp.tune == 1 && system.sD.time == system.fD.trtStart)
+  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + system.fD.period))
     tune(s,agent);
+
   
   PlainRunner<System<M,MP,M,MP>,A> runner;
 
@@ -147,7 +148,7 @@ void M1SpOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
   s.modelEst.fitType = MLE;
-  s.fD.finalT = s.sD.time + 2;
+  s.fD.finalT = s.sD.time + 2*s.fD.period;
 
   M1SpOptim<System<M,MP,M,MP>,A,M,MP> o;
   o.tp.tune = 0;

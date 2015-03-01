@@ -28,6 +28,7 @@ class M1SgdOptimTunePar : public TuneParam{
   double momRate,a,b;
   
   int tune;
+
 };
 
 

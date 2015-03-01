@@ -138,10 +138,8 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 
 void GravityModel::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP, const GravityParam & mPInit){
-
+		       GravityParam & mP, const GravityParam mPInit){
   if(fitType == MLE){
-  
     size_t iter=0;
     int status;
 
@@ -184,6 +182,10 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
+    
+    // njm::message(njm::toString(mP.getPar()," ","\n") +
+    // 		 njm::toString(par," ","\n"));
+    
     mP.putPar(par);
 
     // if(sD.time <= fD.trtStart)
@@ -206,7 +208,9 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     load(sD,tD,fD,dD,mP);
   }
   else{
-    std::cout << "Not a valid Estimation" << std::endl;
+    std::cout << "Not a valid Estimation of "
+	      << fitType
+	      << std::endl;
     throw(1);
   }
 }

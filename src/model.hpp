@@ -60,7 +60,7 @@ class GravityModel : public BaseModel<GravityParam> {
 	   GravityParam & mP);
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
-	   GravityParam & mP, const GravityParam & mPInit);
+	   GravityParam & mP, const GravityParam mPInit);
 
   GravityMcmc mcmc;
 

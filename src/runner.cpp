@@ -621,7 +621,7 @@ OptimRunner<S,A,Optim>
     tickR=std::time(NULL);
     
     system.reset();
-    agent.tp.weights.ones();
+    agent.tp.weights.ones(agent.f.numFeatures);
     
 #pragma omp critical
     {    
@@ -632,12 +632,15 @@ OptimRunner<S,A,Optim>
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
+      printf("[sim](% 4d, % 4d)\n",r,t);
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
 			    system.paramEst);
-	optim.optim(system,agent);
-	weights.push_back(agent.tp.getPar());	
+	if(t>system.fD.trtStart){
+	  optim.optim(system,agent);
+	  weights.push_back(agent.tp.getPar());
+	}
       }
       
       if(t>=system.fD.trtStart)
@@ -890,16 +893,18 @@ TuneRunner<S,A,Optim>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    system.reset();
-    agent.tp.weights.ones();
-    
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
-      system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
+      system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
     }
+    system.reset();
+    agent.tp.weights.ones();
+
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
+      printf("[tune](% 4d, % 4d)\n",r,t);
+      
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,

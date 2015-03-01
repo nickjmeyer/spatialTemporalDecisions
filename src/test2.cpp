@@ -34,11 +34,10 @@ int main(int argc, char ** argv){
   SGDR sgdr;
 
   int numYears = 15;
-  int numReps = 300;
-
-  // omp_set_num_threads(1);
+  int numReps = 1;
+  omp_set_num_threads(1);
   
-  njm::message(spr.run(s,ar,spo,numReps,numYears));
+  // njm::message(spr.run(s,ar,spo,numReps,numYears));
   njm::message(sgdr.run(s,ar,sgdo,numReps,numYears));
 
 

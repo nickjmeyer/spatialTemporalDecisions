@@ -46,7 +46,7 @@ class RangeModel {
 	   RangeParam & mP);
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
-	   RangeParam & mP, const RangeParam & mPInit);
+	   RangeParam & mP, const RangeParam mPInit);
 
   RangeMcmc mcmc;
 

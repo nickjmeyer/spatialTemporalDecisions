@@ -234,6 +234,9 @@ void System<MG, MPG,
 
   preCompData();
 
+  modelEst.fitType = MCMC;
+  modelGen.fitType = MCMC;
+
   paramGen_r.load();
   modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
 

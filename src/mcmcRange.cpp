@@ -106,8 +106,8 @@ void RangeMcmc::sample(int const numSamples, int const numBurn){
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,alpha_mean=0,
-    alpha_var=1,range_mean=100,range_var=100,trtPre_mean=0,trtPre_var=100,
-    trtAct_mean=0,trtAct_var=100;
+    alpha_var=1,range_mean=100,range_var=100,trtPre_mean=4,trtPre_var=1,
+    trtAct_mean=4,trtAct_var=1;
 
 
   int i,j;

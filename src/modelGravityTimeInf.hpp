@@ -27,7 +27,7 @@ class GravityTimeInfModel : public BaseModel<GravityTimeInfParam> {
 	   GravityTimeInfParam & mP);
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
-	   GravityTimeInfParam & mP, const GravityTimeInfParam & mPInit);
+	   GravityTimeInfParam & mP, const GravityTimeInfParam mPInit);
 
   GravityTimeInfMcmc mcmc;
 

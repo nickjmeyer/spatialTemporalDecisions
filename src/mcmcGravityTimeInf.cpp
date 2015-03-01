@@ -26,7 +26,7 @@ void GravityTimeInfSamples::setMean(){
 		[this,&j](const double & x){
 		  betaSet.at(j++ % numCovar) += x;
 		});
-  std::for_each(beta.begin(),beta.end(),
+  std::for_each(betaSet.begin(),betaSet.end(),
 		[this](double & x){x /= double(numSamples);});
 }
 
@@ -127,8 +127,8 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
   int thin=1;
   double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
     alpha_var=1,power_mean=0,power_var=1,xi_mean=0,xi_var=1,
-    trtPre_mean=0,trtPre_var=100,
-    trtAct_mean=0,trtAct_var=100;
+    trtPre_mean=4,trtPre_var=1,
+    trtAct_mean=4,trtAct_var=1;
 
 
   int i,j;

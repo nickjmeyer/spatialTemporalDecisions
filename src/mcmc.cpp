@@ -24,7 +24,7 @@ void GravitySamples::setMean(){
 		[this,&j](const double & x){
 		  betaSet.at(j++ % numCovar) += x;
 		});
-  std::for_each(beta.begin(),beta.end(),
+  std::for_each(betaSet.begin(),betaSet.end(),
 		[this](double & x){x /= double(numSamples);});
 }
 
@@ -117,13 +117,13 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void GravityMcmc::sample(int const numSamples, int const numBurn){
-  samples.numSamples = numSamples;
+  samples.numSamples = numSamples-numBurn;
   
   // priors
   int thin=1;
-  double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
-    alpha_var=1,power_mean=0,power_var=1,trtPre_mean=0,trtPre_var=100,
-    trtAct_mean=0,trtAct_var=100;
+  double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=100,alpha_mean=0,
+    alpha_var=1,power_mean=0,power_var=1,trtPre_mean=4,trtPre_var=1,
+    trtAct_mean=4,trtAct_var=1;
 
 
   int i,j;
@@ -177,7 +177,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){

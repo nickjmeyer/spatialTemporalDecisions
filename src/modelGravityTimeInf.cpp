@@ -65,7 +65,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
 void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
 			      const FixedData & fD, const DynamicData & dD,
 			      GravityTimeInfParam & mP,
-			      const GravityTimeInfParam & mPInit){
+			      const GravityTimeInfParam mPInit){
 
   if(fitType == MLE){
   

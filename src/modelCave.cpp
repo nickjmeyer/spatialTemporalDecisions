@@ -113,7 +113,7 @@ void CaveModel::fit(const SimData & sD, const TrtData & tD,
 
 void CaveModel::fit(const SimData & sD, const TrtData & tD,
 		    const FixedData & fD, const DynamicData & dD,
-		    CaveParam & mP, const CaveParam & mPInit){
+		    CaveParam & mP, const CaveParam mPInit){
   if(fitType == MLE){
     size_t iter=0;
     int status;

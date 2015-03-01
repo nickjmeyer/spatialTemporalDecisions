@@ -46,7 +46,7 @@ class CaveModel {
 	   CaveParam & mP);
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
-	   CaveParam & mP, const CaveParam & mPInit);
+	   CaveParam & mP, const CaveParam mPInit);
 
   CaveMcmc mcmc;
 

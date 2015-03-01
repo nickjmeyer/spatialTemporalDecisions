@@ -73,9 +73,10 @@ void M1SgdOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  if(tp.tune == 1 && system.sD.time == system.fD.trtStart)
+  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + system.fD.period))
     tune(s,agent);
-  
+
+  printf("[optimize]\n");
   
   PlainRunner<System<M,MP,M,MP>,A> runner;
 
@@ -153,14 +154,15 @@ void M1SgdOptim<S,A,M,MP>
 ::tune(const System<M,MP,M,MP> & system,
        A agent){
 
-  std::cout << "thread "
-	    << omp_get_thread_num()
-	    << " is tuning!!!!!!!" << std::endl;
+  printf("[tuning]\n");
+  // std::cout << "thread "
+  // 	    << omp_get_thread_num()
+  // 	    << " is tuning!!!!!!!" << std::endl;
   System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
   s.modelEst.fitType = MLE;
-  s.fD.finalT = s.sD.time + 2;
+  s.fD.finalT = s.sD.time + 2*s.fD.period;
 
   M1SgdOptim<System<M,MP,M,MP>,A,M,MP> o;
   o.tp.tune = 0;
@@ -187,7 +189,8 @@ void M1SgdOptim<S,A,M,MP>
     o.tp.a=abVals.at(i).first;
     o.tp.b=abVals.at(i).second;
 
-    val = r.run(s,agent,o,10,s.fD.finalT);
+    printf("[setting](% 4d)\n",i);
+    val = r.run(s,agent,o,1,s.fD.finalT);
     if(val < minVal){
       bestA = o.tp.a;
       bestB = o.tp.b;
