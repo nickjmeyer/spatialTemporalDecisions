@@ -7,7 +7,7 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "runner.hpp"

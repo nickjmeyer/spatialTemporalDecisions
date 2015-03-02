@@ -7,7 +7,7 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "runner.hpp"
@@ -31,6 +31,9 @@ template <class S, class A, class M, class MP>
 class M1SpOptim : BaseOptim<S,A,M,MP>{
  public:
   M1SpOptim();
+
+  void reset();
+  
   virtual void optim(const S & system,
 		     A & agent);
   virtual void tune(const System<M,MP,M,MP> & system,

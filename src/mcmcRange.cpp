@@ -63,6 +63,8 @@ void RangeMcmc::load(const std::vector<std::vector<int> > & history,
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
+
+  priorTrtMean = fD.priorTrtMean;
   
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
@@ -98,25 +100,36 @@ void RangeMcmc::load(const std::vector<std::vector<int> > & history,
   
 }
 
-
-
 void RangeMcmc::sample(int const numSamples, int const numBurn){
+  std::vector<double> par = {-3.0, // intcp
+			     100, // range
+			     1.0, // alpha
+			     0.0, // trtAct
+			     0.0}; // trtPre
+  sample(numSamples,numBurn,par);
+}
+
+
+void RangeMcmc::sample(int const numSamples, int const numBurn,
+		       const std::vector<double> & par){
   samples.numSamples = numSamples;
   
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,alpha_mean=0,
-    alpha_var=1,range_mean=100,range_var=100,trtPre_mean=4,trtPre_var=1,
-    trtAct_mean=4,trtAct_var=1;
+    alpha_var=1,range_mean=100,range_var=100,
+    trtPre_mean=priorTrtMean,trtPre_var=1,
+    trtAct_mean=priorTrtMean,trtAct_var=1;
 
 
   int i,j;
   // set containers for current and candidate samples
-  intcp_cur=intcp_can=-3;
-  range_cur=range_can=.1;
-  alpha_cur=alpha_can=.1;
-  trtPre_cur=trtPre_can=0;
-  trtAct_cur=trtAct_can=0;
+  std::vector<double>::const_iterator it;
+  intcp_cur=intcp_can= *it++;
+  range_cur=range_can= *it++;
+  alpha_cur=alpha_can= *it++;
+  trtPre_cur=trtPre_can= *it++;
+  trtAct_cur=trtAct_can= *it++;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();

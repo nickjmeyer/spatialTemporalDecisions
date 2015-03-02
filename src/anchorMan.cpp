@@ -19,32 +19,32 @@ AnchorManTunePar::AnchorManTunePar(){
 
 template class AnchorMan<System<GravityModel,GravityParam,
 				GravityModel,GravityParam>,
-			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-				      GravityModel,GravityParam>,
+			 RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+				   GravityModel,GravityParam>,
 			 FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
 template class AnchorMan<System<RangeModel,RangeParam,
 				RangeModel,RangeParam>,
-			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				      RangeModel,RangeParam>,
+			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				   RangeModel,RangeParam>,
 			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
 template class AnchorMan<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,
-			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				      RangeModel,RangeParam>,
+			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				   RangeModel,RangeParam>,
 			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 				     RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
 template class AnchorMan<System<GravityModel,GravityParam,
 				CaveModel,CaveParam>,
-			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				      CaveModel,CaveParam>,
+			 RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				   CaveModel,CaveParam>,
 			 FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
 				     CaveModel,CaveParam>,
 			 CaveModel,CaveParam>;

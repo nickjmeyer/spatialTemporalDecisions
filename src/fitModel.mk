@@ -24,12 +24,10 @@ BINARY = fitModel
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgentToy.o \
-	m1SgdOptim.o m1SimpleOptim.o m1HybridOptim.o m1SpOptim.o \
-	m2SaOptim.o \
-	anchorMan.o \
+	rankAgent.o \
+	m1SpOptim.o \
 	features.o featuresInt.o \
-	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
+	toyFeatures2.o \
 	model.o modelParam.o \
 	modelGravityTimeInf.o modelParamGravityTimeInf.o \
 	modelEbola.o modelParamEbola.o \

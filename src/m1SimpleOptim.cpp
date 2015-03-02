@@ -15,30 +15,30 @@ void M1SimpleOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1SimpleOptim<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures2<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam>,
+			     RankAgent<ToyFeatures2<GravityModel,
+						    GravityParam>,
+				       GravityModel,GravityParam>,
 			     GravityModel,GravityParam>;
 
 template class M1SimpleOptim<System<RangeModel,RangeParam,
 				    RangeModel,RangeParam>,
-			     RankToyAgent<ToyFeatures2<RangeModel,
-						       RangeParam>,
-					  RangeModel,RangeParam>,
+			     RankAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
 			     RangeModel,RangeParam>;
 
 template class M1SimpleOptim<System<GravityModel,GravityParam,
 				    RangeModel,RangeParam>,
-			     RankToyAgent<ToyFeatures2<RangeModel,
-						       RangeParam>,
-					  RangeModel,RangeParam>,
+			     RankAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
 			     RangeModel,RangeParam>;
 
 template class M1SimpleOptim<System<GravityModel,GravityParam,
 				    CaveModel,CaveParam>,
-			     RankToyAgent<ToyFeatures2<CaveModel,
-						       CaveParam>,
-					  CaveModel,CaveParam>,
+			     RankAgent<ToyFeatures2<CaveModel,
+						    CaveParam>,
+				       CaveModel,CaveParam>,
 			     CaveModel,CaveParam>;
 
 

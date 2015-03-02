@@ -2,6 +2,7 @@
 
 
 template class NoTrt<GravityModel,GravityParam>;
+template class NoTrt<GravityTimeInfModel,GravityTimeInfParam>;
 
 template class NoTrt<RangeModel,RangeParam>;
 

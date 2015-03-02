@@ -1,5 +1,5 @@
-#ifndef RANK_AGENT_TOY_HPP__
-#define RANK_AGENT_TOY_HPP__
+#ifndef RANK_AGENT_HPP__
+#define RANK_AGENT_HPP__
 
 
 #include <armadillo>
@@ -11,13 +11,11 @@
 #include "dataDepth.hpp"
 #include "tuneParam.hpp"
 #include "features.hpp"
-#include "toyFeatures0.hpp"
-#include "toyFeatures1.hpp"
 #include "toyFeatures2.hpp"
 #include "calcCentrality.hpp"
 
 
-class RankToyTuneParam : public TuneParam {
+class RankTuneParam : public TuneParam {
  public:
   std::vector<double> getPar() const;
   void putPar(const std::vector<double> & par);
@@ -31,9 +29,11 @@ class RankToyTuneParam : public TuneParam {
 
 
 template < class F, class M, class MP>
-class RankToyAgent : BaseAgent<M,MP> {
+class RankAgent : BaseAgent<M,MP> {
  public:
-  RankToyAgent();
+  RankAgent();
+
+  void reset();
   
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
@@ -50,7 +50,7 @@ class RankToyAgent : BaseAgent<M,MP> {
   int numAct;
   int numPre;
 
-  RankToyTuneParam tp;
+  RankTuneParam tp;
 
   std::string name;
 };

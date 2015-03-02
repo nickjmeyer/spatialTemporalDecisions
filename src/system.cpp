@@ -190,6 +190,8 @@ void System<MG, MPG,
   njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
   njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
 
+  njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
+
   std::vector<double> start;
   njm::fromFile(start,njm::sett.srcExt("startingLocations.txt"));
 

@@ -23,25 +23,8 @@
 #include "randomAgent.hpp"
 #include "runner.hpp"
 #include "settings.hpp"
-#include "m1SgdOptim.hpp"
-#include "m1NmOptim.hpp"
-#include "m2NmOptim.hpp"
-#include "anchorMan.hpp"
-#include "toyFeatures0.hpp"
-#include "toyFeatures1.hpp"
+#include "m1SpOptim.hpp"
 #include "toyFeatures2.hpp"
-
-typedef GravityModel GM;
-typedef GravityParam GP;
-typedef GM EM;
-typedef GP EP;
-
-typedef System<GM,GP,EM,EP> S;
-typedef NoTrt<EM,EP> NT;
-typedef ProximalAgent<EM,EP> PA;
-
-typedef VanillaRunnerNS<S,NT> RN;
-typedef VanillaRunnerNS<S,PA> RP;
 
 
 double TuneGenNTObj(const gsl_vector * x, void * param);

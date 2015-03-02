@@ -23,9 +23,7 @@
 #include "featuresInt.hpp"
 #include "runner.hpp"
 #include "settings.hpp"
-#include "m1SgdOptim.hpp"
-#include "m2NmOptim.hpp"
-#include "m1SimpleOptim.hpp"
+#include "m1SpOptim.hpp"
 
 
 #endif

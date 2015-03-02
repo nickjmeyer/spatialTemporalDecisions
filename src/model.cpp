@@ -169,7 +169,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
     double curSize;
-    double size=.0001;
+    double size=.00001;
   
     do{
       iter++;
@@ -178,7 +178,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 	break;
       curSize=gsl_multimin_fminimizer_size(s);
       status=gsl_multimin_test_size(curSize,size);
-    }while(status==GSL_CONTINUE && iter < 1000);
+    }while(status==GSL_CONTINUE && iter < 2000);
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
@@ -188,9 +188,9 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     
     mP.putPar(par);
 
-    // if(sD.time <= fD.trtStart)
-    //   mP.trtPre = mP.trtAct = 4.0;
-
+    if(sD.time <= fD.trtStart)
+      mP.trtPre = mP.trtAct = fD.priorTrtMean;
+    
     gsl_multimin_fminimizer_free(s);
     gsl_vector_free(x);
     gsl_vector_free(ss);
@@ -200,7 +200,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000);
+    mcmc.sample(5000,1000,mPInit.getPar());
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());

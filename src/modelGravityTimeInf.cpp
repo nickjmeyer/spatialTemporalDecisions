@@ -98,7 +98,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
     gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
     double curSize;
-    double size=.0001;
+    double size=.00001;
   
     do{
       iter++;
@@ -107,7 +107,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
 	break;
       curSize=gsl_multimin_fminimizer_size(s);
       status=gsl_multimin_test_size(curSize,size);
-    }while(status==GSL_CONTINUE && iter < 1000);
+    }while(status==GSL_CONTINUE && iter < 2000);
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
@@ -125,7 +125,7 @@ void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000);
+    mcmc.sample(5000,1000,mPInit.getPar());
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());
@@ -155,8 +155,8 @@ GravityTimeInfModelFitData
   std::vector<int> timeInf(fD.numNodes,0);
   int i,j;
   for(i = 0; i < (int)history.size(); ++i){
-    for(j = 0; j < fD.numNodes; j++){
-      if(history.at(i).at(j) == 1)
+    for(j = 0; j < fD.numNodes; ++j){
+      if(history.at(i).at(j) >= 2)
 	++timeInf.at(j);
     }
     this->timeInf.push_back(timeInf);

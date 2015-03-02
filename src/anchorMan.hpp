@@ -14,7 +14,7 @@
 #include "modelParamRange.hpp"
 #include "m1SgdOptim.hpp"
 #include "m2SaOptim.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 
 
 class AnchorManTunePar : public TuneParam {

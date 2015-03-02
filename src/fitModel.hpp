@@ -19,7 +19,7 @@
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
 #include "featuresInt.hpp"

@@ -1,26 +1,20 @@
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 
 
-template class RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-			    GravityModel,GravityParam>;
-template class RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			    GravityModel,GravityParam>;
-template class RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			    GravityModel,GravityParam>;
+template class RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+			 GravityModel,GravityParam>;
 
-template class RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-			    RangeModel,RangeParam>;
+template class RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
 
-template class RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-			    CaveModel,CaveParam>;
+template class RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+			 CaveModel,CaveParam>;
 
-template class RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			    EbolaModel,EbolaParam>;
 
 
 template <class F, class M, class MP>
-RankToyAgent<F,M,MP>::RankToyAgent(){
-  tp.weights.ones(4);
+RankAgent<F,M,MP>::RankAgent(){
+  tp.weights.ones(f.numFeatures);
   tp.numChunks = 3;
 
   tp.jitterScale = 4.0;
@@ -28,14 +22,20 @@ RankToyAgent<F,M,MP>::RankToyAgent(){
   name="rank";
 }
 
+
+template <class F, class M, class MP>
+void RankAgent<F,M,MP>::reset(){
+  tp.weights.ones(f.numFeatures);
+}
+
   
 template <class F, class M, class MP>
-void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
-				    TrtData & tD,
-				    const FixedData & fD,
-				    const DynamicData & dD,
-				    const M & m,
-				    MP & mP){
+void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
+				 TrtData & tD,
+				 const FixedData & fD,
+				 const DynamicData & dD,
+				 const M & m,
+				 MP & mP){
   if(sD.notInfec.empty())
     return;
 
@@ -218,7 +218,7 @@ void RankToyAgent<F,M,MP>::applyTrt(const SimData & sD,
 
 
 
-std::vector<double> RankToyTuneParam::getPar() const {
+std::vector<double> RankTuneParam::getPar() const {
   std::vector<double> par;
   par = arma::conv_to< std::vector<double> >::from(weights);
   // par.push_back(sigma);
@@ -227,7 +227,7 @@ std::vector<double> RankToyTuneParam::getPar() const {
 
 
 
-void RankToyTuneParam::putPar(const std::vector<double> & par){
+void RankTuneParam::putPar(const std::vector<double> & par){
   // sigma = par.back();
   weights = arma::conv_to<arma::colvec>::from(par);
   // weights.resize(weights.n_elem - 1);

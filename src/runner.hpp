@@ -13,13 +13,9 @@
 #include "randomAgent.hpp"
 #include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "optim.hpp"
-#include "m1SgdOptim.hpp"
-#include "m1SimpleOptim.hpp"
-#include "m1HybridOptim.hpp"
 #include "m1SpOptim.hpp"
-#include "m2SaOptim.hpp"
 
 
 

@@ -22,18 +22,20 @@ PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
 PROF = $(DEBUG) -pg 
 BINARY = tuneGen
 OBJECTS = $(BINARY).o 
-OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
+OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgentToy.o \
-	m1SgdOptim.o m1SimpleOptim.o m1HybridOptim.o m2SaOptim.o \
-	anchorMan.o \
+	rankAgent.o \
+	m1SpOptim.o \
 	features.o featuresInt.o \
-	toyFeatures0.o toyFeatures1.o toyFeatures2.o \
+	toyFeatures2.o \
+	model.o modelParam.o \
+	modelGravityTimeInf.o modelParamGravityTimeInf.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
 	modelCave.o modelParamCave.o \
+	mcmc.o mcmcRange.o mcmcCave.o mcmcGravityTimeInf.o \
 	runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o mcmc.o settings.o
+	sortMerge.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"

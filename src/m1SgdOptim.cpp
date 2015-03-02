@@ -29,32 +29,32 @@ void M1SgdOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1SgdOptim<System<GravityModel,GravityParam,
 				 GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-				       GravityModel,GravityParam>,
+			  RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+				    GravityModel,GravityParam>,
 			  GravityModel,GravityParam>;
 
 template class M1SgdOptim<System<RangeModel,RangeParam,
 				 RangeModel,RangeParam>,
-			  RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				       RangeModel,RangeParam>,
+			  RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				    RangeModel,RangeParam>,
 			  RangeModel,RangeParam>;
 
 template class M1SgdOptim<System<GravityModel,GravityParam,
 				 RangeModel,RangeParam>,
-			  RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				       RangeModel,RangeParam>,
+			  RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				    RangeModel,RangeParam>,
 			  RangeModel,RangeParam>;
 
 template class M1SgdOptim<System<GravityModel,GravityParam,
 				 CaveModel,CaveParam>,
-			  RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				       CaveModel,CaveParam>,
+			  RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				    CaveModel,CaveParam>,
 			  CaveModel,CaveParam>;
 
 template class M1SgdOptim<System<CaveModel,CaveParam,
 				 CaveModel,CaveParam>,
-			  RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				       CaveModel,CaveParam>,
+			  RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				    CaveModel,CaveParam>,
 			  CaveModel,CaveParam>;
 
 
@@ -73,7 +73,7 @@ void M1SgdOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + system.fD.period))
+  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + 1))
     tune(s,agent);
 
   printf("[optimize]\n");
@@ -190,7 +190,7 @@ void M1SgdOptim<S,A,M,MP>
     o.tp.b=abVals.at(i).second;
 
     printf("[setting](% 4d)\n",i);
-    val = r.run(s,agent,o,1,s.fD.finalT);
+    val = r.run(s,agent,o,50,s.fD.finalT);
     if(val < minVal){
       bestA = o.tp.a;
       bestB = o.tp.b;

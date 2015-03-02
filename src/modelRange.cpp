@@ -173,7 +173,7 @@ void RangeModel::fit(const SimData & sD, const TrtData & tD,
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000);
+    mcmc.sample(5000,1000,mPInit.getPar());
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());

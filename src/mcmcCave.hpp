@@ -37,6 +37,8 @@ class CaveMcmc{
 	    const FixedData & fD);
   void load(const std::vector<std::vector<int> > & history,
 	    const FixedData & fD);
+
+  double priorTrtMean;
   
   // MCMC samples
   CaveSamples samples;
@@ -81,6 +83,8 @@ class CaveMcmc{
 
   //functions
   void sample(int const numSamples, int const numBurn);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par);
   double ll();
 
 };

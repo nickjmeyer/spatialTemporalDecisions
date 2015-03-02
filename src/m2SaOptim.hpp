@@ -12,7 +12,7 @@
 #include "system.hpp"
 #include "agent.hpp"
 #include "proximalAgent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "featuresInt.hpp"

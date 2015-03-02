@@ -39,6 +39,8 @@ class GravityMcmc{
 	    const FixedData & fD);
   void load(const std::vector<std::vector<int> > & history,
 	    const FixedData & fD);
+
+  double priorTrtMean;
   
   // MCMC samples
   GravitySamples samples;
@@ -91,6 +93,8 @@ class GravityMcmc{
 
   //functions
   void sample(int const numSamples, int const numBurn);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par);
   double ll();
 
   inline static void updateAlphaW(std::vector<double> & alphaW,

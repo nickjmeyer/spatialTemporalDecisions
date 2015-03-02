@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
 
     typedef System<GM,GP,EM,EP> S;
   
-    S s("dataObs.txt");
+    S s("obsData.txt");
   
     s.paramEst_r = s.paramGen_r;
     s.reset();
@@ -42,7 +42,7 @@ int main(int argc, char ** argv){
 
     typedef System<GM,GP,EM,EP> S;
   
-    S s("dataObs.txt");
+    S s("obsData.txt");
   
     s.paramEst_r = s.paramGen_r;
     s.reset();

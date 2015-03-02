@@ -28,32 +28,32 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1SpOptim<System<GravityModel,GravityParam,
 				GravityModel,GravityParam>,
-			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-				      GravityModel,GravityParam>,
+			 RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+				   GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
 template class M1SpOptim<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,
-			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				      RangeModel,RangeParam>,
+			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				   RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
 template class M1SpOptim<System<GravityModel,GravityParam,
 				CaveModel,CaveParam>,
-			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				      CaveModel,CaveParam>,
+			 RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				   CaveModel,CaveParam>,
 			 CaveModel,CaveParam>;
 
 template class M1SpOptim<System<RangeModel,RangeParam,
 				RangeModel,RangeParam>,
-			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
-				      RangeModel,RangeParam>,
+			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				   RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
 template class M1SpOptim<System<CaveModel,CaveParam,
 				CaveModel,CaveParam>,
-			 RankToyAgent<ToyFeatures2<CaveModel,CaveParam>,
-				      CaveModel,CaveParam>,
+			 RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				   CaveModel,CaveParam>,
 			 CaveModel,CaveParam>;
 
 
@@ -61,6 +61,14 @@ template <class S, class A, class M, class MP>
 M1SpOptim<S,A,M,MP>::M1SpOptim(){
   name = "M1Sp";
 }
+
+
+template <class S, class A, class M, class MP>
+void M1SpOptim<S,A,M,MP>::reset(){
+  tp.A = 30;
+  tp.B = 1;
+}
+
 
 template <class S, class A, class M, class MP>
 void M1SpOptim<S,A,M,MP>
@@ -71,7 +79,7 @@ void M1SpOptim<S,A,M,MP>
 		      system.modelEst,system.modelEst,
 		      system.paramEst,system.paramEst);
 
-  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + system.fD.period))
+  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + 1))
     tune(s,agent);
 
   
@@ -175,7 +183,7 @@ void M1SpOptim<S,A,M,MP>
     o.tp.A=abVals.at(i).first;
     o.tp.B=abVals.at(i).second;
 
-    val = r.run(s,agent,o,10,s.fD.finalT);
+    val = r.run(s,agent,o,50,s.fD.finalT);
     if(val < minVal){
       bestA = o.tp.A;
       bestB = o.tp.B;

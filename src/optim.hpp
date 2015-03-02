@@ -7,7 +7,7 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 
 template <class S, class A, class M, class MP>
 class BaseOptim {

@@ -83,6 +83,8 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
+
+  priorTrtMean = fD.priorTrtMean;
   
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
@@ -119,27 +121,44 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
 }
 
 
-
 void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
+  std::vector<double> beta (numCovar,0.0);
+  std::vector<double> par = {-3.0, // intcp
+			     0.1, // alpha
+			     0.1, // power
+			     0.1, // xi
+			     0.0, // trtAct
+			     0.0}; // trtPre
+  par.insert(par.begin(),beta.begin(),beta.end());
+  sample(numSamples,numBurn,par);
+}
+				
+
+
+void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
+				const std::vector<double> & par){
   samples.numSamples = numSamples;
   
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
     alpha_var=1,power_mean=0,power_var=1,xi_mean=0,xi_var=1,
-    trtPre_mean=4,trtPre_var=1,
-    trtAct_mean=4,trtAct_var=1;
+    trtPre_mean=priorTrtMean,trtPre_var=1,
+    trtAct_mean=priorTrtMean,trtAct_var=1;
 
 
   int i,j;
   // set containers for current and candidate samples
-  intcp_cur=intcp_can=-3;
-  beta_cur=beta_can=std::vector<double>(numCovar,0.0);
-  alpha_cur=alpha_can=0.1;
-  power_cur=power_can=0.1;
-  xi_cur=xi_can=0.1;
-  trtPre_cur=trtPre_can=0;
-  trtAct_cur=trtAct_can=0;
+  std::vector<double>::const_iterator it = par.begin();
+  it += numCovar;
+  beta_cur.insert(beta_cur.begin(),par.begin(),it);
+  beta_can = beta_cur;
+  intcp_cur=intcp_can= *it++;
+  alpha_cur=alpha_can= *it++;
+  power_cur=power_can= *it++;
+  xi_cur=xi_can= *it++;
+  trtPre_cur=trtPre_can= *it++;
+  trtAct_cur=trtAct_can= *it++;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();

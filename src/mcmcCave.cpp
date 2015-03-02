@@ -59,6 +59,8 @@ void CaveMcmc::load(const std::vector<std::vector<int> > & history,
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
+
+  priorTrtMean = fD.priorTrtMean;
   
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
@@ -94,9 +96,16 @@ void CaveMcmc::load(const std::vector<std::vector<int> > & history,
   
 }
 
-
-
 void CaveMcmc::sample(int const numSamples, int const numBurn){
+  std::vector<double> par = {-3.0,
+			     0.0,
+			     0.0,
+			     0.0};
+  sample(numSamples,numBurn,par);
+}
+
+void CaveMcmc::sample(int const numSamples, int const numBurn,
+		      const std::vector<double> & par){
   samples.numSamples = numSamples;
   
   // priors
@@ -108,10 +117,11 @@ void CaveMcmc::sample(int const numSamples, int const numBurn){
 
   int i,j;
   // set containers for current and candidate samples
-  intcp_cur=intcp_can=-3;
-  cave_cur=cave_can=0;
-  trtPre_cur=trtPre_can=0;
-  trtAct_cur=trtAct_can=0;
+  std::vector<double>::const_iterator it = par.begin();
+  intcp_cur=intcp_can= *it++;
+  cave_cur=cave_can= *it++;
+  trtPre_cur=trtPre_can= *it++;
+  trtAct_cur=trtAct_can= *it++;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
