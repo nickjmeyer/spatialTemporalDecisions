@@ -151,12 +151,16 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   // set containers for current and candidate samples
   std::vector<double>::const_iterator it = par.begin();
   it += numCovar;
-  beta_cur.insert(beta_cur.begin(),par.begin(),it);
+  beta_cur.clear();
+  beta_cur.insert(beta_cur.end(),par.begin(),it);
   beta_can = beta_cur;
   intcp_cur=intcp_can= *it++;
-  alpha_cur=alpha_can= *it++;
-  power_cur=power_can= *it++;
-  xi_cur=xi_can= *it++;
+  alpha_cur=alpha_can= (*it < 0.00001 ? 0.01 : *it);
+  ++it;
+  power_cur=power_can= (*it < 0.00001 ? 0.01 : *it);
+  ++it;
+  xi_cur=xi_can= (*it < 0.00001 ? 0.01 : *it);
+  ++it;
   trtPre_cur=trtPre_can= *it++;
   trtAct_cur=trtAct_can= *it++;
 

@@ -341,6 +341,7 @@ FitOnlyRunner<S,A>
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
+    
 #pragma omp critical
     {    
       valueAll.at(r).clear();
@@ -582,27 +583,34 @@ OptimRunnerNS<S,A,Optim>
 
   double value=0;
   int r,t;
+  
+  int threads = omp_get_max_threads();
+  
+#pragma omp parallel for num_threads(threads)	\
+  shared(value)					\
+  firstprivate(system,agent,optim)		\
+  private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
-    agent.tp.weights.ones();
+    agent.reset();
+    optim.reset();
     
-    if(system.modelGen.fitType == MCMC){
-      system.modelGen.mcmc.samples.setRand();
-      system.paramGen.putPar(system.modelGen.mcmc.samples.getPar());
-    }
-
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart &&
-	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    system.paramEst);
+      if(t>=system.fD.trtStart){
+	if(t==system.fD.trtStart)
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst);
+	else
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst,system.paramEst);
+
+	
 	optim.optim(system,agent);
-      }
-      
-      if(t>=system.fD.trtStart)
+	
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst,system.paramEst);
+      }
       
       system.updateStatus();
       
@@ -611,7 +619,11 @@ OptimRunnerNS<S,A,Optim>
     }
     // end rep r
 
-    value += system.value();
+#pragma omp critical
+    {
+      value += system.value();
+    }
+
   }
 
   return value/((double)numReps);

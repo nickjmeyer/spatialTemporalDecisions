@@ -24,7 +24,7 @@ namespace njm{
 
   template<class T>
   std::string toString(const std::vector<T> & n, 
-		       const std::string sep = "  ",
+		       const std::string sep = " ",
 		       const std::string end = "",
 		       const int w = 16, const int p = 8){
     std::stringstream ss;
@@ -60,7 +60,7 @@ namespace njm{
   int toFile(const std::vector<T> & n,
 	     const std::string file,
 	     const std::ios_base::openmode mode = std::ios_base::app,
-	     const std::string sep = "  ",
+	     const std::string sep = " ",
 	     const std::string end = "\n",
 	     const int w = 16, const int p = 8){
     std::ofstream ofs;

@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <numeric>
 #include "utilities.hpp"
 #include "rand.hpp"
 #include "data.hpp"
@@ -17,7 +16,7 @@
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
-#include "rankAgentToy.hpp"
+#include "rankAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
 #include "featuresInt.hpp"
@@ -37,24 +36,32 @@ class FFX {
   
   std::vector<std::string> stats;
 
-  std::vector<std::vector<double> > results;
+  std::vector<std::vector<double> > allObs;
 
   std::vector<int> maxSett;
+
+  void setReps(const int num);
   
   void addFactor(const std::string & f,
 		 const std::vector<double> & fVals);
   void addStat(const std::string & s);
 
   int numFactor;
+  int numStat;
 
   int numCombo;
   int numReps;
 
-  int getMax() const ;
-  std::vector<double> getSett(const int i) const;
+  int maxInd;
 
-  
-  
+  int getMax() const ;
+  std::vector<double> getSett(const int num) const;
+  double getSett(const std::string & f, const int num) const;
+
+  void addObs(const int num, const double & obs);
+  void addObs(const int num, const std::vector<double> & obs);
+
+  void saveObs(const std::string & file) const;
 };
 
 
