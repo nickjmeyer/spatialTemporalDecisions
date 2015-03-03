@@ -5,7 +5,7 @@ double getDPow(const double & power, const double & alpha,
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
   meanCaves /= double(caves.size());
 
-  return(std::log(std::log(1.25)*std::pow(meanCaves,2.0*power)/alpha + 1.0)/
+  return(std::log(std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0)/
 	 std::log(2.0));
 }
 
@@ -24,7 +24,7 @@ double TuneGenNT(S & s){
   double goal = 0.7;
   int numReps = 500;
   int numYears = s.fD.finalT;
-  double tol = 0.001;
+  double tol = 0.01;
 
   std::vector<double> scaleD;
   njm::fromFile(scaleD, njm::sett.srcExt("rawD.txt"));

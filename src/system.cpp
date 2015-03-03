@@ -62,9 +62,9 @@ System<MG, MPG,
   std::vector<int> historyFile;
   njm::fromFile(historyFile,njm::sett.srcExt(file));
 
+
   int size = int(historyFile.size());
   int numPoints = size/fD.numNodes;
-
 
   // history
   sD_r.history.clear();
@@ -83,6 +83,7 @@ System<MG, MPG,
   sD_r.status.clear();
   for(j = 0; j < fD.numNodes; j++, k++)
     sD_r.status.push_back(historyFile.at(k));
+
 
   // current treatments
   for(j = 0; j < fD.numNodes; j++){

@@ -119,7 +119,7 @@ int main(int argc, char ** argv){
   std::vector<double> Bvals = {1,10};
   std::vector<double> Cvals = {2.0,5.0};
   std::vector<double> Tvals = {1.0,2.0};
-  std::vector<double> Lvals = {0.75,1.0};
+  std::vector<double> Lvals = {1.0,1.25};
 
   FFX ffx;
 

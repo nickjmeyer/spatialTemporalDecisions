@@ -169,7 +169,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
     double curSize;
-    double size=.00001;
+    double size=0.001;
   
     do{
       iter++;
@@ -178,7 +178,7 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 	break;
       curSize=gsl_multimin_fminimizer_size(s);
       status=gsl_multimin_test_size(curSize,size);
-    }while(status==GSL_CONTINUE && iter < 2000);
+    }while(status==GSL_CONTINUE && iter < 1000);
 
     for(i=0; i<dim; i++)
       par.at(i) = gsl_vector_get(s->x,i);
