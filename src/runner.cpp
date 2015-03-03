@@ -247,6 +247,10 @@ template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
 				      GravityModel,GravityParam>,
 			       MyopicAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       MyopicAgent<GravityTimeInfModel,
+					   GravityTimeInfParam> >;
 
 
 
@@ -262,6 +266,12 @@ template class VanillaRunnerNS<System<GravityModel,GravityParam,
 			       RankAgent<ToyFeatures2<GravityModel,
 						      GravityParam>,
 					 GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       RankAgent<ToyFeatures2<GravityTimeInfModel,
+						      GravityTimeInfParam>,
+					 GravityTimeInfModel,
+					 GravityTimeInfParam> >;
 
 
 

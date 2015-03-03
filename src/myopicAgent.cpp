@@ -2,6 +2,7 @@
 
 
 template class MyopicAgent<GravityModel,GravityParam>;
+template class MyopicAgent<GravityTimeInfModel,GravityTimeInfParam>;
 
 template class MyopicAgent<CaveModel,CaveParam>;
 

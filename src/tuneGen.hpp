@@ -27,8 +27,5 @@
 #include "toyFeatures2.hpp"
 
 
-double TuneGenNTObj(const gsl_vector * x, void * param);
-double TuneGenMAObj(const gsl_vector * x, void * param);
-
 
 #endif

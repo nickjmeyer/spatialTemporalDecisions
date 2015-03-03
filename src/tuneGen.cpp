@@ -1,10 +1,19 @@
 #include "tuneGen.hpp"
 
 double getDPow(const double & power, const double & alpha,
-	       const std::vector<int> & caves){
+	       const std::vector<double> & caves){
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+  meanCaves /= double(caves.size());
 
-  return(std::log(0.5*std::pow(meanCaves,2.0*power)/alpha + 1.0)/std::log(2.0));
+  return(std::log(std::log(1.25)*std::pow(meanCaves,2.0*power)/alpha + 1.0)/
+	 std::log(2.0));
+}
+
+
+void rescaleD(const double & pastScale, const double & currScale,
+	      std::vector<double> & d){
+  double scale = currScale/pastScale;
+  std::for_each(d.begin(),d.end(),[&scale](double & x){x=std::pow(x,scale);});
 }
 
 template <class S, class NT,class RN>
@@ -17,15 +26,19 @@ double TuneGenNT(S & s){
   int numYears = s.fD.finalT;
   double tol = 0.001;
 
-  std::vector<double> scale;
+  std::vector<double> scaleD;
   njm::fromFile(scaleD, njm::sett.srcExt("rawD.txt"));
-  double pastScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
+  double pastScale = 1.0;
+  double currScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
 			     s.fD.caves);
+
+  rescaleD(pastScale,currScale,scaleD);
+  s.fD.dist = scaleD;
 
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
   double val = rn.run(s,nt,numReps,numYears);
-  double scale = 3.0, shrink = .975;
+  double scale = 1.5, shrink = .975;
   int above = int(val > goal);
   int iter = 0;
 
@@ -40,13 +53,6 @@ double TuneGenNT(S & s){
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0 + scale;});
       
-      s.paramGen_r.putPar(par);
-      s.paramGen_r.power = power;
-      s.paramEst_r.putPar(par);
-      s.paramEst_r.power = power;
-      
-      s.reset();
-
       above = 1;
     }
     else{
@@ -56,15 +62,24 @@ double TuneGenNT(S & s){
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
       
-      s.paramGen_r.putPar(par);
-      s.paramGen_r.power = power;
-      s.paramEst_r.putPar(par);
-      s.paramEst_r.power = power;
-      
       s.reset();
       
       above = 0;
     }
+
+    s.paramGen_r.putPar(par);
+    s.paramGen_r.power = power;
+    s.paramEst_r.putPar(par);
+    s.paramEst_r.power = power;
+
+    s.reset();
+
+    pastScale = currScale;
+    currScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
+			s.fD.caves);
+    rescaleD(pastScale,currScale,scaleD);
+    s.fD.dist = scaleD;
+
 
     val = rn.run(s,nt,numReps,numYears);
     printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
@@ -101,13 +116,26 @@ int main(int argc, char ** argv){
     typedef System<GM,GP,EM,EP> S;
     typedef NoTrt<EM,EP> NT;
     typedef ProximalAgent<EM,EP> PA;
+    typedef MyopicAgent<EM,EP> MA;
+
+    typedef ToyFeatures2<EM,EP> F;
+    typedef RankAgent<F,EM,EP> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
     typedef VanillaRunnerNS<S,PA> RP;
+    typedef VanillaRunnerNS<S,MA> RM;
+    typedef VanillaRunnerNS<S,RA> RR;
 
     S s;
     s.paramEst_r = s.paramGen_r;
     s.reset();
+
+    MA ma;
+    RM rm;
+
+    RA ra;
+    RR rr;
+    ra.reset();
 
     njm::message("Tuning Intercept");
 
@@ -117,15 +145,27 @@ int main(int argc, char ** argv){
 
     double valPA = TuneGenPA<S,PA,RP>(s);
 
+    double valMA = rm.run(s,ma,500,s.fD.finalT);
+
+    double valRA = rr.run(s,ra,500,s.fD.finalT);
+
     njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
+		 "\n" +
+		 " alpha: " + njm::toString(s.paramGen_r.alpha,"") +
+		 "\n" +
+		 " power: " + njm::toString(s.paramGen_r.power,"") +
 		 "\n" +
 		 "trtPre: " + njm::toString(s.paramGen_r.trtPre,"") +
 		 "\n" +
 		 "trtAct: " + njm::toString(s.paramGen_r.trtAct,"") +
-		 "\n" +
+		 "\n\n" +
 		 " valNT: " + njm::toString(valNT,"") +
 		 "\n" +
-		 " valPA: " + njm::toString(valPA,""));
+		 " valPA: " + njm::toString(valPA,"") +
+		 "\n" +
+		 " valMA: " + njm::toString(valMA,"") +
+		 "\n" +
+		 " valRA: " + njm::toString(valRA,""));
 
     s.paramGen_r.save();
   }
@@ -140,13 +180,26 @@ int main(int argc, char ** argv){
     typedef System<GM,GP,EM,EP> S;
     typedef NoTrt<EM,EP> NT;
     typedef ProximalAgent<EM,EP> PA;
+    typedef MyopicAgent<EM,EP> MA;
+
+    typedef ToyFeatures2<EM,EP> F;
+    typedef RankAgent<F,EM,EP> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
     typedef VanillaRunnerNS<S,PA> RP;
+    typedef VanillaRunnerNS<S,MA> RM;
+    typedef VanillaRunnerNS<S,RA> RR;
 
     S s;
     s.paramEst_r = s.paramGen_r;
     s.reset();
+
+    MA ma;
+    RM rm;
+
+    RA ra;
+    RR rr;
+    ra.reset();
 
     njm::message("Tuning Intercept");
 
@@ -156,15 +209,30 @@ int main(int argc, char ** argv){
 
     double valPA = TuneGenPA<S,PA,RP>(s);
 
+    double valMA = rm.run(s,ma,500,s.fD.finalT);
+
+    double valRA = rr.run(s,ra,500,s.fD.finalT);
+
     njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
+		 "\n" +
+		 " alpha: " + njm::toString(s.paramGen_r.alpha,"") +
+		 "\n" +
+		 " power: " + njm::toString(s.paramGen_r.power,"") +
+		 "\n" +
+		 "    xi: " + njm::toString(s.paramGen_r.xi,"") +
 		 "\n" +
 		 "trtPre: " + njm::toString(s.paramGen_r.trtPre,"") +
 		 "\n" +
 		 "trtAct: " + njm::toString(s.paramGen_r.trtAct,"") +
-		 "\n" +
+		 "\n\n" +
 		 " valNT: " + njm::toString(valNT,"") +
 		 "\n" +
-		 " valPA: " + njm::toString(valPA,""));
+		 " valPA: " + njm::toString(valPA,"") +
+		 "\n" +
+		 " valMA: " + njm::toString(valMA,"") +
+		 "\n" +
+		 " valRA: " + njm::toString(valRA,""));
+
 
     s.paramGen_r.save();
 
@@ -172,6 +240,9 @@ int main(int argc, char ** argv){
     double priorMeanTrt = (s.paramGen_r.trtPre + s.paramGen_r.trtAct)/2.0;
     priorMeanTrt *= 4.0;
 
+    // write new distance matrix to file
+    njm::toFile(s.fD.dist,njm::sett.srcExt("d.txt"),
+		std::ios_base::out,"\n","");
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);

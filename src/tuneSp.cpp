@@ -116,10 +116,10 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   std::vector<double> Avals = {30,50};
-  std::vector<double> Bvals = {0.3,0.5};
-  std::vector<double> Cvals = {2.0,10.0};
-  std::vector<double> Tvals = {0.2,1.0,2.0};
-  std::vector<double> Lvals = {0.5,1.0,2.0};
+  std::vector<double> Bvals = {1,10};
+  std::vector<double> Cvals = {2.0,5.0};
+  std::vector<double> Tvals = {1.0,2.0};
+  std::vector<double> Lvals = {0.75,1.0};
 
   FFX ffx;
 
