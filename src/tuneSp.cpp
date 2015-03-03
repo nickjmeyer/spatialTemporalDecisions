@@ -153,18 +153,22 @@ int main(int argc, char ** argv){
   typedef FitOnlyRunner<S,AR> FR;
 
   S s;
+  s.modelGen.fitType = MLE;  // for speed
+  s.modelEst.fitType = MLE;  // for speed
+  
   AR ar;
+  ar.reset();
+
   SPO spo;
+  
   SPR spr;
 
   FR fr;
 
-  ar.reset();
+  
+  // baseline value
   njm::message("Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
 
-  // for speed
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
 
   // this is an experiment to set up the tuning, so no tuning necessary
   spo.tp.tune = 0;
