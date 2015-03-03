@@ -1,5 +1,12 @@
 #include "tuneGen.hpp"
 
+double getDPow(const double & power, const double & alpha,
+	       const std::vector<int> & caves){
+  double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+
+  return(std::log(0.5*std::pow(meanCaves,2.0*power)/alpha + 1.0)/std::log(2.0));
+}
+
 template <class S, class NT,class RN>
 double TuneGenNT(S & s){
   NT nt;
@@ -9,6 +16,11 @@ double TuneGenNT(S & s){
   int numReps = 500;
   int numYears = s.fD.finalT;
   double tol = 0.001;
+
+  std::vector<double> scale;
+  njm::fromFile(scaleD, njm::sett.srcExt("rawD.txt"));
+  double pastScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
+			     s.fD.caves);
 
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
