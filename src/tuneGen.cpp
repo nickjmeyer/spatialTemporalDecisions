@@ -11,6 +11,7 @@ double TuneGenNT(S & s){
   double tol = 0.001;
 
   std::vector<double> par = s.paramGen_r.getPar();
+  double power = s.paramGen_r.power;
   double val = rn.run(s,nt,numReps,numYears);
   double scale = 3.0, shrink = .975;
   int above = int(val > goal);
@@ -26,8 +27,12 @@ double TuneGenNT(S & s){
       
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0 + scale;});
+      
       s.paramGen_r.putPar(par);
+      s.paramGen_r.power = power;
       s.paramEst_r.putPar(par);
+      s.paramEst_r.power = power;
+      
       s.reset();
 
       above = 1;
@@ -38,15 +43,19 @@ double TuneGenNT(S & s){
 
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
+      
       s.paramGen_r.putPar(par);
+      s.paramGen_r.power = power;
       s.paramEst_r.putPar(par);
+      s.paramEst_r.power = power;
+      
       s.reset();
       
       above = 0;
     }
 
     val = rn.run(s,nt,numReps,numYears);
-    printf("Iter: %05d  >>>  Current value: %08.6f", ++iter, val);
+    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
     fflush(stdout);
   }
 
@@ -152,7 +161,7 @@ int main(int argc, char ** argv){
     priorMeanTrt *= 4.0;
 
     // write prior mean of treatment effect
-    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorMeanTrt.txt"),
+    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);
   }
 

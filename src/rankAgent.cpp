@@ -4,6 +4,9 @@
 template class RankAgent<ToyFeatures2<GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
+template class RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
+			 GravityTimeInfModel,GravityTimeInfParam>;
+
 template class RankAgent<ToyFeatures2<RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 

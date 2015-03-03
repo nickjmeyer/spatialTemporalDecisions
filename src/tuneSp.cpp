@@ -130,11 +130,12 @@ int main(int argc, char ** argv){
   ffx.addFactor("L",Lvals);
 
   ffx.addStat("value");
+  ffx.addStat("time");
 
   ffx.setReps(8);
 
-  typedef GravityModel MG;
-  typedef GravityParam PG;
+  typedef GravityTimeInfModel MG;
+  typedef GravityTimeInfParam PG;
   
   typedef MG ME;
   typedef PG PE;
@@ -171,6 +172,7 @@ int main(int argc, char ** argv){
   double value;
   int done = 0;
   int i, M = ffx.maxInd;
+  int tick,tock;
   for(i = 0; i < M; ++i){
     spo.tp.A = ffx.getSett("A",i);
     spo.tp.B = ffx.getSett("B",i);
@@ -178,9 +180,11 @@ int main(int argc, char ** argv){
     spo.tp.t = ffx.getSett("T",i);
     spo.tp.ell = ffx.getSett("L",i);
 
+    tick = std::time(NULL);
     value = spr.run(s,ar,spo,300,s.fD.finalT);
+    tock = std::time(NULL);
 
-    ffx.addObs(i,value);
+    ffx.addObs(i,{value,((double)(tock-tick))/3600.0});
     ffx.saveObs(njm::sett.datExt("results_",".txt"));
 
     printf("\rFinished % 5d out of % 5d",++done,ffx.maxInd);

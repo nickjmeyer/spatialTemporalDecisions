@@ -41,6 +41,11 @@ template class PlainRunner<System<GravityModel,GravityParam,
 				  GravityModel,GravityParam>,
 			   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+				  GravityTimeInfModel,GravityTimeInfParam>,
+			   RankAgent<ToyFeatures2<GravityTimeInfModel,
+						  GravityTimeInfParam>,
+				     GravityTimeInfModel,GravityTimeInfParam> >;
 
 template class PlainRunner<System<RangeModel,RangeParam,
 				  RangeModel,RangeParam>,
@@ -313,6 +318,12 @@ template class FitOnlyRunner<System<GravityModel,GravityParam,
 			     RankAgent<ToyFeatures2<GravityModel,
 						    GravityParam>,
 				       GravityModel,GravityParam> >;
+template class FitOnlyRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+				    GravityTimeInfModel,GravityTimeInfParam>,
+			     RankAgent<ToyFeatures2<GravityTimeInfModel,
+						    GravityTimeInfParam>,
+				       GravityTimeInfModel,
+				       GravityTimeInfParam> >;
 
 
 template class FitOnlyRunner<System<GravityModel,GravityParam,
@@ -547,6 +558,19 @@ OptimRunnerNS<System<GravityModel,GravityParam,
 				  GravityModel,GravityParam>,
 			GravityModel,GravityParam> >;
 
+
+template class
+OptimRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+		     GravityTimeInfModel,GravityTimeInfParam>,
+	      RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
+			GravityTimeInfModel,GravityTimeInfParam>,
+	      M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
+			       GravityTimeInfModel,GravityTimeInfParam>,
+			RankAgent<ToyFeatures2<GravityTimeInfModel,
+					       GravityTimeInfParam>,
+				  GravityTimeInfModel,GravityTimeInfParam>,
+			GravityTimeInfModel,GravityTimeInfParam> >;
+
 template class
 OptimRunnerNS<System<RangeModel,RangeParam,
 		     RangeModel,RangeParam>,
@@ -646,6 +670,20 @@ TuneRunner<System<GravityModel,GravityParam,
 					    GravityParam>,
 			       GravityModel,GravityParam>,
 		     GravityModel,GravityParam> >;
+
+
+template class
+TuneRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+		  GravityTimeInfModel,GravityTimeInfParam>,
+	   RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
+		     GravityTimeInfModel,GravityTimeInfParam>,
+	   M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
+			    GravityTimeInfModel,GravityTimeInfParam>,
+		     RankAgent<ToyFeatures2<GravityTimeInfModel,
+					    GravityTimeInfParam>,
+			       GravityTimeInfModel,GravityTimeInfParam>,
+		     GravityTimeInfModel,GravityTimeInfParam> >;
+
 
 template class
 TuneRunner<System<RangeModel,RangeParam,

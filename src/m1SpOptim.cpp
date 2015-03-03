@@ -32,6 +32,13 @@ template class M1SpOptim<System<GravityModel,GravityParam,
 				   GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
+template class M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
+				GravityTimeInfModel,GravityTimeInfParam>,
+			 RankAgent<ToyFeatures2<GravityTimeInfModel,
+						GravityTimeInfParam>,
+				   GravityTimeInfModel,GravityTimeInfParam>,
+			 GravityTimeInfModel,GravityTimeInfParam>;
+
 template class M1SpOptim<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,
 			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
