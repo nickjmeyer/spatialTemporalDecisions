@@ -1,11 +1,11 @@
 #include "rand.hpp"
 
 // static unsigned randomSeed=std::time(NULL);
-// #ifdef RANDOM_SEED__
-// static unsigned randomSeed= RANDOM_SEED__;
-// #else
+#ifdef RANDOM_SEED__
+static unsigned randomSeed= RANDOM_SEED__;
+#else
 static unsigned randomSeed= 8;
-// #endif
+#endif
 static boost::mt19937 rng( randomSeed );
 static boost::uniform_real<> unif01(0.0,1.0);
 static boost::normal_distribution<> norm01(0.0, 1.0);
