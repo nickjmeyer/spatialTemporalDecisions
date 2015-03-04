@@ -42,6 +42,19 @@ ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
 endif
 
+
+# ifeq ("$(shell hostname)","laber-lnx2")
+# 	CPPFLAGS+= -DRANDOM_SEED__=6
+# endif
+# ifeq ("$(shell hostname)","laber-lnx3")
+# 	CPPFLAGS+= -DRANDOM_SEED__=7
+# endif
+# ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
+# 	CPPFLAGS+= -DRANDOM_SEED__=8
+# endif
+
+
+
 COMPILE_CPP = $(CC) $(CPPFLAGS)
 
 

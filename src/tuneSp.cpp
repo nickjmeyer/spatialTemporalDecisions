@@ -115,88 +115,92 @@ void FFX::saveObs(const std::string & file) const{
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  std::vector<double> Avals = {30,50};
-  std::vector<double> Bvals = {1,10};
-  std::vector<double> Cvals = {2.0,5.0};
-  std::vector<double> Tvals = {1.0,2.0};
-  std::vector<double> Lvals = {1.0,1.25};
+  std::cout << njm::rnorm01() << "\n";
 
-  FFX ffx;
+  // std::vector<double> Avals = {30,50};
+  // std::vector<double> Bvals = {1,10};
+  // std::vector<double> Cvals = {2.0,5.0};
+  // std::vector<double> Tvals = {1.0,2.0};
+  // std::vector<double> Lvals = {1.0,1.25};
 
-  ffx.addFactor("A",Avals);
-  ffx.addFactor("B",Bvals);
-  ffx.addFactor("C",Cvals);
-  ffx.addFactor("T",Tvals);
-  ffx.addFactor("L",Lvals);
+  // FFX ffx;
 
-  ffx.addStat("value");
-  ffx.addStat("time");
+  // ffx.addFactor("A",Avals);
+  // ffx.addFactor("B",Bvals);
+  // ffx.addFactor("C",Cvals);
+  // ffx.addFactor("T",Tvals);
+  // ffx.addFactor("L",Lvals);
 
-  ffx.setReps(8);
+  // ffx.addStat("value");
+  // ffx.addStat("time");
 
-  typedef GravityTimeInfModel MG;
-  typedef GravityTimeInfParam PG;
+  // ffx.setReps(8);
+
+  // typedef GravityTimeInfModel MG;
+  // typedef GravityTimeInfParam PG;
   
-  typedef MG ME;
-  typedef PG PE;
+  // typedef MG ME;
+  // typedef PG PE;
 
-  typedef System<MG,PG,ME,PE> S;
+  // typedef System<MG,PG,ME,PE> S;
   
-  typedef ToyFeatures2<ME,PE> F;
+  // typedef ToyFeatures2<ME,PE> F;
   
-  typedef RankAgent<F,ME,PE> AR;
+  // typedef RankAgent<F,ME,PE> AR;
 
-  typedef M1SpOptim<S,AR,ME,PE> SPO;
+  // typedef M1SpOptim<S,AR,ME,PE> SPO;
 
-  typedef OptimRunnerNS<S,AR,SPO> SPR;
+  // typedef OptimRunnerNS<S,AR,SPO> SPR;
 
-  typedef FitOnlyRunner<S,AR> FR;
+  // typedef FitOnlyRunner<S,AR> FR;
 
-  S s;
-  s.modelGen.fitType = MLE;  // for speed
-  s.modelEst.fitType = MLE;  // for speed
+  // S s;
+  // s.modelGen.fitType = MLE;  // for speed
+  // s.modelEst.fitType = MLE;  // for speed
   
-  AR ar;
-  ar.reset();
+  // AR ar;
+  // ar.reset();
 
-  SPO spo;
+  // SPO spo;
   
-  SPR spr;
+  // SPR spr;
 
-  FR fr;
+  // FR fr;
 
   
-  // baseline value
-  njm::message("Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
+  // // baseline value
+  // njm::message("Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
 
 
-  // this is an experiment to set up the tuning, so no tuning necessary
-  spo.tp.tune = 0;
+  // // this is an experiment to set up the tuning, so no tuning necessary
+  // spo.tp.tune = 0;
 
-  double value;
-  int done = 0;
-  int i, M = ffx.maxInd;
-  int tick,tock;
-  for(i = 0; i < M; ++i){
-    spo.tp.A = ffx.getSett("A",i);
-    spo.tp.B = ffx.getSett("B",i);
-    spo.tp.C = ffx.getSett("C",i);
-    spo.tp.t = ffx.getSett("T",i);
-    spo.tp.ell = ffx.getSett("L",i);
+  // double value;
+  // int done = 0;
+  // int i, M = ffx.maxInd;
+  // int tick,tock;
+  // for(i = 0; i < M; ++i){
+  //   spo.tp.A = ffx.getSett("A",i);
+  //   spo.tp.B = ffx.getSett("B",i);
+  //   spo.tp.C = ffx.getSett("C",i);
+  //   spo.tp.t = ffx.getSett("T",i);
+  //   spo.tp.ell = ffx.getSett("L",i);
 
-    tick = std::time(NULL);
-    value = spr.run(s,ar,spo,300,s.fD.finalT);
-    tock = std::time(NULL);
+  //   tick = std::time(NULL);
+  //   value = spr.run(s,ar,spo,300,s.fD.finalT);
+  //   tock = std::time(NULL);
 
-    ffx.addObs(i,{value,((double)(tock-tick))/3600.0});
-    ffx.saveObs(njm::sett.datExt("results_",".txt"));
+  //   ffx.addObs(i,{value,((double)(tock-tick))/3600.0});
+  //   ffx.saveObs(njm::sett.datExt("results_",".txt"));
 
-    printf("\rFinished % 5d out of % 5d",++done,ffx.maxInd);
-    fflush(stdout);
-  }
-  printf("\n");
+  //   printf("\rFinished % 5d out of % 5d",++done,ffx.maxInd);
+  //   fflush(stdout);
+  // }
+  // printf("\n");
 
-  ffx.saveObs(njm::sett.datExt("results_",".txt"));
+  // ffx.saveObs(njm::sett.datExt("results_",".txt"));
+
+  njm::sett.clean();
   
   return 0;
 }
