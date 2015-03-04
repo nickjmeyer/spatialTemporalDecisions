@@ -112,7 +112,7 @@ void RangeMcmc::sample(int const numSamples, int const numBurn){
 
 void RangeMcmc::sample(int const numSamples, int const numBurn,
 		       const std::vector<double> & par){
-  samples.numSamples = numSamples;
+  samples.numSamples = numSamples - numBurn;
   
   // priors
   int thin=1;

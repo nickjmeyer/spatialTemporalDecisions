@@ -137,7 +137,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
 
 void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 				const std::vector<double> & par){
-  samples.numSamples = numSamples;
+  samples.numSamples = numSamples - numBurn;
   
   // priors
   int thin=1;
@@ -212,7 +212,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){
