@@ -8,7 +8,6 @@
 #include "system.hpp"
 #include "agent.hpp"
 #include "rankAgent.hpp"
-#include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "runner.hpp"
@@ -33,13 +32,13 @@ class M1HybridOptimTunePar : public TuneParam{
 };
 
 
-template <class System, class Agent>
-class M1HybridOptim : BaseOptim<System,Agent>{
+template <class S, class A, class M, class MP>
+class M1HybridOptim : BaseOptim<S,A,M,MP>{
  public:
   M1HybridOptim();
   
-  virtual void optim(System system,
-		     Agent & agent);
+  virtual void optim(const S & system,
+		     A & agent);
   M1HybridOptimTunePar tp;
 
   std::string name;

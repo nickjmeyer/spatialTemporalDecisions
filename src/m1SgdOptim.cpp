@@ -13,8 +13,10 @@ M1SgdOptimTunePar::M1SgdOptimTunePar(){
 
   momRate=.5;
 
-  a=5;
-  b=5;
+  a=30;
+  b=1;
+
+  tune=1;
 }
 
 std::vector<double> M1SgdOptimTunePar::getPar() const{
@@ -25,35 +27,59 @@ void M1SgdOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SgdOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-				       GravityModel,GravityParam> >;
-template class M1SgdOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-				       GravityModel,GravityParam> >;
-template class M1SgdOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-				       GravityModel,GravityParam> >;
+template class M1SgdOptim<System<GravityModel,GravityParam,
+				 GravityModel,GravityParam>,
+			  RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+				    GravityModel,GravityParam>,
+			  GravityModel,GravityParam>;
 
-template class M1SgdOptim<System<EbolaModel,EbolaParam>,
-			  RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-				       EbolaModel,EbolaParam> >;
+template class M1SgdOptim<System<RangeModel,RangeParam,
+				 RangeModel,RangeParam>,
+			  RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				    RangeModel,RangeParam>,
+			  RangeModel,RangeParam>;
+
+template class M1SgdOptim<System<GravityModel,GravityParam,
+				 RangeModel,RangeParam>,
+			  RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				    RangeModel,RangeParam>,
+			  RangeModel,RangeParam>;
+
+template class M1SgdOptim<System<GravityModel,GravityParam,
+				 CaveModel,CaveParam>,
+			  RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				    CaveModel,CaveParam>,
+			  CaveModel,CaveParam>;
+
+template class M1SgdOptim<System<CaveModel,CaveParam,
+				 CaveModel,CaveParam>,
+			  RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				    CaveModel,CaveParam>,
+			  CaveModel,CaveParam>;
 
 
-template <class System, class Agent>
-M1SgdOptim<System,Agent>::M1SgdOptim(){
+
+template <class S, class A, class M, class MP>
+M1SgdOptim<S,A,M,MP>::M1SgdOptim(){
   name = "M1Sgd";
 }
 
-template <class System, class Agent>
-void M1SgdOptim<System,Agent>
-::optim(System system,
-	Agent & agent){
-  
-  PlainRunner<System,Agent> runner;
+template <class S, class A, class M, class MP>
+void M1SgdOptim<S,A,M,MP>
+::optim(const S & system,
+	A & agent){
 
-  system.checkPoint();
+  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
+
+  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + 1))
+    tune(s,agent);
+
+  printf("[optimize]\n");
   
+  PlainRunner<System<M,MP,M,MP>,A> runner;
+
   std::vector<double> par=agent.tp.getPar();
   int i,sameRep=0,converged=0,numPar = par.size();
   std::vector<double> parJit(numPar);
@@ -67,7 +93,7 @@ void M1SgdOptim<System,Agent>
 
 
   std::pair<double,double> curr,prev;
-  prev = runner.runEx(system,agent,tp.mcReps,system.fD.finalT);
+  prev = runner.runEx(s,agent,tp.mcReps,s.fD.finalT);
   
   tp.rate = tp.a/tp.b;
 
@@ -81,16 +107,17 @@ void M1SgdOptim<System,Agent>
 
     
     agent.tp.putPar(par);
-    prev = runner.runEx(system,agent,tp.mcReps,system.fD.finalT);    
+    prev = runner.runEx(s,agent,tp.mcReps,s.fD.finalT);    
 
     agent.tp.putPar(parJit);
-    curr = runner.runEx(system,agent,tp.mcReps,system.fD.finalT);    
+    curr = runner.runEx(s,agent,tp.mcReps,s.fD.finalT);    
 
-    // njm::message("iter: " + njm::toString(iter,"",4,0) +
-    // 		 " || " + njm::toString(prev.first,"",6,4) + " - " +
-    // 		 njm::toString(curr.first,"",6,4) + " -> " +
-    // 		 njm::toString(curr.second,"",6,4) + " || " +
-    // 		 njm::toString(par,", ",""));
+    // if(omp_get_thread_num() == 0)
+    //   std::cout << "iter: " + njm::toString(iter,"",4,0) +
+    // 	" || " + njm::toString(prev.first,"",6,4) + " - " +
+    // 	njm::toString(curr.first,"",6,4) + " -> " +
+    // 	njm::toString(curr.second,"",6,4) + " || " +
+    // 	njm::toString(par,", ","") << "\r" << std::flush;
     
 
     for(i=0; i<numPar; i++)
@@ -122,40 +149,51 @@ void M1SgdOptim<System,Agent>
 
 
 
-template <class System, class Agent>
-void M1SgdOptim<System,Agent>
-::tune(System system,
-       Agent & agent){
+template <class S, class A, class M, class MP>
+void M1SgdOptim<S,A,M,MP>
+::tune(const System<M,MP,M,MP> & system,
+       A agent){
 
-  std::vector<double> aVals;
-  aVals.push_back(1);
-  aVals.push_back(3);
-  aVals.push_back(7);
-  aVals.push_back(10);
-  aVals.push_back(13);
-  aVals.push_back(17);
-  aVals.push_back(20);
-  aVals.push_back(40);
+  printf("[tuning]\n");
+  // std::cout << "thread "
+  // 	    << omp_get_thread_num()
+  // 	    << " is tuning!!!!!!!" << std::endl;
+  System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
+  s.modelEst.fitType = MLE;
+  s.fD.finalT = s.sD.time + 2*s.fD.period;
+
+  M1SgdOptim<System<M,MP,M,MP>,A,M,MP> o;
+  o.tp.tune = 0;
   
-  int i;
+  TuneRunner<System<M,MP,M,MP>,A,
+	     M1SgdOptim<System<M,MP,M,MP>,A,M,MP> > r;
+  
+  std::vector<double> scale;
+  scale.push_back(0.5);
+  scale.push_back(1.0);
+  scale.push_back(2.0);
+
+  
+  int i,j;
   std::vector<std::pair<double,double> > abVals;
-  for(i=0; i<(int)aVals.size(); i++)
-    abVals.push_back(std::pair<double,double>(aVals.at(i),1));
-  abVals.push_back(std::pair<double,double>(1,40));
-  abVals.push_back(std::pair<double,double>(40,40));
+  for(i = 0; i < (int)scale.size(); ++i)
+    for(j = 0; j < (int)scale.size(); ++j)
+      abVals.push_back(std::pair<double,double>(30*scale.at(i),
+						1*scale.at(j)));
 
-  PlainRunner<System,Agent> pR;
-  
   int numAbVals=abVals.size();
-  double val,minVal=1.0,bestA=40,bestB=1;
+  double val,minVal=1.0,bestA=10,bestB=100;
   for(i=0; i<numAbVals; i++){
-    tp.a=abVals.at(i).first;
-    tp.b=abVals.at(i).second;
+    o.tp.a=abVals.at(i).first;
+    o.tp.b=abVals.at(i).second;
 
-    val=pR.run(system,agent,150,system.fD.finalT);
-    if(val<=minVal){
-      bestA = abVals.at(i).first;
-      bestB = abVals.at(i).second;
+    printf("[setting](% 4d)\n",i);
+    val = r.run(s,agent,o,50,s.fD.finalT);
+    if(val < minVal){
+      bestA = o.tp.a;
+      bestB = o.tp.b;
 
       minVal = val;
     }

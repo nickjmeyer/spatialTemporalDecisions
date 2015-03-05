@@ -13,7 +13,6 @@
 #include "agent.hpp"
 #include "proximalAgent.hpp"
 #include "rankAgent.hpp"
-#include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "featuresInt.hpp"
@@ -34,12 +33,17 @@ class M2NmEvalTunePar : public TuneParam{
   double tol; // convergence tolerance
   double rate; // learning rate
   double rateDecay; // learning rate decay
+
+  double sdStart;
+  double sdStop;
+  double sdDecay;
+  double sdJump;
 };
 
 
 
-template <class System, class Agent, class Features,
-	  class Model, class ModelParam>
+template <class S, class A, class F,
+	  class M, class MP>
 class M2NmEval {
  public:
 
@@ -47,8 +51,8 @@ class M2NmEval {
 
   double qFn(const SimData & sD, TrtData & tD,
 	     const FixedData & fD, const DynamicData & dD,
-	     const Model & m, ModelParam & mP,
-	     Agent a);
+	     const M & m, MP & mP,
+	     A a);
   
   double bellRes();
 
@@ -64,23 +68,23 @@ class M2NmEval {
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD,
-		      const Model & m,
-		      ModelParam & mP);
+		      const M & m,
+		      MP & mP);
 
   // policy generated data for bellman residual
   // sets D1
   void bellResPolData(const int time,
 		      const FixedData & fD,
-		      const Model & m,
-  		      ModelParam & mP,
-  		      Agent a);
+		      const M & m,
+  		      MP & mP,
+  		      A a);
   
   // builds the spatial penalty
   Eigen::SparseMatrix<double> buildSpatialPen(const SimData & sD,
 					      const FixedData & fD);
   Eigen::SparseMatrix<double> buildL2Pen(const int numNodes);
 
-  Features f; // used to generate features
+  F f; // used to generate features
   std::vector<double> feat2Vec(const int numNodes,
 			       const std::vector<int> & status);
 
@@ -109,47 +113,47 @@ class M2NmEval {
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-class M2NmOptim : BaseOptim<System,Agent> {
+template <class S, class A, class F,
+	  class M,class MP>
+class M2NmOptim : BaseOptim<S,A,M,MP> {
  public:
   M2NmOptim();
   
-  virtual void optim(System system,
-		     Agent & agent);
+  virtual void optim(const S & system,
+		     A & agent);
   
-  M2NmEval<System,Agent,Features,Model,ModelParam> qEval;
+  M2NmEval<System<M,MP,M,MP>,A,F,M,MP> qEval;
   
   std::string name;
 };
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
+template <class S, class A, class F,
+	  class M,class MP>
 class M2NmData {
  public:
-  M2NmEval<System,Agent,Features,Model,ModelParam>  qEval;
+  M2NmEval<S,A,F,M,MP>  qEval;
 
-  System s;
-  Agent a;
+  S s;
+  A a;
 };
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
+template <class S, class A, class F,
+	  class M,class MP>
 double M2NmObj(const gsl_vector * x, void * params){
-  M2NmData<System,Agent,Features,Model,ModelParam> * qD =
-    static_cast<M2NmData<System,Agent,Features,Model,ModelParam> *>(params);
+  M2NmData<S,A,F,M,MP> * qD =
+    static_cast<M2NmData<S,A,F,M,MP> *>(params);
   int i;
   for(i=0; i<qD->a.f.numFeatures; i++)
     qD->a.tp.weights(i) = gsl_vector_get(x,i);
   qD->qEval.bellResPolData(qD->s.sD.time,qD->s.fD,
-			   qD->s.model,qD->s.estParam,
+			   qD->s.modelEst,qD->s.paramEst,
 			   qD->a);
   qD->qEval.solve();
   return - qD->qEval.qFn(qD->s.sD,qD->s.tD,qD->s.fD,qD->s.dD,
-			 qD->s.model,qD->s.estParam,qD->a);
+			 qD->s.modelEst,qD->s.paramEst,qD->a);
 }
 
 

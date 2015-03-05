@@ -2,104 +2,226 @@
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
+
+  {
+    typedef GravityModel MG;
+    typedef GravityParam PG;
   
-  System<GravityModel,GravityParam> s;
+    typedef GravityModel ME;
+    typedef GravityParam PE;
+    // typedef RangeModel ME;
+    // typedef RangeParam PE;
+
+    typedef System<MG,PG,ME,PE> S;
   
-  NoTrt<GravityModel,GravityParam> nA;
-  ProximalAgent<GravityModel,GravityParam> pA;
-  MyopicAgent<GravityModel,GravityParam> mA;
-  RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-	       GravityModel,GravityParam> rA;
-
-  // no treatment
-  VanillaRunner<System<GravityModel,GravityParam>,
-		NoTrt<GravityModel,GravityParam> > nR;
-
-  // proximal
-  VanillaRunner<System<GravityModel,GravityParam>,
-		ProximalAgent<GravityModel,GravityParam> > pR;
+    typedef ToyFeatures2<ME,PE> F;
+    // typedef FeaturesInt<F,ME,PE> FI;
   
-  // myopic
-  FitOnlyRunner<System<GravityModel,GravityParam>,
-		MyopicAgent<GravityModel,GravityParam> > mR;
+    typedef NoTrt<ME,PE> AN;
+    typedef ProximalAgent<ME,PE> AP;
+    typedef MyopicAgent<ME,PE>  AM;
+    typedef RankToyAgent<F,ME,PE> AR;
 
-  // rank agent fixed (1,1,1,1)
-  FitOnlyRunner<System<GravityModel,GravityParam>,
-		RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			     GravityModel,GravityParam> > rR;
+    typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
 
-  // rank agent simple
-  OptimRunner<System<GravityModel,GravityParam>,
-	      RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			   GravityModel,GravityParam>,
-	      M1SimpleOptim<System<GravityModel,GravityParam>,
-			    RankToyAgent<ToyFeatures2<GravityModel,
-						      GravityParam>,
-					 GravityModel,GravityParam>
-			    > > rRSimple;
-			    
-  // rank agent sgd
-  OptimRunner<System<GravityModel,GravityParam>,
-	      RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			   GravityModel,GravityParam>,
-	      M1SgdOptim<System<GravityModel,GravityParam>,
-			 RankToyAgent<ToyFeatures2<GravityModel,
-						   GravityParam>,
-				      GravityModel,GravityParam>
-			 > > rRSgd;
+    typedef VanillaRunner<S,AN> R_AN;
+    typedef VanillaRunner<S,AP> R_AP;
+    typedef FitOnlyRunner<S,AM> R_AM;
+    typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+
+    // system
+    S s;
+
+    // agents
+    AN an;
+    AP ap;
+    AM am;
+    AR ar;
+    std::string name = ar.name;
+
+    // optim
+    OM1_Sgd om1_sgd;
+    // OM2_Sa om2_sa;
     
-  // rank agent hybrid
-  OptimRunner<System<GravityModel,GravityParam>,
-	      RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			   GravityModel,GravityParam>,
-	      M1HybridOptim<System<GravityModel,GravityParam>,
-			    RankToyAgent<ToyFeatures2<GravityModel,
-						      GravityParam>,
-					 GravityModel,GravityParam>
-			    > > rRHybrid;
+    // runners
+    R_AN r_an;
+    R_AP r_ap;
+    R_AM r_am;
+    R_AR_M1Sgd r_ar_m1sgd;
+    // R_AR_M2Sa r_ar_m2sa;
 
+    int mcReps=300,numPoints = s.fD.finalT;
+    njm::message("No Trt");
+    njm::message(r_an.run(s,an,mcReps,numPoints));
   
-  // m1 simple optim
-  M1SimpleOptim<System<GravityModel,GravityParam>,
-		RankToyAgent<ToyFeatures2<GravityModel,
-					  GravityParam>,
-			     GravityModel,GravityParam> > m1Simple;
-
-  // m1 sgd optim
-  M1SgdOptim<System<GravityModel,GravityParam>,
-	     RankToyAgent<ToyFeatures2<GravityModel,
-				       GravityParam>,
-			  GravityModel,GravityParam> > m1Sgd;
-
-  // m1 hybrid optim
-  M1HybridOptim<System<GravityModel,GravityParam>,
-		RankToyAgent<ToyFeatures2<GravityModel,
-					  GravityParam>,
-			     GravityModel,GravityParam> > m1Hybrid;
-
-
-  int mcReps=300,numPoints = s.fD.finalT;
-  njm::message("No Treatment");
-  njm::message(nR.run(s,nA,mcReps,numPoints));
+    njm::message("Proximal");
+    njm::message(r_ap.run(s,ap,mcReps,numPoints));
   
-  njm::message("Proximal");
-  njm::message(pR.run(s,pA,mcReps,numPoints));
-  
-  njm::message("Myopic");
-  njm::message(mR.run(s,mA,mcReps,numPoints));
-  
-  njm::message("Rank");
-  njm::message(rR.run(s,rA,mcReps,numPoints));
-  
-  njm::message("Rank Simple");
-  njm::message(rRSimple.run(s,rA,m1Simple,mcReps,numPoints));
+    njm::message("Myopic");
+    njm::message(r_am.run(s,am,mcReps,numPoints));
 
-  njm::message("Rank Sgd");
-  njm::message(rRSgd.run(s,rA,m1Sgd,mcReps,numPoints));
-  
-  njm::message("Rank Hybrid");
-  njm::message(rRHybrid.run(s,rA,m1Hybrid,mcReps,numPoints));
+    ar.name = name;
+    ar.tp.jitter = 0.00;
+    njm::message("Rank M1");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
 
+    ar.name = name+"_rand";
+    ar.tp.jitter = 0.25;
+    njm::message("Rank M1 random");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    // ar.name = name;
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+
+    // ar.name = name+"_rand";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+  }
+
+
+  // misspecified models (Range)
+  {
+
+    typedef GravityModel MG;
+    typedef GravityParam PG;
+  
+    typedef RangeModel ME;
+    typedef RangeParam PE;
+
+    typedef System<MG,PG,ME,PE> S;
+  
+    typedef ToyFeatures2<ME,PE> F;
+    // typedef FeaturesInt<F,ME,PE> FI;
+  
+    typedef MyopicAgent<ME,PE>  AM;
+    typedef RankToyAgent<F,ME,PE> AR;
+
+    typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+
+    typedef FitOnlyRunner<S,AM> R_AM;
+    typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+
+    // system
+    S s;
+
+    // agents
+    AM am;
+    AR ar;
+    std::string name = ar.name;
+    
+    // optim
+    OM1_Sgd om1_sgd;
+    // OM2_Sa om2_sa;
+
+    // runners
+    R_AM r_am;
+    R_AR_M1Sgd r_ar_m1sgd;
+    // R_AR_M2Sa r_ar_m2sa;
+
+
+    int mcReps=300,numPoints = s.fD.finalT;
+    am.name += "_range";
+    njm::message("Myopic");
+    njm::message(r_am.run(s,am,mcReps,numPoints));
+  
+    ar.name = name + "_range";
+    ar.tp.jitter = 0.00;
+    njm::message("Rank M1");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    ar.name = name + "_rand" + "_range";
+    ar.tp.jitter = 0.25;
+    njm::message("Rank M1 random");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    // ar.name = name + "_range";
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+
+    // ar.name = name + "_rand" + "_range";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+  }
+
+
+
+  // misspecified models (Cave)
+  {
+
+    typedef GravityModel MG;
+    typedef GravityParam PG;
+  
+    typedef CaveModel ME;
+    typedef CaveParam PE;
+
+    typedef System<MG,PG,ME,PE> S;
+  
+    typedef ToyFeatures2<ME,PE> F;
+    // typedef FeaturesInt<F,ME,PE> FI;
+  
+    typedef MyopicAgent<ME,PE>  AM;
+    typedef RankToyAgent<F,ME,PE> AR;
+
+    typedef M1SgdOptim<S,AR,ME,PE> OM1_Sgd;
+    // typedef M2SaOptim<S,AR,FI,ME,PE> OM2_Sa;
+
+    typedef FitOnlyRunner<S,AM> R_AM;
+    typedef OptimRunner<S,AR,OM1_Sgd> R_AR_M1Sgd;
+    // typedef OptimRunner<S,AR,OM2_Sa> R_AR_M2Sa;
+
+    // system
+    S s;
+
+    // agents
+    AM am;
+    AR ar;
+    std::string name = ar.name;
+    
+    // optim
+    OM1_Sgd om1_sgd;
+    // OM2_Sa om2_sa;
+
+    // runners
+    R_AM r_am;
+    R_AR_M1Sgd r_ar_m1sgd;
+    // R_AR_M2Sa r_ar_m2sa;
+
+
+    int mcReps=300,numPoints = s.fD.finalT;
+    am.name += "_cave";
+    njm::message("Myopic");
+    njm::message(r_am.run(s,am,mcReps,numPoints));
+  
+    ar.name = name + "_cave";
+    ar.tp.jitter = 0.00;
+    njm::message("Rank M1");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    ar.name = name + "_rand" + "_cave";
+    ar.tp.jitter = 0.25;
+    njm::message("Rank M1 random");
+    njm::message(r_ar_m1sgd.run(s,ar,om1_sgd,mcReps,numPoints));
+
+    // ar.name = name + "_cave";
+    // ar.tp.jitter = 0.00;
+    // njm::message("Rank M2");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));
+
+    // ar.name = name + "_rand" + "_cave";
+    // ar.tp.jitter = 0.25;
+    // njm::message("Rank M2 random");
+    // njm::message(r_ar_m2sa.run(s,ar,om2_sa,mcReps,numPoints));    
+  }
+  
 
   // njm::sett.clean();
   

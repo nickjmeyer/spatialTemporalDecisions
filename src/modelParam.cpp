@@ -10,6 +10,22 @@ void GravityParam::load(){
   njm::fromFile(trtPre,njm::sett.srcExt("./GravityParam/trtPre.txt"));
 }
 
+void GravityParam::save(){
+  njm::toFile(intcp,njm::sett.srcExt("./GravityParam/intcp.txt"),
+	      std::ios_base::out);
+  njm::toFile(beta,njm::sett.srcExt("./GravityParam/beta.txt"),
+	      std::ios_base::out);
+  njm::toFile(alpha,njm::sett.srcExt("./GravityParam/alpha.txt"),
+	      std::ios_base::out);
+  njm::toFile(power,njm::sett.srcExt("./GravityParam/power.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtAct,njm::sett.srcExt("./GravityParam/trtAct.txt"),
+	      std::ios_base::out);
+  njm::toFile(trtPre,njm::sett.srcExt("./GravityParam/trtPre.txt"),
+	      std::ios_base::out);
+}
+
+
 std::vector<double> GravityParam::getPar() const {
   std::vector<double> param;
   param.insert(param.end(),beta.begin(),beta.end());

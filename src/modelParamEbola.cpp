@@ -44,14 +44,14 @@ void EbolaParam::putPar(const std::vector<double> & param){
 
 
 inline void EbolaParam::setAll(){
-  infProbsSep = 1.0/(1.0 + arma::exp(infProbsBase));
+  infProbsSep = 1.0 - 1.0/(1.0 + arma::exp(infProbsBase));
 }
 inline void EbolaParam::setRow(const int r){
-  infProbsSep.row(r) = 1.0/(1.0 + arma::exp(infProbsBase.row(r)));
+  infProbsSep.row(r) = 1.0 - 1.0/(1.0 + arma::exp(infProbsBase.row(r)));
 }
 inline void EbolaParam::setCol(const int c){
-  infProbsSep.col(c) = 1.0/(1.0 + arma::exp(infProbsBase.col(c)));
+  infProbsSep.col(c) = 1.0 - 1.0/(1.0 + arma::exp(infProbsBase.col(c)));
 }
 inline void EbolaParam::setInd(const int r, const int c){
-  infProbsSep(r,c) = 1.0/(1.0 + std::exp(infProbsBase(r,c)));
+  infProbsSep(r,c) = 1.0 - 1.0/(1.0 + std::exp(infProbsBase(r,c)));
 }

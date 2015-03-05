@@ -4,15 +4,25 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   int i,j,numSys=25;
-  std::vector<System<GravityModel,GravityParam> > s(numSys);
-  RankToyAgent<GravityModel,GravityParam> rA;  
+
+  typedef GravityModel GM;
+  typedef GravityParam GP;
+  typedef System<GM,GP,GM,GP> S;
+  typedef ToyFeatures2<GM,GP> F;
+  typedef FeaturesInt<F,GM,GP> FI;
+  typedef RankToyAgent<F,GM,GP> RA;
+  typedef M2SaOptim<S,RA,FI,GM,GP> M2;
+
+  std::vector<S> s(numSys);
+  RA rA;
+
   for(i=0; i<numSys; i++){
-    s.at(i).estParam_r = s.at(i).genParam_r;
+    s.at(i).paramEst_r = s.at(i).paramGen_r;
     s.at(i).reset();
-    for(j=0; j<s.fD.finalT; j++){
+    for(j=0; j<s.at(i).fD.finalT; j++){
       if(j>=s.at(i).fD.trtStart){
 	rA.applyTrt(s.at(i).sD,s.at(i).tD,s.at(i).fD,s.at(i).dD,
-		    s.at(i).model,s.at(i).estParam);
+		    s.at(i).modelEst,s.at(i).paramEst);
 	s.at(i).updateStatus();
 	s.at(i).nextPoint();
       }
@@ -26,15 +36,15 @@ int main(int argc, char ** argv){
   shared(results,numSys)					\
   private(i,j)
   {
-    M2NmOptim<System,RankToyAgent,GravityModel,GravityParam> qO;
+    M2 qO;
 
     int minLambda=0;
     double err,errOrr,minErr=-1;
 
     std::vector<double> lambdaVals;
-    for(i=2; i<13; i++)
-      for(j=1; j<10; j+=2)
-	lambdaVals.push_back(j*std::pow(10,i));
+    double count,tol = 0.000001;
+    for(count = -3.0; count < (16.0 + tol); count += 0.1)
+      lambdaVals.push_back(std::pow(2.0,count));
 
 	  
     int I = lambdaVals.size();
@@ -46,24 +56,28 @@ int main(int argc, char ** argv){
       errOrr=0;
       for(j=0; j<numSys; j++){
 	jp1 = (j+1 == numSys ? 0 : j+1);
+
+	
 	
 	// train data set j
 	qO.qEval.preCompData(s.at(j).sD,s.at(j).fD);
 	qO.qEval.bellResFixData(s.at(j).sD,s.at(j).tD,s.at(j).fD,s.at(j).dD,
-				s.at(j).model,s.at(j).estParam);
+				s.at(j).modelEst,s.at(j).paramEst);
 	qO.qEval.bellResPolData(s.at(j).sD.time,s.at(j).fD,
-				s.at(j).model,s.at(j).estParam,rA);
+				s.at(j).modelEst,s.at(j).paramEst,rA);
 	qO.qEval.solve();
 
 	errOrr += qO.qEval.bellRes();
 
+
+	
 	// test data set j+1
 	qO.qEval.preCompData(s.at(jp1).sD,s.at(jp1).fD);
 	qO.qEval.bellResFixData(s.at(jp1).sD,s.at(jp1).tD,s.at(jp1).fD,
-				s.at(jp1).dD,s.at(jp1).model,
-				s.at(jp1).estParam);
+				s.at(jp1).dD,s.at(jp1).modelEst,
+				s.at(jp1).paramEst);
 	qO.qEval.bellResPolData(s.at(jp1).sD.time,s.at(jp1).fD,
-				s.at(jp1).model,s.at(jp1).estParam,rA);
+				s.at(jp1).modelEst,s.at(jp1).paramEst,rA);
 
 	// error
 	err += qO.qEval.bellRes();

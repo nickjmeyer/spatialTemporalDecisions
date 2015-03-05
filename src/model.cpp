@@ -1,12 +1,15 @@
 #include "model.hpp"
 
+template class BaseModel<GravityParam>;
 
-template<class ModelParam>
-void BaseModel<ModelParam>::load(const SimData & sD,
-				 const TrtData & tD,
-				 const FixedData & fD,
-				 const DynamicData & dD,
-				 ModelParam & mP) const{
+template class BaseModel<GravityTimeInfParam>;
+
+template<class MP>
+void BaseModel<MP>::load(const SimData & sD,
+			 const TrtData & tD,
+			 const FixedData & fD,
+			 const DynamicData & dD,
+			 MP & mP) const{
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -27,12 +30,12 @@ void BaseModel<ModelParam>::load(const SimData & sD,
 }
 
 
-template <class ModelParam>
-void BaseModel<ModelParam>::infProbs(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     ModelParam & mP) const {
+template <class MP>
+void BaseModel<MP>::infProbs(const SimData & sD,
+			     const TrtData & tD,
+			     const FixedData & fD,
+			     const DynamicData & dD,
+			     MP & mP) const {
   mP.infProbs.clear();
   int i,j,node0;
   double prob;
@@ -47,12 +50,12 @@ void BaseModel<ModelParam>::infProbs(const SimData & sD,
 
 
 
-template <class ModelParam>
-void BaseModel<ModelParam>::update(const SimData & sD,
-				   const TrtData & tD,
-				   const FixedData & fD,
-				   const DynamicData & dD,
-				   ModelParam & mP){
+template <class MP>
+void BaseModel<MP>::update(const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD,
+			   MP & mP){
   int i,j,k,node0,numNewInfec=sD.newInfec.size();
   double prob;
   std::vector<double> newInfProbs;
@@ -73,6 +76,26 @@ void BaseModel<ModelParam>::update(const SimData & sD,
   mP.infProbs = newInfProbs;
 }
 
+
+double GravityModel::tuneTrt(const FixedData & fD,
+			     const GravityParam & gP){
+  int i,j;
+  double avgCaves = 0.0;
+  for(i = 0; i < fD.numNodes; i++)
+    avgCaves += fD.caves.at(i);
+  avgCaves /= double(fD.numNodes);
+
+  double minDist = std::numeric_limits<double>::max();
+  for(i = 0; i < fD.numNodes; i++)
+    for(j = (i+1); j < fD.numNodes; j++)
+      if(minDist > fD.dist.at(i*fD.numNodes + j))
+	minDist = fD.dist.at(i*fD.numNodes + j);
+
+  double base = gP.intcp;
+  base -= gP.alpha * minDist/std::pow(avgCaves*avgCaves,gP.power);
+
+   return -(std::log(0.005) - base)/2.0;
+}
 
 
 double GravityModel::oneOnOne(const int notNode,
@@ -109,65 +132,87 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
   for(i=0; i<(5+fD.numCovar); i++)
     par.push_back(0);
   mPInit.putPar(par);
-  mPInit.intcp=-3;
+  mPInit.intcp=-3.0;
   fit(sD,tD,fD,dD,mP,mPInit);
 }
 
 void GravityModel::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP, const GravityParam & mPInit){
-  size_t iter=0;
-  int status;
+		       GravityParam & mP, const GravityParam mPInit){
+  if(fitType == MLE){
+    size_t iter=0;
+    int status;
 
-  gsl_vector *x,*ss;
-  std::vector<double> par = mPInit.getPar();
-  int i,dim=par.size();
-  std::vector< std::vector<int> > history;
-  history=sD.history;
-  history.push_back(sD.status);
-  GravityModelFitData dat(*this,mPInit,sD,fD,history);
+    gsl_vector *x,*ss;
+    std::vector<double> par = mPInit.getPar();
+    int i,dim=par.size();
+    std::vector< std::vector<int> > history;
+    history=sD.history;
+    history.push_back(sD.status);
+    GravityModelFitData dat(*this,mPInit,sD,fD,history);
 
-  x = gsl_vector_alloc(dim);
-  for(i=0; i<dim; i++)
-    gsl_vector_set(x,i,par.at(i));
-  ss=gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,.1);
+    x = gsl_vector_alloc(dim);
+    for(i=0; i<dim; i++)
+      gsl_vector_set(x,i,par.at(i));
+    ss=gsl_vector_alloc(dim);
+    gsl_vector_set_all(ss,.5);
 
-  gsl_multimin_function minex_func;
-  minex_func.n=dim;
-  minex_func.f=&gravityModelFitObjFn;
-  minex_func.params=&dat;
+    gsl_multimin_function minex_func;
+    minex_func.n=dim;
+    minex_func.f=&gravityModelFitObjFn;
+    minex_func.params=&dat;
 
-  const gsl_multimin_fminimizer_type *T=
-    gsl_multimin_fminimizer_nmsimplex2;
-  gsl_multimin_fminimizer *s = NULL;
-  s=gsl_multimin_fminimizer_alloc(T,dim);
-  gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
+    const gsl_multimin_fminimizer_type *T=
+      gsl_multimin_fminimizer_nmsimplex2;
+    gsl_multimin_fminimizer *s = NULL;
+    s=gsl_multimin_fminimizer_alloc(T,dim);
+    gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
 
-  double curSize;
-  double size=.001;
+    double curSize;
+    double size=0.001;
   
-  do{
-    iter++;
-    status=gsl_multimin_fminimizer_iterate(s);
-    if(status)
-      break;
-    curSize=gsl_multimin_fminimizer_size(s);
-    status=gsl_multimin_test_size(curSize,size);
-  }while(status==GSL_CONTINUE && iter < 500);
+    do{
+      iter++;
+      status=gsl_multimin_fminimizer_iterate(s);
+      if(status)
+	break;
+      curSize=gsl_multimin_fminimizer_size(s);
+      status=gsl_multimin_test_size(curSize,size);
+    }while(status==GSL_CONTINUE && iter < 1000);
 
-  for(i=0; i<dim; i++)
-    par.at(i) = gsl_vector_get(s->x,i);
-  mP.putPar(par);
+    for(i=0; i<dim; i++)
+      par.at(i) = gsl_vector_get(s->x,i);
+    
+    // njm::message(njm::toString(mP.getPar()," ","\n") +
+    // 		 njm::toString(par," ","\n"));
+    
+    mP.putPar(par);
 
-  if(sD.time <= fD.trtStart)
-    mP.trtPre = mP.trtAct = 4.0;
+    if(sD.time <= fD.trtStart)
+      mP.trtPre = mP.trtAct = fD.priorTrtMean;
+    
+    gsl_multimin_fminimizer_free(s);
+    gsl_vector_free(x);
+    gsl_vector_free(ss);
 
-  gsl_multimin_fminimizer_free(s);
-  gsl_vector_free(x);
-  gsl_vector_free(ss);
+    load(sD,tD,fD,dD,mP);
+    
+  }
+  else if(fitType == MCMC){
+    mcmc.load(sD.history,sD.status,fD);
+    mcmc.sample(5000,1000,mPInit.getPar());
 
-  load(sD,tD,fD,dD,mP);
+    mcmc.samples.setMean();
+    mP.putPar(mcmc.samples.getPar());
+
+    load(sD,tD,fD,dD,mP);
+  }
+  else{
+    std::cout << "Not a valid Estimation of "
+	      << fitType
+	      << std::endl;
+    throw(1);
+  }
 }
 
 
@@ -230,80 +275,4 @@ double gravityModelFitObjFn (const gsl_vector * x, void * params){
 }
 
 
-
-double GravityModelMcmc::oneOnOne(const int notNode,
-				  const int infNode,
-				  const SimData & sD,
-				  const TrtData & tD,
-				  const FixedData & fD,
-				  const DynamicData & dD,
-				  const GravityParam & gP) const{
-  double base = gP.intcp;
-  int len = gP.beta.size();
-  for(int i=0; i<len; i++)
-    base += gP.beta.at(i)*fD.covar.at(notNode*len + i);
-
-  base -= gP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
-    std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),gP.power);
-
-  if(tD.p.at(notNode))
-    base -= gP.trtPre;
-  if(tD.a.at(infNode))
-    base -= gP.trtAct;
-
-  return base;
-}
-
-
-
-inline double multOneMinus(double a, double b){
-  return a*(1-b);
-}
-
-
-
-
-void GravityModelMcmc::assignMean(GravityParam & mP){
-  mP.intcp = arma::mean(mcmc.samples.intcp);
-  mP.beta = arma::conv_to<std::vector<double> >
-    ::from(arma::mean(mcmc.samples.beta));
-  mP.alpha = arma::mean(mcmc.samples.alpha);
-  mP.power = arma::mean(mcmc.samples.power);
-  mP.trtPre = arma::mean(mcmc.samples.trtPre);
-  mP.trtAct = arma::mean(mcmc.samples.trtAct);
-}
-
-void GravityModelMcmc::assignMean(GravityParam & mP0, GravityParam & mP1){
-  mP0.intcp = arma::mean(mcmc.samples.intcp);
-  mP0.beta = arma::conv_to<std::vector<double> >
-    ::from(arma::mean(mcmc.samples.beta));
-  mP0.alpha = arma::mean(mcmc.samples.alpha);
-  mP0.power = arma::mean(mcmc.samples.power);
-  mP0.trtPre = arma::mean(mcmc.samples.trtPre);
-  mP0.trtAct = arma::mean(mcmc.samples.trtAct);
-  mP1 = mP0;
-}
-
-void GravityModelMcmc::assignRand(GravityParam & mP){
-  int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
-  mP.intcp = mcmc.samples.intcp(ind);
-  mP.beta = arma::conv_to<std::vector<double> >
-    ::from(mcmc.samples.beta.row(ind));
-  mP.alpha = mcmc.samples.alpha(ind);
-  mP.power = mcmc.samples.power(ind);
-  mP.trtPre = mcmc.samples.trtPre(ind);
-  mP.trtAct = mcmc.samples.trtAct(ind);
-}
-
-void GravityModelMcmc::assignRand(GravityParam & mP0, GravityParam & mP1){
-  int ind = njm::runifInterv(0,mcmc.samples.intcp.n_elem);
-  mP0.intcp = mcmc.samples.intcp(ind);
-  mP0.beta = arma::conv_to<std::vector<double> >
-    ::from(mcmc.samples.beta.row(ind));
-  mP0.alpha = mcmc.samples.alpha(ind);
-  mP0.power = mcmc.samples.power(ind);
-  mP0.trtPre = mcmc.samples.trtPre(ind);
-  mP0.trtAct = mcmc.samples.trtAct(ind);
-  mP1 = mP0;
-}
 

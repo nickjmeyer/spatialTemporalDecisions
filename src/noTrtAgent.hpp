@@ -5,17 +5,17 @@
 #include "features.hpp"
 
 
-template <class Model, class ModelParam>
-class NoTrt : public BaseAgent<Model,ModelParam> {
+template <class M, class MP>
+class NoTrt : public BaseAgent<M,MP> {
  public:
   void applyTrt(const SimData & sD,
 		TrtData & tD,
 		const FixedData & fD,
 		const DynamicData & dD,
-		const Model & model,
-		ModelParam & modelParam);
+		const M & model,
+		MP & modelParam);
 
-  static const std::string name;
+  static std::string name;
 };
 
 

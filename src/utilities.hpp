@@ -24,7 +24,7 @@ namespace njm{
 
   template<class T>
   std::string toString(const std::vector<T> & n, 
-		       const std::string sep = "  ",
+		       const std::string sep = " ",
 		       const std::string end = "",
 		       const int w = 16, const int p = 8){
     std::stringstream ss;
@@ -51,14 +51,16 @@ namespace njm{
       ofs.close();
       return 0;
     }
-    else
+    else{
+      std::cout << "Faild to write " << file << std::endl;
       return 1;
+    }
   };
   template<class T>
   int toFile(const std::vector<T> & n,
 	     const std::string file,
 	     const std::ios_base::openmode mode = std::ios_base::app,
-	     const std::string sep = "  ",
+	     const std::string sep = " ",
 	     const std::string end = "\n",
 	     const int w = 16, const int p = 8){
     std::ofstream ofs;
@@ -68,8 +70,10 @@ namespace njm{
       ofs.close();
       return 0;
     }
-    else
+    else{
+      std::cout << "Faild to write " << file << std::endl;
       return 1;
+    }
   };
 
   
@@ -127,7 +131,7 @@ namespace njm{
 
 
   double l2norm(const std::vector<double> & v0,
-		  const std::vector<double> & v1);
+		const std::vector<double> & v1);
 
   double l2norm(std::vector<double> & v);
 

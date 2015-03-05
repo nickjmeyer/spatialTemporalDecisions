@@ -7,21 +7,19 @@
 #include "system.hpp"
 #include "model.hpp"
 #include "modelEbola.hpp"
+#include "modelRange.hpp"
 #include "agent.hpp"
 #include "noTrtAgent.hpp"
+#include "randomAgent.hpp"
 #include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
-#include "rankAgentToy.hpp"
 #include "optim.hpp"
-#include "m1SgdOptim.hpp"
-#include "m2NmOptim.hpp"
-#include "m1SimpleOptim.hpp"
-#include "m1HybridOptim.hpp"
+#include "m1SpOptim.hpp"
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 class BaseRunner {
  public:
 };
@@ -29,88 +27,108 @@ class BaseRunner {
 
 
 
-template <class System, class Agent>
-class TrainRunner : BaseRunner<System,Agent> {
+template <class S, class A>
+class TrainRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     const int numReps, const int numPoints);
 };
 
 
 
 
-template <class System, class Agent>
-class PlainRunner : BaseRunner<System,Agent> {
+template <class S, class A>
+class PlainRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     const int numReps, const int numPoints);
 
-  std::pair<double,double> runEx(System system,
-				 Agent agent,
+  std::pair<double,double> runEx(S system,
+				 A agent,
 				 const int numReps, const int numPoints);
 };
 
 
 
-template <class System, class Agent>
-class VanillaRunner : BaseRunner<System,Agent> {
+template <class S, class A>
+class VanillaRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
+		     const int numReps, const int numPoints);
+};
+
+
+template <class S, class A>
+class VanillaRunnerNS : BaseRunner<S,A> {
+ public:
+  virtual double run(S system,
+		     A agent,
 		     const int numReps, const int numPoints);
 };
 
 
 
-template <class System, class Agent>
-class FitOnlyRunner : BaseRunner<System,Agent> {
+template <class S, class A>
+class FitOnlyRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     const int numReps, const int numPoints);
 };
 
 
 
-template <class System, class Agent, class Optim>
-class OptimRunner : BaseRunner<System,Agent> {
+template <class S, class A, class Optim>
+class OptimRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     Optim optim,
 		     const int numReps, const int numPoints);
 };
 
 
 
-template <class System, class Agent, class Optim>
-class OptimRunnerNS : BaseRunner<System,Agent> {
+template <class S, class A, class Optim>
+class OptimRunnerNS : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     Optim optim,
 		     const int numReps, const int numPoints);
 };
 
 
 
-template <class System, class Agent, class Optim>
-class TestRunner : BaseRunner<System,Agent> {
+template <class S, class A, class Optim>
+class TuneRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
 		     Optim optim,
 		     const int numReps, const int numPoints);
 };
 
 
-template <class System, class Agent>
-class TimerRunner : BaseRunner<System,Agent> {
+
+template <class S, class A, class Optim>
+class TestRunner : BaseRunner<S,A> {
  public:
-  virtual double run(System system,
-		     Agent agent,
+  virtual double run(S system,
+		     A agent,
+		     Optim optim,
+		     const int numReps, const int numPoints);
+};
+
+
+template <class S, class A>
+class TimerRunner : BaseRunner<S,A> {
+ public:
+  virtual double run(S system,
+		     A agent,
 		     const int numReps, const int numPoints);
 };
 

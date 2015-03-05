@@ -11,27 +11,50 @@ endif
 
 
 
-CPPFLAGS = -fopenmp -Wall #-Wl,-rpath=/usr/lib64/R/library/RInside/lib/
-INCLUDE = #-I/usr/include/R/ -I/usr/lib64/R/library/Rcpp/include/
-#INCLUDE += -I/usr/lib64/R/library/RInside/include/
+CPPFLAGS = -std=c++11 -fopenmp -Wall
+INCLUDE = 
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
-#LINKS += -L/usr/lib64/R/lib -L/usr/lib64/R/library/RInside/lib/ -lR -lRInside
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
 PROF = $(DEBUG) -pg 
-COMPILE_CPP = $(CC) $(CPPFLAGS)
-BINARY = test2
+BINARY = tuneSp
 OBJECTS = $(BINARY).o 
-OBJECTS += rand.o system.o model.o modelParam.o utilities.o agent.o \
-	noTrtAgent.o myopicAgent.o proximalAgent.o rankAgent.o rankAgentToy.o \
-	m1SgdOptim.o m2NmOptim.o m1SimpleOptim.o runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o mcmc.o settings.o
+OBJECTS += rand.o system.o utilities.o agent.o \
+	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
+	rankAgent.o \
+	m1SpOptim.o \
+	features.o featuresInt.o \
+	toyFeatures2.o \
+	model.o modelParam.o \
+	modelGravityTimeInf.o modelParamGravityTimeInf.o \
+	modelEbola.o modelParamEbola.o \
+	modelRange.o modelParamRange.o \
+	modelCave.o modelParamCave.o \
+	mcmc.o mcmcRange.o mcmcCave.o mcmcGravityTimeInf.o \
+	runner.o dataDepth.o calcCentrality.o \
+	sortMerge.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
 endif
+
+## random seeds
+ifeq ("$(shell hostname)","laber-lnx2")
+	CPPFLAGS+= -DRANDOM_SEED__=6
+endif
+ifeq ("$(shell hostname)","laber-lnx3")
+	CPPFLAGS+= -DRANDOM_SEED__=7
+endif
+ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
+	CPPFLAGS+= -DRANDOM_SEED__=8
+endif
+
+
+
+COMPILE_CPP = $(CC) $(CPPFLAGS)
+
 
 all: $(BINARY)
 
@@ -52,6 +75,7 @@ $(BINARY): $(OBJECTS)
 	@tar -cjf $(BINARY).tar.bz2 $(BINARY).mk \
 	$$(awk -F: '{gsub(/\\/,"",$$2); gsub(/{\s}+/," ",$$2); printf $$2}' \
 	$(DEPENDS) | awk '{for(i=1; i<=NF; i++) print $$i}' | sort | uniq)
+	mv $(BINARY) $(BINARY).tar.bz2 ../bin/
 
 
 -include $(DEPENDS)

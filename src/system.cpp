@@ -1,60 +1,184 @@
 #include "system.hpp"
 
-template class System<GravityModel,GravityParam>;
+template class System<GravityModel,GravityParam,
+		      GravityModel,GravityParam>;
 
-template class System<EbolaModel,EbolaParam>;
+template class System<GravityTimeInfModel,GravityTimeInfParam,
+		      GravityTimeInfModel,GravityTimeInfParam>;
+
+template class System<GravityModel,GravityParam,
+		      RangeModel,RangeParam>;
+
+template class System<GravityModel,GravityParam,
+		      CaveModel,CaveParam>;
+
+template class System<RangeModel,RangeParam,
+		      RangeModel,RangeParam>;
+
+template class System<CaveModel,CaveParam,
+		      CaveModel,CaveParam>;
+
+template class System<EbolaModel,EbolaParam,
+		      EbolaModel,EbolaParam>;
 
 
-template<class Model, class ModelParam>
-System<Model, ModelParam>::System(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(){
   initialize();
 }
 
 
-template<class Model, class ModelParam>
-System<Model, ModelParam>::System(const SimData & sD,
-				  const TrtData & tD,
-				  const FixedData & fD,
-				  const DynamicData & dD,
-				  const Model & model,
-				  const ModelParam & genParam,
-				  const ModelParam & estParam){
+template <class MG, class MPG,
+	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD,
+			const MG & modelGen,
+			const ME & modelEst,
+			const MPG & paramGen,
+			const MPE & paramEst){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
   this->dD_r = dD;
-  this->model = model;
-  this->genParam_r = genParam;
-  this->estParam_r = estParam;
+  this->modelGen = modelGen;
+  this->modelEst = modelEst;
+  this->paramGen_r = paramGen;
+  this->paramEst_r = paramEst;
+  reset();
+}
+
+
+template <class MG, class MPG,
+	  class ME, class MPE>
+System<MG, MPG,
+       ME, MPE>::System(const std::string file){
+  initialize();
+
+  std::vector<int> historyFile;
+  njm::fromFile(historyFile,njm::sett.srcExt(file));
+
+
+  int size = int(historyFile.size());
+  int numPoints = size/fD.numNodes;
+
+  // history
+  sD_r.history.clear();
+  sD_r.history.resize(numPoints - 1);
+  
+  int i,j,k;
+  for(i = 0, k = 0; i < (numPoints - 1); i++){
+    sD_r.history.at(i).clear();
+    for(j = 0; j < fD.numNodes; j++, k++){
+      sD_r.history.at(i).push_back(historyFile.at(k));
+    }
+  }
+
+
+  // status
+  sD_r.status.clear();
+  for(j = 0; j < fD.numNodes; j++, k++)
+    sD_r.status.push_back(historyFile.at(k));
+
+
+  // current treatments
+  for(j = 0; j < fD.numNodes; j++){
+    tD_r.a.at(j) = tD_r.p.at(j) = 0;
+    if(sD_r.status.at(j) == 1)
+      tD_r.p.at(j) = 1;
+    else if(sD_r.status.at(j) == 3)
+      tD_r.a.at(j) = 1;
+  }
+
+  // past treatments
+  if(numPoints > 1)
+    for(j = 0; j < fD.numNodes; j++){
+      tD_r.aPast.at(j) = tD_r.pPast.at(j) = 0;
+      if(sD_r.history.at(numPoints - 2).at(j) == 1)
+	tD_r.pPast.at(j) = 1;
+      else if(sD_r.history.at(numPoints - 2).at(j) == 3)
+	tD_r.aPast.at(j) = 1;
+    }
+  else{
+    std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
+    std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
+  }
+	
+  // infected & not infected
+  sD_r.infected.clear();
+  sD_r.notInfec.clear();
+  for(j = 0; j < fD.numNodes; j++)
+    if(sD_r.status.at(j) < 2)
+      sD_r.notInfec.push_back(j);
+    else
+      sD_r.infected.push_back(j);
+  sD_r.numInfected = sD_r.infected.size();
+  sD_r.numNotInfec = sD_r.notInfec.size();
+
+  // newly infected
+  sD_r.newInfec.clear();
+  if(numPoints > 1){
+    for(j = 0; j < fD.numNodes; j++)
+      if(sD_r.status.at(j) >= 2 && sD_r.history.at(numPoints - 2).at(j) < 2)
+	sD_r.newInfec.push_back(j);
+  }
+  else{
+    sD_r.newInfec = sD_r.infected;
+  }
+
+
+  // time infected
+  sD_r.timeInf.resize(fD.numNodes);
+  std::fill(sD_r.timeInf.begin(),sD_r.timeInf.end(),0);
+  for(i = 0; i < (numPoints - 1); i++)
+    for(j = 0; j < fD.numNodes; j++)
+      if(sD_r.history.at(i).at(j) >= 2)
+	sD_r.timeInf.at(j)++;
+  for(j = 0; j < fD.numNodes; j++)
+    if(sD_r.status.at(j) >= 2)
+      sD_r.timeInf.at(j)++;
+  
+  // current time
+  sD_r.time = numPoints - 1;
 
   reset();
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::reset(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::reset(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
 
-  genParam = genParam_r;
-  estParam = estParam_r;
+  paramGen = paramGen_r;
+  paramEst = paramEst_r;
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::checkPoint(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::checkPoint(){
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
   
-  genParam_r = genParam;
-  estParam_r = estParam;
+  paramGen_r = paramGen;
+  paramEst_r = paramEst;
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::initialize(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.dist,njm::sett.srcExt("d.txt"));
@@ -67,11 +191,14 @@ void System<Model, ModelParam>::initialize(){
   njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
   njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
 
+  njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
+
   std::vector<double> start;
   njm::fromFile(start,njm::sett.srcExt("startingLocations.txt"));
 
   
   sD_r.time=0;
+  sD_r.history.clear();
   sD_r.status.resize(fD.numNodes);
   std::fill(sD_r.status.begin(),sD_r.status.end(),0);
   int i;
@@ -108,18 +235,22 @@ void System<Model, ModelParam>::initialize(){
   // final time step in simulation
   njm::fromFile(fD.finalT,njm::sett.srcExt("finalT.txt"));
 
-  genParam_r.load();
-  model.load(sD_r,tD_r,fD,dD_r,genParam_r);
-
-  reset();
-
   preCompData();
 
+  modelEst.fitType = MCMC;
+  modelGen.fitType = MCMC;
+
+  paramGen_r.load();
+  modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
+
+  reset();
 }
 
 
-template<class Model, class ModelParam>
-void System<Model,ModelParam>::preCompData(){
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG,MPG,
+	    ME,MPE>::preCompData(){
   int i,j,tot;
   
   // subGraph only K steps out
@@ -167,15 +298,20 @@ void System<Model,ModelParam>::preCompData(){
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::nextPoint(){
-  model.infProbs(sD,tD,fD,dD,genParam);
-  nextPoint(genParam.infProbs);
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::nextPoint(){
+  modelGen.infProbs(sD,tD,fD,dD,paramGen);
+  nextPoint(paramGen.infProbs);
 }
 
 
-template<class Model, class ModelParam>
-void System<Model, ModelParam>::nextPoint(const std::vector<double> & infProbs){
+template<class MG, class MPG,
+	 class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>
+::nextPoint(const std::vector<double> & infProbs){
   int i;
   for(i=0; i<sD.numInfected; i++)
     sD.timeInf.at(sD.infected.at(i))++;
@@ -212,8 +348,10 @@ void System<Model, ModelParam>::nextPoint(const std::vector<double> & infProbs){
 
 
 
-template<class Model, class ModelParam>
-void System<Model,ModelParam>::updateStatus(){
+template<class MG, class MPG,
+	 class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::updateStatus(){
   int i,j,k,isInf;
   for(i=0,j=0,k=0; i<fD.numNodes; i++){
     if(j == sD.numInfected)
@@ -243,52 +381,55 @@ void System<Model,ModelParam>::updateStatus(){
 }
 
 
-template<class Model, class ModelParam>
-double System<Model, ModelParam>::value(){
+template<class MG, class MPG,
+	 class ME, class MPE>
+double System<MG, MPG,
+	      ME, MPE>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////
+// System Light
 
 
 
 template class SystemLight<GravityModel,GravityParam>;
 
 
-template<class Model, class ModelParam>
-SystemLight<Model, ModelParam>::SystemLight(const SimData & sD,
-					    const TrtData & tD,
-					    const FixedData & fD,
-					    const DynamicData & dD,
-					    const Model & model,
-					    const ModelParam & genParam){
+template<class M, class MP>
+SystemLight<M, MP>::SystemLight(const SimData & sD,
+				const TrtData & tD,
+				const FixedData & fD,
+				const DynamicData & dD,
+				const M & modelGen,
+				const MP & paramGen){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
   this->dD_r = dD;
-  this->model = model;
-  this->genParam_r = genParam;
+  this->modelGen = modelGen;
+  this->paramGen_r = paramGen;
 
   reset();
 }
 
 
-template<class Model, class ModelParam>
-void SystemLight<Model, ModelParam>::reset(){
+template<class M, class MP>
+void SystemLight<M, MP>::reset(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
 
-  genParam = genParam_r;
+  paramGen = paramGen_r;
 }
 
 
 
-template<class Model, class ModelParam>
+template<class M, class MP>
 void
-SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
+SystemLight<M, MP>::nextPoint(const int isFinal){
   int i;
   for(i=0; i<sD.numInfected; i++)
     sD.timeInf.at(sD.infected.at(i))++;
@@ -296,7 +437,7 @@ SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
   int node,numNewInf=0;
   sD.newInfec.clear();
   for(i=0; i<sD.numNotInfec; i++){
-    if(njm::runif01() < genParam.infProbs.at(i)){
+    if(njm::runif01() < paramGen.infProbs.at(i)){
       node = sD.notInfec.at(i);
       sD.infected.push_back(node);
       sD.newInfec.push_back(node);
@@ -316,13 +457,13 @@ SystemLight<Model, ModelParam>::nextPoint(const int isFinal){
   sD.time++; // turn the calendar
 
   if(!isFinal)
-    model.update(sD,tD,fD,dD,genParam);
+    modelGen.update(sD,tD,fD,dD,paramGen);
 }
 
 
 
-template<class Model, class ModelParam>
-double SystemLight<Model, ModelParam>::value(){
+template<class M, class MP>
+double SystemLight<M, MP>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 

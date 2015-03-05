@@ -8,8 +8,6 @@
 #include "system.hpp"
 #include "agent.hpp"
 #include "rankAgent.hpp"
-#include "rankAgentToy.hpp"
-#include "toyFeatures0.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "runner.hpp"
@@ -28,17 +26,20 @@ class M1SgdOptimTunePar : public TuneParam{
   double rateDecay; // learning rate decay
 
   double momRate,a,b;
+  
+  int tune;
+
 };
 
 
-template <class System, class Agent>
-class M1SgdOptim : BaseOptim<System,Agent>{
+template <class S, class A, class M, class MP>
+class M1SgdOptim : BaseOptim<S,A,M,MP>{
  public:
   M1SgdOptim();
-  virtual void optim(System system,
-		     Agent & agent);
-  virtual void tune(System system,
-		    Agent & agent);
+  virtual void optim(const S & system,
+		     A & agent);
+  virtual void tune(const System<M,MP,M,MP> & system,
+		    A agent);
   
   M1SgdOptimTunePar tp;
 

@@ -2,19 +2,24 @@
 
 
 template class ProximalAgent<GravityModel,GravityParam>;
+template class ProximalAgent<GravityTimeInfModel,GravityTimeInfParam>;
+
+template class ProximalAgent<RangeModel,RangeParam>;
+
+template class ProximalAgent<CaveModel,CaveParam>;
 
 template class ProximalAgent<EbolaModel,EbolaParam>;
 
-template<class Model, class ModelParam>
-const std::string ProximalAgent<Model,ModelParam>::name = "proximal";
+template<class M, class MP>
+std::string ProximalAgent<M,MP>::name = "proximal";
 
-template <class Model, class ModelParam>
-void ProximalAgent<Model,ModelParam>::applyTrt(const SimData & sD,
-					       TrtData & tD,
-					       const FixedData & fD,
-					       const DynamicData & dD,
-					       const Model & m,
-					       ModelParam & mP){
+template <class M, class MP>
+void ProximalAgent<M,MP>::applyTrt(const SimData & sD,
+				   TrtData & tD,
+				   const FixedData & fD,
+				   const DynamicData & dD,
+				   const M & m,
+				   MP & mP){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 

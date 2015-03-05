@@ -16,7 +16,6 @@
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
-#include "rankAgent.hpp"
 #include "rankAgentToy.hpp"
 #include "runner.hpp"
 #include "settings.hpp"

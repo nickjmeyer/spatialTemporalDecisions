@@ -8,7 +8,6 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "rankAgent.hpp"
 #include "rankAgentToy.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
@@ -27,12 +26,12 @@ class M1NmOptimTunePar : public TuneParam{
 };
 
 
-template <class System,class Agent>
-class M1NmOptim : BaseOptim<System,Agent>{
+template <class S,class A, class M, class MP>
+class M1NmOptim : BaseOptim<S,A,M,MP>{
  public:
   M1NmOptim();
-  virtual void optim(System system,
-		     Agent & agent);
+  virtual void optim(const S & system,
+		     A & agent);
 
   M1NmOptimTunePar tp;
   
@@ -42,14 +41,14 @@ class M1NmOptim : BaseOptim<System,Agent>{
 
 
 
-template <class System, class Agent>
+template <class S, class A, class M, class MP>
 class M1NmData {
  public:
-  System s;
+  System<M,MP,M,MP> s;
   
-  Agent a;
+  A a;
   
-  PlainRunner<System,Agent> r;
+  PlainRunner<System<M,MP,M,MP>,A> r;
 
   int numReps;
   int numYears;
@@ -57,10 +56,10 @@ class M1NmData {
 
 
 
-template <class System, class Agent>
+template <class S, class A, class M, class MP>
 double M1NmObj(const gsl_vector * x, void * params){
-  M1NmData<System,Agent> * d =
-    static_cast<M1NmData<System,Agent> *>(params);
+  M1NmData<System<M,MP,M,MP>,A,M,MP> * d =
+    static_cast<M1NmData<System<M,MP,M,MP>,A,M,MP> *>(params);
   int i;
   for(i=0; i<d->a.f.numFeatures; i++)
     d->a.tp.weights(i) = gsl_vector_get(x,i);

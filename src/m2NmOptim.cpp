@@ -13,103 +13,96 @@ void M2NmEvalTunePar::putPar(const std::vector<double> & par){
 
 
 
-template class M2NmOptim<System<GravityModel,GravityParam>,
+template class M2NmOptim<System<GravityModel,GravityParam,
+				GravityModel,GravityParam>,
 			 RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				      GravityModel,GravityParam>,
 			 FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam>,
 			 GravityModel,GravityParam>;
 
+template class M2NmOptim<System<RangeModel,RangeParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
+
+template class M2NmOptim<System<GravityModel,GravityParam,
+				RangeModel,RangeParam>,
+			 RankToyAgent<ToyFeatures2<RangeModel,RangeParam>,
+				      RangeModel,RangeParam>,
+			 FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam>,
+			 RangeModel,RangeParam>;
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-M2NmOptim<System,Agent,Features,Model,ModelParam>::M2NmOptim(){
+
+template <class S, class A, class F,
+	  class M,class MP>
+M2NmOptim<S,A,F,M,MP>::M2NmOptim(){
   name = "M2Nm";
 }
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmOptim<System,Agent,Features,Model,ModelParam>::
-optim(System system,
-      Agent & agent){
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmOptim<S,A,F,M,MP>::
+optim(const S & system,
+      A & agent){
 
-  qEval.preCompData(system.sD,system.fD);
-  qEval.bellResFixData(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
 
-  M2NmData<System,Agent,Features,Model,ModelParam> qData;
-  qData.qEval = qEval;
-  qData.s = system;
-  qData.a = agent;
+  double sd = qEval.tp.sdStart;
+  std::vector<double> w;
+  std::vector<double> bestW;
+  double q,bestQ;
+  bestQ = std::numeric_limits<double>::lowest();
+  bestW.resize(agent.f.numFeatures);
+  std::fill(bestW.begin(),bestW.end(),0.0);
+  int i;  
+  while(sd > qEval.tp.sdStop){
+    w.clear();
+    for(i=0; i<agent.f.numFeatures; i++)
+      w.push_back(bestW.at(i) +sd*njm::rnorm01());
+    njm::l2norm(w);
+    agent.tp.putPar(w);
 
+    qEval.bellResPolData(system.sD.time,system.fD,
+			 system.model,system.estParam,agent);
+    qEval.solve();
+    q=qEval.qFn(system.sD,system.tD,system.fD,system.dD,
+		system.model,system.estParam,agent);
+    
+    if(q > bestQ){
+      bestQ = q;
+      bestW = w;
+      sd*=qEval.tp.sdJump;
+    }
+    else{
+      sd*=qEval.tp.sdDecay;
+    }
+  }
   
-  std::vector<double> par = agent.tp.getPar();
-  int i,dim=agent.f.numFeatures;
-
-  gsl_vector *x, *ss;
-  x = gsl_vector_alloc(dim);
-  for(i=0; i<dim; i++)
-    gsl_vector_set(x,i,par.at(i));
-  ss=gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,6);
-
-  gsl_multimin_function minex_func;
-  minex_func.n=dim;
-  minex_func.f=&M2NmObj<System,Agent,Features,Model,ModelParam>;
-  minex_func.params=&qData;
-
-  const gsl_multimin_fminimizer_type *T=
-    gsl_multimin_fminimizer_nmsimplex2;
-  gsl_multimin_fminimizer *s = NULL;
-  s=gsl_multimin_fminimizer_alloc(T,dim);
-  gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
-
-  double curSize;
-  double size=.001;
-  size_t iter=0;
-  int status;
-  
-  do{
-    iter++;
-    status=gsl_multimin_fminimizer_iterate(s);
-    if(status)
-      break;
-    curSize=gsl_multimin_fminimizer_size(s);
-    status=gsl_multimin_test_size(curSize,size);
-
-    // printf("iter % d: Q() = % 16.6f  ->  [",
-    // 	   (int)iter,s->fval);
-    // for(i=0; i<(dim-1); i++)
-    //   printf(" % 10.6f,",gsl_vector_get(s->x,i));
-    // printf(" % 10.6f ]\r",gsl_vector_get(s->x,i));
-    // fflush(stdout);
-
-  }while(status == GSL_CONTINUE && iter < 100);
-  // std::cout << "\033[K";
-  
-  for(i=0; i<dim; i++)
-    par.at(i) = gsl_vector_get(s->x,i);
-  agent.tp.putPar(par);
-
-  gsl_multimin_fminimizer_free(s);
-  gsl_vector_free(x);
-  gsl_vector_free(ss);
+  agent.tp.putPar(bestW);
 }
 
 
-template class M2NmEval<System<GravityModel,GravityParam>,
+template class M2NmEval<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
 			RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
 				     GravityModel,GravityParam>,
 			FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 				    GravityModel,GravityParam>,
 			GravityModel,GravityParam>;
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-M2NmEval<System,Agent,Features,Model,ModelParam>::M2NmEval(){
+template <class S, class A, class F,
+	  class M,class MP>
+M2NmEval<S,A,F,M,MP>::M2NmEval(){
   tp.polReps = 1;
   // radius = 50;
   tp.numNeigh = 5;
@@ -128,9 +121,9 @@ M2NmEval<System,Agent,Features,Model,ModelParam>::M2NmEval(){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
   int i,j;
   
@@ -156,15 +149,15 @@ preCompData(const SimData & sD, const FixedData & fD){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 bellResFixData(const SimData & sD,
 	       const TrtData & tD,
 	       const FixedData & fD,
 	       const DynamicData & dD,
-	       const Model & m,
-	       ModelParam & mP){
+	       const M & m,
+	       MP & mP){
   int dim = (2*K-1)*fD.numNodes;
   // prep containers
   R.resize(dim);
@@ -276,9 +269,9 @@ bellResFixData(const SimData & sD,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-Eigen::SparseMatrix<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
 buildSpatialPen(const SimData & sD, const FixedData & fD){
   int i,j,k,node0,node1;
   Eigen::SparseMatrix<double> H,G,spatP;
@@ -311,9 +304,9 @@ buildSpatialPen(const SimData & sD, const FixedData & fD){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-Eigen::SparseMatrix<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+Eigen::SparseMatrix<double> M2NmEval<S,A,F,M,MP>::
 buildL2Pen(const int numNodes){
   Eigen::SparseMatrix<double> l2P((2*K-1)*numNodes,(2*K-1)*numNodes);
   int i,j;
@@ -326,9 +319,9 @@ buildL2Pen(const int numNodes){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-std::vector<double> M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+std::vector<double> M2NmEval<S,A,F,M,MP>::
 feat2Vec(const int numNodes,
 	 const std::vector<int> & status){
 
@@ -360,10 +353,10 @@ feat2Vec(const int numNodes,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
+template <class S, class A, class F,
+	  class M,class MP>
 inline Eigen::SparseMatrix<double>
-M2NmEval<System,Agent,Features,Model,ModelParam>::
+M2NmEval<S,A,F,M,MP>::
 featToPhi(const std::vector<double> & feat, const int numNodes){
 
   int n,i,j,dim=(2*K-1)*numNodes;
@@ -414,14 +407,14 @@ featToPhi(const std::vector<double> & feat, const int numNodes){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 bellResPolData(const int time,
 	       const FixedData & fD,
-	       const Model & m,
-	       ModelParam & mP,
-	       Agent a){
+	       const M & m,
+	       MP & mP,
+	       A a){
 
   int dim = (2*K-1)*fD.numNodes;
   Eigen::SparseMatrix<double> phi;
@@ -486,9 +479,9 @@ bellResPolData(const int time,
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-void M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+void M2NmEval<S,A,F,M,MP>::
 solve(){
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > simplicialLDLT;
   simplicialLDLT.compute(D.transpose()*D + tp.lambda*P);
@@ -498,25 +491,25 @@ solve(){
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-double M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+double M2NmEval<S,A,F,M,MP>::
 bellRes(){
   return (R + D*beta).squaredNorm();
 }
 
 
 
-template <class System, class Agent, class Features,
-	  class Model,class ModelParam>
-double M2NmEval<System,Agent,Features,Model,ModelParam>::
+template <class S, class A, class F,
+	  class M,class MP>
+double M2NmEval<S,A,F,M,MP>::
 qFn(const SimData & sD,
     TrtData & tD,
     const FixedData & fD,
     const DynamicData & dD,
-    const Model & m,
-    ModelParam & mP,
-    Agent a){
+    const M & m,
+    MP & mP,
+    A a){
   // now evaluate Q-function
   Eigen::SparseMatrix<double> phi;
   phi.resize(fD.numNodes,fD.numNodes*(2*K-1));

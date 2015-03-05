@@ -7,22 +7,30 @@
 #include "utilities.hpp"
 #include "data.hpp"
 #include "modelParam.hpp"
-#include "model.hpp"
+#include "modelParamGravityTimeInf.hpp"
 #include "modelParamEbola.hpp"
+#include "modelParamRange.hpp"
+#include "modelParamCave.hpp"
+#include "model.hpp"
+#include "modelGravityTimeInf.hpp"
 #include "modelEbola.hpp"
+#include "modelRange.hpp"
+#include "modelCave.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 
 
-template <class Model, class ModelParam>
+template <class MG, class MPG,
+	  class ME, class MPE>
 class System {
  public:
 
   System();
   System(const SimData & sD, const TrtData & tD,
 	 const FixedData & fD, const DynamicData & dD,
-	 const Model & model,
-	 const ModelParam & genParam, const ModelParam & estParam);
+	 const MG & modelGen, const ME & modelEst,
+	 const MPG & paramGen, const MPE & paramEst);
+  System(const std::string file);
   
   SimData sD;
   TrtData tD;
@@ -33,12 +41,13 @@ class System {
   TrtData tD_r;
   DynamicData dD_r;
 
-  Model model;
-  ModelParam genParam;
-  ModelParam estParam;
+  MG modelGen;
+  ME modelEst;
+  MPG paramGen;
+  MPE paramEst;
 
-  ModelParam genParam_r;
-  ModelParam estParam_r;
+  MPG paramGen_r;
+  MPE paramEst_r;
 
 
   virtual void reset();
@@ -59,14 +68,14 @@ class System {
 
 
 
-template <class Model, class ModelParam>
+template <class M, class MP>
 class SystemLight {
  public:
 
   SystemLight(const SimData & sD, const TrtData & tD,
 	      const FixedData & fD, const DynamicData & dD,
-	      const Model & model,
-	      const ModelParam & genParam);
+	      const M & model,
+	      const MP & paramGen);
   
   SimData sD;
   TrtData tD;
@@ -77,10 +86,10 @@ class SystemLight {
   TrtData tD_r;
   DynamicData dD_r;
 
-  Model model;
-  ModelParam genParam;
+  M modelGen;
+  MP paramGen;
 
-  ModelParam genParam_r;
+  MP paramGen_r;
 
 
   virtual void reset();

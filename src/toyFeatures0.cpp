@@ -18,17 +18,17 @@ template class ToyFeatures0<GravityModel,GravityParam>;
 
 
 
-template <class Model, class ModelParam>
-int ToyFeatures0<Model,ModelParam>::numFeatures = 4;
+template <class M, class MP>
+int ToyFeatures0<M,MP>::numFeatures = 4;
 
 
-template <class Model, class ModelParam>
-void ToyFeatures0<Model,ModelParam>::preCompData(const SimData & sD,
-						 const TrtData & tD,
-						 const FixedData & fD,
-						 const DynamicData & dD,
-						 const Model & m,
-						 ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures0<M,MP>::preCompData(const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     const M & m,
+				     MP & mP){
   // pre compute stuff
   m.load(sD,tD,fD,dD,mP);
   getSubGraph(fD.numNodes,&fD.network,&subgraph,4);
@@ -36,13 +36,13 @@ void ToyFeatures0<Model,ModelParam>::preCompData(const SimData & sD,
 
 
 
-template <class Model, class ModelParam>
-void ToyFeatures0<Model,ModelParam>::getFeatures(const SimData & sD,
-						 const TrtData & tD,
-						 const FixedData & fD,
-						 const DynamicData & dD,
-						 const Model & m,
-						 ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures0<M,MP>::getFeatures(const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     const M & m,
+				     MP & mP){
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -64,7 +64,7 @@ void ToyFeatures0<Model,ModelParam>::getFeatures(const SimData & sD,
   featNum++;
   
   // feature 1
-  SystemLight<Model,ModelParam> s(sD,tD,fD,dD,m,mP);
+  SystemLight<M,MP> s(sD,tD,fD,dD,m,mP);
   std::vector<int> newInfec;
   int k,numNewInfec;
   for(i=0; i<tp.valReps; i++){
@@ -210,13 +210,13 @@ void ToyFeatures0<Model,ModelParam>::getFeatures(const SimData & sD,
 
 
 
-template <class Model, class ModelParam>
-void ToyFeatures0<Model,ModelParam>::updateFeatures(const SimData & sD,
-						    const TrtData & tD,
-						    const FixedData & fD,
-						    const DynamicData & dD,
-						    const Model & m,
-						    ModelParam & mP){
+template <class M, class MP>
+void ToyFeatures0<M,MP>::updateFeatures(const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD,
+					const M & m,
+					MP & mP){
   int i,node0,now,pre;
 
   // update not infected probabilities

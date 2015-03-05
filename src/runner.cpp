@@ -1,22 +1,23 @@
 #include "runner.hpp"
+#include "anchorMan.hpp"
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 double
-TrainRunner<System,Agent>
-::run(System system,
-      Agent agent,
+TrainRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    system.model.assignRand(system.genParam_r,system.estParam_r);
+    system.model.assignRand(system.paramGen_r,system.paramEst_r);
     system.reset();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -30,41 +31,77 @@ TrainRunner<System,Agent>
 
 
 
-template class PlainRunner<System<GravityModel,GravityParam>,
-			   RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-					GravityModel,GravityParam> >;
-template class PlainRunner<System<GravityModel,GravityParam>,
-			   RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-					GravityModel,GravityParam> >;
-template class PlainRunner<System<GravityModel,GravityParam>,
-			   RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-					GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
+			   NoTrt<GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
+			   ProximalAgent<GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityModel,GravityParam,
+				  GravityModel,GravityParam>,
+			   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+				     GravityModel,GravityParam> >;
+template class PlainRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+				  GravityTimeInfModel,GravityTimeInfParam>,
+			   RankAgent<ToyFeatures2<GravityTimeInfModel,
+						  GravityTimeInfParam>,
+				     GravityTimeInfModel,GravityTimeInfParam> >;
 
-template class PlainRunner<System<EbolaModel,EbolaParam>,
-			   NoTrt<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
-			   ProximalAgent<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
-			   MyopicAgent<EbolaModel,EbolaParam> >;
-template class PlainRunner<System<EbolaModel,EbolaParam>,
-			   RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-					EbolaModel,EbolaParam> >;
+template class PlainRunner<System<RangeModel,RangeParam,
+				  RangeModel,RangeParam>,
+			   NoTrt<RangeModel,RangeParam> >;
+template class PlainRunner<System<RangeModel,RangeParam,
+				  RangeModel,RangeParam>,
+			   ProximalAgent<RangeModel,RangeParam> >;
+template class PlainRunner<System<RangeModel,RangeParam,
+				  RangeModel,RangeParam>,
+			   MyopicAgent<RangeModel,RangeParam> >;
+template class PlainRunner<System<RangeModel,RangeParam,
+				  RangeModel,RangeParam>,
+			   RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam> >;
+
+template class PlainRunner<System<GravityModel,GravityParam,
+				  RangeModel,RangeParam>,
+			   RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+				     RangeModel,RangeParam> >;
+
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   NoTrt<CaveModel,CaveParam> >;
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   ProximalAgent<CaveModel,CaveParam> >;
+
+template class PlainRunner<System<CaveModel,CaveParam,
+				  CaveModel,CaveParam>,
+			   RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+				     CaveModel,CaveParam> >;
 
 
-template <class System, class Agent>
+
+
+template <class S, class A>
 double
-PlainRunner<System,Agent>
-::run(System system,
-      Agent agent,
+PlainRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
+    if(system.modelGen.fitType == MCMC){
+      system.modelGen.mcmc.samples.setRand();
+      
+      system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
+      system.paramEst_r.putPar(system.modelGen.mcmc.samples.getPar());
+    }
+    
     system.reset();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -77,11 +114,11 @@ PlainRunner<System,Agent>
 
 
 
-template <class System, class Agent>
+template <class S, class A>
 std::pair<double,double>
-PlainRunner<System,Agent>
-::runEx(System system,
-	Agent agent,
+PlainRunner<S,A>
+::runEx(S system,
+	A agent,
 	const int numReps, const int numPoints){
   double value=0,valueSq=0;
   int r,t;
@@ -90,7 +127,7 @@ PlainRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -106,23 +143,38 @@ PlainRunner<System,Agent>
 }
 
 
-template class VanillaRunner<System<GravityModel,GravityParam>,
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     NoTrt<GravityModel,GravityParam> >;
-template class VanillaRunner<System<GravityModel,GravityParam>,
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
 			     ProximalAgent<GravityModel,GravityParam> >;
-
-template class VanillaRunner<System<EbolaModel,EbolaParam>,
-			     NoTrt<EbolaModel,EbolaParam> >;
-template class VanillaRunner<System<EbolaModel,EbolaParam>,
-			     ProximalAgent<EbolaModel,EbolaParam> >;
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     MyopicAgent<GravityModel,GravityParam> >;
 
 
 
-template<class System, class Agent>
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     NoTrt<RangeModel,RangeParam> >;
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     ProximalAgent<RangeModel,RangeParam> >;
+
+template class VanillaRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     RankAgent<ToyFeatures2<GravityModel,
+						    GravityParam>,
+				       GravityModel,GravityParam> >;
+
+
+
+template<class S, class A>
 double
-VanillaRunner<System,Agent>
-::run(System system,
-      Agent agent,
+VanillaRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
   
@@ -144,7 +196,7 @@ VanillaRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -176,29 +228,129 @@ VanillaRunner<System,Agent>
 
 
 
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
-			     MyopicAgent<GravityModel,GravityParam> >;
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures1<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
-template class FitOnlyRunner<System<GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures2<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
 
-template class FitOnlyRunner<System<EbolaModel,EbolaParam>,
-			     MyopicAgent<EbolaModel,EbolaParam> >;
-template class FitOnlyRunner<System<EbolaModel,EbolaParam>,
-			     RankToyAgent<ToyFeatures1<EbolaModel,
-						       EbolaParam>,
-					  EbolaModel,EbolaParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       NoTrt<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       NoTrt<GravityTimeInfModel,GravityTimeInfParam> >;
 
-template <class System, class Agent>
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       RandomAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       ProximalAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       ProximalAgent<GravityTimeInfModel,
+					     GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       MyopicAgent<GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       MyopicAgent<GravityTimeInfModel,
+					   GravityTimeInfParam> >;
+
+
+
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      RangeModel,RangeParam>,
+			       NoTrt<RangeModel,RangeParam> >;
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      RangeModel,RangeParam>,
+			       ProximalAgent<RangeModel,RangeParam> >;
+
+template class VanillaRunnerNS<System<GravityModel,GravityParam,
+				      GravityModel,GravityParam>,
+			       RankAgent<ToyFeatures2<GravityModel,
+						      GravityParam>,
+					 GravityModel,GravityParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+				      GravityTimeInfModel,GravityTimeInfParam>,
+			       RankAgent<ToyFeatures2<GravityTimeInfModel,
+						      GravityTimeInfParam>,
+					 GravityTimeInfModel,
+					 GravityTimeInfParam> >;
+
+
+
+template<class S, class A>
 double
-FitOnlyRunner<System,Agent>
-::run(System system,
-      Agent agent,
+VanillaRunnerNS<S,A>
+::run(S system,
+      A agent,
+      const int numReps, const int numPoints){
+  resetRandomSeed();
+  
+  double value=0;
+  int r,t;
+
+#pragma omp parallel for num_threads(omp_get_max_threads())	\
+  shared(value)							\
+  firstprivate(system,agent)					\
+  private(r,t)
+  for(r=0; r<numReps; r++){
+    system.reset();
+    for(t=system.sD.time; t<numPoints; t++){
+      if(t>=system.fD.trtStart)
+	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+		       system.modelEst,system.paramEst);
+      
+      system.updateStatus();
+      
+      system.nextPoint();
+
+    }
+
+#pragma omp critical
+    {
+      value += system.value();
+    }
+
+  }
+  return value/((double)numReps);
+}
+
+
+
+
+
+
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     MyopicAgent<GravityModel,GravityParam> >;
+template class FitOnlyRunner<System<CaveModel,CaveParam,
+				    CaveModel,CaveParam>,
+			     MyopicAgent<CaveModel,CaveParam> >;
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     RankAgent<ToyFeatures2<GravityModel,
+						    GravityParam>,
+				       GravityModel,GravityParam> >;
+template class FitOnlyRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+				    GravityTimeInfModel,GravityTimeInfParam>,
+			     RankAgent<ToyFeatures2<GravityTimeInfModel,
+						    GravityTimeInfParam>,
+				       GravityTimeInfModel,
+				       GravityTimeInfParam> >;
+
+
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     MyopicAgent<RangeModel,RangeParam> >;
+template class FitOnlyRunner<System<GravityModel,GravityParam,
+				    CaveModel,CaveParam>,
+			     MyopicAgent<CaveModel,CaveParam> >;
+
+
+template <class S, class A>
+double
+FitOnlyRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
   
@@ -212,6 +364,7 @@ FitOnlyRunner<System,Agent>
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
+    
 #pragma omp critical
     {    
       valueAll.at(r).clear();
@@ -220,12 +373,12 @@ FitOnlyRunner<System,Agent>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) ==0))
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -257,112 +410,33 @@ FitOnlyRunner<System,Agent>
 
 
 template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SimpleOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SimpleOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures2<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SgdOptim<System<GravityModel,GravityParam>,
-		       RankToyAgent<ToyFeatures1<GravityModel,
-						 GravityParam>,
-				    GravityModel,GravityParam>
-		       > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1SgdOptim<System<GravityModel,GravityParam>,
-		       RankToyAgent<ToyFeatures2<GravityModel,
-						 GravityParam>,
-				    GravityModel,GravityParam>
-		       > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures0<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures0<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures1<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures1<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
-template class
-OptimRunner<System<GravityModel,GravityParam>,
-	    RankToyAgent<ToyFeatures2<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>,
-	    M1HybridOptim<System<GravityModel,GravityParam>,
-			  RankToyAgent<ToyFeatures2<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam>
-			  > >;
+OptimRunner<System<GravityModel,GravityParam,
+		   GravityModel,GravityParam>,
+	    RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+		      GravityModel,GravityParam>,
+	    M1SpOptim<System<GravityModel,GravityParam,
+			     GravityModel,GravityParam>,
+		      RankAgent<ToyFeatures2<GravityModel,
+					     GravityParam>,
+				GravityModel,GravityParam>,
+		      GravityModel,GravityParam> >;
+
+
+// Range model (misspecified)
 
 
 
-
-template class
-OptimRunner<System<EbolaModel,EbolaParam>,
-	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>,
-	    M1SimpleOptim<System<EbolaModel,EbolaParam>,
-			  RankToyAgent<ToyFeatures1<EbolaModel,
-						    EbolaParam>,
-				       EbolaModel,EbolaParam>
-			  > >;
-template class
-OptimRunner<System<EbolaModel,EbolaParam>,
-	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>,
-	    M1SgdOptim<System<EbolaModel,EbolaParam>,
-		       RankToyAgent<ToyFeatures1<EbolaModel,
-						 EbolaParam>,
-				    EbolaModel,EbolaParam>
-		       > >;
-template class
-OptimRunner<System<EbolaModel,EbolaParam>,
-	    RankToyAgent<ToyFeatures1<EbolaModel,EbolaParam>,
-			 EbolaModel,EbolaParam>,
-	    M1HybridOptim<System<EbolaModel,EbolaParam>,
-			  RankToyAgent<ToyFeatures1<EbolaModel,
-						    EbolaParam>,
-				       EbolaModel,EbolaParam>
-			  > >;
-
-
-template <class System, class Agent, class Optim>
+template <class S, class A, class Optim>
 double
-OptimRunner<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+OptimRunner<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
 
   resetRandomSeed();
   
-  int tick,tock,done=0;
+  int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
   double hours;
   
@@ -370,13 +444,24 @@ OptimRunner<System,Agent,Optim>
   int r,t;
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
-  int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
-#pragma omp parallel for num_threads(threads)			\
-  shared(value,valueAll)					\
-  firstprivate(system,agent,optim,weights)			\
-  private(r,t)
+
+  std::vector<int> times(numReps);
+  
+  // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
+  int threads = omp_get_max_threads();
+  
+#pragma omp parallel for num_threads(threads)	\
+  shared(value,valueAll,tock,tick)		\
+  firstprivate(system,agent,optim,weights)	\
+  private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
+    // record time for each replication
+    tickR=std::time(NULL);
+
     system.reset();
+    agent.reset();
+    optim.reset();
+    
 #pragma omp critical
     {    
       valueAll.at(r).clear();
@@ -386,17 +471,22 @@ OptimRunner<System,Agent,Optim>
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart &&
-	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+      if(t>=system.fD.trtStart){
+	if(t==system.fD.trtStart)
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst);
+	else
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst,system.paramEst);
+
+	
 	optim.optim(system,agent);
-	weights.push_back(agent.tp.getPar());	
-      }
-      
-      if(t>=system.fD.trtStart)
+	
+	weights.push_back(agent.tp.getPar());
+	
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
+      }
       
       system.updateStatus();
       
@@ -412,6 +502,13 @@ OptimRunner<System,Agent,Optim>
 #pragma omp critical
     {
       value += system.value();
+    }
+
+    // store time for iteration
+    tockR = std::time(NULL);
+#pragma omp critical
+    {
+      times.at(r) = tockR - tickR;
     }
 
     // write history to file
@@ -441,42 +538,227 @@ OptimRunner<System,Agent,Optim>
 		  " in " + njm::toString(hours,"",8,4) + " hours" +
 		  " with value " + njm::toString(value/((double)done),"",6,4) +
 		  "\n",
-		  njm::sett.datExt(agent.name+"_"+optim.name+"_",".txt"));
+		  njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
+				   ".txt"));
     }
+    
   }
+
   njm::toFile(njm::toString(valueAll,"\n",""),
 	      njm::sett.datExt(agent.name+"_"+optim.name+
 			       "_values_",".txt"));
+
+  njm::toFile(njm::toString(times,"\n",""),
+	      njm::sett.datExt(agent.name+"_"+optim.name+
+			       "_times_",".txt"));
+
+
+  return value/((double)numReps);
+}
+
+
+
+template class
+OptimRunnerNS<System<GravityModel,GravityParam,
+		     GravityModel,GravityParam>,
+	      RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+			GravityModel,GravityParam>,
+	      M1SpOptim<System<GravityModel,GravityParam,
+			       GravityModel,GravityParam>,
+			RankAgent<ToyFeatures2<GravityModel,
+					       GravityParam>,
+				  GravityModel,GravityParam>,
+			GravityModel,GravityParam> >;
+
+
+template class
+OptimRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
+		     GravityTimeInfModel,GravityTimeInfParam>,
+	      RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
+			GravityTimeInfModel,GravityTimeInfParam>,
+	      M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
+			       GravityTimeInfModel,GravityTimeInfParam>,
+			RankAgent<ToyFeatures2<GravityTimeInfModel,
+					       GravityTimeInfParam>,
+				  GravityTimeInfModel,GravityTimeInfParam>,
+			GravityTimeInfModel,GravityTimeInfParam> >;
+
+template class
+OptimRunnerNS<System<RangeModel,RangeParam,
+		     RangeModel,RangeParam>,
+	      RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+			RangeModel,RangeParam>,
+	      M1SpOptim<System<RangeModel,RangeParam,
+			       RangeModel,RangeParam>,
+			RankAgent<ToyFeatures2<RangeModel,
+					       RangeParam>,
+				  RangeModel,RangeParam>,
+			RangeModel,RangeParam> >;
+
+template class
+OptimRunnerNS<System<CaveModel,CaveParam,
+		     CaveModel,CaveParam>,
+	      RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+			CaveModel,CaveParam>,
+	      M1SpOptim<System<CaveModel,CaveParam,
+			       CaveModel,CaveParam>,
+			RankAgent<ToyFeatures2<CaveModel,
+					       CaveParam>,
+				  CaveModel,CaveParam>,
+			CaveModel,CaveParam> >;
+
+
+
+template <class S, class A, class Optim>
+double
+OptimRunnerNS<S,A,Optim>
+::run(S system,
+      A agent,
+      Optim optim,
+      const int numReps, const int numPoints){
+
+  double value=0;
+  int r,t;
+  
+  int threads = omp_get_max_threads();
+  
+#pragma omp parallel for num_threads(threads)	\
+  shared(value)					\
+  firstprivate(system,agent,optim)		\
+  private(r,t)
+  for(r=0; r<numReps; r++){
+    system.reset();
+    agent.reset();
+    optim.reset();
+    
+    // begin rep r
+    for(t=system.sD.time; t<numPoints; t++){
+      if(t>=system.fD.trtStart){
+	if(t==system.fD.trtStart)
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst);
+	else
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst,system.paramEst);
+
+	
+	optim.optim(system,agent);
+	
+	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+		       system.modelEst,system.paramEst);
+      }
+      
+      system.updateStatus();
+      
+      system.nextPoint();
+
+    }
+    // end rep r
+
+#pragma omp critical
+    {
+      value += system.value();
+    }
+
+  }
+
   return value/((double)numReps);
 }
 
 
 
 
-template <class System, class Agent, class Optim>
+
+
+
+template class
+TuneRunner<System<GravityModel,GravityParam,
+		  GravityModel,GravityParam>,
+	   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
+		     GravityModel,GravityParam>,
+	   M1SpOptim<System<GravityModel,GravityParam,
+			    GravityModel,GravityParam>,
+		     RankAgent<ToyFeatures2<GravityModel,
+					    GravityParam>,
+			       GravityModel,GravityParam>,
+		     GravityModel,GravityParam> >;
+
+
+template class
+TuneRunner<System<GravityTimeInfModel,GravityTimeInfParam,
+		  GravityTimeInfModel,GravityTimeInfParam>,
+	   RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
+		     GravityTimeInfModel,GravityTimeInfParam>,
+	   M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
+			    GravityTimeInfModel,GravityTimeInfParam>,
+		     RankAgent<ToyFeatures2<GravityTimeInfModel,
+					    GravityTimeInfParam>,
+			       GravityTimeInfModel,GravityTimeInfParam>,
+		     GravityTimeInfModel,GravityTimeInfParam> >;
+
+
+template class
+TuneRunner<System<RangeModel,RangeParam,
+		  RangeModel,RangeParam>,
+	   RankAgent<ToyFeatures2<RangeModel,RangeParam>,
+		     RangeModel,RangeParam>,
+	   M1SpOptim<System<RangeModel,RangeParam,
+			    RangeModel,RangeParam>,
+		     RankAgent<ToyFeatures2<RangeModel,
+					    RangeParam>,
+			       RangeModel,RangeParam>,
+		     RangeModel,RangeParam> >;
+
+template class
+TuneRunner<System<CaveModel,CaveParam,
+		  CaveModel,CaveParam>,
+	   RankAgent<ToyFeatures2<CaveModel,CaveParam>,
+		     CaveModel,CaveParam>,
+	   M1SpOptim<System<CaveModel,CaveParam,
+			    CaveModel,CaveParam>,
+		     RankAgent<ToyFeatures2<CaveModel,
+					    CaveParam>,
+			       CaveModel,CaveParam>,
+		     CaveModel,CaveParam> >;
+
+
+
+
+template <class S, class A, class Optim>
 double
-OptimRunnerNS<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+TuneRunner<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
 
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
+    if(system.modelGen.fitType == MCMC){
+      system.modelGen.mcmc.samples.setRand();
+      system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
+    }
     system.reset();
+    agent.tp.weights.ones();
+
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart &&
-	 (((t-system.fD.trtStart) % system.fD.period) == 0)){
-	system.model.fit(system.sD,system.fD,system.estParam);
-	optim.optim(system,agent);
-      }
       
-      if(t>=system.fD.trtStart)
+      if(t>=system.fD.trtStart){
+	if(t==system.fD.trtStart)
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst);
+	else
+	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			      system.paramEst,system.paramEst);
+	  
+	optim.optim(system,agent);
+
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
+      }
       
       system.updateStatus();
       
@@ -495,11 +777,12 @@ OptimRunnerNS<System,Agent,Optim>
 
 
 
-template <class System, class Agent, class Optim>
+
+template <class S, class A, class Optim>
 double
-TestRunner<System,Agent,Optim>
-::run(System system,
-      Agent agent,
+TestRunner<S,A,Optim>
+::run(S system,
+      A agent,
       Optim optim,
       const int numReps, const int numPoints){
   double value=0;
@@ -507,9 +790,9 @@ TestRunner<System,Agent,Optim>
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
   int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
-#pragma omp parallel for num_threads(threads)			\
-  shared(value,valueAll)					\
-  firstprivate(system,agent,optim,weights)			\
+#pragma omp parallel for num_threads(threads)	\
+  shared(value,valueAll)			\
+  firstprivate(system,agent,optim,weights)	\
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset();
@@ -527,7 +810,7 @@ TestRunner<System,Agent,Optim>
       
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       
       system.updateStatus();
       
@@ -564,22 +847,13 @@ TestRunner<System,Agent,Optim>
 
 
 
-template class TimerRunner<System<GravityModel,GravityParam>,
-			   RankToyAgent<ToyFeatures0<GravityModel,
-						     GravityParam>,
-					GravityModel,GravityParam> >;
-template class TimerRunner<System<GravityModel,GravityParam>,
-			   RankToyAgent<ToyFeatures1<GravityModel,
-						     GravityParam>,
-					GravityModel,GravityParam> >;
 
 
-
-template <class System, class Agent>
+template <class S, class A>
 double
-TimerRunner<System,Agent>
-::run(System system,
-      Agent agent,
+TimerRunner<S,A>
+::run(S system,
+      A agent,
       const int numReps, const int numPoints){
   resetRandomSeed();
 
@@ -607,8 +881,8 @@ TimerRunner<System,Agent>
       tick=std::chrono::high_resolution_clock::now();
       if(t>=system.fD.trtStart &&
 	 (((t-system.fD.trtStart) % system.fD.period) ==0))
-	system.model.fit(system.sD,system.tD,system.fD,system.dD,
-			 system.estParam);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    system.paramEst);
       tock=std::chrono::high_resolution_clock::now();
       
       diff=std::chrono::milliseconds::zero();
@@ -623,7 +897,7 @@ TimerRunner<System,Agent>
       tick=std::chrono::high_resolution_clock::now();
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.model,system.estParam);
+		       system.modelEst,system.paramEst);
       tock=std::chrono::high_resolution_clock::now();
 
       diff=std::chrono::milliseconds::zero();

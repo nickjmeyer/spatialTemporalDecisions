@@ -8,9 +8,12 @@
 #include "data.hpp"
 #include "settings.hpp"
 #include "modelParam.hpp"
+#include "modelParamGravityTimeInf.hpp"
 #include "mcmc.hpp"
 
-template<class ModelParam>
+enum Estimation {MLE = 0,MCMC = 1};
+
+template<class MP>
 class BaseModel {
  public:
 
@@ -18,26 +21,26 @@ class BaseModel {
 		    const TrtData & tD,
 		    const FixedData & fD,
 		    const DynamicData & dD,
-		    ModelParam & mP) const;
+		    MP & mP) const;
 
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD,
-			  const ModelParam & mP) const = 0;
+			  const MP & mP) const = 0;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			ModelParam & mP) const;
+			MP & mP) const;
   
   virtual void update(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD,
-		      ModelParam & mP);
+		      MP & mP);
 };
 
 
@@ -57,7 +60,14 @@ class GravityModel : public BaseModel<GravityParam> {
 	   GravityParam & mP);
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
-	   GravityParam & mP, const GravityParam & mPInit);
+	   GravityParam & mP, const GravityParam mPInit);
+
+  GravityMcmc mcmc;
+
+  Estimation fitType;
+  
+
+  double tuneTrt(const FixedData & fD, const GravityParam & gP);
 };
 
 
@@ -79,29 +89,5 @@ double gravityModelFitObjFn (const gsl_vector * x, void * params);
 
 
 
-class GravityModelMcmc : public BaseModel<GravityParam> {
- public:
-  virtual double oneOnOne(const int notNode, const int infNode,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const GravityParam & mP) const;
-
-  GravityMcmc mcmc;
-
-  void sample(const SimData & sD, const TrtData & tD, const FixedData & fD);
-  void sample(const SimData & sD, const TrtData & tD, const FixedData & fD,
-	      const GravityParam & mP);
-
-  void assignMean(GravityParam & mP);
-  void assignMean(GravityParam & mP0, GravityParam & mP1);
-  void assignRand(GravityParam & mP);
-  void assignRand(GravityParam & mP0, GravityParam & mP1);
-};
-
-
-inline double multOneMinus(double a, double b);
-  
 
 #endif

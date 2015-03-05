@@ -11,7 +11,8 @@
 #include "dataDepth.hpp"
 #include "tuneParam.hpp"
 #include "features.hpp"
-#include "toyFeatures0.hpp"
+#include "toyFeatures2.hpp"
+#include "calcCentrality.hpp"
 
 
 class RankTuneParam : public TuneParam {
@@ -22,36 +23,30 @@ class RankTuneParam : public TuneParam {
   arma::colvec weights;
 
   int numChunks;
-  int valReps;
+
+  double jitterScale;
 };
 
 
-template < class Features, class Model, class ModelParam>
-class RankAgent : BaseAgent<Model,ModelParam> {
+template < class F, class M, class MP>
+class RankAgent : BaseAgent<M,MP> {
  public:
   RankAgent();
+
+  void reset();
   
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const Model & m,
-			ModelParam & mP);
+			const M & m,
+			MP & mP);
 
-  virtual void getFeatures(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   const Model & m,
-			   const ModelParam & mP);
+  F f;
 
-  arma::mat infFeat;
-  arma::mat notFeat;
   arma::colvec infRanks;
   arma::colvec notRanks;
   
-  static int numFeatures;
-
   int numAct;
   int numPre;
 
@@ -59,6 +54,7 @@ class RankAgent : BaseAgent<Model,ModelParam> {
 
   std::string name;
 };
+
 
 
 #endif

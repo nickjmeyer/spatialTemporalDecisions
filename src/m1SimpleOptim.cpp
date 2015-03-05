@@ -13,37 +13,50 @@ void M1SimpleOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures0<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    GravityModel,GravityParam>,
+			     RankAgent<ToyFeatures2<GravityModel,
+						    GravityParam>,
+				       GravityModel,GravityParam>,
+			     GravityModel,GravityParam>;
 
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures1<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
-template class M1SimpleOptim<System<GravityModel,GravityParam>,
-			     RankToyAgent<ToyFeatures2<GravityModel,
-						       GravityParam>,
-					  GravityModel,GravityParam> >;
+template class M1SimpleOptim<System<RangeModel,RangeParam,
+				    RangeModel,RangeParam>,
+			     RankAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
+			     RangeModel,RangeParam>;
+
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    RangeModel,RangeParam>,
+			     RankAgent<ToyFeatures2<RangeModel,
+						    RangeParam>,
+				       RangeModel,RangeParam>,
+			     RangeModel,RangeParam>;
+
+template class M1SimpleOptim<System<GravityModel,GravityParam,
+				    CaveModel,CaveParam>,
+			     RankAgent<ToyFeatures2<CaveModel,
+						    CaveParam>,
+				       CaveModel,CaveParam>,
+			     CaveModel,CaveParam>;
 
 
-template class M1SimpleOptim<System<EbolaModel,EbolaParam>,
-			     RankToyAgent<ToyFeatures1<EbolaModel,
-						       EbolaParam>,
-					  EbolaModel,EbolaParam> >;
-
-template <class System, class Agent>
-M1SimpleOptim<System,Agent>::M1SimpleOptim(){
+template <class S, class A, class M , class MP>
+M1SimpleOptim<S,A,M,MP>::M1SimpleOptim(){
   name = "M1Simple";
 }
 
-template <class System, class Agent>
-void M1SimpleOptim<System,Agent>
-::optim(System system,
-	Agent & agent){
+template <class S, class A, class M, class MP>
+void M1SimpleOptim<S,A,M,MP>
+::optim(const S & system,
+	A & agent){
+
+  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
+		      system.modelEst,system.modelEst,
+		      system.paramEst,system.paramEst);
   
-  PlainRunner<System,Agent> runner;
+  PlainRunner<System<M,MP,M,MP>,A> runner;
 
   int i,j,k;
   std::vector< std::vector<double> > weights;
@@ -116,16 +129,14 @@ void M1SimpleOptim<System,Agent>
   
   std::fill(w.begin(),w.end(),-1);
   weights.push_back(w);
-
-  system.checkPoint(); // don't want to go back to original state
-
   
+
   int N=weights.size();
   std::priority_queue< std::pair<double,int> > p;
   for(i=0; i<N; i++){
     agent.tp.putPar(weights.at(i));
-    p.push(std::pair<double,int>(-runner.run(system,agent,tp.mcReps,
-					     system.fD.finalT),
+    p.push(std::pair<double,int>(-runner.run(s,agent,tp.mcReps,
+					     s.fD.finalT),
 				 i));
   }
 
