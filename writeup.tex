@@ -1,4 +1,4 @@
-% Created 2015-02-18 Wed 11:54
+% Created 2015-03-04 Wed 23:44
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -16,7 +16,7 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \tolerance=1000
-\usepackage{amsmath,amssymb,fullpage}
+\usepackage{amsmath,amssymb,fullpage,dsfont}
 \newcommand{\bs}{\boldsymbol}
 \newcommand{\attn}[1]{\textbf{***{#1}***}}
 \newcommand{\src}{\attn{source}}
@@ -115,6 +115,29 @@ Distances between nodes are not defined in the usual way.  For any
 node on the outer points, the distance to the closest node on the main
 horizontal line is $0.9$ instead of $1.0$.
 
+For a starred alley of size $N$, define
+\begin{equation*}
+  m_N = \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le N
+    \rbrace }
+\end{equation*}
+where
+\begin{equation*}
+  f(m) = m + \left\lceil \frac{m}{2}
+  \right\rceil 
+  \left(\left\lceil \frac{m}{2} \right\rceil
+    - (m \text{ mod } 2) + 1 \right).
+\end{equation*}
+
+Let locations $1,\ldots,m_N$ index the locations on the main
+horizontal line.  Next define disjoint sets of locations
+$\mathcal{N}_i$ for $i = 1,\ldots,m_N$.  The cardinality for
+$\mathcal{N}_i$ is defined as
+\begin{equation*}
+  | \mathcal{N}_i | = \left\lfloor \frac{i}{2} \right\rfloor +
+  \mathds{1}_{\lbrace(m_N - i) < (N - f(m_N))\rbrace}.
+\end{equation*}
+For each location $j \in \mathcal{N}_i$ set $A_{i,j} = A_{j,i} = 1$.
+
 
 \begin{figure}[htb]
 \centering
@@ -139,6 +162,8 @@ example can be seen in figure \ref{fig:ring25}.
 \end{figure}
 
 
+
+
 \subsubsection{Grid}
 \label{sec-1-3-4}
 
@@ -149,6 +174,8 @@ The grid is a checkerboard-like structure.
 \includegraphics[width=0.5\textwidth]{./data/toy/grid25.pdf}
 \caption{\label{fig:grid25}The grid network with 25 locations}
 \end{figure}
+
+
 
 \subsubsection{Bowtie}
 \label{sec-1-3-5}
@@ -170,11 +197,22 @@ the random network and into the other grid.
 The scalefree network is designed so that some locations are highly
 connected while others are only connected by a couple edges.  This
 type of network was originally desigined to mimic the network of
-webpages \src.  The internet houses many websites that are highly
-connected (e.g. Google, Yahoo, etc.) and others that are not (e.g.  my
-personal webpage).
+webpages.  The internet houses many websites that are highly
+connected (e.g. Google, Yahoo, etc.) and others that are not.
 
-\attn{Describe the probabilities of having an edge}
+To generate the network, we will define the process via induction.  A
+network of size $1$ is the trivial network.  Given a network of size
+$N-1$, attach the additonal $N^{th}$ node to existing node $i \in
+\lbrace 1,\ldots,N-1\rbrace$ with probability
+\begin{equation*}
+  \frac{\sum_{j!=i} A_{j,i}}{\sum_{j,k \;:\; j > k} A_{j,k}}.
+\end{equation*}
+
+Generating a scale-free network in this fashion results in a
+Barabasi-Network.  The defining feature of a scale-free network is the
+proportion of nodes with $k$ edges is proportional to $k^{-\gamma}$
+for some $\gamma$.  In the case of a Barabasi-Network $\gamma = 3$.
+
 
 \begin{figure}[htb]
 \centering

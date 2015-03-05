@@ -3,7 +3,7 @@
 
 #+startup: showeverything
 
-#+latex_header: \usepackage{amsmath,amssymb,fullpage}
+#+latex_header: \usepackage{amsmath,amssymb,fullpage,dsfont}
 #+latex_header: \newcommand{\bs}{\boldsymbol}
 #+latex_header: \newcommand{\attn}[1]{\textbf{***{#1}***}}
 #+latex_header: \newcommand{\src}{\attn{source}}
@@ -40,6 +40,8 @@
      - [ ] Strategy estimation
    - [ ] Number of time points
    - [ ] Objective function
+   - [ ] Optimization online tuning
+   - [ ] Model estimation
 ** Priority scores
    - [ ] Form of the scores
    - [ ] Selection process
@@ -52,7 +54,7 @@
    - [ ] Myopic
 
 
-# begin writing...
+# begin writing
 
 * Structure generation
 
@@ -131,6 +133,44 @@ Distances between nodes are not defined in the usual way.  For any
 node on the outer points, the distance to the closest node on the main
 horizontal line is $0.9$ instead of $1.0$.
 
+For a starred alley of size $N$, define
+#+BEGIN_LaTeX
+  \begin{equation*}
+    m_N = \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le N
+      \rbrace }
+  \end{equation*}
+#+END_LaTeX
+where
+# #+BEGIN_LaTeX
+#   \begin{equation*}
+#     f(m) = m + \left\lceil \frac{m}{2}
+#     \right\rceil 
+#     \left(\left\lceil \frac{m}{2} \right\rceil - 1\right) 
+#     + (2 - (m \text{ mod } 2)) \left\lceil{\frac{m}{2}\right\rceil.
+#     \end{equation*}
+# #+END_LaTeX
+# or simplified, it becomes
+#+BEGIN_LaTeX
+  \begin{equation*}
+    f(m) = m + \left\lceil \frac{m}{2}
+    \right\rceil 
+    \left(\left\lceil \frac{m}{2} \right\rceil
+      - (m \text{ mod } 2) + 1 \right).
+  \end{equation*}
+#+END_LaTeX
+
+Let locations $1,\ldots,m_N$ index the locations on the main
+horizontal line.  Next define disjoint sets of locations
+$\mathcal{N}_i$ for $i = 1,\ldots,m_N$.  The cardinality for
+$\mathcal{N}_i$ is defined as
+#+BEGIN_LaTeX
+  \begin{equation*}
+    | \mathcal{N}_i | = \left\lfloor \frac{i}{2} \right\rfloor +
+    \mathds{1}_{\lbrace(m_N - i) < (N - f(m_N))\rbrace}.
+  \end{equation*}
+#+END_LaTeX
+For each location $j \in \mathcal{N}_i$ set $A_{i,j} = A_{j,i} = 1$.
+
 
 #+caption: The starred alleyway network with 25 locations
 #+name: fig:alley25
@@ -152,6 +192,8 @@ example can be seen in figure [[fig:ring25]].
 [[./data/toy/ring25.pdf]]
 
 
+
+
 *** Grid
 
 The grid is a checkerboard-like structure.
@@ -160,6 +202,8 @@ The grid is a checkerboard-like structure.
 #+name: fig:grid25
 #+attr_latex: :width 0.5\textwidth
 [[./data/toy/grid25.pdf]]
+
+
 
 *** Bowtie
 
@@ -178,11 +222,24 @@ the random network and into the other grid.
 The scalefree network is designed so that some locations are highly
 connected while others are only connected by a couple edges.  This
 type of network was originally desigined to mimic the network of
-webpages \src.  The internet houses many websites that are highly
-connected (e.g. Google, Yahoo, etc.) and others that are not (e.g.  my
-personal webpage).
+webpages.  The internet houses many websites that are highly
+connected (e.g. Google, Yahoo, etc.) and others that are not.
 
-\attn{Describe the probabilities of having an edge}
+To generate the network, we will define the process via induction.  A
+network of size $1$ is the trivial network.  Given a network of size
+$N-1$, attach the additonal $N^{th}$ node to existing node $i \in
+\lbrace 1,\ldots,N-1\rbrace$ with probability
+#+BEGIN_LaTeX
+  \begin{equation*}
+    \frac{\sum_{j!=i} A_{j,i}}{\sum_{j,k \;:\; j > k} A_{j,k}}.
+  \end{equation*}
+#+END_LaTeX
+
+Generating a scale-free network in this fashion results in a
+Barabasi-Network.  The defining feature of a scale-free network is the
+proportion of nodes with $k$ edges is proportional to $k^{-\gamma}$
+for some $\gamma$.  In the case of a Barabasi-Network $\gamma = 3$.
+
 
 #+caption: The scalefree network with 25 locations
 #+name: fig:scalefree25
