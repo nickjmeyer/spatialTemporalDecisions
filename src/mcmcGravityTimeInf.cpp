@@ -1,7 +1,7 @@
 #include "mcmcGravityTimeInf.hpp"
 
 
-enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,XI_=4,TRTP_=4,TRTA_=5};
+enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,XI_=3,TRTP_=4,TRTA_=5};
 
 void GravityTimeInfSamples::setMean(){
   intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
