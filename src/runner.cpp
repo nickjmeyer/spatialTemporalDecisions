@@ -92,7 +92,9 @@ PlainRunner<S,A>
   for(r=0; r<numReps; r++){
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
+      
       system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
+      system.paramEst_r.putPar(system.modelGen.mcmc.samples.getPar());
     }
     
     system.reset();

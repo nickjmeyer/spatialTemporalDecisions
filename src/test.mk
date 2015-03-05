@@ -11,11 +11,9 @@ endif
 
 
 
-CPPFLAGS = -std=c++11 -fopenmp -Wall #-Wl,-rpath=/usr/lib64/R/library/RInside/lib/
-INCLUDE = #-I/usr/include/R/ -I/usr/lib64/R/library/Rcpp/include/
-#INCLUDE += -I/usr/lib64/R/library/RInside/include/
+CPPFLAGS = -std=c++11 -fopenmp -Wall
+INCLUDE = 
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
-#LINKS += -L/usr/lib64/R/lib -L/usr/lib64/R/library/RInside/lib/ -lR -lRInside
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
@@ -24,7 +22,7 @@ BINARY = test
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgentToy.o \
+	rankAgent.o \
 	m1SpOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
@@ -41,6 +39,19 @@ DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
 endif
+
+## random seeds
+ifeq ("$(shell hostname)","laber-lnx2")
+	CPPFLAGS+= -DRANDOM_SEED__=6
+endif
+ifeq ("$(shell hostname)","laber-lnx3")
+	CPPFLAGS+= -DRANDOM_SEED__=7
+endif
+ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
+	CPPFLAGS+= -DRANDOM_SEED__=8
+endif
+
+
 
 COMPILE_CPP = $(CC) $(CPPFLAGS)
 

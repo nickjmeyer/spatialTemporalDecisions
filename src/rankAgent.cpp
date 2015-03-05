@@ -59,8 +59,10 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
   
   double fBar,fSq,fVar;
   int fN;
+
+  int cap = std::min(std::max(numPre,numAct),tp.numChunks);
   
-  for(i = 0; i < tp.numChunks; i++){
+  for(i = 0; i < cap; i++){
 
     // get jitter
     for(j = 0; j < f.numFeatures; j++){

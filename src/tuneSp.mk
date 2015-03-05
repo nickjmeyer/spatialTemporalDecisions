@@ -11,11 +11,9 @@ endif
 
 
 
-CPPFLAGS = -std=c++11 -fopenmp -Wall #-Wl,-rpath=/usr/lib64/R/library/RInside/lib/
-INCLUDE = #-I/usr/include/R/ -I/usr/lib64/R/library/Rcpp/include/
-#INCLUDE += -I/usr/lib64/R/library/RInside/include/
+CPPFLAGS = -std=c++11 -fopenmp -Wall
+INCLUDE = 
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
-#LINKS += -L/usr/lib64/R/lib -L/usr/lib64/R/library/RInside/lib/ -lR -lRInside
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
