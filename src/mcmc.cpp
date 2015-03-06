@@ -135,8 +135,9 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
   
   // priors
   int thin=1;
-  double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=100,alpha_mean=0,
-    alpha_var=1,power_mean=0,power_var=1,trtPre_mean=priorTrtMean,trtPre_var=1,
+  double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
+    alpha_var=1,power_mean=0,power_var=1,
+    trtPre_mean=priorTrtMean,trtPre_var=1,
     trtAct_mean=priorTrtMean,trtAct_var=1;
 
 
