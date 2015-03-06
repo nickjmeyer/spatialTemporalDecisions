@@ -6,6 +6,18 @@ template class System<GravityModel,GravityParam,
 template class System<GravityTimeInfModel,GravityTimeInfParam,
 		      GravityTimeInfModel,GravityTimeInfParam>;
 
+template class System<GravityTimeInfSqModel,GravityTimeInfSqParam,
+		      GravityTimeInfSqModel,GravityTimeInfSqParam>;
+
+template class System<GravityTimeInfSqrtModel,GravityTimeInfSqrtParam,
+		      GravityTimeInfSqrtModel,GravityTimeInfSqrtParam>;
+
+template class System<GravityTimeInfLogModel,GravityTimeInfLogParam,
+		      GravityTimeInfLogModel,GravityTimeInfLogParam>;
+
+template class System<GravityTimeInfExpModel,GravityTimeInfExpParam,
+		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
+
 template class System<GravityModel,GravityParam,
 		      RangeModel,RangeParam>;
 

@@ -1,9 +1,9 @@
-#include "mcmcGravityTimeInfSq.hpp"
+#include "mcmcGravityTimeInf.hpp"
 
 
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,XI_=3,TRTP_=4,TRTA_=5};
 
-void GravityTimeInfSqSamples::setMean(){
+void GravityTimeInfSamples::setMean(){
   intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
@@ -31,7 +31,7 @@ void GravityTimeInfSqSamples::setMean(){
 }
 
 
-void GravityTimeInfSqSamples::setRand(){
+void GravityTimeInfSamples::setRand(){
   intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
@@ -52,7 +52,7 @@ void GravityTimeInfSqSamples::setRand(){
 }
 
 
-std::vector<double> GravityTimeInfSqSamples::getPar() const {
+std::vector<double> GravityTimeInfSamples::getPar() const {
   std::vector<double> par = betaSet;
   par.push_back(intcpSet);
   par.push_back(alphaSet);
@@ -66,7 +66,7 @@ std::vector<double> GravityTimeInfSqSamples::getPar() const {
 
 
 
-void GravityTimeInfSqMcmc::load(const std::vector<std::vector<int> > & history,
+void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
 		       const std::vector<int> & status,
 		       const FixedData & fD){
   std::vector<std::vector<int> > all;
@@ -77,7 +77,7 @@ void GravityTimeInfSqMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 
-void GravityTimeInfSqMcmc::load(const std::vector<std::vector<int> > & history,
+void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
 		       const FixedData & fD){
   numNodes=fD.numNodes;
   T=(int)history.size();
@@ -92,7 +92,7 @@ void GravityTimeInfSqMcmc::load(const std::vector<std::vector<int> > & history,
   d = fD.dist;
   cc.resize(numNodes*numNodes);
   covar = fD.covar;
-  timeInfSq.resize(numNodes*T);
+  timeInfMinOne.resize(numNodes*T);
   int i,j;
   for(i = 0; i < numNodes; ++i){
     for(j = 0; j < T; ++j){// get the histories of infection and treatments
@@ -114,14 +114,14 @@ void GravityTimeInfSqMcmc::load(const std::vector<std::vector<int> > & history,
     for(j = 0; j < T; ++j){
       if(infHist.at(i*T + j) == 1)
 	++val;
-      timeInfSq.at(i*T + j) = std::pow(val - 1.0,2.0);
+      timeInfMinOne.at(i*T + j) = val - 1.0;
     }
   }
   
 }
 
 
-void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn){
+void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
@@ -135,7 +135,7 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn){
 				
 
 
-void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
+void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 				const std::vector<double> & par){
   samples.numSamples = numSamples - numBurn;
   
@@ -191,9 +191,9 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
   updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
   alphaW_can = alphaW_cur;
 
-  xiTimeInfSq_cur = timeInfSq;
-  updateXiTimeInfSq(xiTimeInfSq_cur,xi_cur);
-  xiTimeInfSq_can = xiTimeInfSq_cur;
+  xiTimeInfMinOne_cur = timeInfMinOne;
+  updateXiTimeInf(xiTimeInfMinOne_cur,xi_cur);
+  xiTimeInfMinOne_can = xiTimeInfMinOne_cur;
   
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
@@ -400,7 +400,7 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
     upd=xi_cur+mh.at(numCovar+XI_)*njm::rnorm01();
     xi_can=upd;
 
-    updateXiTimeInfSq(xiTimeInfSq_can,xi_can/xi_cur);
+    updateXiTimeInf(xiTimeInfMinOne_can,xi_can/xi_cur);
     
     // get new likelihood
     ll_can=ll();
@@ -415,12 +415,12 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+XI_);
       xi_cur=xi_can;
-      xiTimeInfSq_cur = xiTimeInfSq_can;
+      xiTimeInfMinOne_cur = xiTimeInfMinOne_can;
       ll_cur=ll_can;
     }
     else{
       xi_can=xi_cur;
-      xiTimeInfSq_can=xiTimeInfSq_cur;
+      xiTimeInfMinOne_can=xiTimeInfMinOne_cur;
       ll_can=ll_cur;
     }
 
@@ -470,8 +470,8 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
   updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
   updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
-  xiTimeInfSq_can = timeInfSq;
-  updateXiTimeInfSq(xiTimeInfSq_can,xi_can);
+  xiTimeInfMinOne_can = timeInfMinOne;
+  updateXiTimeInf(xiTimeInfMinOne_can,xi_can);
 
   samples.llPt = ll();
 
@@ -488,7 +488,7 @@ void GravityTimeInfSqMcmc::sample(int const numSamples, int const numBurn,
 
 
 
-double GravityTimeInfSqMcmc::ll(){
+double GravityTimeInfMcmc::ll(){
   int i,j,k;
   double llVal,wontProb,prob,expProb,baseProb,baseProbInit;
 
@@ -513,7 +513,7 @@ double GravityTimeInfSqMcmc::ll(){
 	    else
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 
-	    baseProb += xiTimeInfSq_can.at(k*T + i-1);
+	    baseProb += xiTimeInfMinOne_can.at(k*T + i-1);
 	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;

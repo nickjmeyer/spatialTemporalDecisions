@@ -51,7 +51,7 @@ class GravityTimeInfSqMcmc{
   std::vector<int> infHist;
   std::vector<int> trtPreHist;
   std::vector<int> trtActHist;
-  std::vector<double> timeInfVal; // time infected valued
+  std::vector<double> timeInfSq; // time infected valued
 
   // information about each county
   std::vector<double> d;

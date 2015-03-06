@@ -4,6 +4,14 @@ template class BaseModel<GravityParam>;
 
 template class BaseModel<GravityTimeInfParam>;
 
+template class BaseModel<GravityTimeInfSqParam>;
+
+template class BaseModel<GravityTimeInfSqrtParam>;
+
+template class BaseModel<GravityTimeInfLogParam>;
+
+template class BaseModel<GravityTimeInfExpParam>;
+
 template<class MP>
 void BaseModel<MP>::load(const SimData & sD,
 			 const TrtData & tD,

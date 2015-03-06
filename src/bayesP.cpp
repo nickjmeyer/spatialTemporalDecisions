@@ -98,23 +98,15 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
 }
 
 
+template <class M, class P>
+void runBayesP(const std::string & file, const int obs){
+  typedef System<M,P,M,P> S;
 
-int main(int argc, char ** argv){
-  njm::sett.set(argc,argv);
-
-  typedef GravityTimeInfModel GM;
-  typedef GravityTimeInfParam GP;
-  typedef GM EM;
-  typedef GP EP;
-
-  typedef System<GM,GP,EM,EP> S;
-
-
-  S s1Obs("obsData.txt");
+  S sObs("obsData.txt");
 
   std::vector<std::vector<int> > h;
-  h = s1Obs.sD.history;
-  h.push_back(s1Obs.sD.status);
+  h = sObs.sD.history;
+  h.push_back(sObs.sD.status);
 
   std::vector<std::string> names = {"n_inf","n_inf_2007","n_inf_2008",
   				    "n_inf_2009","n_inf_2010","n_inf_2011",
@@ -125,81 +117,67 @@ int main(int argc, char ** argv){
   				    "max_long","max_lat",
   				    "max_dist_from_start"};
 
-  njm::toFile(names,njm::sett.datExt("obsStats_",".txt"),
-  	      std::ios_base::out);
-  njm::toFile(getStats(h,s1Obs.sD,s1Obs.fD),
-	      njm::sett.datExt("obsStats_",".txt"));
+  if(obs){
+    njm::toFile(names,njm::sett.datExt("obsStats_",".txt"),
+		std::ios_base::out);
+    njm::toFile(getStats(h,sObs.sD,sObs.fD),
+		njm::sett.datExt("obsStats_",".txt"));
+  }
 
-  s1Obs.modelGen.mcmc.load(s1Obs.sD.history,s1Obs.sD.status,s1Obs.fD);
-  s1Obs.modelGen.mcmc.sample(20000,10000);
+  sObs.modelGen.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
+  sObs.modelGen.mcmc.sample(20000,10000);
 
   std::vector< std::vector<double> > stats;
   
-  S s1;
-  s1.modelGen = s1Obs.modelGen;
+  S s;
+  s.modelGen = sObs.modelGen;
   int r,t,R,T;
   R = 10000;
-  T = s1Obs.sD.time;
+  T = sObs.sD.time;
   for(r = 0; r < R; ++r){
-    s1.modelGen.mcmc.samples.setRand();
-    s1.paramGen_r.putPar(s1.modelGen.mcmc.samples.getPar());
-    s1.paramEst_r.putPar(s1.paramGen_r.getPar());
+    s.modelGen.mcmc.samples.setRand();
+    s.paramGen_r.putPar(s.modelGen.mcmc.samples.getPar());
+    s.paramEst_r.putPar(s.paramGen_r.getPar());
     
-    s1.reset();
+    s.reset();
     
     for(t = 0; t < T; ++t)
-      s1.nextPoint();
-    h = s1.sD.history;
-    h.push_back(s1.sD.status);
+      s.nextPoint();
+    h = s.sD.history;
+    h.push_back(s.sD.status);
 
-    stats.push_back(getStats(h,s1.sD,s1.fD));
+    stats.push_back(getStats(h,s.sD,s.fD));
   }
 
-  njm::toFile(names,njm::sett.datExt("sampStats_",".txt"),
+  njm::toFile(names,njm::sett.datExt(file+"_",".txt"),
   	      std::ios_base::out);
   njm::toFile(njm::toString(stats,"\n",""),
-	      njm::sett.datExt("sampStats_timeInf_",".txt"));
+	      njm::sett.datExt(file+"_",".txt"));
+
+}
 
 
-  
-  stats.clear();
 
-  
-  typedef GravityModel GM2;
-  typedef GravityParam GP2;
-  typedef GM2 EM2;
-  typedef GP2 EP2;
+int main(int argc, char ** argv){
+  njm::sett.set(argc,argv);
 
+  runBayesP<GravityModel,
+	    GravityParam>("sampStats_gravity",1);
 
-  System<GM2,GP2,EM2,EP2> s2Obs("obsData.txt");
-  
-  s2Obs.modelGen.mcmc.load(s2Obs.sD.history,s2Obs.sD.status,s2Obs.fD);
-  s2Obs.modelGen.mcmc.sample(20000,10000);
+  runBayesP<GravityTimeInfModel,
+	    GravityTimeInfParam>("sampStats_timeInf",0);
 
-  System<GM2,GP2,EM2,EP2> s2;
+  runBayesP<GravityTimeInfSqModel,
+	    GravityTimeInfSqParam>("sampStats_timeInfSq",0);
 
-  s2.modelGen = s2Obs.modelGen;
+  runBayesP<GravityTimeInfSqrtModel,
+	    GravityTimeInfSqrtParam>("sampStats_timeInfSqrt",0);
 
-  for(r = 0; r < R; ++r){
-    s2.modelGen.mcmc.samples.setRand();
-    s2.paramGen_r.putPar(s2.modelGen.mcmc.samples.getPar());
-    s2.paramEst_r.putPar(s2.paramGen_r.getPar());
-    
-    s2.reset();
-    
-    for(t = 0; t < T; ++t)
-      s2.nextPoint();
-    h = s2.sD.history;
-    h.push_back(s2.sD.status);
+  runBayesP<GravityTimeInfLogModel,
+	    GravityTimeInfLogParam>("sampStats_timeInfLog",0);
 
-    stats.push_back(getStats(h,s2.sD,s2.fD));
-  }
-
-  njm::toFile(names,njm::sett.datExt("sampStats_",".txt"),
-  	      std::ios_base::out);
-  njm::toFile(njm::toString(stats,"\n",""),
-	      njm::sett.datExt("sampStats_",".txt"));
-  
+  runBayesP<GravityTimeInfExpModel,
+	    GravityTimeInfExpParam>("sampStats_timeInfExp",0);
 
   // njm::sett.clean();
   return 0;
