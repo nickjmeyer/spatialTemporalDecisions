@@ -18,6 +18,17 @@ template class System<GravityTimeInfLogModel,GravityTimeInfLogParam,
 template class System<GravityTimeInfExpModel,GravityTimeInfExpParam,
 		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
 
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
+
+template class System<GravityTimeInfExpLCavesModel,GravityTimeInfExpLCavesParam,
+		      GravityTimeInfExpLCavesModel,
+		      GravityTimeInfExpLCavesParam>;
+
+template class System<GravityTimeInfExpRCavesModel,GravityTimeInfExpRCavesParam,
+		      GravityTimeInfExpRCavesModel,
+		      GravityTimeInfExpRCavesParam>;
+
 template class System<GravityModel,GravityParam,
 		      RangeModel,RangeParam>;
 
@@ -264,6 +275,39 @@ template <class MG, class MPG,
 void System<MG,MPG,
 	    ME,MPE>::preCompData(){
   int i,j,tot;
+
+  double maxVal = std::numeric_limits<double>::lowest();
+
+  // proportion of caves, (caves[i] + 1)/(max(caves) + 1)
+  for(i = 0 ; i < fD.numNodes; ++i){
+    if(fD.caves.at(i) > maxVal)
+      maxVal = fD.caves.at(i);
+  }
+  fD.propCaves = fD.caves;
+  std::for_each(fD.propCaves.begin(),fD.propCaves.end(),
+		[&maxVal](double & x){
+		  x=(x+1.0)/(maxVal+1.0);
+		});
+
+  // proprtion of log caves, (log(caves[i]+1)+1)/(log(max(caves)+1)+1)
+  fD.logPropCaves = fD.caves;
+  std::for_each(fD.logPropCaves.begin(),fD.logPropCaves.end(),
+		[&maxVal](double & x){
+		  x=(std::log(x+1.0)+1.0)/(std::log(maxVal+1.0)+1.0);
+		});
+
+  // rank of caves
+  int numGt;
+  double curCaves;
+  fD.rankCaves = std::vector<double> (fD.numNodes,0);
+  for(i = 0; i < fD.numNodes; ++i){
+    curCaves = fD.caves.at(i);
+    numGt = 0;
+    for(j = 0; j < fD.numNodes; ++j)
+      if(fD.caves.at(j) >= curCaves)
+	++numGt;
+    fD.rankCaves.at(i) = ((double)numGt)/((double)fD.numNodes);
+  }
   
   // subGraph only K steps out
   fD.subGraphKval = 4;

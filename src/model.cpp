@@ -12,6 +12,12 @@ template class BaseModel<GravityTimeInfLogParam>;
 
 template class BaseModel<GravityTimeInfExpParam>;
 
+template class BaseModel<GravityTimeInfExpCavesParam>;
+
+template class BaseModel<GravityTimeInfExpLCavesParam>;
+
+template class BaseModel<GravityTimeInfExpRCavesParam>;
+
 template<class MP>
 void BaseModel<MP>::load(const SimData & sD,
 			 const TrtData & tD,

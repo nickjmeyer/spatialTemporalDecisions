@@ -52,6 +52,25 @@ void GravityTimeInfSamples::setRand(){
 }
 
 
+void GravityTimeInfSamples::setPar(const int i){
+  intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
+  betaSet.resize(numCovar);
+  std::fill(betaSet.begin(),betaSet.end(),0.0);
+  
+  intcpSet = intcp.at(i);
+  alphaSet = alpha.at(i);
+  powerSet = power.at(i);
+  xiSet = xi.at(i);
+  trtPreSet = trtPre.at(i);
+  trtActSet = trtAct.at(i);
+
+  int j = 0;
+  std::for_each(betaSet.begin(),betaSet.end(),
+		[this,&i,&j](double & x){
+		  x = beta.at(i*numCovar + j++);});
+}
+
+
 std::vector<double> GravityTimeInfSamples::getPar() const {
   std::vector<double> par = betaSet;
   par.push_back(intcpSet);
@@ -142,7 +161,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
-    alpha_var=1,power_mean=0,power_var=1,xi_mean=0,xi_var=1,
+    alpha_var=1,power_mean=0,power_var=1,xi_mean=0,xi_var=1.0,
     trtPre_mean=priorTrtMean,trtPre_var=1,
     trtAct_mean=priorTrtMean,trtAct_var=1;
 

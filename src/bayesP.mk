@@ -32,6 +32,9 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	modelGravityTimeInfSqrt.o modelParamGravityTimeInfSqrt.o \
 	modelGravityTimeInfLog.o modelParamGravityTimeInfLog.o \
 	modelGravityTimeInfExp.o modelParamGravityTimeInfExp.o \
+	modelGravityTimeInfExpCaves.o modelParamGravityTimeInfExpCaves.o \
+	modelGravityTimeInfExpLCaves.o modelParamGravityTimeInfExpLCaves.o \
+	modelGravityTimeInfExpRCaves.o modelParamGravityTimeInfExpRCaves.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
 	modelCave.o modelParamCave.o \
@@ -41,6 +44,9 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	mcmcGravityTimeInfSqrt.o \
 	mcmcGravityTimeInfLog.o \
 	mcmcGravityTimeInfExp.o \
+	mcmcGravityTimeInfExpCaves.o \
+	mcmcGravityTimeInfExpLCaves.o \
+	mcmcGravityTimeInfExpRCaves.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))

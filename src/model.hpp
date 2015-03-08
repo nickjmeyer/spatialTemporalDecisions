@@ -13,6 +13,9 @@
 #include "modelParamGravityTimeInfSqrt.hpp"
 #include "modelParamGravityTimeInfLog.hpp"
 #include "modelParamGravityTimeInfExp.hpp"
+#include "modelParamGravityTimeInfExpCaves.hpp"
+#include "modelParamGravityTimeInfExpLCaves.hpp"
+#include "modelParamGravityTimeInfExpRCaves.hpp"
 #include "mcmc.hpp"
 
 enum Estimation {MLE = 0,MCMC = 1};

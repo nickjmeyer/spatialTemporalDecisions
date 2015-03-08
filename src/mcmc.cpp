@@ -48,6 +48,25 @@ void GravitySamples::setRand(){
 		  x = beta.at(i*numCovar + j++);});
 }
 
+void GravitySamples::setPar(const int i){
+  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
+  betaSet.resize(numCovar);
+  std::fill(betaSet.begin(),betaSet.end(),0.0);
+  
+  intcpSet = intcp.at(i);
+  alphaSet = alpha.at(i);
+  powerSet = power.at(i);
+  trtPreSet = trtPre.at(i);
+  trtActSet = trtAct.at(i);
+
+  int j = 0;
+  std::for_each(betaSet.begin(),betaSet.end(),
+		[this,&i,&j](double & x){
+		  x = beta.at(i*numCovar + j++);});
+}
+
+
+
 
 std::vector<double> GravitySamples::getPar() const {
   std::vector<double> par = betaSet;

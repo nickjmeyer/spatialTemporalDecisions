@@ -64,6 +64,9 @@ struct FixedData {
 
   
   // pre-computed data
+  std::vector<double> propCaves;
+  std::vector<double> logPropCaves;
+  std::vector<double> rankCaves;
   
   std::vector<double> subGraphK;
   int subGraphKval;

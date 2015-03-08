@@ -163,7 +163,7 @@ void RangeMcmc::sample(int const numSamples, int const numBurn,
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){

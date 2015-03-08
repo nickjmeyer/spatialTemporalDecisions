@@ -99,7 +99,9 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
 
 
 template <class M, class P>
-void runBayesP(const std::string & file, const int obs){
+void runBayesP(const std::string & file, const int obs,
+	       const int numSamples,const int numBurn,
+	       const int numStats){
   typedef System<M,P,M,P> S;
 
   S sObs("obsData.txt");
@@ -125,14 +127,18 @@ void runBayesP(const std::string & file, const int obs){
   }
 
   sObs.modelGen.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen.mcmc.sample(20000,10000);
+  sObs.modelGen.mcmc.sample(numSamples,numBurn);
+
+  sObs.modelGen.mcmc.samples.setMean();
+  sObs.paramGen.putPar(sObs.modelGen.mcmc.samples.getPar());
+  sObs.paramGen.save();
 
   std::vector< std::vector<double> > stats;
   
   S s;
   s.modelGen = sObs.modelGen;
   int r,t,R,T;
-  R = 10000;
+  R = numStats;
   T = sObs.sD.time;
   for(r = 0; r < R; ++r){
     s.modelGen.mcmc.samples.setRand();
@@ -154,6 +160,16 @@ void runBayesP(const std::string & file, const int obs){
   njm::toFile(njm::toString(stats,"\n",""),
 	      njm::sett.datExt(file+"_",".txt"));
 
+  std::vector<std::vector<double> > parSamp;
+  int i;
+  for(i = 0; i < (numSamples-numBurn); ++i){
+    s.modelGen.mcmc.samples.setPar(i);
+    parSamp.push_back(s.modelGen.mcmc.samples.getPar());
+  }
+
+  njm::toFile(njm::toString(parSamp,"\n",""),
+	      njm::sett.datExt(file+"_param_",".txt"),
+	      std::ios_base::out);
 }
 
 
@@ -161,24 +177,77 @@ void runBayesP(const std::string & file, const int obs){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  runBayesP<GravityModel,
-	    GravityParam>("sampStats_gravity",1);
+  int numSamples = 20000, numBurn = 10000, numStats = 10000;
+  // int numSamples = 100, numBurn = 50, numStats = 50;
 
-  runBayesP<GravityTimeInfModel,
-	    GravityTimeInfParam>("sampStats_timeInf",0);
+#pragma omp parallel sections			\
+  shared(numSamples,numBurn,numStats)
+  {
+#pragma omp section
+    {
+      runBayesP<GravityModel,
+		GravityParam>("sampStats_gravity",1,
+			      numSamples,numBurn,numStats);
+    }
 
-  runBayesP<GravityTimeInfSqModel,
-	    GravityTimeInfSqParam>("sampStats_timeInfSq",0);
+#pragma omp section
+    {
+      runBayesP<GravityTimeInfModel,
+		GravityTimeInfParam>("sampStats_timeInf",0,
+				     numSamples,numBurn,numStats);
+    }
 
-  runBayesP<GravityTimeInfSqrtModel,
-	    GravityTimeInfSqrtParam>("sampStats_timeInfSqrt",0);
+// #pragma omp section
+//     {
+//       runBayesP<GravityTimeInfSqModel,
+// 		GravityTimeInfSqParam>("sampStats_timeInfSq",0,
+// 				       numSamples,numBurn,numStats);
+//     }
 
-  runBayesP<GravityTimeInfLogModel,
-	    GravityTimeInfLogParam>("sampStats_timeInfLog",0);
+// #pragma omp section
+//     {
+//       runBayesP<GravityTimeInfSqrtModel,
+// 		GravityTimeInfSqrtParam>("sampStats_timeInfSqrt",0,
+// 					 numSamples,numBurn,numStats);
+//     }
 
-  runBayesP<GravityTimeInfExpModel,
-	    GravityTimeInfExpParam>("sampStats_timeInfExp",0);
+// #pragma omp section
+//     {
+//       runBayesP<GravityTimeInfLogModel,
+// 		GravityTimeInfLogParam>("sampStats_timeInfLog",0,
+// 					numSamples,numBurn,numStats);
+//     }
 
+#pragma omp section
+    {
+      runBayesP<GravityTimeInfExpModel,
+		GravityTimeInfExpParam>("sampStats_timeInfExp",0,
+					numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<GravityTimeInfExpCavesModel,
+		GravityTimeInfExpCavesParam>("sampStats_timeInfExpCaves",0,
+					     numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<GravityTimeInfExpLCavesModel,
+		GravityTimeInfExpLCavesParam>("sampStats_timeInfExpLCaves",0,
+					      numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<GravityTimeInfExpRCavesModel,
+		GravityTimeInfExpRCavesParam>("sampStats_timeInfExpRCaves",0,
+					      numSamples,numBurn,numStats);
+    }
+  
+  }
+  
   // njm::sett.clean();
   return 0;
 }

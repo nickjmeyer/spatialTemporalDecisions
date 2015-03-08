@@ -27,6 +27,8 @@ class GravitySamples{
   void setMean();
   void setRand();
 
+  void setPar(const int i);
+
   std::vector<double> getPar() const;
 };
 
