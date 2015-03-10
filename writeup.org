@@ -1,6 +1,8 @@
 #+title: M1 Writeup
 #+author: 
 
+
+
 #+startup: showeverything
 
 #+latex_header: \usepackage{amsmath,amssymb,fullpage,dsfont,setspace}
@@ -13,13 +15,6 @@
 #+latex_header: \setstretch{1.5}
 
 * Checklist							   :noexport:
-** Spread dynamics models
-   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
-   - [ ] Gravity model
-   - [ ] Gravity model with time infected
-   - [ ] Range model
-   - [ ] Cave model
-   - [ ] Setting generative model parameters
 ** Notation
    - [ ] Locations
      - [ ] Coordinates
@@ -27,6 +22,13 @@
      - [ ] Neighbors
    - [ ] Dynamics model
      - [ ] Gravity model
+** Spread dynamics models
+   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
+   - [ ] Gravity model
+   - [ ] Gravity model with time infected
+   - [ ] Range model
+   - [ ] Cave model
+   - [ ] Setting generative model parameters
 ** Structure generation
    - [X] Covariates
    - [ ] Network distance
@@ -58,7 +60,9 @@
    - [ ] Myopic
 
 
-# begin writing
+# begin document
+
+* Notation
 
 * System dynamics model
 
@@ -80,10 +84,13 @@ To define $p_{i,j,t}$ we use a form of the gravity model.
 #+BEGIN_LaTeX
   \begin{equation*}
     \logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
-    - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta \tau_i 
+    - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g(\tau_{i,t})
     - \rho A_{j,t-1} - \gamma A_{i,t-1}
   \end{equation*}
 #+END_LaTeX
+where $\tau_{i,t} = \sum_{t' = 0}^t X_{i,t'}$ is the number of time
+points $i$ has been infected.  We compare different forms of
+$g(\cdot)$ discussed later.
 
 For model estimation, we use a Bayesian framework.  The priors on the
 parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
@@ -92,6 +99,18 @@ N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$, $\rho
 
 
 ** Model fit diagnostics
+
+When estimating the posterior distributions, we compared multiple
+forms for $g(\cdot)$.
+#+BEGIN_LaTeX
+  \begin{itemize}
+    \item $g_j(x) = 0$
+    \item $g_j(x) = x - 1$
+    \item $g_j(x) = exp(x - 1) - 1$
+    \item $g_j(x) = exp(\frac{\max_k c_k+1}{c_j + 1}(x - 1)) - 1$
+  \end{itemize}
+#+END_LaTeX
+
 
 * Structure generation
 
@@ -390,3 +409,17 @@ is equal to
 #+end_latex
 Set this equation equal to $\log(0.5)$ and solve for $z$.
 
+
+* Simulations
+
+
+
+* Results
+
+** Simultaneous perturbation experiment
+
+** Agent jitter and num chunks experiment
+
+** Toy Structures
+
+** WNS
