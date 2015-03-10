@@ -3,11 +3,13 @@
 
 #+startup: showeverything
 
-#+latex_header: \usepackage{amsmath,amssymb,fullpage,dsfont}
+#+latex_header: \usepackage{amsmath,amssymb,fullpage,dsfont,setspace}
 #+latex_header: \newcommand{\bs}{\boldsymbol}
 #+latex_header: \newcommand{\attn}[1]{\textbf{***{#1}***}}
 #+latex_header: \newcommand{\src}{\attn{source}}
 #+latex_header: \setlength{\parskip}{\baselineskip}
+
+#+latex_header: \setstretch{1.5}
 
 * Checklist							   :noexport:
 ** Notation
@@ -171,6 +173,9 @@ $\mathcal{N}_i$ is defined as
 #+END_LaTeX
 For each location $j \in \mathcal{N}_i$ set $A_{i,j} = A_{j,i} = 1$.
 
+To define the coordinates for each location, first set $C_{i} =
+\lbrace i,0 \rbrace$ for $i = 1,\ldots,m_N$.  Then for each 
+
 
 #+caption: The starred alleyway network with 25 locations
 #+name: fig:alley25
@@ -186,6 +191,34 @@ section.  To form the ring, place the locations evenly on the circle
 then between one pair of locations insert more locations evenly.  An
 example can be seen in figure [[fig:ring25]].
 
+Divide the number of locations $N$ into two groups.  Define $N_1 = N -
+N_2$ where $N_2 = \lceil N*0.05 \rceil$.  Let $\theta = 2\pi/(N_1+1)$
+and $r = 1/(2\sin(\theta/2))$.  Place location $1$ at $C_1 = \lbrace
+0,r \rbrace$.  Given location $i-1$ at $C_{i-1}$, place location $i$
+at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,N_1$ and
+#+BEGIN_LaTeX
+  \begin{equation*}
+    rot(\theta) = \left[
+      \begin{matrix}
+        \cos(\theta) & -\sin(\theta)\\
+        \sin(\theta) & \cos(\theta)
+      \end{matrix}
+    \right]
+  \end{equation*}
+#+END_LaTeX
+Note that $C_{1} \cdot C_{N_1} = \|C_{1}\| \|C_{N_1}\| \cos(2\theta)$.
+
+With the first $N_1$ locations defined, we need to define the last
+$N_2$ locations.  Place location $N_1 + i$ at $C_{N_1 + i} =
+rot(\theta/N_2)C_{N_1 + i - 1}$ for $i = 1,\ldots,N_2$.  Note that
+$C_{N} \cdot C_{N_1} = \|C_{N}\| \|C_{N_1}\| \cos(\theta)$ and $C_{1}
+\cdot C_{N} = \|C_{1}\| \|C_{N}\| \cos(\theta)$.
+
+To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
+1,\ldots,N-1$ and $A_{1,N} = A_{N,1} = 1$.
+
+
+
 #+caption: The ring network with 25 locations
 #+name: fig:ring25
 #+attr_latex: :width 0.5\textwidth
@@ -196,7 +229,24 @@ example can be seen in figure [[fig:ring25]].
 
 *** Grid
 
-The grid is a checkerboard-like structure.
+The grid is a checkerboard-like structure.  First define $N_1$ to be
+the number of columns and $N_2$ to be the number of rows.  These
+values are defined by
+#+BEGIN_LaTeX
+  \begin{equation*}
+    \lbrace N_1, N_2 \rbrace = \underset{
+      \begin{subarray}{c}
+        N_1,N_2 > 0\\
+        N_1N_2 = N\\
+        N_1 \le N_2
+      \end{subarray}
+    }{\arg\min} \quad |N_1 - N_2|
+  \end{equation*}
+#+END_LaTeX
+
+Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } N_2), \lfloor
+i/N_2 \rfloor \rbrace$.  The adjacency matrix is defined as $A_{i,j} =
+1$ if $\|C_i - C_j\| = 1$.
 
 #+caption: The grid network with 25 locations
 #+name: fig:grid25
@@ -210,6 +260,45 @@ The grid is a checkerboard-like structure.
 The bowtie combines two grid networks with a random network in
 between.  Spread of the disease begins in one grid and travels through
 the random network and into the other grid.
+
+For a bowtie network of size $N$, create one random network of size
+$N_R = \lceil 0.1 N \rceil + ((N - \lceil 0.1 N \rceil) \text{ mod }
+2)$ and two grid networks of size $N_G = (N - N_R)/2$.
+
+Let $i_{R}$ be the $i^{th}$ location in the random network and
+$i_{G_j}$ be the $i^{th}$ location in the $j^{th}$ grid.n
+
+To connect the three networks, we need to first identify which nodes
+in each network will connect to one of the other two networks.  We
+will begin with the first grid.  First, define $N_1$ and $N_2$ to be
+defined in the same way as in the grid description.  Both grid
+networks are the same size, we do not need to distinguish between the
+two.  Let $M_{G} = \lceil N_2/3 \rceil$ be the number of points to
+connect from the grid networks.  Define the following four sets of locations
+#+BEGIN_LaTeX
+  \begin{equation*}
+    \begin{array}{rcl}
+      \Lambda_{G_1} & = & \lbrace N_G -
+                          2N_1M_G + kN_1 : k = 1,\ldots,M_G\rbrace\\
+      \Lambda_{G_2} & = & \lbrace N_G -
+                          2N_1M_G + 1 + (k-1)N_1 : k =
+                          1,\ldots,M_G\rbrace\\
+      \Lambda_{R_1} & = & \lbrace i : C_{i,1} \le C_{[M_R],1} \rbrace\\
+      \Lambda_{R_2} & = & \lbrace i : C_{i,1} \ge C_{[N_R - M_R + 1],1} \rbrace
+    \end{array}
+  \end{equation*}
+#+END_LaTeX
+where $[\cdot]$ denotes the usual order statistics.
+
+To define the adjacency matrix, combine the adjacency matrices from
+the three separate networks as a block diagonal matrix.  To define the
+additional edges, set $A_{i_{G_1},j_R} = A_{j_R,i_{G_1}} = 1$ for all
+$i \in \Lambda_{G_1}$ and $j \in \Lambda_{R_1}$ to connect the first
+grid to the random network.  Then set $A_{i_{G_2},j_R} =
+A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
+\Lambda_{R_2}$ to connect the second grid to the random network.
+
+
 
 #+caption: The bowtie network with 25 locations
 #+name: fig:bowtie25
@@ -239,6 +328,9 @@ Generating a scale-free network in this fashion results in a
 Barabasi-Network.  The defining feature of a scale-free network is the
 proportion of nodes with $k$ edges is proportional to $k^{-\gamma}$
 for some $\gamma$.  In the case of a Barabasi-Network $\gamma = 3$.
+
+Given the network, we use the Fruchterman-Reingold algorithm to
+position the nodes in a two dimensional plane.
 
 
 #+caption: The scalefree network with 25 locations
