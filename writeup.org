@@ -8,10 +8,18 @@
 #+latex_header: \newcommand{\attn}[1]{\textbf{***{#1}***}}
 #+latex_header: \newcommand{\src}{\attn{source}}
 #+latex_header: \setlength{\parskip}{\baselineskip}
+#+latex_header: \newcommand{\logit}{\text{logit}}
 
 #+latex_header: \setstretch{1.5}
 
 * Checklist							   :noexport:
+** Spread dynamics models
+   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
+   - [ ] Gravity model
+   - [ ] Gravity model with time infected
+   - [ ] Range model
+   - [ ] Cave model
+   - [ ] Setting generative model parameters
 ** Notation
    - [ ] Locations
      - [ ] Coordinates
@@ -29,12 +37,6 @@
      - [X] Random
      - [ ] Ring
      - [ ] Scalefree
-** Spread dynamics models
-   - [ ] $1 - \Pi_{i}[ 1 - P_{i,j}]$
-   - [ ] Gravity model
-   - [ ] Range model
-   - [ ] Cave model
-   - [ ] Setting generative model parameters
 ** Simulation details
    - [ ] Start settings
    - [ ] Significant points
@@ -58,45 +60,40 @@
 
 # begin writing
 
-* Structure generation
+* System dynamics model
 
-** Covariates
+** Gravity model
 
-Define $X$ to be a $n \times p$ centered and scaled covariate matrix.
-The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
-$\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
-$\widetilde{C}$ are the centered and scaled coordinates.  The
-covariance matrix has the structure $\Sigma_{ip + s, jp + t} =
-\rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
-individual covariates are $1$ and the correlation decays as $E_{i,j}$
-increases and as $|s-t|$ increases.
-
-We need the mass of each individual node to compute the gravity term
-in the gravity model.  In the case of White-Nose Syndrome, the mass is
-the number of caves.  Arbitrarily set the first covariate to be the
-mass of the node.  Define $M_i = \lfloor X_{i,1} - X_{[1],1} \rfloor +
-1$ to be the mass of location $i$.
-
-
-** Network distance
-
-In order for the structure of the network to have a strong impact on
-the disease spread, we define distance as the geodesic distance raised
-to a power.  The distance between adjacent nodes ($i$ and $j$ such
-that $A_{i,j} = 1$) is defined to be $1$.  For non-adjacent nodes, the
-distance is the number of edges along the shortest path raised to a
-power.  To determine the appropriate power, let $p^{(1)}_{i,j}$ be the
-hypothetical probability node $i$ infects node $j$ where $i$ and $j$
-have geodesic distance $1$.  Let $p^{(2)}_{i,j}$ be the hypothetical
-probability if infection if $i$ and $j$ have geodesic distance $2$.
-For their mass, use the mean mass of the network.  The log odds-ratio
-is equal to
-#+begin_latex
+To model the evolution of the disease, we model the probability that
+an infected location $i$ infects an uninfected location $j$ at time
+point $t$.  We denote this probability as $p_{i,j,t}$.  If we assume
+independence across events $i$ infecting $j$ and $i'$ infecting $j$,
+the probability of $j$ becoming infected at time $t$ is
+#+BEGIN_LaTeX
   \begin{equation*}
-    - \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
+    P(X_{j,t} = 1 | X_{\cdot,t}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
+    X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
   \end{equation*}
-#+end_latex
-Set this equation equal to $\log(0.5)$ and solve for $z$.
+#+END_LaTeX
+
+To define $p_{i,j,t}$ we use a form of the gravity model.
+#+BEGIN_LaTeX
+  \begin{equation*}
+    \logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
+    - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta \tau_i 
+    - \rho A_{j,t-1} - \gamma A_{i,t-1}
+  \end{equation*}
+#+END_LaTeX
+
+For model estimation, we use a Bayesian framework.  The priors on the
+parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
+N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$, $\rho
+\sim N(0,1)$, $\gamma \sim N(0,1)$.
+
+
+** Model fit diagnostics
+
+* Structure generation
 
 ** Structures
 
@@ -116,10 +113,10 @@ E_{i,j} <= E_{i,[k]} \rbrace$.  Now, the adjacency matrix is defined
 as $A_{i,j} = 1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
 
 
-#+caption: A random network with 25 locations
+#+caption: A random network with 50 locations
 #+name: fig:rand25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/rand25.pdf]]
+[[./data/toy/randSample.pdf]]
 
 
 
@@ -177,10 +174,10 @@ To define the coordinates for each location, first set $C_{i} =
 \lbrace i,0 \rbrace$ for $i = 1,\ldots,m_N$.  Then for each 
 
 
-#+caption: The starred alleyway network with 25 locations
+#+caption: The starred alleyway network with 50 locations
 #+name: fig:alley25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/alley25.pdf]]
+[[./data/toy/alleySample.pdf]]
 
 
 
@@ -219,10 +216,10 @@ To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
 
 
 
-#+caption: The ring network with 25 locations
+#+caption: The ring network with 50 locations
 #+name: fig:ring25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/ring25.pdf]]
+[[./data/toy/ringSample.pdf]]
 
 
 
@@ -248,10 +245,10 @@ Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } N_2), \lfloor
 i/N_2 \rfloor \rbrace$.  The adjacency matrix is defined as $A_{i,j} =
 1$ if $\|C_i - C_j\| = 1$.
 
-#+caption: The grid network with 25 locations
+#+caption: The grid network with 50 locations
 #+name: fig:grid25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/grid25.pdf]]
+[[./data/toy/gridSample.pdf]]
 
 
 
@@ -298,12 +295,26 @@ grid to the random network.  Then set $A_{i_{G_2},j_R} =
 A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
 \Lambda_{R_2}$ to connect the second grid to the random network.
 
+Now that the adjacency marix is defined, we need to finish the
+network.  The last step is scaling and adjusting the coordinates from
+the three networks.  We define this as an ordered list of operations.
+#+BEGIN_LaTeX
+  \begin{enumerate}
+    \item For $i=1,\ldots,N_R$: $C_{i_{R}} = C_{i_{R}}/2$.
+    \item Define $S = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
+    \item For $i=1,\ldots,N_R$: $C_{i_{R},1} = C_{i_{R},1} -
+    \min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + S$
+    \item For $i=1,\ldots,N_G$:
+    $C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
+    C_{j_{R},1} + S$.
+  \end{enumerate}
+#+END_LaTeX
 
 
-#+caption: The bowtie network with 25 locations
+#+caption: The bowtie network with 50 locations
 #+name: fig:bowtie25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/bowtie25.pdf]]
+[[./data/toy/bowtieSample.pdf]]
 
 
 *** Scalefree
@@ -333,7 +344,49 @@ Given the network, we use the Fruchterman-Reingold algorithm to
 position the nodes in a two dimensional plane.
 
 
-#+caption: The scalefree network with 25 locations
+#+caption: The scalefree network with 50 locations
 #+name: fig:scalefree25
 #+attr_latex: :width 0.5\textwidth
-[[./data/toy/scalefree25.pdf]]
+[[./data/toy/scalefreeSample.pdf]]
+
+
+
+
+** Covariates
+
+Define $X$ to be a $n \times p$ centered and scaled covariate matrix.
+The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
+$\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
+$\widetilde{C}$ are the centered and scaled coordinates.  The
+covariance matrix has the structure $\Sigma_{ip + s, jp + t} =
+\rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
+individual covariates are $1$ and the correlation decays as $E_{i,j}$
+increases and as $|s-t|$ increases.
+
+We need the mass of each individual node to compute the gravity term
+in the gravity model.  In the case of White-Nose Syndrome, the mass is
+the number of caves.  Arbitrarily set the first covariate to be the
+mass of the node.  Define $M_i = \lfloor X_{i,1} - X_{[1],1} \rfloor +
+1$ to be the mass of location $i$.
+
+
+** Network distance
+
+In order for the structure of the network to have a strong impact on
+the disease spread, we define distance as the geodesic distance raised
+to a power.  The distance between adjacent nodes ($i$ and $j$ such
+that $A_{i,j} = 1$) is defined to be $1$.  For non-adjacent nodes, the
+distance is the number of edges along the shortest path raised to a
+power.  To determine the appropriate power, let $p^{(1)}_{i,j}$ be the
+hypothetical probability node $i$ infects node $j$ where $i$ and $j$
+have geodesic distance $1$.  Let $p^{(2)}_{i,j}$ be the hypothetical
+probability if infection if $i$ and $j$ have geodesic distance $2$.
+For their mass, use the mean mass of the network.  The log odds-ratio
+is equal to
+#+begin_latex
+  \begin{equation*}
+    - \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
+  \end{equation*}
+#+end_latex
+Set this equation equal to $\log(0.5)$ and solve for $z$.
+
