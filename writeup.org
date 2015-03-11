@@ -64,6 +64,18 @@
 
 * Notation
 
+Each location $i \in \mathcal{L}$ lies in a $R^2$ at coordinate pair
+$C_i$.  The matrix $\Omega$ is a binary matrix indicating adjacent
+locations.  For any two locations $i$ and $j$, $\Omega_{i,j} = 1$ if
+location $j$ is adjacent to location $i$.  All networks defined will
+be undirected thus $\Omega_{i,j} = \Omega_{j,i}$ for all $i,j$.  The
+adjacency matrix is the defining component of the network.  For some
+of the networks, the adjacency matrix can be defined without knowing
+the coordinate pairs, but for other networks the coordinate pairs are
+required to generate the adjacency matrix.  Regardless of the network,
+we outline every step to generate the network in its entirety.
+
+
 * System dynamics model
 
 ** Gravity model
@@ -84,13 +96,18 @@ To define $p_{i,j,t}$ we use a form of the gravity model.
 #+BEGIN_LaTeX
   \begin{equation*}
     \logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
-    - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g(\tau_{i,t})
+    - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g_j(\tau_{i,t})
     - \rho A_{j,t-1} - \gamma A_{i,t-1}
   \end{equation*}
 #+END_LaTeX
 where $\tau_{i,t} = \sum_{t' = 0}^t X_{i,t'}$ is the number of time
 points $i$ has been infected.  We compare different forms of
-$g(\cdot)$ discussed later.
+$g_j(\cdot)$ discussed later.  The name of the model comes from
+$d_{i,j}/(c_i,c_j)^\nu$ which is known as the gravity term.  The
+effect of distance between two locations is diminished if the number
+of caves in the two locations is large.  We assume as the number of
+caves increases, so does the number of bats effectively decreasing the
+effect of distance.
 
 For model estimation, we use a Bayesian framework.  The priors on the
 parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
