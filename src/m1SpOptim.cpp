@@ -6,14 +6,14 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
 
   C = 2.0;
 
-  t = 0.3;
+  t = 2.0;
 
-  ell = 1.0;
+  ell = 1.25;
 
   muMin = 0.1;
 
-  A = 30;
-  B = 1;
+  A = 50;
+  B = 10;
 
   tune = 1;
 }
@@ -72,8 +72,8 @@ M1SpOptim<S,A,M,MP>::M1SpOptim(){
 
 template <class S, class A, class M, class MP>
 void M1SpOptim<S,A,M,MP>::reset(){
-  tp.A = 30;
-  tp.B = 1;
+  tp.A = 50;
+  tp.B = 10;
 }
 
 

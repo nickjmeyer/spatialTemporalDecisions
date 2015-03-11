@@ -144,8 +144,6 @@ int main(int argc, char ** argv){
 
   typedef OptimRunnerNS<S,AR,SPO> SPR;
 
-  typedef FitOnlyRunner<S,AR> FR;
-
   S s;
   s.modelGen.fitType = MLE;  // for speed
   s.modelEst.fitType = MLE;  // for speed
@@ -157,11 +155,9 @@ int main(int argc, char ** argv){
   
   SPR spr;
 
-  FR fr;
-
   
-  // this is an experiment done after tuning, so we know the best
-  // values for the grid 100
+  // this is an experiment done after tuning on grid 100, so we know
+  // good values for the grid 100
   spo.tp.tune = 0;
 
   double value;
