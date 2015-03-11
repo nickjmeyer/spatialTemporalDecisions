@@ -1,4 +1,4 @@
-% Created 2015-03-11 Wed 15:38
+% Created 2015-03-11 Wed 16:33
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -46,7 +46,7 @@ locations.  For any two locations $i$ and $j$, $\Omega_{i,j} = 1$ if
 location $j$ is adjacent to location $i$.  We define the network such
 that locations are adjacenty to themselves, $\Omega_{i,i} = 1$ for all
 $i$.  All networks defined will be undirected thus $\Omega_{i,j} =
-\Omega_{j,i}$ for all $i,j$.  The adjacency matrix is the defining
+  \Omega_{j,i}$ for all $i,j$.  The adjacency matrix is the defining
 component of the network.  For some of the networks, the adjacency
 matrix can be defined without knowing the coordinate pairs, but for
 other networks the coordinate pairs are required to generate the
@@ -78,15 +78,15 @@ point $t$.  We denote this probability as $p_{i,j,t}$.  If we assume
 independence across events $i$ infecting $j$ and $i'$ infecting $j$,
 the probability of $j$ becoming infected at time $t$ is
 \begin{equation*}
-  P(X_{j,t} = 1 | X_{\cdot,t-1}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
-  X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
+P(X_{j,t} = 1 | X_{\cdot,t-1}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
+X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
 \end{equation*}
 
 To define $p_{i,j,t}$ we use a form of the gravity model.
 \begin{equation*}
-  \logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
-  - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g_j(\tau_{i,t})
-  - \rho A_{j,t-1} - \gamma A_{i,t-1}
+\logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
+- \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g_j(\tau_{i,t})
+- \rho A_{j,t-1} - \gamma A_{i,t-1}
 \end{equation*}
 where $\tau_{i,t} = \sum_{t' = 0}^t X_{i,t'}$ is the number of time
 points $i$ has been infected.  We compare different forms of
@@ -102,7 +102,7 @@ hibernating bat species.
 
 For model estimation, we use a Bayesian framework.  The priors on the
 parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
-N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$.  The
+   N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$.  The
 priors for $\rho$ and $\gamma$ will be specified later.  For WNS, the
 observed data does not include information about treatments.  This
 requires an ad-hoc selection of the true treatment effects.  The prior
@@ -115,10 +115,10 @@ estimate the true effect.
 When estimating the posterior distributions, we compared multiple
 forms for $g(\cdot)$.
 \begin{itemize}
-  \item ``zero'': $g_j(x) = 0$
-  \item ``linear'': $g_j(x) = x - 1$
-  \item ``exp'': $g_j(x) = exp(x - 1) - 1$
-  \item ``exp\_caves'': $g_j(x) = exp(\frac{\max_k c_k+1}{c_j + 1}(x - 1)) - 1$
+\item ``zero'': $g_j(x) = 0$
+\item ``linear'': $g_j(x) = x - 1$
+\item ``exp'': $g_j(x) = exp(x - 1) - 1$
+\item ``exp\_caves'': $g_j(x) = exp(\frac{\max_k c_k+1}{c_j + 1}(x - 1)) - 1$
 \end{itemize}
 
 
@@ -126,8 +126,8 @@ The table below shows the Bayesian P-value for each of the four
 transformations above.  Using an exponential transformation greatly
 improves the estimated p-values.  Going forward, we choose the
 ``exp\(\_\)caves'' transformation as providing the best fit.
-% latex table generated in R 3.1.3 by xtable 1.7-4 package
-% Wed Mar 11 15:38:17 2015
+ % latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Wed Mar 11 16:33:16 2015
 \begin{table}[ht]
 \centering
 \begin{tabular}{rrrrr}
@@ -156,7 +156,9 @@ Column Mean & 0.2864 & 0.5186 & 0.4878 & 0.4723 \\
   Column SD & 0.3794 & 0.1616 & 0.1705 & 0.1508 \\ 
    \hline
 \end{tabular}
+\caption{Bayesian p-values for postulated models.} 
 \end{table}
+
 
 
 \section{Structure generation}
@@ -172,9 +174,9 @@ For each location $i=1,\ldots,L$, $C_i \sim \lbrace U(0,1)\rbrace^2$.
 To determine which locations are connected, we must first define some
 notation.  Let $E_{i,j} = \|C_{i} - C_{j}\|_2$.  The set of $k$ nearby
 locations to location $i$ is $N^{(k)}_i = \lbrace j : E_{i,j} \le
-E_{i,[k+1]} \rbrace$.  Note the detail $[k+1]$ which is a consequence
+    E_{i,[k+1]} \rbrace$.  Note the detail $[k+1]$ which is a consequence
 of $E_{i,i} = 0$.  The adjacency matrix is defined as $\Omega_{i,j} =
-1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
+    1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
 
 
 \begin{figure}[htb]
@@ -190,15 +192,15 @@ of $E_{i,i} = 0$.  The adjacency matrix is defined as $\Omega_{i,j} =
 
 For a starred alley of size $L$, define
 \begin{equation*}
-  m_L= \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le L
-    \rbrace }
+m_L= \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le L
+\rbrace }
 \end{equation*}
 where
 \begin{equation*}
-  f(m) = m + \left\lceil \frac{m}{2}
-  \right\rceil 
-  \left(\left\lceil \frac{m}{2} \right\rceil
-    - (m \text{ mod } 2) + 1 \right).
+f(m) = m + \left\lceil \frac{m}{2}
+\right\rceil 
+\left(\left\lceil \frac{m}{2} \right\rceil
+- (m \text{ mod } 2) + 1 \right).
 \end{equation*}
 
 Let locations $1,\ldots,m_L$ index the locations on the main
@@ -206,15 +208,15 @@ horizontal line.  Next define disjoint sets of locations
 $N_i$ for \$i = 1,\ldots,m$_{\text{L}}$.  The cardinality for
 $N_i$ is defined as
 \begin{equation*}
-  | N_i | = \left\lfloor \frac{i}{2} \right\rfloor +
-  \mathds{1}_{\lbrace(m_L - i) < (L - f(m_L))\rbrace}.
+| N_i | = \left\lfloor \frac{i}{2} \right\rfloor +
+\mathds{1}_{\lbrace(m_L - i) < (L - f(m_L))\rbrace}.
 \end{equation*}
 For each location $j \in N_i$ set $\Omega_{i,j} = \Omega_{j,i} = 1$.
 For the first $m_L$ locations, $\Omega_{i,i+1} = \Omega_{i+1,1} = 1$ for
 $i = 1,\ldots,m_L$.
 
 To define the coordinates for each location, first set $C_{i} =
-\lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each 
+    \lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each 
 
 
 \begin{figure}[htb]
@@ -229,28 +231,28 @@ To define the coordinates for each location, first set $C_{i} =
 \label{sec-3-1-3}
 
 Divide the number of locations $L$ into two groups.  Define $L_1 = L -
-L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta = 2\pi/(L_1+1)$
+    L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta = 2\pi/(L_1+1)$
 and $r = 1/(2\sin(\theta/2))$.  Place location $1$ at $C_1 = \lbrace
-0,r \rbrace$.  Given location $i-1$ at $C_{i-1}$, place location $i$
+    0,r \rbrace$.  Given location $i-1$ at $C_{i-1}$, place location $i$
 at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,L_1$ and
 \begin{equation*}
-  rot(\theta) = \left[
-    \begin{matrix}
-      \cos(\theta) & -\sin(\theta)\\
-      \sin(\theta) & \cos(\theta)
-    \end{matrix}
-  \right]
+rot(\theta) = \left[
+\begin{matrix}
+\cos(\theta) & -\sin(\theta)\\
+\sin(\theta) & \cos(\theta)
+\end{matrix}
+\right]
 \end{equation*}
 Note that $C_{1} \cdot C_{L_1} = \|C_{1}\| \|C_{L_1}\| \cos(2\theta)$.
 
 With the first $L_1$ locations defined, we need to define the last
 $L_2$ locations.  Place location $L_1 + i$ at $C_{L_1 + i} =
-rot(\theta/L_2)C_{L_1 + i - 1}$ for $i = 1,\ldots,L_2$.  Note that
+    rot(\theta/L_2)C_{L_1 + i - 1}$ for $i = 1,\ldots,L_2$.  Note that
 $C_{L} \cdot C_{L_1} = \|C_{L}\| \|C_{L_1}\| \cos(\theta)$ and $C_{1}
-\cdot C_{L} = \|C_{1}\| \|C_{L}\| \cos(\theta)$.
+    \cdot C_{L} = \|C_{1}\| \|C_{L}\| \cos(\theta)$.
 
 To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
-1,\ldots,L-1$ and $A_{1,L} = A_{L,1} = 1$.
+    1,\ldots,L-1$ and $A_{1,L} = A_{L,1} = 1$.
 
 
 
@@ -269,18 +271,18 @@ To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
 First define $L_1$ to be the number of columns and $L_2$ to be the
 number of rows.  These values are defined by
 \begin{equation*}
-  \lbrace L_1, L_2 \rbrace = \underset{
-    \begin{subarray}{c}
-      \ell_1,\ell_2 > 0\\
-      \ell_1\ell_2 = L\\
-      \ell_1 \le \ell_2
-    \end{subarray}
-  }{\arg\min} \quad |\ell_1 - \ell_2|
+\lbrace L_1, L_2 \rbrace = \underset{
+\begin{subarray}{c}
+\ell_1,\ell_2 > 0\\
+\ell_1\ell_2 = L\\
+\ell_1 \le \ell_2
+\end{subarray}
+}{\arg\min} \quad |\ell_1 - \ell_2|
 \end{equation*}
 
 Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } L_2), \lfloor
-i/L_2 \rfloor \rbrace$.  The adjacency matrix is defined as $\Omega_{i,j} =
-1$ if $\|C_i - C_j\| = 1$.
+    i/L_2 \rfloor \rbrace$.  The adjacency matrix is defined as $\Omega_{i,j} =
+    1$ if $\|C_i - C_j\| = 1$.
 
 \begin{figure}[htb]
 \centering
@@ -299,7 +301,7 @@ the random network and into the other grid.
 
 For a bowtie network of size $L$, create one random network of size
 $L_R = \lceil 0.1 L \rceil + ((L - \lceil 0.1 L \rceil) \text{ mod }
-2)$ and two grid networks of size $L_G = (L - L_R)/2$.  Let $i_{R}$ be
+    2)$ and two grid networks of size $L_G = (L - L_R)/2$.  Let $i_{R}$ be
 the $i^{th}$ location in the random network and $i_{G_j}$ be the
 $i^{th}$ location in the $j^{th}$ grid.
 
@@ -307,40 +309,40 @@ To connect the three networks, we need to first identify which nodes
 in each network will connect to one of the other two networks.  We
 will begin with the first grid.  First, define $L_1$ and $L_2$ to be
 defined in the same way as in the grid description.  Let $M_{G} =
-\lceil L_2/3 \rceil$ be the number of points to connect from the grid
+    \lceil L_2/3 \rceil$ be the number of points to connect from the grid
 networks and $M_{R} = \lceil L_R/5 \rceil$.  Define the following four
 sets of locations
 \begin{equation*}
-  \begin{array}{rcl}
-    \Lambda_{G_1} & = & \lbrace L_G -
-                        2L_1M_G + kL_1 : k = 1,\ldots,M_G\rbrace\\
-    \Lambda_{G_2} & = & \lbrace L_G -
-                        2L_1M_G + 1 + (k-1)L_1 : k =
-                        1,\ldots,M_G\rbrace\\
-    \Lambda_{R_1} & = & \lbrace i : C_{i_R,1} \le C_{[M_R]_{R},1} \rbrace\\
-    \Lambda_{R_2} & = & \lbrace i : C_{i_R,1} \ge C_{[L_R - M_R + 1]_{R},1} \rbrace.
-  \end{array}
+\begin{array}{rcl}
+\Lambda_{G_1} & = & \lbrace L_G -
+2L_1M_G + kL_1 : k = 1,\ldots,M_G\rbrace\\
+\Lambda_{G_2} & = & \lbrace L_G -
+2L_1M_G + 1 + (k-1)L_1 : k =
+1,\ldots,M_G\rbrace\\
+\Lambda_{R_1} & = & \lbrace i : C_{i_R,1} \le C_{[M_R]_{R},1} \rbrace\\
+\Lambda_{R_2} & = & \lbrace i : C_{i_R,1} \ge C_{[L_R - M_R + 1]_{R},1} \rbrace.
+\end{array}
 \end{equation*}
 
 To define the adjacency matrix, combine the adjacency matrices from
 the three separate networks as a block diagonal matrix.  To define the
 additional edges, set $\Omega_{i_{G_1},j_R} = \Omega_{j_R,i_{G_1}} =
-1$ for all $i \in \Lambda_{G_1}$ and $j \in \Lambda_{R_1}$ to connect
+    1$ for all $i \in \Lambda_{G_1}$ and $j \in \Lambda_{R_1}$ to connect
 the first grid to the random network.  Then set $\Omega_{i_{G_2},j_R}
-= A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
-\Lambda_{R_2}$ to connect the second grid to the random network.
+    = A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
+    \Lambda_{R_2}$ to connect the second grid to the random network.
 
 Now that the adjacency marix is defined, we need to finish the
 network.  The last step is scaling and adjusting the coordinates from
 the three networks.  We define this as an ordered list of operations.
 \begin{enumerate}
-  \item For $i=1,\ldots,L_R$: $C_{i_{R}} = C_{i_{R}}/2$.
-  \item Define $K = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
-  \item For $i=1,\ldots,L_R$: $C_{i_{R},1} = C_{i_{R},1} -
-  \min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + K$
-  \item For $i=1,\ldots,L_G$:
-  $C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
-  C_{j_{R},1} + K$.
+\item For $i=1,\ldots,L_R$: $C_{i_{R}} = C_{i_{R}}/2$.
+\item Define $K = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
+\item For $i=1,\ldots,L_R$: $C_{i_{R},1} = C_{i_{R},1} -
+\min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + K$
+\item For $i=1,\ldots,L_G$:
+$C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
+C_{j_{R},1} + K$.
 \end{enumerate}
 
 
@@ -365,10 +367,10 @@ induction.  Define $\Omega^{(i)}$ to be the adjacency network on
 iteration $i = 1,\ldots,L$.  A network of size $1$ is the trivial
 network.  Given a network of size $N-1$, place the additonal $N^{th}$
 location adjacent to an existing location $i \in \lbrace
-1,\ldots,N-1\rbrace$ with probability
+    1,\ldots,N-1\rbrace$ with probability
 \begin{equation*}
-  P(\Omega^{(N)}_{N,i} = 1 | \Omega^{(N-1)}) = 
-  \frac{\sum_{j!=i} \Omega^{(N-1)}_{j,i}}{\sum_{j,k \;:\; j > k} \Omega^{(N-1)}_{j,k}}.
+P(\Omega^{(N)}_{N,i} = 1 | \Omega^{(N-1)}) = 
+\frac{\sum_{j!=i} \Omega^{(N-1)}_{j,i}}{\sum_{j,k \;:\; j > k} \Omega^{(N-1)}_{j,k}}.
 \end{equation*}
 
 Generating a scale-free network in this fashion results in a
@@ -397,7 +399,7 @@ The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
 $\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
 $\widetilde{C}$ are the centered and scaled coordinates.  The
 covariance matrix has the structure $\Sigma_{ip + s, jp + t} =
-\rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
+   \rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
 individual covariates are $1$ and the correlation decays as $E_{i,j}$
 increases and as $|s-t|$ increases.
 
@@ -405,7 +407,7 @@ We need the mass of each individual node to compute the gravity term
 in the gravity model.  In the case of White-Nose Syndrome, the mass is
 the number of caves.  Arbitrarily set the first covariate to be the
 mass of the node.  Define $M_i = \lfloor X_{i,1} - X_{[1],1} \rfloor +
-1$ to be the mass of location $i$.
+   1$ to be the mass of location $i$.
 
 
 \subsection{Network distance}
@@ -423,7 +425,7 @@ probability if infection if $i$ and $j$ have geodesic distance $2$.
 For their mass, use the mean mass of the network.  The log odds-ratio
 is equal to
 \begin{equation*}
-  - \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
+- \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
 \end{equation*}
 Set this equation equal to $\log(0.5)$ and solve for $z$.
 
@@ -431,6 +433,28 @@ Set this equation equal to $\log(0.5)$ and solve for $z$.
 \section{Simulations}
 \label{sec-4}
 
+The simulations begin at time point $0$ and end at $T=15$.  Observed
+data from WNS has data from $8$ years.  When simulating the spread
+of the disease under intervention, treatments are not given until
+time point $8$ to mimic the observed data.
+
+At time point $8$, we estimate the posterior distributions of the
+indexing parameters in the system dynamics model.  Note that there
+are no treatments yet in the data, so the posterior for the
+treatment effects are simply the prior.  Using the estimated
+posterior distributions, the simultaneous perturbation algorithm is
+run to maximize the posterior mean reward at time $T$.  The reward
+funtion at time $t$ is the current proportion of locations infected,
+$Y^t(\pi) \triangleq \frac{1}{L}\sum_i X_{i,t}$.
+
+At $t = 9$, the process is the same with one addition.  Since the
+data now include a year of treatments, we run the tuning algorithm
+for simultaneous perturbation to adaptively improve the performance.
+Time points $t=10,\ldots,T$ are the same as $8$.
+
+The prior for the treatment effects are set to be optimistic.  They
+are normal with mean $4$ times as large as the true effect and
+variance $1$.
 
 
 \section{Results}
@@ -438,6 +462,68 @@ Set this equation equal to $\log(0.5)$ and solve for $z$.
 
 \subsection{Simultaneous perturbation experiment}
 \label{sec-5-1}
+
+To calibrate the simultaneous perturbation algorithm, we ran a full
+factorial experiment over the following levels.
+\begin{itemize}
+  \item $A \in \lbrace 30, 50 \rbrace $
+  \item $B \in \lbrace 1, 10 \rbrace $
+  \item $C \in \lbrace 2, 5 \rbrace $
+  \item $L \in \lbrace 1, 1.25 \rbrace $
+  \item $T \in \lbrace 1, 2 \rbrace $
+\end{itemize}
+
+For each of the $32$ combinations, the table below shows the mean and
+standard deviation of the value across all replications of that factor
+combination.  The results are sorted by the mean value.
+
+ % latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Wed Mar 11 16:33:17 2015
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrcccccr}
+  \hline
+valueMean & valueSd & timeMean & Afac & Bfac & Cfac & Tfac & Lfac & combo \\ 
+  \hline
+0.554 & 0.016 & 2.757 & + & - & - & + & + & 12 \\ 
+  0.560 & 0.021 & 2.741 & - & + & - & + & + & 20 \\ 
+  0.565 & 0.030 & 2.700 & - & - & - & + & + & 28 \\ 
+  0.565 & 0.017 & 2.789 & - & + & + & + & + & 16 \\ 
+  0.568 & 0.019 & 2.817 & + & + & - & + & + & 4 \\ 
+  0.569 & 0.009 & 2.746 & - & - & + & + & + & 24 \\ 
+  0.574 & 0.014 & 0.909 & - & + & - & + & - & 21 \\ 
+  0.574 & 0.013 & 0.920 & - & + & + & + & - & 17 \\ 
+  0.576 & 0.017 & 0.915 & + & + & - & + & - & 5 \\ 
+  0.578 & 0.029 & 2.848 & + & + & + & + & + & 0 \\ 
+  0.578 & 0.014 & 0.931 & + & - & + & + & - & 9 \\ 
+  0.581 & 0.032 & 0.898 & - & - & - & + & - & 29 \\ 
+  0.581 & 0.017 & 2.825 & + & - & + & + & + & 8 \\ 
+  0.584 & 0.014 & 0.917 & - & - & + & + & - & 25 \\ 
+  0.584 & 0.019 & 0.920 & + & - & - & + & - & 13 \\ 
+  0.587 & 0.022 & 0.942 & + & + & + & + & - & 1 \\ 
+  0.631 & 0.023 & 0.791 & - & + & - & - & - & 23 \\ 
+  0.649 & 0.026 & 0.789 & + & - & - & - & - & 15 \\ 
+  0.650 & 0.012 & 0.821 & + & + & - & - & - & 7 \\ 
+  0.658 & 0.017 & 0.811 & - & - & - & - & - & 31 \\ 
+  0.662 & 0.011 & 0.729 & - & + & + & - & - & 19 \\ 
+  0.664 & 0.029 & 0.773 & + & + & + & - & - & 3 \\ 
+  0.667 & 0.016 & 0.721 & - & - & + & - & - & 27 \\ 
+  0.667 & 0.015 & 0.740 & + & - & + & - & - & 11 \\ 
+  0.668 & 0.030 & 2.072 & - & - & - & - & + & 30 \\ 
+  0.670 & 0.040 & 1.964 & - & - & + & - & + & 26 \\ 
+  0.671 & 0.028 & 2.124 & - & + & + & - & + & 18 \\ 
+  0.675 & 0.018 & 2.040 & + & - & - & - & + & 14 \\ 
+  0.686 & 0.024 & 2.094 & + & + & + & - & + & 2 \\ 
+  0.688 & 0.025 & 1.973 & + & - & + & - & + & 10 \\ 
+  0.700 & 0.020 & 2.108 & + & + & - & - & + & 6 \\ 
+  0.710 & 0.024 & 2.078 & - & + & - & - & + & 22 \\ 
+   \hline
+\end{tabular}
+\caption{Results from the simultaneous perturbation experiment.} 
+\end{table}
+
+
+
 
 \subsection{Agent jitter and num chunks experiment}
 \label{sec-5-2}
