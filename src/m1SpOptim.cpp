@@ -19,10 +19,15 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
 }
 
 std::vector<double> M1SpOptimTunePar::getPar() const{
-  return std::vector<double> (0);
+  std::vector<double> par = {A,B};
+  return par;
 }
 
 void M1SpOptimTunePar::putPar(const std::vector<double> & par){
+  std::cout << "In M1SpOptimTunePar: "
+	    << "putPar is not defined"
+	    << std::endl;
+  throw(1);
 }
 
 

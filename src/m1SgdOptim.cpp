@@ -20,10 +20,18 @@ M1SgdOptimTunePar::M1SgdOptimTunePar(){
 }
 
 std::vector<double> M1SgdOptimTunePar::getPar() const{
+  std::cout << "In M1SgdOptimTunePar: "
+	    << "getPar is not defined"
+	    << std::endl;
+  throw(1);
   return std::vector<double> (0);
 }
 
 void M1SgdOptimTunePar::putPar(const std::vector<double> & par){
+  std::cout << "In M1SgdOptimTunePar: "
+	    << "putPar is not defined"
+	    << std::endl;
+  throw(1);
 }
 
 

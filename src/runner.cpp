@@ -497,7 +497,7 @@ OptimRunner<S,A,Optim>
 	valueAll.at(r).push_back(system.value());
       }
     }
-    // end rep r
+    // end rep r...time to write results to disk
 
 #pragma omp critical
     {
@@ -522,6 +522,13 @@ OptimRunner<S,A,Optim>
     njm::toFile(njm::toString(weights,"\n","")
 		,njm::sett.datExt(agent.name+"_"+optim.name+
 				  "_weights_"+
+				  njm::toString(r,"",0,0)
+				  +"_",".txt"));
+
+    // write optim parameters to file
+    njm::toFile(njm::toString(optim.tp.getPar()," ","\n")
+		,njm::sett.datExt(agent.name+"_"+optim.name+
+				  "_tunePar_"+
 				  njm::toString(r,"",0,0)
 				  +"_",".txt"));
 

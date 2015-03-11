@@ -1,4 +1,4 @@
-% Created 2015-03-10 Tue 21:28
+% Created 2015-03-11 Wed 15:38
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -43,13 +43,27 @@
 Each location $i \in \mathcal{L}$ lies in a $R^2$ at coordinate pair
 $C_i$.  The matrix $\Omega$ is a binary matrix indicating adjacent
 locations.  For any two locations $i$ and $j$, $\Omega_{i,j} = 1$ if
-location $j$ is adjacent to location $i$.  All networks defined will
-be undirected thus $\Omega_{i,j} = \Omega_{j,i}$ for all $i,j$.  The
-adjacency matrix is the defining component of the network.  For some
-of the networks, the adjacency matrix can be defined without knowing
-the coordinate pairs, but for other networks the coordinate pairs are
-required to generate the adjacency matrix.  Regardless of the network,
-we outline every step to generate the network in its entirety.
+location $j$ is adjacent to location $i$.  We define the network such
+that locations are adjacenty to themselves, $\Omega_{i,i} = 1$ for all
+$i$.  All networks defined will be undirected thus $\Omega_{i,j} =
+\Omega_{j,i}$ for all $i,j$.  The adjacency matrix is the defining
+component of the network.  For some of the networks, the adjacency
+matrix can be defined without knowing the coordinate pairs, but for
+other networks the coordinate pairs are required to generate the
+adjacency matrix.  Regardless of the network, we outline every step to
+generate the network in its entirety.
+
+When defining networks, some additonal notation may be added to keep
+the process clear and concise.
+
+To model the spread of the disease, we assume that once a location
+becomes infected, it remains infected thereafter.  The infection
+status for location $i$ at time $t$ is $X_{i,t} = 1$ if infected and
+$X_{i,t} = 0$ otherwise.  Thus $X_{i,t} \ge X_{i,t'}$ for all $t > t'$.
+
+Let the subscript operator $[\cdot]$ denote the usual order
+statistics; let $\lfloor \cdot \rfloor$ denote the floor operator; let
+$\lceil \cdot \rceil$ denote the ceiling operator.
 
 
 \section{System dynamics model}
@@ -64,7 +78,7 @@ point $t$.  We denote this probability as $p_{i,j,t}$.  If we assume
 independence across events $i$ infecting $j$ and $i'$ infecting $j$,
 the probability of $j$ becoming infected at time $t$ is
 \begin{equation*}
-  P(X_{j,t} = 1 | X_{\cdot,t}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
+  P(X_{j,t} = 1 | X_{\cdot,t-1}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
   X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
 \end{equation*}
 
@@ -81,13 +95,19 @@ $d_{i,j}/(c_i,c_j)^\nu$ which is known as the gravity term.  The
 effect of distance between two locations is diminished if the number
 of caves in the two locations is large.  We assume as the number of
 caves increases, so does the number of bats effectively decreasing the
-effect of distance.
+effect of distance.  The vector $U_j$ is a vector of covariates as
+part of the state information.  These covariates include the number of
+caves, average winter length, area, species richness, and number of
+hibernating bat species.
 
 For model estimation, we use a Bayesian framework.  The priors on the
 parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
-N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$, $\rho
-\sim N(0,1)$, $\gamma \sim N(0,1)$.
-
+N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$.  The
+priors for $\rho$ and $\gamma$ will be specified later.  For WNS, the
+observed data does not include information about treatments.  This
+requires an ad-hoc selection of the true treatment effects.  The prior
+distributions during the simulations for these parameters will over
+estimate the true effect.
 
 \subsection{Model fit diagnostics}
 \label{sec-2-2}
@@ -95,11 +115,48 @@ N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$, $\rho
 When estimating the posterior distributions, we compared multiple
 forms for $g(\cdot)$.
 \begin{itemize}
-  \item $g_j(x) = 0$
-  \item $g_j(x) = x - 1$
-  \item $g_j(x) = exp(x - 1) - 1$
-  \item $g_j(x) = exp(\frac{\max_k c_k+1}{c_j + 1}(x - 1)) - 1$
+  \item ``zero'': $g_j(x) = 0$
+  \item ``linear'': $g_j(x) = x - 1$
+  \item ``exp'': $g_j(x) = exp(x - 1) - 1$
+  \item ``exp\_caves'': $g_j(x) = exp(\frac{\max_k c_k+1}{c_j + 1}(x - 1)) - 1$
 \end{itemize}
+
+
+The table below shows the Bayesian P-value for each of the four
+transformations above.  Using an exponential transformation greatly
+improves the estimated p-values.  Going forward, we choose the
+``exp\(\_\)caves'' transformation as providing the best fit.
+% latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Wed Mar 11 15:38:17 2015
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  & zero & linear & exp & exp\_caves \\ 
+  \hline
+n\_inf & 0.0044 & 0.6837 & 0.6604 & 0.6139 \\ 
+  n\_inf\_2007 & 0.0507 & 0.2654 & 0.2942 & 0.3209 \\ 
+  n\_inf\_2008 & 0.0000 & 0.4197 & 0.1263 & 0.1175 \\ 
+  n\_inf\_2009 & 0.0000 & 0.6249 & 0.3884 & 0.3037 \\ 
+  n\_inf\_2010 & 0.0001 & 0.6709 & 0.5682 & 0.4780 \\ 
+  n\_inf\_2011 & 0.0013 & 0.6819 & 0.6420 & 0.5804 \\ 
+  n\_inf\_2012 & 0.0234 & 0.6813 & 0.6710 & 0.6408 \\ 
+  n\_inf\_2013 & 0.1357 & 0.6098 & 0.6757 & 0.6557 \\ 
+  mean\_year & 0.7744 & 0.3494 & 0.6573 & 0.6276 \\ 
+  mean\_long & 0.9122 & 0.3176 & 0.3735 & 0.4526 \\ 
+  mean\_lat & 0.9260 & 0.3189 & 0.4078 & 0.5153 \\ 
+  mean\_dist\_from\_start & 0.0484 & 0.6816 & 0.6064 & 0.5132 \\ 
+  min\_long & 0.8960 & 0.3169 & 0.3612 & 0.4193 \\ 
+  min\_lat & 0.8946 & 0.3170 & 0.3432 & 0.3931 \\ 
+  max\_long & 0.0017 & 0.5111 & 0.2298 & 0.2070 \\ 
+  max\_lat & 0.0744 & 0.6827 & 0.6384 & 0.5913 \\ 
+  max\_dist\_from\_start & 0.1256 & 0.6834 & 0.6495 & 0.5994 \\ 
+   \hline
+Column Mean & 0.2864 & 0.5186 & 0.4878 & 0.4723 \\ 
+  Column Median & 0.0625 & 0.5642 & 0.5280 & 0.4956 \\ 
+  Column SD & 0.3794 & 0.1616 & 0.1705 & 0.1508 \\ 
+   \hline
+\end{tabular}
+\end{table}
 
 
 \section{Structure generation}
@@ -111,24 +168,19 @@ forms for $g(\cdot)$.
 \subsubsection{Random Network}
 \label{sec-3-1-1}
 
-The random network generates location coordinates uniformly on $[0,1]
-\times [0,1]$.  Let $C$ denote the set of coordinate pairs.  For any
-$i \in \lbrace 1,...,n \rbrace$, $C_{i} \in [0,1] \times [0,1]$.
-
-Let $A$ be the $n \times n$ adjacency matrix where $A_{i,j} = 1$ if
-locations $i$ and $j$ are adjacent and $A_{i,j} = 0$ otherwise.  To
-determine which locations are connected, we must first define some
-notation.  Let $E_{i,j} = \|C_{i} - C_{j}\|_2$ and $E_{i,[j]}$ denote
-the $j^{th}$ largest norm excluding $E_{i,i}$ which is zero.  The set
-of $k$ nearby locations to location $i$ is $N^{(k)}_i = \lbrace j :
-E_{i,j} <= E_{i,[k]} \rbrace$.  Now, the adjacency matrix is defined
-as $A_{i,j} = 1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
+For each location $i=1,\ldots,L$, $C_i \sim \lbrace U(0,1)\rbrace^2$.
+To determine which locations are connected, we must first define some
+notation.  Let $E_{i,j} = \|C_{i} - C_{j}\|_2$.  The set of $k$ nearby
+locations to location $i$ is $N^{(k)}_i = \lbrace j : E_{i,j} \le
+E_{i,[k+1]} \rbrace$.  Note the detail $[k+1]$ which is a consequence
+of $E_{i,i} = 0$.  The adjacency matrix is defined as $\Omega_{i,j} =
+1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/randSample.pdf}
-\caption{\label{fig:rand25}A random network with 50 locations}
+\caption{\label{fig:rand50}A random network with 50 locations}
 \end{figure}
 
 
@@ -136,19 +188,9 @@ as $A_{i,j} = 1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
 \subsubsection{Starred Alley}
 \label{sec-3-1-2}
 
-The starred alleyway was produced to incorporate the importance of
-network centrality metrics.  An example of a starred alleyway can be
-found in figure \ref{fig:alley25}.  By looking at the structure, the goal is
-to identify the locations along the main horizontal line.  If these
-locations are treated, it helps to contain the spread of the disease.
-
-Distances between nodes are not defined in the usual way.  For any
-node on the outer points, the distance to the closest node on the main
-horizontal line is $0.9$ instead of $1.0$.
-
-For a starred alley of size $N$, define
+For a starred alley of size $L$, define
 \begin{equation*}
-  m_N = \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le N
+  m_L= \underset{m > 0}{\arg\max} \; f(m) \mathds{1}_{\lbrace f(m) \le L
     \rbrace }
 \end{equation*}
 where
@@ -159,24 +201,26 @@ where
     - (m \text{ mod } 2) + 1 \right).
 \end{equation*}
 
-Let locations $1,\ldots,m_N$ index the locations on the main
+Let locations $1,\ldots,m_L$ index the locations on the main
 horizontal line.  Next define disjoint sets of locations
-$\mathcal{N}_i$ for $i = 1,\ldots,m_N$.  The cardinality for
-$\mathcal{N}_i$ is defined as
+$N_i$ for \$i = 1,\ldots,m$_{\text{L}}$.  The cardinality for
+$N_i$ is defined as
 \begin{equation*}
-  | \mathcal{N}_i | = \left\lfloor \frac{i}{2} \right\rfloor +
-  \mathds{1}_{\lbrace(m_N - i) < (N - f(m_N))\rbrace}.
+  | N_i | = \left\lfloor \frac{i}{2} \right\rfloor +
+  \mathds{1}_{\lbrace(m_L - i) < (L - f(m_L))\rbrace}.
 \end{equation*}
-For each location $j \in \mathcal{N}_i$ set $A_{i,j} = A_{j,i} = 1$.
+For each location $j \in N_i$ set $\Omega_{i,j} = \Omega_{j,i} = 1$.
+For the first $m_L$ locations, $\Omega_{i,i+1} = \Omega_{i+1,1} = 1$ for
+$i = 1,\ldots,m_L$.
 
 To define the coordinates for each location, first set $C_{i} =
-\lbrace i,0 \rbrace$ for $i = 1,\ldots,m_N$.  Then for each 
+\lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/alleySample.pdf}
-\caption{\label{fig:alley25}The starred alleyway network with 50 locations}
+\caption{\label{fig:alley50}The starred alleyway network with 50 locations}
 \end{figure}
 
 
@@ -184,16 +228,11 @@ To define the coordinates for each location, first set $C_{i} =
 \subsubsection{Ring}
 \label{sec-3-1-3}
 
-The ring is a simple circle of locations with a concetrated group in one
-section.  To form the ring, place the locations evenly on the circle
-then between one pair of locations insert more locations evenly.  An
-example can be seen in figure \ref{fig:ring25}.
-
-Divide the number of locations $N$ into two groups.  Define $N_1 = N -
-N_2$ where $N_2 = \lceil N*0.05 \rceil$.  Let $\theta = 2\pi/(N_1+1)$
+Divide the number of locations $L$ into two groups.  Define $L_1 = L -
+L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta = 2\pi/(L_1+1)$
 and $r = 1/(2\sin(\theta/2))$.  Place location $1$ at $C_1 = \lbrace
 0,r \rbrace$.  Given location $i-1$ at $C_{i-1}$, place location $i$
-at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,N_1$ and
+at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,L_1$ and
 \begin{equation*}
   rot(\theta) = \left[
     \begin{matrix}
@@ -202,23 +241,23 @@ at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,N_1$ and
     \end{matrix}
   \right]
 \end{equation*}
-Note that $C_{1} \cdot C_{N_1} = \|C_{1}\| \|C_{N_1}\| \cos(2\theta)$.
+Note that $C_{1} \cdot C_{L_1} = \|C_{1}\| \|C_{L_1}\| \cos(2\theta)$.
 
-With the first $N_1$ locations defined, we need to define the last
-$N_2$ locations.  Place location $N_1 + i$ at $C_{N_1 + i} =
-rot(\theta/N_2)C_{N_1 + i - 1}$ for $i = 1,\ldots,N_2$.  Note that
-$C_{N} \cdot C_{N_1} = \|C_{N}\| \|C_{N_1}\| \cos(\theta)$ and $C_{1}
-\cdot C_{N} = \|C_{1}\| \|C_{N}\| \cos(\theta)$.
+With the first $L_1$ locations defined, we need to define the last
+$L_2$ locations.  Place location $L_1 + i$ at $C_{L_1 + i} =
+rot(\theta/L_2)C_{L_1 + i - 1}$ for $i = 1,\ldots,L_2$.  Note that
+$C_{L} \cdot C_{L_1} = \|C_{L}\| \|C_{L_1}\| \cos(\theta)$ and $C_{1}
+\cdot C_{L} = \|C_{1}\| \|C_{L}\| \cos(\theta)$.
 
 To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
-1,\ldots,N-1$ and $A_{1,N} = A_{N,1} = 1$.
+1,\ldots,L-1$ and $A_{1,L} = A_{L,1} = 1$.
 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/ringSample.pdf}
-\caption{\label{fig:ring25}The ring network with 50 locations}
+\caption{\label{fig:ring50}The ring network with 50 locations}
 \end{figure}
 
 
@@ -227,27 +266,26 @@ To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
 \subsubsection{Grid}
 \label{sec-3-1-4}
 
-The grid is a checkerboard-like structure.  First define $N_1$ to be
-the number of columns and $N_2$ to be the number of rows.  These
-values are defined by
+First define $L_1$ to be the number of columns and $L_2$ to be the
+number of rows.  These values are defined by
 \begin{equation*}
-  \lbrace N_1, N_2 \rbrace = \underset{
+  \lbrace L_1, L_2 \rbrace = \underset{
     \begin{subarray}{c}
-      N_1,N_2 > 0\\
-      N_1N_2 = N\\
-      N_1 \le N_2
+      \ell_1,\ell_2 > 0\\
+      \ell_1\ell_2 = L\\
+      \ell_1 \le \ell_2
     \end{subarray}
-  }{\arg\min} \quad |N_1 - N_2|
+  }{\arg\min} \quad |\ell_1 - \ell_2|
 \end{equation*}
 
-Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } N_2), \lfloor
-i/N_2 \rfloor \rbrace$.  The adjacency matrix is defined as $A_{i,j} =
+Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } L_2), \lfloor
+i/L_2 \rfloor \rbrace$.  The adjacency matrix is defined as $\Omega_{i,j} =
 1$ if $\|C_i - C_j\| = 1$.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/gridSample.pdf}
-\caption{\label{fig:grid25}The grid network with 50 locations}
+\caption{\label{fig:grid50}The grid network with 50 locations}
 \end{figure}
 
 
@@ -259,59 +297,57 @@ The bowtie combines two grid networks with a random network in
 between.  Spread of the disease begins in one grid and travels through
 the random network and into the other grid.
 
-For a bowtie network of size $N$, create one random network of size
-$N_R = \lceil 0.1 N \rceil + ((N - \lceil 0.1 N \rceil) \text{ mod }
-2)$ and two grid networks of size $N_G = (N - N_R)/2$.
-
-Let $i_{R}$ be the $i^{th}$ location in the random network and
-$i_{G_j}$ be the $i^{th}$ location in the $j^{th}$ grid.n
+For a bowtie network of size $L$, create one random network of size
+$L_R = \lceil 0.1 L \rceil + ((L - \lceil 0.1 L \rceil) \text{ mod }
+2)$ and two grid networks of size $L_G = (L - L_R)/2$.  Let $i_{R}$ be
+the $i^{th}$ location in the random network and $i_{G_j}$ be the
+$i^{th}$ location in the $j^{th}$ grid.
 
 To connect the three networks, we need to first identify which nodes
 in each network will connect to one of the other two networks.  We
-will begin with the first grid.  First, define $N_1$ and $N_2$ to be
-defined in the same way as in the grid description.  Both grid
-networks are the same size, we do not need to distinguish between the
-two.  Let $M_{G} = \lceil N_2/3 \rceil$ be the number of points to
-connect from the grid networks.  Define the following four sets of locations
+will begin with the first grid.  First, define $L_1$ and $L_2$ to be
+defined in the same way as in the grid description.  Let $M_{G} =
+\lceil L_2/3 \rceil$ be the number of points to connect from the grid
+networks and $M_{R} = \lceil L_R/5 \rceil$.  Define the following four
+sets of locations
 \begin{equation*}
   \begin{array}{rcl}
-    \Lambda_{G_1} & = & \lbrace N_G -
-                        2N_1M_G + kN_1 : k = 1,\ldots,M_G\rbrace\\
-    \Lambda_{G_2} & = & \lbrace N_G -
-                        2N_1M_G + 1 + (k-1)N_1 : k =
+    \Lambda_{G_1} & = & \lbrace L_G -
+                        2L_1M_G + kL_1 : k = 1,\ldots,M_G\rbrace\\
+    \Lambda_{G_2} & = & \lbrace L_G -
+                        2L_1M_G + 1 + (k-1)L_1 : k =
                         1,\ldots,M_G\rbrace\\
-    \Lambda_{R_1} & = & \lbrace i : C_{i,1} \le C_{[M_R],1} \rbrace\\
-    \Lambda_{R_2} & = & \lbrace i : C_{i,1} \ge C_{[N_R - M_R + 1],1} \rbrace
+    \Lambda_{R_1} & = & \lbrace i : C_{i_R,1} \le C_{[M_R]_{R},1} \rbrace\\
+    \Lambda_{R_2} & = & \lbrace i : C_{i_R,1} \ge C_{[L_R - M_R + 1]_{R},1} \rbrace.
   \end{array}
 \end{equation*}
-where $[\cdot]$ denotes the usual order statistics.
 
 To define the adjacency matrix, combine the adjacency matrices from
 the three separate networks as a block diagonal matrix.  To define the
-additional edges, set $A_{i_{G_1},j_R} = A_{j_R,i_{G_1}} = 1$ for all
-$i \in \Lambda_{G_1}$ and $j \in \Lambda_{R_1}$ to connect the first
-grid to the random network.  Then set $A_{i_{G_2},j_R} =
-A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
+additional edges, set $\Omega_{i_{G_1},j_R} = \Omega_{j_R,i_{G_1}} =
+1$ for all $i \in \Lambda_{G_1}$ and $j \in \Lambda_{R_1}$ to connect
+the first grid to the random network.  Then set $\Omega_{i_{G_2},j_R}
+= A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
 \Lambda_{R_2}$ to connect the second grid to the random network.
 
 Now that the adjacency marix is defined, we need to finish the
 network.  The last step is scaling and adjusting the coordinates from
 the three networks.  We define this as an ordered list of operations.
 \begin{enumerate}
-  \item For $i=1,\ldots,N_R$: $C_{i_{R}} = C_{i_{R}}/2$.
-  \item Define $S = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
-  \item For $i=1,\ldots,N_R$: $C_{i_{R},1} = C_{i_{R},1} -
-  \min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + S$
-  \item For $i=1,\ldots,N_G$:
+  \item For $i=1,\ldots,L_R$: $C_{i_{R}} = C_{i_{R}}/2$.
+  \item Define $K = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
+  \item For $i=1,\ldots,L_R$: $C_{i_{R},1} = C_{i_{R},1} -
+  \min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + K$
+  \item For $i=1,\ldots,L_G$:
   $C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
-  C_{j_{R},1} + S$.
+  C_{j_{R},1} + K$.
 \end{enumerate}
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/bowtieSample.pdf}
-\caption{\label{fig:bowtie25}The bowtie network with 50 locations}
+\caption{\label{fig:bowtie50}The bowtie network with 50 locations}
 \end{figure}
 
 
@@ -321,30 +357,33 @@ the three networks.  We define this as an ordered list of operations.
 The scalefree network is designed so that some locations are highly
 connected while others are only connected by a couple edges.  This
 type of network was originally desigined to mimic the network of
-webpages.  The internet houses many websites that are highly
-connected (e.g. Google, Yahoo, etc.) and others that are not.
+webpages.  The internet houses many websites that are highly connected
+(e.g. Google, Yahoo, etc.) while the majority are not.
 
-To generate the network, we will define the process via induction.  A
-network of size $1$ is the trivial network.  Given a network of size
-$N-1$, attach the additonal $N^{th}$ node to existing node $i \in
-\lbrace 1,\ldots,N-1\rbrace$ with probability
+To generate the network of size $L$, we will define the process via
+induction.  Define $\Omega^{(i)}$ to be the adjacency network on
+iteration $i = 1,\ldots,L$.  A network of size $1$ is the trivial
+network.  Given a network of size $N-1$, place the additonal $N^{th}$
+location adjacent to an existing location $i \in \lbrace
+1,\ldots,N-1\rbrace$ with probability
 \begin{equation*}
-  \frac{\sum_{j!=i} A_{j,i}}{\sum_{j,k \;:\; j > k} A_{j,k}}.
+  P(\Omega^{(N)}_{N,i} = 1 | \Omega^{(N-1)}) = 
+  \frac{\sum_{j!=i} \Omega^{(N-1)}_{j,i}}{\sum_{j,k \;:\; j > k} \Omega^{(N-1)}_{j,k}}.
 \end{equation*}
 
 Generating a scale-free network in this fashion results in a
 Barabasi-Network.  The defining feature of a scale-free network is the
 proportion of nodes with $k$ edges is proportional to $k^{-\gamma}$
-for some $\gamma$.  In the case of a Barabasi-Network $\gamma = 3$.
+for some $\gamma$.  In a Barabasi-Network $\gamma = 3$.
 
-Given the network, we use the Fruchterman-Reingold algorithm to
-position the nodes in a two dimensional plane.
+Given the adjacency matrix, we use the Fruchterman-Reingold algorithm
+to position the nodes in a two dimensional plane.
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{./data/toy/scalefreeSample.pdf}
-\caption{\label{fig:scalefree25}The scalefree network with 50 locations}
+\caption{\label{fig:scalefree50}The scalefree network with 50 locations}
 \end{figure}
 
 
