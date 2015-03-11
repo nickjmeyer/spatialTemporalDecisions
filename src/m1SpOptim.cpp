@@ -24,10 +24,10 @@ std::vector<double> M1SpOptimTunePar::getPar() const{
 }
 
 void M1SpOptimTunePar::putPar(const std::vector<double> & par){
-  std::cout << "In M1SpOptimTunePar: "
-	    << "putPar is not defined"
-	    << std::endl;
-  throw(1);
+  std::vector<double>::const_iterator it;
+  it = par.begin();
+  A = *it++;
+  B = *it++;
 }
 
 
