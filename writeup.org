@@ -2,7 +2,6 @@
 #+author: 
 
 
-
 #+startup: showeverything
 
 #+latex_header: \usepackage{amsmath,amssymb,fullpage,dsfont,setspace}
@@ -76,6 +75,13 @@
   other networks the coordinate pairs are required to generate the
   adjacency matrix.  Regardless of the network, we outline every step to
   generate the network in its entirety.
+
+  Defining distance between to locations in a network, for most of the
+  following structures, is the geodesic distance where each edge has
+  length $1$ regardless of the coordinate values.  For the ring and
+  starred alley, we make some modifications to the edge lengths before
+  calculating the geodesic distance.  These details are covered in the
+  respective sections.
   
   When defining networks, some additonal notation may be added to keep
   the process clear and concise.
@@ -269,7 +275,7 @@
     E_{i,[k+1]} \rbrace$.  Note the detail $[k+1]$ which is a consequence
     of $E_{i,i} = 0$.  The adjacency matrix is defined as $\Omega_{i,j} =
     1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
-    
+
     
     #+caption: A random network with 50 locations
     #+name: fig:rand50
@@ -312,7 +318,48 @@
     $i = 1,\ldots,m_L$.
     
     To define the coordinates for each location, first set $C_{i} =
-    \lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each 
+    \lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each $i$,
+    we set the coordinates for all nodes in $N_i$ according to
+    #+BEGIN_LaTeX
+      \begin{equation*}
+        C_{j_{N_i}} = 
+        \begin{cases}
+          rot(j\pi/(\lceil |N_i|/2 \rceil + 1)) (-1,0) + C_i & j = 1,\ldots,
+          \lceil |N_i|/2 \rceil\\
+          rot(j\pi/(\lfloor |N_i|/2 \rfloor + 1)) (0,1) + C_i & j = \lceil
+          |N_i|/2 \rceil + 1,\ldots,|N_i|
+        \end{cases}  
+      \end{equation*}
+    #+END_LaTeX
+    where
+    #+BEGIN_LaTeX
+      \begin{equation*}
+      rot(\theta) = \left[
+      \begin{matrix}
+      \cos(\theta) & -\sin(\theta)\\
+      \sin(\theta) & \cos(\theta)
+      \end{matrix}
+      \right].
+      \end{equation*}
+    #+END_LaTeX
+    
+    Distances between locations is defined as geodesic distance, but
+    the edges do not all have length $1$.  Distance between location
+    $i$ and $j$ is
+    #+BEGIN_LaTeX
+      \begin{equation*}
+        d_{i,j} = 
+        \begin{cases}
+          | i - j | & i,j \in \lbrace 1,\ldots,m_L \rbrace\\
+          | i - k | + .9 & j \in N_k \text{ and } i \in \lbrace 1,\ldots,m_L
+          \rbrace\\
+          | k - j | + .9 & i \in N_k \text{ and } j \in \lbrace 1,\ldots,m_L
+          \rbrace\\
+          | k - \ell| + 1.8 & i \in N_k \text{ and } j \in N_\ell \text{ and
+            } k,\ell \in \lbrace 1,\ldots,m_L
+        \end{cases}
+      \end{equation*}
+    #+END_LaTeX
     
     
     #+caption: The starred alleyway network with 50 locations
@@ -324,22 +371,13 @@
     
 *** Ring
     
-    Divide the number of locations $L$ into two groups.  Define $L_1 = L -
-    L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta = 2\pi/(L_1+1)$
-    and $r = 1/(2\sin(\theta/2))$.  Place location $1$ at $C_1 = \lbrace
-    0,r \rbrace$.  Given location $i-1$ at $C_{i-1}$, place location $i$
-    at $C_i = rot(\theta) C_{i-1}$ for $i = 2,\ldots,L_1$ and
-    #+BEGIN_LaTeX
-      \begin{equation*}
-      rot(\theta) = \left[
-      \begin{matrix}
-      \cos(\theta) & -\sin(\theta)\\
-      \sin(\theta) & \cos(\theta)
-      \end{matrix}
-      \right]
-      \end{equation*}
-    #+END_LaTeX
-    Note that $C_{1} \cdot C_{L_1} = \|C_{1}\| \|C_{L_1}\| \cos(2\theta)$.
+    Divide the number of locations $L$ into two groups.  Define $L_1 =
+    L - L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta =
+    2\pi/(L_1+1)$ and $r = 1/(2\sin(\theta/2))$.  Place location $1$
+    at $C_1 = \lbrace 0,r \rbrace$.  Given location $i-1$ at
+    $C_{i-1}$, place location $i$ at $C_i = rot(\theta) C_{i-1}$ for
+    $i = 2,\ldots,L_1$.  Note that $C_{1} \cdot C_{L_1} = \|C_{1}\|
+    \|C_{L_1}\| \cos(2\theta)$.
     
     With the first $L_1$ locations defined, we need to define the last
     $L_2$ locations.  Place location $L_1 + i$ at $C_{L_1 + i} =
