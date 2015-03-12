@@ -115,8 +115,8 @@ void FFX::saveObs(const std::string & file) const{
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  std::vector<double> chunkVals = {1,2,4,8};
-  std::vector<double> scaleVals = {1,2,4,8};
+  std::vector<double> chunkVals = {1,2,3};
+  std::vector<double> scaleVals = {1,2,4,8,10};
 
   FFX ffx;
 
@@ -144,6 +144,8 @@ int main(int argc, char ** argv){
 
   typedef OptimRunnerNS<S,AR,SPO> SPR;
 
+  typedef FitOnlyRunner<S,AR> FR;
+
   S s;
   s.modelGen.fitType = MLE;  // for speed
   s.modelEst.fitType = MLE;  // for speed
@@ -155,10 +157,17 @@ int main(int argc, char ** argv){
   
   SPR spr;
 
+  Fr fr;
+
+  // baseline value
+  njm::message(" Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
   
   // this is an experiment done after tuning on grid 100, so we know
   // good values for the grid 100
   spo.tp.tune = 0;
+
+  // original agent tp
+  njm::message("Original: " + njm::toString(spr.run(s,ar,spo,300,s.fD.finalT)));
 
   double value;
   int done = 0;
