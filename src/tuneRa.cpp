@@ -157,7 +157,7 @@ int main(int argc, char ** argv){
   
   SPR spr;
 
-  Fr fr;
+  FR fr;
 
   // baseline value
   njm::message(" Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
