@@ -249,7 +249,8 @@
    The table below shows the Bayesian P-value for each of the four
    transformations above.  Using an exponential transformation greatly
    improves the estimated p-values.  Going forward, we choose the
-   ``exp\(\_\)caves'' transformation as providing the best fit.
+   ``exp\(\_\)caves'' transformation as providing the best fit.  (talk
+   about the p-value close to 0.5 and 
    #+BEGIN_SRC R :session :exports results :results output latex
      bayesP = rbind(bayesP,colMeans(bayesP))
      row.names(bayesP)[nrow(bayesP)] = "Column Mean"
@@ -596,7 +597,8 @@
 ** Simultaneous perturbation experiment
    
    To calibrate the simultaneous perturbation algorithm, we ran a full
-   factorial experiment over the following levels.
+   factorial experiment over the following levels. (put the algorithm
+   in here)
    #+BEGIN_LaTeX
      \begin{itemize}
        \item $A \in \lbrace 30, 50 \rbrace $

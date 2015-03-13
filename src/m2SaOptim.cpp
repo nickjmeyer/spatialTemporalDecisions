@@ -399,7 +399,7 @@ featToPhi(const std::vector<double> & feat, const int numNodes){
       featFull.push_back(feat.at(n*f.numFeatures +i));
     }
 
-    for(i=1; i<f.numFeatures; i++){
+    for(i=1; i<f.numFeatures; i++){// start at 1 since 0 is the intercept
       for(j=i; j<f.numFeatures; j++){
 	featFull.push_back(feat.at(n*f.numFeatures + i)*
 			   feat.at(n*f.numFeatures + j));
@@ -423,7 +423,7 @@ featToPhi(const std::vector<double> & feat, const int numNodes){
       neighAvg=0.0;
       for(j=0; j<tp.numNeigh; j++){
 	node1=neighbors.at(n).at(j);
-	neighAvg+=featFull.at(node1*K + 1 + i);
+	neighAvg+=featFull.at(node1*K + 1 + i); // + 1 since intercept is at 0
       }
       neighAvg/=(double)tp.numNeigh;
       Di.insert(n,(2*K-1)*n + K + i) = neighAvg;
