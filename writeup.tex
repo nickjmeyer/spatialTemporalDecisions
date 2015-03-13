@@ -1,4 +1,4 @@
-% Created 2015-03-12 Thu 20:09
+% Created 2015-03-13 Fri 11:06
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -24,8 +24,9 @@
 \newcommand{\src}{\attn{source}}
 \setlength{\parskip}{\baselineskip}
 \newcommand{\logit}{\text{logit}}
+\newcommand{\T}{\intercal}
 \setstretch{1.5}
-\date{\today}
+\date{}
 \title{M1 Writeup}
 \hypersetup{
   pdfkeywords={},
@@ -85,15 +86,15 @@ point $t$.  We denote this probability as $p_{i,j,t}$.  If we assume
 independence across events $i$ infecting $j$ and $i'$ infecting $j$,
 the probability of $j$ becoming infected at time $t$ is
 \begin{equation*}
-P(X_{j,t} = 1 | X_{\cdot,t-1}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
-X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
+  P(X_{j,t} = 1 | X_{\cdot,t-1}) = X_{j,t-1} \bigvee \left[1 - \prod_{i:
+      X_{i,t-1} = 1} ( 1 - p_{i,j,t} ) \right].
 \end{equation*}
 
 To define $p_{i,j,t}$ we use a form of the gravity model.
 \begin{equation*}
-\logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
-- \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \eta g_j(\tau_{i,t})
-- \rho A_{j,t-1} - \gamma A_{i,t-1}
+  \logit \; p_{i,j,t} = \beta_0 + \beta_1 U_j 
+  - \alpha \frac{d_{i,j}}{(c_ic_j)^\nu} - \xi g_j(\tau_{i,t})
+  - \rho A_{j,t-1} - \eta A_{i,t-1}
 \end{equation*}
 where $\tau_{i,t} = \sum_{t' = 0}^t X_{i,t'}$ is the number of time
 points $i$ has been infected.  We compare different forms of
@@ -110,7 +111,7 @@ hibernating bat species.
 For model estimation, we use a Bayesian framework.  The priors on the
 parameters are as follows $\beta_0 \sim N(0,100)$, $\beta_1 \sim
    N(0,10)$, $\log(\alpha) \sim N(0,1)$, $\log(\nu) \sim N(0,1)$.  The
-priors for $\rho$ and $\gamma$ will be specified later.  For WNS, the
+priors for $\rho$ and $\eta$ will be specified later.  For WNS, the
 observed data does not include information about treatments.  This
 requires an ad-hoc selection of the true treatment effects.  The prior
 distributions during the simulations for these parameters will over
@@ -134,7 +135,7 @@ transformations above.  Using an exponential transformation greatly
 improves the estimated p-values.  Going forward, we choose the
 ``exp\(\_\)caves'' transformation as providing the best fit.
  % latex table generated in R 3.1.3 by xtable 1.7-4 package
-% Thu Mar 12 20:09:48 2015
+% Fri Mar 13 11:06:20 2015
 \begin{table}[ht]
 \centering
 \begin{tabular}{rrrrr}
@@ -256,7 +257,7 @@ $i$ and $j$ is
     | k - j | + .9 & i \in N_k \text{ and } j \in \lbrace 1,\ldots,m_L
     \rbrace\\
     | k - \ell| + 1.8 & i \in N_k \text{ and } j \in N_\ell \text{ and
-      } k,\ell \in \lbrace 1,\ldots,m_L
+      } k,\ell \in \lbrace 1,\ldots,m_L \rbrace
   \end{cases}
 \end{equation*}
 
@@ -286,8 +287,17 @@ $L_2$ locations.  Place location $L_1 + i$ at $C_{L_1 + i} =
 $C_{L} \cdot C_{L_1} = \|C_{L}\| \|C_{L_1}\| \cos(\theta)$ and $C_{1}
     \cdot C_{L} = \|C_{1}\| \|C_{L}\| \cos(\theta)$.
 
-To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
-    1,\ldots,L-1$ and $A_{1,L} = A_{L,1} = 1$.
+To define the adjacency matrix, $\Omega_{i,i+1} = \Omega_{i+1,i} = 1$ for $i =
+    1,\ldots,L-1$ and $\Omega_{1,L} = \Omega_{L,1} = 1$.
+
+Defining distance is defined as the minimum arc length between two
+locations.
+\begin{equation*}
+  d_{i,j} = r\cos^{-1}\left(\frac{C_{i} \cdot
+      C_{j}}{\|C_{i}\|\|C_{j}\|}\right)
+\end{equation*}
+
+
 
 
 
@@ -306,13 +316,13 @@ To define the adjacency matrix, $A_{i,i+1} = A_{i+1,i} = 1$ for $i =
 First define $L_1$ to be the number of columns and $L_2$ to be the
 number of rows.  These values are defined by
 \begin{equation*}
-\lbrace L_1, L_2 \rbrace = \underset{
-\begin{subarray}{c}
-\ell_1,\ell_2 > 0\\
-\ell_1\ell_2 = L\\
-\ell_1 \le \ell_2
-\end{subarray}
-}{\arg\min} \quad |\ell_1 - \ell_2|
+  \lbrace L_1, L_2 \rbrace = \underset{
+    \begin{subarray}{c}
+      \ell_1,\ell_2 > 0\\
+      \ell_1\ell_2 = L\\
+      \ell_1 \le \ell_2
+    \end{subarray}
+  }{\arg\min} \quad |\ell_1 - \ell_2|
 \end{equation*}
 
 Location $i$ is positioned at $C_i = \lbrace (i \text{ mod } L_2), \lfloor
@@ -348,15 +358,15 @@ defined in the same way as in the grid description.  Let $M_{G} =
 networks and $M_{R} = \lceil L_R/5 \rceil$.  Define the following four
 sets of locations
 \begin{equation*}
-\begin{array}{rcl}
-\Lambda_{G_1} & = & \lbrace L_G -
-2L_1M_G + kL_1 : k = 1,\ldots,M_G\rbrace\\
-\Lambda_{G_2} & = & \lbrace L_G -
-2L_1M_G + 1 + (k-1)L_1 : k =
-1,\ldots,M_G\rbrace\\
-\Lambda_{R_1} & = & \lbrace i : C_{i_R,1} \le C_{[M_R]_{R},1} \rbrace\\
-\Lambda_{R_2} & = & \lbrace i : C_{i_R,1} \ge C_{[L_R - M_R + 1]_{R},1} \rbrace.
-\end{array}
+  \begin{array}{rcl}
+    \Lambda_{G_1} & = & \lbrace L_G -
+                        2L_1M_G + kL_1 : k = 1,\ldots,M_G\rbrace\\
+    \Lambda_{G_2} & = & \lbrace L_G -
+                        2L_1M_G + 1 + (k-1)L_1 : k =
+                        1,\ldots,M_G\rbrace\\
+    \Lambda_{R_1} & = & \lbrace i : C_{i_R,1} \le C_{[M_R]_{R},1} \rbrace\\
+    \Lambda_{R_2} & = & \lbrace i : C_{i_R,1} \ge C_{[L_R - M_R + 1]_{R},1} \rbrace.
+  \end{array}
 \end{equation*}
 
 To define the adjacency matrix, combine the adjacency matrices from
@@ -371,13 +381,13 @@ Now that the adjacency marix is defined, we need to finish the
 network.  The last step is scaling and adjusting the coordinates from
 the three networks.  We define this as an ordered list of operations.
 \begin{enumerate}
-\item For $i=1,\ldots,L_R$: $C_{i_{R}} = C_{i_{R}}/2$.
-\item Define $K = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
-\item For $i=1,\ldots,L_R$: $C_{i_{R},1} = C_{i_{R},1} -
-\min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + K$
-\item For $i=1,\ldots,L_G$:
-$C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
-C_{j_{R},1} + K$.
+  \item For $i=1,\ldots,L_R$: $C_{i_{R}} = C_{i_{R}}/2$.
+  \item Define $K = (\max_i C_{i_{R},1} - \min_i C_{i_{R},1})/2$.
+  \item For $i=1,\ldots,L_R$: $C_{i_{R},1} = C_{i_{R},1} -
+  \min_j C_{j_{R},1} + \max_j C_{j_{G_1},1} + K$
+  \item For $i=1,\ldots,L_G$:
+  $C_{i_{G_2},1} = C_{i_{G_2},1} - \min_j C_{j_{G_2},1} + \max_j
+  C_{j_{R},1} + K$.
 \end{enumerate}
 
 
@@ -404,8 +414,8 @@ network.  Given a network of size $N-1$, place the additonal $N^{th}$
 location adjacent to an existing location $i \in \lbrace
     1,\ldots,N-1\rbrace$ with probability
 \begin{equation*}
-P(\Omega^{(N)}_{N,i} = 1 | \Omega^{(N-1)}) = 
-\frac{\sum_{j!=i} \Omega^{(N-1)}_{j,i}}{\sum_{j,k \;:\; j > k} \Omega^{(N-1)}_{j,k}}.
+  P(\Omega^{(N)}_{N,i} = 1 | \Omega^{(N-1)}) = 
+  \frac{\sum_{j!=i} \Omega^{(N-1)}_{j,i}}{\sum_{j,k \;:\; j > k} \Omega^{(N-1)}_{j,k}}.
 \end{equation*}
 
 Generating a scale-free network in this fashion results in a
@@ -429,67 +439,115 @@ to position the nodes in a two dimensional plane.
 \subsection{Covariates}
 \label{sec-3-2}
 
-Define $X$ to be a $n \times p$ centered and scaled covariate matrix.
-The covariates are multivariate normal $MVN_p(\mu,\Sigma)$ where
-$\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
+The covariates $U_i$ are multivariate normal $MVN_p(\mu,\Sigma)$
+where $\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
 $\widetilde{C}$ are the centered and scaled coordinates.  The
-covariance matrix has the structure $\Sigma_{ip + s, jp + t} =
-   \rho e^{(-\tau  E_{i,j} - \eta |s-t|)}$.  Thus, the variance of the
-individual covariates are $1$ and the correlation decays as $E_{i,j}$
-increases and as $|s-t|$ increases.
+covariance matrix has the structure $\Sigma_{ip + s, jp + t} = \psi
+   e^{(-\zeta E_{i,j} - \phi |s-t|)}$.  Thus, the variance of the
+individual covariates are $1$ and the correlation decays as
+$E_{i,j}$ increases and as $|s-t|$ increases.
 
-We need the mass of each individual node to compute the gravity term
-in the gravity model.  In the case of White-Nose Syndrome, the mass is
-the number of caves.  Arbitrarily set the first covariate to be the
-mass of the node.  Define $M_i = \lfloor X_{i,1} - X_{[1],1} \rfloor +
-   1$ to be the mass of location $i$.
+We need the number of caves for each location to compute the
+gravity term in the gravity model.  Define $c_i = \lfloor U_{i,1} -
+   U_{[1],1} \rfloor + 1$ to be the mass of location $i$.
 
 
-\subsection{Network distance}
-\label{sec-3-3}
-
-In order for the structure of the network to have a strong impact on
-the disease spread, we define distance as the geodesic distance raised
-to a power.  The distance between adjacent nodes ($i$ and $j$ such
-that $A_{i,j} = 1$) is defined to be $1$.  For non-adjacent nodes, the
-distance is the number of edges along the shortest path raised to a
-power.  To determine the appropriate power, let $p^{(1)}_{i,j}$ be the
-hypothetical probability node $i$ infects node $j$ where $i$ and $j$
-have geodesic distance $1$.  Let $p^{(2)}_{i,j}$ be the hypothetical
-probability if infection if $i$ and $j$ have geodesic distance $2$.
-For their mass, use the mean mass of the network.  The log odds-ratio
-is equal to
-\begin{equation*}
-- \frac{\alpha}{m^\rho} + \frac{\alpha2^z}{m^\rho}.
-\end{equation*}
-Set this equation equal to $\log(0.5)$ and solve for $z$.
-
-
-\section{Simulations}
+\section{Simulation Experiment}
 \label{sec-4}
+
+\subsection{Implementation details}
+\label{sec-4-1}
+
+For each structure, we calibrate the generative model to have
+certain characteristics.  We use the estimated posterior
+distributions from the observed WNS data as a starting point to
+insure realistic effect sizes.
+
+Using the generative model, we are able to simulate the spread of
+the disease on the structure.  The simulation runs for $T$ time
+points at which the final reward is recorded.  This simulation
+experiment aims at comparing the expected reward under different
+intervention strategies.  The expectred reward is estimated using
+Monte Carlo integration.
+
+\subsubsection{Setting the generative model}
+\label{sec-4-1-1}
+
+Let $\lbrace \widetilde{\beta}_0, \widetilde{\beta}_1^\T,
+    \widetilde{\alpha}, \widetilde{\nu}, \widetilde{\xi} \rbrace$ be
+the estimated posterior mean from the observed WNS data.  Since
+treatments are not included in the observed data, we exlude
+$\widetilde{\rho}$ and $\widetilde{\eta}$ and define these below.
+For the above generated structures, we make two changes to the
+gravity model to force the network to have a larger impact on the
+dynamics of the disease.  First, we scale all paramters excluding
+$\nu$ by a constant $\omega$.  Second, we raise $d_{i,j}$ to a
+power $h(\omega,\widetilde{\alpha},\widetilde{\nu})$.  The
+generative model for the experiment is
+\begin{equation*}
+  \logit \; p_{i,j,t} = \omega\widetilde{\beta}_0 + \omega\widetilde{\beta}_1 U_j 
+  - \omega\widetilde{\alpha}
+  \frac{d_{i,j}^{h(\omega,\widetilde{\alpha},\widetilde{\nu})}}{(c_ic_j)^{\widetilde{\nu}}}
+  - 
+  \omega\widetilde{\xi} g_j(\tau_{i,t})
+  - \omega\widetilde{\rho} A_{j,t-1} - \omega\widetilde{\eta} A_{i,t-1}
+\end{equation*}
+where 
+\begin{equation*}
+  h(\omega,\widetilde{\alpha},\widetilde{\nu}) =
+  \frac{\log\left(\frac{\overline{c}^{2\omega\widetilde{\nu}}\log(2.0)}
+      {\omega\widetilde{\alpha}}
+      + 1 \right)}{\log(2.0)}.
+\end{equation*}
+Take three hypothetical locations $i,j,j'$.  Location $i$ is
+infected and $j,j'$ are not.  Assume no intervention and locations
+are all identical with $c_i,c_j,c_{j'} = \overline{c}$ where
+$\overline{c} = \frac{1}{L}\sum_i c_i$.  The only differences
+between the locations is $d_{i,j} = 1$ and $d_{i,j'} = 2$.  The
+form of $h$ comes from setting
+\begin{equation*}
+  \frac{\frac{p_{i,j,0}}{1-p_{i,j,0}}}{\frac{p_{i,j',0}}{1-p_{i,j',0}}}
+  = 2.0
+\end{equation*}
+We set $\omega$ such that the expected reward under no
+intervention is $0.3$.
+
+The final component of the generative model is defining
+$\widetilde{rho},\widetilde{eta}$.  Again, take hypothetical
+locations $i,j$ where $i$ is infected and $j$ is not.  Assume both
+receive intervention, $c_i = c_j = \overline{c}$, and $d_{i,j} =
+    \underset{i,j\in\mathcal{L}} \min d_{i,j}$.  They treatment
+effects are set such that
+\begin{equation*}
+  \logit(p_{i,j,0}) = 0.005
+\end{equation*}
+
+
+\subsubsection{Details of each trajectory}
+\label{sec-4-1-2}
 
 The simulations begin at time point $0$ and end at $T=15$.  Observed
 data from WNS has data from $8$ years.  When simulating the spread
 of the disease under intervention, treatments are not given until
 time point $8$ to mimic the observed data.
 
-At time point $8$, we estimate the posterior distributions of the
-indexing parameters in the system dynamics model.  Note that there
-are no treatments yet in the data, so the posterior for the
-treatment effects are simply the prior.  Using the estimated
-posterior distributions, the simultaneous perturbation algorithm is
-run to maximize the posterior mean reward at time $T$.  The reward
-funtion at time $t$ is the current proportion of locations infected,
-$Y^t(\pi) \triangleq \frac{1}{L}\sum_i X_{i,t}$.
+At time $t \ge 8$, the posterior distributions of the indexing
+parameters in the system dynamics model are estimated.  Using these
+estimated distributions, the simulataneous perturbation algorithm is
+used to maximize the estimated posterior mean reward at time $T$
+with respect to the priority score weights.  The reward funtion at
+time $t$ is the current proportion of locations not infected,
+$Y^t(\pi) \triangleq \frac{1}{L}\sum_i 1 - X_{i,t}$.
 
-At $t = 9$, the process is the same with one addition.  Since the
-data now include a year of treatments, we run the tuning algorithm
-for simultaneous perturbation to adaptively improve the performance.
-Time points $t=10,\ldots,T$ are the same as $8$.
+At $t = 9$, we add one component to the simulation.  At time this an
+online tuning is run for simultaneous perturbation to adaptively
+improve the optimization performance.
 
 The prior for the treatment effects are set to be optimistic.  They
 are normal with mean $4$ times as large as the true effect and
 variance $1$.
+
+[An algorithm sketch would be useful here]
 
 
 \section{Results}
@@ -511,32 +569,9 @@ factorial experiment over the following levels.
 For each of the $32$ combinations, the table below shows the mean and
 standard deviation of the value across all replications of that factor
 combination.  The results are sorted by the mean value.
-\lstset{language=R,label= ,caption= ,numbers=none}
-\begin{lstlisting}
-cbind(factor(res$T),as.numeric(factor(res$T)))[1:15,]
-\end{lstlisting}
-
-\begin{verbatim}
-      [,1] [,2]
- [1,]    1    1
- [2,]    1    1
- [3,]    2    2
- [4,]    2    2
- [5,]    1    1
- [6,]    1    1
- [7,]    2    2
- [8,]    2    2
- [9,]    1    1
-[10,]    1    1
-[11,]    2    2
-[12,]    2    2
-[13,]    1    1
-[14,]    1    1
-[15,]    2    2
-\end{verbatim}
 
  % latex table generated in R 3.1.3 by xtable 1.7-4 package
-% Thu Mar 12 20:09:48 2015
+% Fri Mar 13 11:06:20 2015
 \begin{table}[ht]
 \centering
 \begin{tabular}{rrrcccccr}
@@ -581,9 +616,7 @@ valueMean & valueSd & timeMean & Afac & Bfac & Cfac & Tfac & Lfac & combo \\
 \end{table}
 
 
-
-
-\subsection{Agent jitter and num chunks experiment}
+\subsection{Agent jitter and iterations experiment}
 \label{sec-5-2}
 
 \subsection{Toy Structures}
