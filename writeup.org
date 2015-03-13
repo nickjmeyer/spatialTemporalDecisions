@@ -1,4 +1,4 @@
-#+title: M1 Writeup
+#+title: M1 Write-up
 #+author: 
 #+date: 
 
@@ -35,7 +35,7 @@
    - [ ] Network distance
    - [-] Structures
      - [X] Alley
-     - [ ] Bowtie
+     - [ ] Bow tie
      - [ ] Grid
      - [X] Random
      - [ ] Ring
@@ -65,11 +65,11 @@
    
 * Notation
   
-  Each location $i \in \mathcal{L}$ lies in a $R^2$ at coordinate pair
+  Each location $i \in \mathcal{L}$ lies in $R^2$ at coordinate pair
   $C_i$.  The matrix $\Omega$ is a binary matrix indicating adjacent
   locations.  For any two locations $i$ and $j$, $\Omega_{i,j} = 1$ if
   location $j$ is adjacent to location $i$.  We define the network such
-  that locations are adjacenty to themselves, $\Omega_{i,i} = 1$ for all
+  that locations are adjacent to themselves, $\Omega_{i,i} = 1$ for all
   $i$.  All networks defined will be undirected thus $\Omega_{i,j} =
   \Omega_{j,i}$ for all $i,j$.  The adjacency matrix is the defining
   component of the network.  For some of the networks, the adjacency
@@ -78,20 +78,19 @@
   adjacency matrix.  Regardless of the network, we outline every step to
   generate the network in its entirety.
 
-  Defining distance between to locations in a network, for most of the
-  following structures, is the geodesic distance where each edge has
-  length $1$ regardless of the coordinate values.  For the ring and
-  starred alley, we make some modifications to the edge lengths before
-  calculating the geodesic distance.  These details are covered in the
-  respective sections.
-  
-  When defining networks, some additonal notation may be added to keep
-  the process clear and concise.
+  Defining distance between two locations in a network, for most of
+  the following structures, is the geodesic distance where each edge
+  has length $1$ regardless of the coordinate values.  For the ring
+  and starred alley, we make some modifications to the edge lengths
+  before calculating the geodesic distance.  These details are covered
+  in the respective sections.  When defining networks, some additional
+  notation may be added to keep the process clear and concise.
   
   To model the spread of the disease, we assume that once a location
   becomes infected, it remains infected thereafter.  The infection
   status for location $i$ at time $t$ is $X_{i,t} = 1$ if infected and
-  $X_{i,t} = 0$ otherwise.  Thus $X_{i,t} \ge X_{i,t'}$ for all $t > t'$.
+  $X_{i,t} = 0$ otherwise.  Thus $X_{i,t} \ge X_{i,t'}$ for all $t \ge
+  t'$.
   
   Let the subscript operator $[\cdot]$ denote the usual order
   statistics; let $\lfloor \cdot \rfloor$ denote the floor operator; let
@@ -126,12 +125,12 @@
    points $i$ has been infected.  We compare different forms of
    $g_j(\cdot)$ discussed later.  The name of the model comes from
    $d_{i,j}/(c_i,c_j)^\nu$ which is known as the gravity term.  The
-   effect of distance between two locations is diminished if the number
-   of caves in the two locations is large.  We assume as the number of
-   caves increases, so does the number of bats effectively decreasing the
-   effect of distance.  The vector $U_j$ is a vector of covariates as
-   part of the state information.  These covariates include the number of
-   caves, average winter length, area, species richness, and number of
+   effect of distance between two locations is diminished if the
+   number of caves in the two locations is large.  We assume the
+   number of caves is positively correlated with the tendency to
+   spread.  The vector $U_j$ is a vector of covariates as part of the
+   state information.  These covariates include the number of caves,
+   average winter length, area, species richness, and number of
    hibernating bat species.
    
    For model estimation, we use a Bayesian framework.  The priors on the
@@ -251,7 +250,8 @@
    The table below shows the Bayesian P-value for each of the four
    transformations above.  Using an exponential transformation greatly
    improves the estimated p-values.  Going forward, we choose the
-   ``exp\(\_\)caves'' transformation as providing the best fit.
+   ``exp\(\_\)caves'' transformation as providing the best fit and use
+   it as the generative model in the simulation experiments.
    #+BEGIN_SRC R :session :exports results :results output latex
      bayesP = rbind(bayesP,colMeans(bayesP))
      row.names(bayesP)[nrow(bayesP)] = "Column Mean"
@@ -268,7 +268,7 @@
   
 ** Structures
    
-*** Random Network
+*** Random Network (Figure \ref{fig:rand50})
     
     For each location $i=1,\ldots,L$, $C_i \sim \lbrace U(0,1)\rbrace^2$.
     To determine which locations are connected, we must first define some
@@ -276,7 +276,8 @@
     locations to location $i$ is $N^{(k)}_i = \lbrace j : E_{i,j} \le
     E_{i,[k+1]} \rbrace$.  Note the detail $[k+1]$ which is a consequence
     of $E_{i,i} = 0$.  The adjacency matrix is defined as $\Omega_{i,j} =
-    1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.
+    1$ if $i \in N_{j}^{(k)}$ or $j \in N_{i}^{(k)}$.  For the
+    networks in the simulation experiment $k = 3$.
 
     
     #+caption: A random network with 50 locations
@@ -286,7 +287,7 @@
     
     
     
-*** Starred Alley
+*** Starred Alley (Figure \ref{fig:alley50})
     
     For a starred alley of size $L$, define
     #+BEGIN_LaTeX
@@ -306,18 +307,18 @@
     #+END_LaTeX
     
     Let locations $1,\ldots,m_L$ index the locations on the main
-    horizontal line.  Next define disjoint sets of locations
-    $N_i$ for $i = 1,\ldots,m_L.  The cardinality for
-    $N_i$ is defined as
+    horizontal line in the figure.  Next define disjoint sets of
+    locations $N_i$ for $i = 1,\ldots,m_L$.  The cardinality for $N_i$
+    is defined as
     #+BEGIN_LaTeX
       \begin{equation*}
       | N_i | = \left\lfloor \frac{i}{2} \right\rfloor +
       \mathds{1}_{\lbrace(m_L - i) < (L - f(m_L))\rbrace}.
       \end{equation*}
     #+END_LaTeX
-    For each location $j \in N_i$ set $\Omega_{i,j} = \Omega_{j,i} = 1$.
-    For the first $m_L$ locations, $\Omega_{i,i+1} = \Omega_{i+1,1} = 1$ for
-    $i = 1,\ldots,m_L$.
+    For each location $j \in N_i$ set $\Omega_{i,j} = \Omega_{j,i} =
+    1$.  For locations $i = 1,\ldots,m_L - 1$, $\Omega_{i,i+1} =
+    \Omega_{i+1,1} = 1$.
     
     To define the coordinates for each location, first set $C_{i} =
     \lbrace i,0 \rbrace$ for $i = 1,\ldots,m_L$.  Then for each $i$,
@@ -328,7 +329,7 @@
         \begin{cases}
           rot(j\pi/(\lceil |N_i|/2 \rceil + 1)) (-1,0) + C_i & j = 1,\ldots,
           \lceil |N_i|/2 \rceil\\
-          rot(j\pi/(\lfloor |N_i|/2 \rfloor + 1)) (0,1) + C_i & j = \lceil
+          rot(j\pi/(\lfloor |N_i|/2 \rfloor + 1)) (1,0) + C_i & j = \lceil
           |N_i|/2 \rceil + 1,\ldots,|N_i|
         \end{cases}  
       \end{equation*}
@@ -371,11 +372,11 @@
     
     
     
-*** Ring
+*** Ring (Figure \ref{fig:ring50})
     
     Divide the number of locations $L$ into two groups.  Define $L_1 =
-    L - L_2$ where $L_2 = \lceil L*0.05 \rceil$.  Let $\theta =
-    2\pi/(L_1+1)$ and $r = 1/(2\sin(\theta/2))$.  Place location $1$
+    L - L_2$ where $L_2 = \lceil 0.05L \rceil$.  Let $\theta =
+    2\pi/(L_1+1)$ and $r = 1/\theta$.  Place location $1$
     at $C_1 = \lbrace 0,r \rbrace$.  Given location $i-1$ at
     $C_{i-1}$, place location $i$ at $C_i = rot(\theta) C_{i-1}$ for
     $i = 2,\ldots,L_1$.  Note that $C_{1} \cdot C_{L_1} = \|C_{1}\|
@@ -411,7 +412,7 @@
     
     
     
-*** Grid
+*** Grid (Figure \ref{fig:grid50})
     
     First define $L_1$ to be the number of columns and $L_2$ to be the
     number of rows.  These values are defined by
@@ -438,25 +439,25 @@
     
     
     
-*** Bowtie
+*** Bow tie (Figure \ref{fig:bowtie50})
     
-    The bowtie combines two grid networks with a random network in
-    between.  Spread of the disease begins in one grid and travels through
-    the random network and into the other grid.
-    
-    For a bowtie network of size $L$, create one random network of size
-    $L_R = \lceil 0.1 L \rceil + ((L - \lceil 0.1 L \rceil) \text{ mod }
-    2)$ and two grid networks of size $L_G = (L - L_R)/2$.  Let $i_{R}$ be
+    The bow-tie combines two grid networks connected by a random
+    network.  Spread of the disease begins in one grid and travels
+    through the random network into the other grid.  For a bow-tie
+    network of size $L$, create one random network of size $L_R =
+    \lceil 0.1 L \rceil + ((L - \lceil 0.1 L \rceil) \text{ mod } 2)$
+    and two grid networks of size $L_G = (L - L_R)/2$.  Let $i_{R}$ be
     the $i^{th}$ location in the random network and $i_{G_j}$ be the
     $i^{th}$ location in the $j^{th}$ grid.
     
-    To connect the three networks, we need to first identify which nodes
-    in each network will connect to one of the other two networks.  We
-    will begin with the first grid.  First, define $L_1$ and $L_2$ to be
-    defined in the same way as in the grid description.  Let $M_{G} =
-    \lceil L_2/3 \rceil$ be the number of points to connect from the grid
-    networks and $M_{R} = \lceil L_R/5 \rceil$.  Define the following four
-    sets of locations
+    To connect the three networks, we need to first identify which
+    nodes in each network will connect to one of the other two
+    networks.  We will begin with the first grid.  First, define $L_1$
+    and $L_2$ to be defined in the same way as in the grid
+    description.  Let $M_{G} = \lceil L_2/3 \rceil$ be the number of
+    points to connect from the grid networks and $M_{R} = \lceil L_R/5
+    \rceil$ be the number of points to connect from either side of the
+    random network.  Define the following four sets of locations
     #+BEGIN_LaTeX
       \begin{equation*}
         \begin{array}{rcl}
@@ -479,7 +480,7 @@
     = A_{j_R,i_{G_2}} = 1$ for all $i \in \Lambda_{G_2}$ and $j \in
     \Lambda_{R_2}$ to connect the second grid to the random network.
     
-    Now that the adjacency marix is defined, we need to finish the
+    Now that the adjacency matrix is defined, we need to finish the
     network.  The last step is scaling and adjusting the coordinates from
     the three networks.  We define this as an ordered list of operations.
     #+BEGIN_LaTeX
@@ -501,18 +502,19 @@
     [[./data/toy/bowtieSample.pdf]]
     
     
-*** Scalefree
+*** Scalefree (Figure \ref{fig:scalefree50})
     
-    The scalefree network is designed so that some locations are highly
-    connected while others are only connected by a couple edges.  This
-    type of network was originally desigined to mimic the network of
-    webpages.  The internet houses many websites that are highly connected
-    (e.g. Google, Yahoo, etc.) while the majority are not.
+    The scalefree network is designed so that some locations are
+    highly connected while others are only connected by a few edges.
+    This type of network was originally designed to mimic networks
+    like the internet.  The internet houses many websites that are
+    highly connected (e.g. Google, Yahoo, etc.) while the majority are
+    not.
     
     To generate the network of size $L$, we will define the process via
     induction.  Define $\Omega^{(i)}$ to be the adjacency network on
-    iteration $i = 1,\ldots,L$.  A network of size $1$ is the trivial
-    network.  Given a network of size $N-1$, place the additonal $N^{th}$
+    iteration $i = 2,\ldots,L$.  A network of size $2$ is the trivial
+    network.  Given a network of size $N-1$, place the additional $N^{th}$
     location adjacent to an existing location $i \in \lbrace
     1,\ldots,N-1\rbrace$ with probability
     #+BEGIN_LaTeX
@@ -542,12 +544,10 @@
 ** Covariates
    
    The covariates $U_i$ are multivariate normal $MVN_p(\mu,\Sigma)$
-   where $\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$ and
-   $\widetilde{C}$ are the centered and scaled coordinates.  The
-   covariance matrix has the structure $\Sigma_{ip + s, jp + t} = \psi
-   e^{(-\zeta E_{i,j} - \phi |s-t|)}$.  Thus, the variance of the
-   individual covariates are $1$ and the correlation decays as
-   $E_{i,j}$ increases and as $|s-t|$ increases.
+   with mean $\mu_i = 2\widetilde{C}_{i,1}^2 + 1\widetilde{C}_{i,2}$
+   and $\widetilde{C}$ are the centered and scaled coordinates and
+   covariance matrix $\Sigma_{ip + s, jp + t} = \psi e^{(-\zeta
+   E_{i,j} - \phi |s-t|)}$.
    
    We need the number of caves for each location to compute the
    gravity term in the gravity model.  Define $c_i = \lfloor U_{i,1} -
@@ -567,19 +567,21 @@
    the disease on the structure.  The simulation runs for $T$ time
    points at which the final reward is recorded.  This simulation
    experiment aims at comparing the expected reward under different
-   intervention strategies.  The expectred reward is estimated using
-   Monte Carlo integration.
+   intervention strategies.  The expected reward is estimated using
+   Monte Carlo integration.  The reward function at time $t$ is the
+   current proportion of locations not infected, $Y^t(\pi) \triangleq
+   \frac{1}{L}\sum_i 1 - X_{i,t}$.
 
 *** Setting the generative model
 
     Let $\lbrace \widetilde{\beta}_0, \widetilde{\beta}_1^\T,
     \widetilde{\alpha}, \widetilde{\nu}, \widetilde{\xi} \rbrace$ be
-    the estimated posterior mean from the observed WNS data.  Since
-    treatments are not included in the observed data, we exlude
+    the estimated posterior means from the observed WNS data.  Since
+    treatments are not included in the observed data, we exclude
     $\widetilde{\rho}$ and $\widetilde{\eta}$ and define these below.
     For the above generated structures, we make two changes to the
     gravity model to force the network to have a larger impact on the
-    dynamics of the disease.  First, we scale all paramters excluding
+    dynamics of the disease.  First, we scale all parameters excluding
     $\nu$ by a constant $\omega$.  Second, we raise $d_{i,j}$ to a
     power $h(\omega,\widetilde{\alpha},\widetilde{\nu})$.  The
     generative model for the experiment is
@@ -607,7 +609,7 @@
     are all identical with $c_i,c_j,c_{j'} = \overline{c}$ where
     $\overline{c} = \frac{1}{L}\sum_i c_i$.  The only differences
     between the locations is $d_{i,j} = 1$ and $d_{i,j'} = 2$.  The
-    form of $h$ comes from setting
+    form of $h$ is a result of setting
     #+BEGIN_LaTeX
       \begin{equation*}
         \frac{\frac{p_{i,j,0}}{1-p_{i,j,0}}}{\frac{p_{i,j',0}}{1-p_{i,j',0}}}
@@ -618,40 +620,39 @@
     intervention is $0.3$.
 
     The final component of the generative model is defining
-    $\widetilde{rho},\widetilde{eta}$.  Again, take hypothetical
+    $\widetilde{\rho},\widetilde{\eta}$.  Again, take hypothetical
     locations $i,j$ where $i$ is infected and $j$ is not.  Assume both
     receive intervention, $c_i = c_j = \overline{c}$, and $d_{i,j} =
-    \underset{i,j\in\mathcal{L}} \min d_{i,j}$.  They treatment
-    effects are set such that
+    \underset{i,j\in\mathcal{L}} \min d_{i,j}$.  The treatment
+    effects are the solution to
     #+BEGIN_LaTeX
       \begin{equation*}
-        \logit(p_{i,j,0}) = 0.005
+        \logit(p_{i,j,0}) = 0.005.
       \end{equation*}
     #+END_LaTeX
     
 
-*** Details of each trajectory
+*** Trajectory details
 
-  The simulations begin at time point $0$ and end at $T=15$.  Observed
-  data from WNS has data from $8$ years.  When simulating the spread
-  of the disease under intervention, treatments are not given until
-  time point $8$ to mimic the observed data.
+  The simulations begin at time point $0$, with one location infected,
+  and end at $T=15$.  Observed data from WNS has data from $8$ years.
+  When simulating the spread of the disease under intervention,
+  treatments are not given until time point $8$ to mimic the observed
+  data.
 
   At time $t \ge 8$, the posterior distributions of the indexing
   parameters in the system dynamics model are estimated.  Using these
-  estimated distributions, the simulataneous perturbation algorithm is
+  estimated distributions, the simultaneous perturbation algorithm is
   used to maximize the estimated posterior mean reward at time $T$
-  with respect to the priority score weights.  The reward funtion at
-  time $t$ is the current proportion of locations not infected,
-  $Y^t(\pi) \triangleq \frac{1}{L}\sum_i 1 - X_{i,t}$.
+  with respect to the priority score weights.
 
   At $t = 9$, we add one component to the simulation.  At time this an
-  online tuning is run for simultaneous perturbation to adaptively
-  improve the optimization performance.
+  online tuning algorithm is run for simultaneous perturbation to
+  adaptively improve the optimization performance.
 
   The prior for the treatment effects are set to be optimistic.  They
-  are normal with mean $4$ times as large as the true effect and
-  variance $1$.
+  are normal with mean $4$ times that of the true effect and variance
+  $1$.
 
   [An algorithm sketch would be useful here]
   
@@ -661,7 +662,8 @@
 ** Simultaneous perturbation experiment
    
    To calibrate the simultaneous perturbation algorithm, we ran a full
-   factorial experiment over the following levels.
+   factorial experiment over the following levels on the grid network
+   of size 100.
    #+BEGIN_LaTeX
      \begin{itemize}
        \item $A \in \lbrace 30, 50 \rbrace $
@@ -708,9 +710,9 @@
    #+END_SRC
    
    
-   For each of the $32$ combinations, the table below shows the mean and
-   standard deviation of the value across all replications of that factor
-   combination.  The results are sorted by the mean value.
+   For each of the $32$ combinations, the table below shows the mean
+   and standard deviation of the value across all replications of that
+   factor combination.  The results are sorted by the mean value.
 
    #+BEGIN_SRC R :session :exports results :results output latex
      print(xtable(resAgg[order(resAgg$valueMean,decreasing=FALSE),],
