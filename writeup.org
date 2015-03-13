@@ -616,14 +616,13 @@
          "data/toy/grid100/2015-03-03-18-51-38/results",sep="/")
      res = read.table(paste(datDir,"results_.txt",sep="/"),header=TRUE)
 
-     pm = c("+","-")
+     pm = c("-","+")
 
      res$Afac = pm[as.numeric(factor(res$A))]
      res$Bfac = pm[as.numeric(factor(res$B))]
      res$Cfac = pm[as.numeric(factor(res$C))]
      res$Tfac = pm[as.numeric(factor(res$T))]
      res$Lfac = pm[as.numeric(factor(res$L))]
-
 
      resAll = res[,c("value","time","Afac","Bfac","Cfac","Tfac","Lfac","combo")]
 
@@ -647,6 +646,9 @@
    For each of the $32$ combinations, the table below shows the mean and
    standard deviation of the value across all replications of that factor
    combination.  The results are sorted by the mean value.
+   #+BEGIN_SRC R :session
+     cbind(factor(res$T),as.numeric(factor(res$T)))[1:15,]
+   #+END_SRC
 
    #+BEGIN_SRC R :session :exports results :results output latex
      print(xtable(resAgg[order(resAgg$valueMean,decreasing=FALSE),],
