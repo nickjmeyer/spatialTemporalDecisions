@@ -160,7 +160,7 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
     }
 
     // if more iterations, update features
-    if((i+1) < tp.numChunks){
+    if((i+1) < cap){
       f.updateFeatures(sD,tD,fD,dD,m,mP);
     }
     

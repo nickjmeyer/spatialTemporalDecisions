@@ -211,6 +211,10 @@ double gravityTimeInfSqModelFitObjFn (const gsl_vector * x, void * params){
       }
     }
   }
+
+  if(!std::isfinite(llike))
+    llike = std::numeric_limits<double>::lowest();
+  
   return -llike;
 }
 

@@ -25,11 +25,20 @@ Settings::~Settings(){
 
 void Settings::timeElapsed(){
   tock = std::time(NULL);
-  std::cout << std::endl << std::endl
-	    << "time elapsed: "
-	    << ((double)(tock-tick))/(3600.0)
-	    << " hours"
-	    << std::endl;
+  if(!cleaned){
+    std::stringstream timeInfo;
+    timeInfo.str("");
+    timeInfo.clear();
+    timeInfo << std::endl << std::endl
+	     << "time elapsed: "
+	     << ((double)(tock-tick))/(3600.0)
+	     << " hours"
+	     << std::endl;
+    std::cout << timeInfo.str();
+    njm::toFile("\n\n\n",datDir + "/README.org");
+    njm::toFile("* Time Elapsed",datDir + "/README.org");
+    njm::toFile(timeInfo.str(),datDir + "/README.org");
+  }
 }  
 
 
@@ -53,6 +62,12 @@ void Settings::set(int numInitVals, char ** initVals){
   int arg=0;
   std::stringstream info;
   fileName = initVals[arg++];
+
+  char hostName[128];
+  hostName[127] = '\0';
+  gethostname(hostName,127);
+  info << "hostName: " << hostName << "\n";
+  
   info << "fileName: " << fileName << "\n";
 
   srcDir=initVals[arg++];
@@ -84,7 +99,12 @@ void Settings::set(int numInitVals, char ** initVals){
   if(check.compare("y")==0 || check.compare("Y")==0){
     std::cout << "Check complete.  "
 	      << "Proceeding with program...\n\n";
-    njm::toFile(info.str(),datDir + "/README");
+    njm::toFile("#+title: " + fileName,datDir + "/README.org");
+    njm::toFile("#+author: Nick Meyer",datDir + "/README.org");
+    njm::toFile("#+date: " + date,datDir + "/README.org");
+    njm::toFile("\n\n\n",datDir + "/README.org");
+    njm::toFile("* Run-time Information",datDir + "/README.org");
+    njm::toFile(info.str(),datDir + "/README.org");
     junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
     if(junk);// dummy statement to get -Wall off my back
   }

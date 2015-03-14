@@ -2,7 +2,8 @@
 
 
 template<class M, class P>
-void fitModel(const int numSamples,const int numBurn,const int verbose){
+void fitModel(const int numSamples, const int numBurn,
+	      const int verbose, const std::string msg){
   typedef System<M,P,M,P> S;
   
   S s("obsData.txt");
@@ -20,15 +21,16 @@ void fitModel(const int numSamples,const int numBurn,const int verbose){
   s.modelGen.mcmc.samples.setMean();
   s.paramGen.putPar(s.modelGen.mcmc.samples.getPar());
 
-  s.paramGen.save();
+  // s.paramGen.save();
 
   std::vector<double> mcmcPar = s.paramGen.getPar();
 
-#pragma omp critical (verbose)
+#pragma omp critical
   {
-    if(verbose){
-      njm::message("MCMC: " + njm::toString(mlePar," "));
-      njm::message("MCMC: " + njm::toString(mcmcPar," "));
+    if(verbose > 0){
+      std::cout << msg << std::endl;
+      std::cout << " MLE: " + njm::toString(mlePar," ","\n");
+      std::cout << "MCMC: " + njm::toString(mcmcPar," ","\n");
     }
   }
 }
@@ -36,19 +38,49 @@ void fitModel(const int numSamples,const int numBurn,const int verbose){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  int numSamples=20000,numBurn=5000;
+  int numSamples=20,numBurn=10;
 
 #pragma omp parallel sections			\
   shared(numSamples,numBurn)
   {
 #pragma omp section
     {
-      njm::message("Gravity Model: no time infected");
+      std::string msg = "Gravity Model: no time infected";
     
       typedef GravityModel M;
       typedef GravityParam P;
 
-      fitModel<M,P>(numSamples,numBurn,1);
+      fitModel<M,P>(numSamples,numBurn,1,msg);
+    }
+
+#pragma omp section
+    {
+      std::string msg = "Gravity Model: linear time infected";
+    
+      typedef GravityTimeInfModel M;
+      typedef GravityTimeInfParam P;
+
+      fitModel<M,P>(numSamples,numBurn,1,msg);
+    }
+
+#pragma omp section
+    {
+      std::string msg = "Gravity Model: exp time infected";
+    
+      typedef GravityTimeInfExpModel M;
+      typedef GravityTimeInfExpParam P;
+
+      fitModel<M,P>(numSamples,numBurn,1,msg);
+    }
+    
+#pragma omp section
+    {
+      std::string msg = "Gravity Model: exp caves time infected";
+    
+      typedef GravityTimeInfExpCavesModel M;
+      typedef GravityTimeInfExpCavesParam P;
+
+      fitModel<M,P>(numSamples,numBurn,1,msg);
     }
     
   }

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <algorithm>
 #include <ctime>
+#include <unistd.h>
 #include "utilities.hpp"
 
 class Settings {
