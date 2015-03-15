@@ -172,8 +172,8 @@ int main(int argc, char ** argv){
 
   
   {
-    typedef GravityTimeInfModel GM;
-    typedef GravityTimeInfParam GP;
+    typedef GravityTimeInfExpCavesModel GM;
+    typedef GravityTimeInfExpCavesParam GP;
     typedef GM EM;
     typedef GP EP;
 

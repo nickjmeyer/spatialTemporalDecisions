@@ -3,6 +3,8 @@
 
 template class ProximalAgent<GravityModel,GravityParam>;
 template class ProximalAgent<GravityTimeInfModel,GravityTimeInfParam>;
+template class ProximalAgent<GravityTimeInfExpCavesModel,
+			     GravityTimeInfExpCavesParam>;
 
 template class ProximalAgent<RangeModel,RangeParam>;
 

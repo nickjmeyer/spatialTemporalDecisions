@@ -11,6 +11,7 @@
 #include "features.hpp"
 #include "modelParamRange.hpp"
 #include "modelRange.hpp"
+#include "modelGravityTimeInfExpCaves.hpp"
 
 
 template <class M, class MP>

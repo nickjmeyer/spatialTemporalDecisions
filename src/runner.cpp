@@ -47,6 +47,16 @@ template class PlainRunner<System<GravityTimeInfModel,GravityTimeInfParam,
 						  GravityTimeInfParam>,
 				     GravityTimeInfModel,GravityTimeInfParam> >;
 
+template class PlainRunner<System<GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesParam,
+				  GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesParam>,
+			   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+						  GravityTimeInfExpCavesParam>,
+				     GravityTimeInfExpCavesModel,
+				     GravityTimeInfExpCavesParam> >;
+
+
 template class PlainRunner<System<RangeModel,RangeParam,
 				  RangeModel,RangeParam>,
 			   NoTrt<RangeModel,RangeParam> >;
@@ -235,10 +245,17 @@ template class VanillaRunnerNS<System<GravityModel,GravityParam,
 template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 				      GravityTimeInfModel,GravityTimeInfParam>,
 			       NoTrt<GravityTimeInfModel,GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam,
+				      GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam>,
+			       NoTrt<GravityTimeInfExpCavesModel,
+				     GravityTimeInfExpCavesParam> >;
 
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
 				      GravityModel,GravityParam>,
 			       RandomAgent<GravityModel,GravityParam> >;
+
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
 				      GravityModel,GravityParam>,
 			       ProximalAgent<GravityModel,GravityParam> >;
@@ -246,6 +263,13 @@ template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 				      GravityTimeInfModel,GravityTimeInfParam>,
 			       ProximalAgent<GravityTimeInfModel,
 					     GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam,
+				      GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam>,
+			       ProximalAgent<GravityTimeInfExpCavesModel,
+					     GravityTimeInfExpCavesParam> >;
+
 template class VanillaRunnerNS<System<GravityModel,GravityParam,
 				      GravityModel,GravityParam>,
 			       MyopicAgent<GravityModel,GravityParam> >;
@@ -253,6 +277,12 @@ template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 				      GravityTimeInfModel,GravityTimeInfParam>,
 			       MyopicAgent<GravityTimeInfModel,
 					   GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam,
+				      GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam>,
+			       MyopicAgent<GravityTimeInfExpCavesModel,
+					   GravityTimeInfExpCavesParam> >;
 
 
 
@@ -274,6 +304,15 @@ template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 						      GravityTimeInfParam>,
 					 GravityTimeInfModel,
 					 GravityTimeInfParam> >;
+template class
+VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
+		       GravityTimeInfExpCavesParam,
+		       GravityTimeInfExpCavesModel,
+		       GravityTimeInfExpCavesParam>,
+		RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				       GravityTimeInfExpCavesParam>,
+			  GravityTimeInfExpCavesModel,
+			  GravityTimeInfExpCavesParam> >;
 
 
 
@@ -336,6 +375,17 @@ template class FitOnlyRunner<System<GravityTimeInfModel,GravityTimeInfParam,
 						    GravityTimeInfParam>,
 				       GravityTimeInfModel,
 				       GravityTimeInfParam> >;
+
+
+template class
+FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+		     GravityTimeInfExpCavesParam,
+		     GravityTimeInfExpCavesModel,
+		     GravityTimeInfExpCavesParam>,
+	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				     GravityTimeInfExpCavesParam>,
+			GravityTimeInfExpCavesModel,
+			GravityTimeInfExpCavesParam> >;
 
 
 template class FitOnlyRunner<System<GravityModel,GravityParam,
@@ -590,6 +640,28 @@ OptimRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
 				  GravityTimeInfModel,GravityTimeInfParam>,
 			GravityTimeInfModel,GravityTimeInfParam> >;
 
+
+
+template class
+OptimRunnerNS<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				     GravityTimeInfExpCavesParam>,
+			GravityTimeInfExpCavesModel,
+			GravityTimeInfExpCavesParam>,
+	      M1SpOptim<System<GravityTimeInfExpCavesModel,
+			       GravityTimeInfExpCavesParam,
+			       GravityTimeInfExpCavesModel,
+			       GravityTimeInfExpCavesParam>,
+			RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+					       GravityTimeInfExpCavesParam>,
+				  GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesParam>,
+			GravityTimeInfExpCavesModel,
+			GravityTimeInfExpCavesParam> >;
+
+
+
 template class
 OptimRunnerNS<System<RangeModel,RangeParam,
 		     RangeModel,RangeParam>,
@@ -702,6 +774,23 @@ TuneRunner<System<GravityTimeInfModel,GravityTimeInfParam,
 					    GravityTimeInfParam>,
 			       GravityTimeInfModel,GravityTimeInfParam>,
 		     GravityTimeInfModel,GravityTimeInfParam> >;
+
+
+template class
+TuneRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		  GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesParam>,
+		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	   M1SpOptim<System<GravityTimeInfExpCavesModel,
+			    GravityTimeInfExpCavesParam,
+			    GravityTimeInfExpCavesModel,
+			    GravityTimeInfExpCavesParam>,
+		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+					    GravityTimeInfExpCavesParam>,
+			       GravityTimeInfExpCavesModel,
+			       GravityTimeInfExpCavesParam>,
+		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam> >;
 
 
 template class

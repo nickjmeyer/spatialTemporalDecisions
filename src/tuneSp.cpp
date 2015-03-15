@@ -115,17 +115,22 @@ void FFX::saveObs(const std::string & file) const{
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  std::vector<double> Avals = {30,50};
-  std::vector<double> Bvals = {1,10};
-  std::vector<double> Cvals = {2.0,5.0};
-  std::vector<double> Tvals = {1.0,2.0};
-  std::vector<double> Lvals = {1.0,1.25};
+  // std::vector<double> Avals = {30,50};
+  // std::vector<double> Bvals = {1,10};
+  // std::vector<double> Cvals = {2.0,5.0};
+  // std::vector<double> Tvals = {1.0,2.0};
+  // std::vector<double> Lvals = {1.0,1.25};
+
+  std::vector<double> Tvals = {0.5,1.0};
+  std::vector<double> Lvals = {1.25,1.75};
+
+  
 
   FFX ffx;
 
-  ffx.addFactor("A",Avals);
-  ffx.addFactor("B",Bvals);
-  ffx.addFactor("C",Cvals);
+  // ffx.addFactor("A",Avals);
+  // ffx.addFactor("B",Bvals);
+  // ffx.addFactor("C",Cvals);
   ffx.addFactor("T",Tvals);
   ffx.addFactor("L",Lvals);
 
@@ -134,8 +139,8 @@ int main(int argc, char ** argv){
 
   ffx.setReps(8);
 
-  typedef GravityTimeInfModel MG;
-  typedef GravityTimeInfParam PG;
+  typedef GravityTimeInfExpCavesModel MG;
+  typedef GravityTimeInfExpCavesParam PG;
   
   typedef MG ME;
   typedef PG PE;
@@ -171,6 +176,7 @@ int main(int argc, char ** argv){
 
 
   // this is an experiment to set up the tuning, so no tuning necessary
+  // NOW we want to tune for the updated experiment
   spo.tp.tune = 0;
 
   double value;
@@ -178,9 +184,9 @@ int main(int argc, char ** argv){
   int i, M = ffx.maxInd;
   int tick,tock;
   for(i = 0; i < M; ++i){
-    spo.tp.A = ffx.getSett("A",i);
-    spo.tp.B = ffx.getSett("B",i);
-    spo.tp.C = ffx.getSett("C",i);
+    // spo.tp.A = ffx.getSett("A",i);
+    // spo.tp.B = ffx.getSett("B",i);
+    // spo.tp.C = ffx.getSett("C",i);
     spo.tp.t = ffx.getSett("T",i);
     spo.tp.ell = ffx.getSett("L",i);
 

@@ -6,6 +6,10 @@ template class RankAgent<ToyFeatures2<GravityModel,GravityParam>,
 
 template class RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
 			 GravityTimeInfModel,GravityTimeInfParam>;
+template class RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				      GravityTimeInfExpCavesParam>,
+			 GravityTimeInfExpCavesModel,
+			 GravityTimeInfExpCavesParam>;
 
 template class RankAgent<ToyFeatures2<RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
@@ -18,7 +22,6 @@ template class RankAgent<ToyFeatures2<CaveModel,CaveParam>,
 template <class F, class M, class MP>
 RankAgent<F,M,MP>::RankAgent(){
   tp.weights.ones(f.numFeatures);
-  tp.numChunks = 3;
 
   tp.jitterScale = 4.0;
   
@@ -52,51 +55,33 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
 
   // jitter the current weights
   arma::colvec jitter;
+  arma::mat featStddev;
   jitter.zeros(f.numFeatures);
   
-  int i,j,k,node0,addPre,addAct;
+  int i,j,node0,addPre,addAct;
   int cI = 0,cN = 0;
   
-  double fBar,fSq,fVar;
-  int fN;
+  int numChunks = std::log((double)fD.numNodes) + 1.0;
 
-  int cap = std::min(std::max(numPre,numAct),tp.numChunks);
+  numChunks = std::min(std::max(numPre,numAct),numChunks);
   
-  for(i = 0; i < cap; i++){
+  for(i = 0; i < numChunks; i++){
 
     // get jitter
-    for(j = 0; j < f.numFeatures; j++){
-      fBar = 0.0;
-      fSq = 0.0;
-      fN = 0;
-      
-      for(k = 0; k < sD.numNotInfec; k++){
-	if(tD.p.at(sD.notInfec.at(k)) == 0){
-	  fBar += f.notFeat(k,j);
-	  fSq += f.notFeat(k,j)*f.notFeat(k,j);
-	  fN++;
-	}
-      }
-      for(k = 0; k < sD.numInfected; k++){
-	if(tD.a.at(sD.infected.at(k)) == 0){
-	  fBar += f.infFeat(k,j);
-	  fSq += f.infFeat(k,j)*f.infFeat(k,j);
-	  fN++;
-	}
-      }
-
-      if(fN > 1){
-	fBar/=double(fN);
-	fSq/=double(fN);
-	
-	fVar = (double(fN)/double(fN - 1))*(fSq - fBar*fBar);
-      }
-      else
-	fVar = 1.0;
-
-      jitter(j) = std::sqrt(fVar)*njm::rnorm01()/tp.jitterScale;
+    featStddev.zeros(0,f.numFeatures);
+    for(j = 0; j < sD.numNotInfec; ++j){
+      if(tD.p.at(sD.notInfec.at(j)) == 0)
+	featStddev.insert_rows(0,f.notFeat.row(j));
     }
-
+    for(j = 0; j < sD.numInfected; ++j){
+      if(tD.a.at(sD.infected.at(j)) == 0)
+	featStddev.insert_rows(0,f.infFeat.row(j));
+    }
+    featStddev = arma::cov(featStddev);
+    jitter = arma::sqrt(featStddev.diag())/tp.jitterScale;
+    
+    for(j = 0; j < f.numFeatures; j++)
+      jitter(j) *= njm::rnorm01();
 
     // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
@@ -139,10 +124,10 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
     
 
     // number of locations to add treatment too for this iteration
-    addPre = (int)((i+1)*numPre/std::min(tp.numChunks,numPre)) -
-      (int)(i*numPre/std::min(tp.numChunks,numPre));
-    addAct = (int)((i+1)*numAct/std::min(tp.numChunks,numAct)) -
-      (int)(i*numAct/std::min(tp.numChunks,numAct));
+    addPre = (int)((i+1)*numPre/std::min(numChunks,numPre)) -
+      (int)(i*numPre/std::min(numChunks,numPre));
+    addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
+      (int)(i*numAct/std::min(numChunks,numAct));
 
 
     // add active treatment
@@ -160,7 +145,7 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
     }
 
     // if more iterations, update features
-    if((i+1) < cap){
+    if((i+1) < numChunks){
       f.updateFeatures(sD,tD,fD,dD,m,mP);
     }
     

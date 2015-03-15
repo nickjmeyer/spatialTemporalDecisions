@@ -8,7 +8,7 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
 
   t = 1.0;
 
-  ell = 1.0;
+  ell = 1.25;
 
   muMin = 0.1;
 
@@ -43,6 +43,17 @@ template class M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
 						GravityTimeInfParam>,
 				   GravityTimeInfModel,GravityTimeInfParam>,
 			 GravityTimeInfModel,GravityTimeInfParam>;
+
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam>,
+			 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+						GravityTimeInfExpCavesParam>,
+				   GravityTimeInfExpCavesModel,
+				   GravityTimeInfExpCavesParam>,
+			 GravityTimeInfExpCavesModel,
+			 GravityTimeInfExpCavesParam>;
 
 template class M1SpOptim<System<GravityModel,GravityParam,
 				RangeModel,RangeParam>,

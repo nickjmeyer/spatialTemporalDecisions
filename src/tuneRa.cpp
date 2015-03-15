@@ -115,12 +115,10 @@ void FFX::saveObs(const std::string & file) const{
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  std::vector<double> chunkVals = {1,2,3};
-  std::vector<double> scaleVals = {1,2,4,8,10};
+  std::vector<double> scaleVals = {1,2,4,8};
 
   FFX ffx;
 
-  ffx.addFactor("chunk",chunkVals);
   ffx.addFactor("scale",scaleVals);
 
   ffx.addStat("value");
@@ -128,8 +126,8 @@ int main(int argc, char ** argv){
 
   ffx.setReps(8);
 
-  typedef GravityTimeInfModel MG;
-  typedef GravityTimeInfParam PG;
+  typedef GravityTimeInfExpCavesModel MG;
+  typedef GravityTimeInfExpCavesParam PG;
   
   typedef MG ME;
   typedef PG PE;
@@ -174,7 +172,6 @@ int main(int argc, char ** argv){
   int i, M = ffx.maxInd;
   int tick,tock;
   for(i = 0; i < M; ++i){
-    ar.tp.numChunks = ffx.getSett("chunk",i);
     ar.tp.jitterScale = ffx.getSett("scale",i);
 
     tick = std::time(NULL);
