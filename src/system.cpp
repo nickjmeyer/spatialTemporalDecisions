@@ -209,8 +209,12 @@ void System<MG, MPG,
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
   fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
   njm::fromFile(fD.network,njm::sett.srcExt("network.txt"));
-  njm::fromFile(fD.centroidsLong,njm::sett.srcExt("centroidsLong.txt"));
-  njm::fromFile(fD.centroidsLat,njm::sett.srcExt("centroidsLat.txt"));
+  
+  njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsLong.txt"));
+  njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsLat.txt"));
+  njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsMdsLong.txt"));
+  njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsMdsLat.txt"));
+  
   njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
   njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
 

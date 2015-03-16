@@ -58,6 +58,9 @@ struct FixedData {
   std::vector<double> centroidsLong;
   std::vector<double> centroidsLat;
 
+  std::vector<double> centroidsMdsLong;
+  std::vector<double> centroidsMdsLat;
+  
   std::vector<double> subGraph;
   std::vector<double> betweenness;
 

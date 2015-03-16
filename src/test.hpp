@@ -34,7 +34,7 @@
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SgdOptim.hpp"
-#include "m2NmOptim.hpp"
+#include "m2QOptim.hpp"
 #include "m1SimpleOptim.hpp"
 
 
