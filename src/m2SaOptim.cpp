@@ -274,6 +274,7 @@ bellResFixData(const SimData & sD,
     }
 
 
+    
     // using the current values build D0
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
