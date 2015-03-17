@@ -3,6 +3,11 @@
 template class FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
 			   GravityModel,GravityParam>;
 
+template class FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
+					GravityTimeInfExpCavesParam>,
+			   GravityTimeInfExpCavesModel,
+			   GravityTimeInfExpCavesParam>;
+
 template class FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 			   RangeModel,RangeParam>;
 

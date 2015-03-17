@@ -25,16 +25,18 @@ Settings::~Settings(){
 
 void Settings::timeElapsed(){
   tock = std::time(NULL);
+  
+  std::stringstream timeInfo;
+  timeInfo.str("");
+  timeInfo.clear();
+  timeInfo << std::endl << std::endl
+	   << "time elapsed: "
+	   << ((double)(tock-tick))/(3600.0)
+	   << " hours"
+	   << std::endl;
+  std::cout << timeInfo.str();
+  
   if(!cleaned){
-    std::stringstream timeInfo;
-    timeInfo.str("");
-    timeInfo.clear();
-    timeInfo << std::endl << std::endl
-	     << "time elapsed: "
-	     << ((double)(tock-tick))/(3600.0)
-	     << " hours"
-	     << std::endl;
-    std::cout << timeInfo.str();
     njm::toFile("\n\n\n",datDir + "/README.org");
     njm::toFile("* Time Elapsed",datDir + "/README.org");
     njm::toFile(timeInfo.str(),datDir + "/README.org");

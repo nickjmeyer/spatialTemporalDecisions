@@ -250,13 +250,10 @@
    The table below shows the Bayesian P-value for each of the four
    transformations above.  Using an exponential transformation greatly
    improves the estimated p-values.  Going forward, we choose the
-<<<<<<< HEAD
    ``exp\(\_\)caves'' transformation as providing the best fit.  (talk
-   about the p-value close to 0.5 and 
-=======
-   ``exp\(\_\)caves'' transformation as providing the best fit and use
-   it as the generative model in the simulation experiments.
->>>>>>> fe7f549f265f1f6c884817fd2703eaf2e50a1ad7
+   about the p-value close to 0.5 and providing the best fit and use
+   it as the generative model in the simulation experiments).
+
    #+BEGIN_SRC R :session :exports results :results output latex
      bayesP = rbind(bayesP,colMeans(bayesP))
      row.names(bayesP)[nrow(bayesP)] = "Column Mean"
@@ -660,20 +657,18 @@
   $1$.
 
   [An algorithm sketch would be useful here]
-  
+
+
+\newpage
   
 * Results
   
 ** Simultaneous perturbation experiment
    
    To calibrate the simultaneous perturbation algorithm, we ran a full
-<<<<<<< HEAD
    factorial experiment over the following levels. (put the algorithm
    in here)
-=======
-   factorial experiment over the following levels on the grid network
-   of size 100.
->>>>>>> fe7f549f265f1f6c884817fd2703eaf2e50a1ad7
+
    #+BEGIN_LaTeX
      \begin{itemize}
        \item $A \in \lbrace 30, 50 \rbrace $
@@ -732,8 +727,95 @@
    #+END_SRC
 
 
-** Agent jitter and iterations experiment
+   This is the second simultaneous perturbation experiment
+
+
+   #+BEGIN_SRC R :session :exports none
+     rm(list=ls(all=TRUE))
+
+     library(xtable)
+
+     datDir = paste("/home/nick/research/spatialDecisionMaking",
+         "data/toy/grid100/2015-03-14-21-05-18",sep="/")
+     res = read.table(paste(datDir,"results_.txt",sep="/"),header=TRUE)
+
+     pm = c("-","+")
+
+     res$Tfac = pm[as.numeric(factor(res$T))]
+     res$Lfac = pm[as.numeric(factor(res$L))]
+
+     resAll = res[,c("value","time","Tfac","Lfac","combo")]
+
+     mnAgg = aggregate(res$value,by=list(res$combo),FUN=mean)
+     sdAgg = aggregate(res$value,by=list(res$combo),FUN=sd)
+     tmAgg = aggregate(res$time,by=list(res$combo),FUN=mean)
+
+     names(mnAgg) = c("combo","valueMean")
+     names(sdAgg) = c("combo","valueSd")
+     names(tmAgg) = c("combo","timeMean")
+
+     resAgg = res[1:4,]
+     resAgg = merge(resAgg,mnAgg,by="combo")
+     resAgg = merge(resAgg,sdAgg,by="combo")
+     resAgg = merge(resAgg,tmAgg,by="combo")
+
+     resAgg = resAgg[,c("valueMean","valueSd","timeMean","Tfac","Lfac","combo")]
+   #+END_SRC
+
+
+   #+BEGIN_SRC R :session :exports results :results output latex
+     print(xtable(resAgg[order(resAgg$valueMean,decreasing=FALSE),],
+                  digits=c(0,3,3,3,0,0,0),align="rrrrccr",
+                  caption="Results from the second simultaneous perturbation experiment."),
+           include.rownames=FALSE,label="tab:simPertExp")
+   #+END_SRC
+
+
+\newpage
+
+
+** Priority score experiment
+
+   Varried the scaling factor for the jitter to the priority score
+   weights.  Large values for [[scale]] implies a smaller jitter.
    
-** Toy Structures
+
+   #+BEGIN_SRC R :session :exports none
+     rm(list=ls(all=TRUE))
+
+     library(xtable)
+
+     datDir = paste("/home/nick/research/spatialDecisionMaking",
+         "data/toy/grid100/2015-03-14-21-04-32",sep="/")
+     res = read.table(paste(datDir,"results_.txt",sep="/"),header=TRUE)
+
+     resAll = res
+
+     mnAgg = aggregate(res$value,by=list(res$combo),FUN=mean)
+     sdAgg = aggregate(res$value,by=list(res$combo),FUN=sd)
+     tmAgg = aggregate(res$time,by=list(res$combo),FUN=mean)
+
+     names(mnAgg) = c("combo","valueMean")
+     names(sdAgg) = c("combo","valueSd")
+     names(tmAgg) = c("combo","timeMean")
+
+     resAgg = res[1:4,]
+     resAgg = merge(resAgg,mnAgg,by="combo")
+     resAgg = merge(resAgg,sdAgg,by="combo")
+     resAgg = merge(resAgg,tmAgg,by="combo")
+
+     resAgg = resAgg[,c("valueMean","valueSd","timeMean","scale","combo")]
+   #+END_SRC
+
+
+   #+BEGIN_SRC R :session :exports results :results output latex
+     print(xtable(resAgg[order(resAgg$valueMean,decreasing=FALSE),],
+                  digits=c(0,3,3,3,0,0),align="rrrrcr",
+                  caption="Results from the priority score experiment."),
+           include.rownames=FALSE,label="tab:simPertExp")
+   #+END_SRC
+
    
-** WNS
+# ** Toy Structures
+   
+# ** WNS

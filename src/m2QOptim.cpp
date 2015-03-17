@@ -62,44 +62,44 @@ optim(const S & system,
   
 
 
-  double sd = qEval.tp.sdStart;
-  std::vector<double> w;
-  std::vector<double> bestW;
-  double q,bestQ;
+  // double sd = qEval.tp.sdStart;
+  // std::vector<double> w;
+  // std::vector<double> bestW;
+  // double q,bestQ;
   
-  qEval.bellResPolData(s.sD.time,s.fD,
-		       s.modelEst,s.paramEst,agent);
-  qEval.solve();
+  // qEval.bellResPolData(s.sD.time,s.fD,
+  // 		       s.modelEst,s.paramEst,agent);
+  // qEval.solve();
   
-  bestW = agent.tp.getPar();
-  bestQ=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
-		  s.modelEst,s.paramEst,agent);
+  // bestW = agent.tp.getPar();
+  // bestQ=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
+  // 		  s.modelEst,s.paramEst,agent);
   
-  int i;  
-  while(sd > qEval.tp.sdStop){
-    w.clear();
-    for(i=0; i<agent.f.numFeatures; i++)
-      w.push_back(bestW.at(i) +sd*njm::rnorm01());
-    njm::l2norm(w);
-    agent.tp.putPar(w);
+  // int i;  
+  // while(sd > qEval.tp.sdStop){
+  //   w.clear();
+  //   for(i=0; i<agent.f.numFeatures; i++)
+  //     w.push_back(bestW.at(i) +sd*njm::rnorm01());
+  //   njm::l2norm(w);
+  //   agent.tp.putPar(w);
 
-    qEval.bellResPolData(s.sD.time,s.fD,
-			 s.modelEst,s.paramEst,agent);
-    qEval.solve();
-    q=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
-		s.modelEst,s.paramEst,agent);
+  //   qEval.bellResPolData(s.sD.time,s.fD,
+  // 			 s.modelEst,s.paramEst,agent);
+  //   qEval.solve();
+  //   q=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
+  // 		s.modelEst,s.paramEst,agent);
     
-    if(q > bestQ){
-      bestQ = q;
-      bestW = w;
-      sd*=qEval.tp.sdJump;
-    }
-    else{
-      sd*=qEval.tp.sdDecay;
-    }
-  }
+  //   if(q > bestQ){
+  //     bestQ = q;
+  //     bestW = w;
+  //     sd*=qEval.tp.sdJump;
+  //   }
+  //   else{
+  //     sd*=qEval.tp.sdDecay;
+  //   }
+  // }
 
-  agent.tp.putPar(bestW);
+  // agent.tp.putPar(bestW);
 }
 
 
@@ -119,7 +119,9 @@ M2QEval<S,A,F,M,MP>::M2QEval(){
 
   tp.gamma = .95;
   tp.lambda = 3000.0;
-  
+
+  tp.dfLat = 10;
+  tp.dfLong = 10;
 }
 
 
@@ -155,19 +157,22 @@ preCompData(const SimData & sD, const FixedData & fD){
   const int nbreakLat = tp.dfLat + 2 - deg;
   const int nbreakLong = tp.dfLong + 2 - deg;
 
+
   gsl_bspline_workspace *bsLat, *bsLong;
   bsLat = gsl_bspline_alloc(deg,nbreakLat);
   bsLong = gsl_bspline_alloc(deg,nbreakLong);
 
-  double latMin = std::min(fD.centroidsMdsLat.begin(),
-			   fD.centroidsMdsLat.end());
-  double latMax = std::max(fD.centroidsMdsLat.begin(),
-			   fD.centroidsMdsLat.end());
-  double longMin = std::min(fD.centroidsMdsLong.begin(),
-			    fD.centroidsMdsLong.end());
-  double longMax = std::max(fD.centroidsMdsLong.begin(),
-			    fD.centroidsMdsLong.end());
 
+  double latMin = *std::min_element(fD.centroidsMdsLat.begin(),
+				    fD.centroidsMdsLat.end());
+  double latMax = *std::max_element(fD.centroidsMdsLat.begin(),
+				    fD.centroidsMdsLat.end());
+  double longMin = *std::min_element(fD.centroidsMdsLong.begin(),
+				     fD.centroidsMdsLong.end());
+  double longMax = *std::max_element(fD.centroidsMdsLong.begin(),
+				     fD.centroidsMdsLong.end());
+
+  
   gsl_bspline_knots_uniform(latMin,latMax,bsLat);
   gsl_bspline_knots_uniform(longMin,longMax,bsLong);
 
@@ -175,28 +180,29 @@ preCompData(const SimData & sD, const FixedData & fD){
   bLat = gsl_vector_alloc(tp.dfLat);
   bLong = gsl_vector_alloc(tp.dfLong);
 
+
   phiL.clear();
-  int k,u,v;
+  int u,v;
   double bb;
   for(i = 0; i < fD.numNodes; ++i){
-    Eigen::SparseMatrix<double> phi(lenPsi*dfLat*dfLong,lenPsi);
-    phi.reserve(lenPsi*dfLat*dfLong);
+    Eigen::SparseMatrix<double> phi(lenPsi*tp.dfLat*tp.dfLong,lenPsi);
+    phi.reserve(lenPsi*tp.dfLat*tp.dfLong);
     
     gsl_bspline_eval(fD.centroidsMdsLat.at(i),
 		     bLat,bsLat);
-    gsl_bspline_eval(fD.centroidsMdsLat.at(i),
-		     bLat,bsLat);
+    gsl_bspline_eval(fD.centroidsMdsLong.at(i),
+		     bLong,bsLong);
     for(j = 0; j < lenPsi; ++j){
-      for(u = 0; u < dfLat; ++u){
-	for(v = 0; v < dfLong; ++v){
+      for(u = 0; u < tp.dfLat; ++u){
+	for(v = 0; v < tp.dfLong; ++v){
 	  bb = gsl_vector_get(bLat,u)*gsl_vector_get(bLong,v);
-	  phi.insert(j*dfLat*dfLong + u*dfLong + v,j) == bb;
+	  if(bb != 0.0)
+	    phi.insert(j*tp.dfLat*tp.dfLong + u*tp.dfLong + v,j) = bb;
 	}
       }
     }
     phiL.push_back(phi);
   }
-
 
   gsl_bspline_free(bsLat);
   gsl_bspline_free(bsLong);
@@ -225,7 +231,6 @@ bellResFixData(const SimData & sD,
   
   sD1T.clear();
   dD1T.clear();
-  deltaQ.clear();
   
   SimData sDt;
   TrtData tDt;
@@ -305,7 +310,7 @@ bellResFixData(const SimData & sD,
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
-    phiPsiL=featToPsiPhi(features,fD.numNodes);
+    phiPsiL=featToPhiPsi(features,fD.numNodes);
     
     phiPsiTL.push_back(phiPsiL);
 
@@ -370,7 +375,7 @@ featToPhiPsi(const std::vector<double> & feat, const int numNodes){
 
   // create full features with interactions
   std::vector<double> featFull;
-  featFull.reserve(K*numNodes);
+  featFull.reserve(numFeat*numNodes);
   for(n=0; n<numNodes; n++){
     for(i=0; i<f.numFeatures; i++){
       featFull.push_back(feat.at(n*f.numFeatures +i));
@@ -386,7 +391,6 @@ featToPhiPsi(const std::vector<double> & feat, const int numNodes){
 
   // for each location create psi vector
   double avg;
-  int node;
   std::vector<Eigen::VectorXd> mats;
   for(n = 0; n < numNodes; ++n){
     Eigen::VectorXd psiL(lenPsi);
@@ -468,7 +472,7 @@ bellResPolData(const int time,
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 	phiPsiL = featToPhiPsi(features,fD.numNodes);
-	if(j = 0)
+	if(j == 0)
 	  phiPsiLavg = phiPsiL;
 	else
 	  for(k = 0; k < fD.numNodes; ++k)
@@ -481,7 +485,7 @@ bellResPolData(const int time,
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
-      phiPsiLavg = featToPhi(features,fD.numNodes);
+      phiPsiLavg = featToPhiPsi(features,fD.numNodes);
     }
 
     for(k = 0; k < fD.numNodes; ++k)
@@ -499,12 +503,13 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  Eigen::DiagonalMatrix<double,Eigen::dynamic> P(tp.dfLat*tp.dfLong*numFeat);
-
-  Eigen::MatrixXd xTx = D.transpose() * D + tp.lambda * P;
-  Eigen::VectorXd y = -D.transpose() * R;
+  Eigen::DiagonalMatrix<double,Eigen::Dynamic> P(tp.dfLat*tp.dfLong*numFeat);
+  P.setIdentity();
   
-  beta = xTx.fullPivHouseholderQr().solve(y);
+  Eigen::MatrixXd xTxP = D.transpose() * D;
+  xTxP += tp.lambda * P;
+  Eigen::VectorXd xTy = -D.transpose() * R;
+  beta = xTxP.fullPivHouseholderQr().solve(xTy);
 }
 
 

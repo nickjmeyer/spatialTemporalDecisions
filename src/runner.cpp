@@ -361,6 +361,15 @@ VanillaRunnerNS<S,A>
 template class FitOnlyRunner<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     MyopicAgent<GravityModel,GravityParam> >;
+
+template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
+				    GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam>,
+			     MyopicAgent<GravityTimeInfExpCavesModel,
+					 GravityTimeInfExpCavesParam> >;
+
+
 template class FitOnlyRunner<System<CaveModel,CaveParam,
 				    CaveModel,CaveParam>,
 			     MyopicAgent<CaveModel,CaveParam> >;
