@@ -9,8 +9,8 @@ double getDPow(const double & power, const double & alpha,
   dPow = std::log(dPow);
   dPow /= std::log(2.0);
 
-  return(std::pow(dPow,0.75));
-  // return(dPow);
+  return(dPow);
+  // return(std::pow(dPow,0.75));
   // return(1.0);
 }
 
