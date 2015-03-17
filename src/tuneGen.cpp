@@ -10,8 +10,6 @@ double getDPow(const double & power, const double & alpha,
   dPow /= std::log(2.0);
 
   return(dPow);
-  // return(std::pow(dPow,0.75));
-  // return(1.0);
 }
 
 
@@ -43,7 +41,7 @@ double TuneGenNT(S & s){
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
   double val = rn.run(s,nt,numReps,numYears);
-  double scale = 1.5, shrink = .9;
+  double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
 
