@@ -38,8 +38,6 @@ struct FixedData {
 
   int trtStart;
 
-  double propTrt;
-
   int period;
 
   int finalT;

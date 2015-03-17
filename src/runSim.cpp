@@ -9,7 +9,6 @@ int main(int argc, char ** argv){
   ProximalAgent<GravityModel,GravityParam> pA;
   MyopicAgent<GravityModel,GravityParam> mA;
   RankAgent<GravityModel,GravityParam> rA;
-  rA.tp.numChunks=3;
 
   VanillaRunner<System,NoTrt,GravityModel,GravityParam> nR;
   VanillaRunner<System,ProximalAgent,GravityModel,GravityParam> pR;

@@ -151,7 +151,7 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
     
   }
 
-#ifdef NJM_DEBUG
+#ifndef NJM_NO_DEBUG
   int totPre = 0,totAct = 0;
   // check if valid treatments are given to valid locations
   for(i = 0; i < fD.numNodes; i++){

@@ -38,7 +38,7 @@ double TuneGenNT(S & s){
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
   double val = rn.run(s,nt,numReps,numYears);
-  double scale = 1.5, shrink = .975;
+  double scale = 50.0, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
 
@@ -71,6 +71,13 @@ double TuneGenNT(S & s){
     s.paramGen_r.power = power;
     s.paramEst_r.putPar(par);
     s.paramEst_r.power = power;
+
+    std::cout << "  par: " << njm::toString(s.paramGen_r.getPar()," ","\n");
+
+    std::cout << "avg d: "
+	      << (std::accumulate(s.fD.dist.begin(),s.fD.dist.end(),0.0)/
+		  double(s.fD.numNodes))
+	      << std::endl;
 
     s.reset();
 

@@ -163,20 +163,18 @@ template class VanillaRunner<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			     MyopicAgent<GravityModel,GravityParam> >;
 
-
-
-template class VanillaRunner<System<GravityModel,GravityParam,
-				    RangeModel,RangeParam>,
-			     NoTrt<RangeModel,RangeParam> >;
-template class VanillaRunner<System<GravityModel,GravityParam,
-				    RangeModel,RangeParam>,
-			     ProximalAgent<RangeModel,RangeParam> >;
-
-template class VanillaRunner<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     RankAgent<ToyFeatures2<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam> >;
+template class VanillaRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
+				    GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam>,
+			     NoTrt<GravityTimeInfExpCavesModel,
+				   GravityTimeInfExpCavesParam> >;
+template class VanillaRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
+				    GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam>,
+			     ProximalAgent<GravityTimeInfExpCavesModel,
+					   GravityTimeInfExpCavesParam> >;
 
 
 
@@ -479,6 +477,23 @@ OptimRunner<System<GravityModel,GravityParam,
 					     GravityParam>,
 				GravityModel,GravityParam>,
 		      GravityModel,GravityParam> >;
+
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		   GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				   GravityTimeInfExpCavesParam>,
+		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	    M1SpOptim<System<GravityTimeInfExpCavesModel,
+			     GravityTimeInfExpCavesParam,
+			     GravityTimeInfExpCavesModel,
+			     GravityTimeInfExpCavesParam>,
+		      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+					     GravityTimeInfExpCavesParam>,
+				GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam>,
+		      GravityTimeInfExpCavesModel,
+		      GravityTimeInfExpCavesParam> >;
 
 
 // Range model (misspecified)

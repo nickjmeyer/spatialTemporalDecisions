@@ -389,7 +389,7 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // 	    << std::endl << std::endl;
   // ////////////////////////////////////////
 
-#ifdef NJM_DEBUG
+#ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
     std::cout << "Error: in getFeatures: featNum != numFeatures"
 	      << std::endl;
