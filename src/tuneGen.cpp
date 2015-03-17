@@ -5,8 +5,13 @@ double getDPow(const double & power, const double & alpha,
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
   meanCaves /= double(caves.size());
 
-  return(std::log(std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0)/
-	 std::log(2.0));
+  double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
+  dPow = std::log(dPow);
+  dPow /= std::log(2.0);
+
+  // return(std::pow(dPow,0.75));
+  return(dPow);
+  // return(1.0);
 }
 
 
@@ -38,7 +43,7 @@ double TuneGenNT(S & s){
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
   double val = rn.run(s,nt,numReps,numYears);
-  double scale = 50.0, shrink = .9;
+  double scale = 1.5, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
 
@@ -71,13 +76,6 @@ double TuneGenNT(S & s){
     s.paramGen_r.power = power;
     s.paramEst_r.putPar(par);
     s.paramEst_r.power = power;
-
-    std::cout << "  par: " << njm::toString(s.paramGen_r.getPar()," ","\n");
-
-    std::cout << "avg d: "
-	      << (std::accumulate(s.fD.dist.begin(),s.fD.dist.end(),0.0)/
-		  double(s.fD.numNodes))
-	      << std::endl;
 
     s.reset();
 
