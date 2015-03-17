@@ -8,7 +8,7 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
 
   t = 1.0;
 
-  ell = 1.25;
+  ell = 1.75;
 
   muMin = 0.1;
 
