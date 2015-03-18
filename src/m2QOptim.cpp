@@ -562,14 +562,6 @@ solve(){
   
   Eigen::SparseMatrix<double> P(tp.dfLat*tp.dfLong*lenPsi,
 				tp.dfLat*tp.dfLong*lenPsi);
-
-  // don't penalize the coefficients that correspond to the intercept
-  // this means all tp.dfLat*tp.dfLong basis functions for the intercept
-  
-  // int i, I = tp.dfLat*tp.dfLong, J = I*lenPsi;
-  // for(i = I; i < J; ++i){
-  //   P.insert(i,i) = 1;
-  // }
   P.setIdentity();
 
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
