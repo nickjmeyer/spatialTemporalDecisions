@@ -43,6 +43,8 @@ int main(int argc, char ** argv){
 
   oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
 
+  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
+
   
   njm::sett.clean();
   return 0;

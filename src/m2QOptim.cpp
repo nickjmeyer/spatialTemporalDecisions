@@ -111,6 +111,26 @@ template class M2QEval<System<GravityModel,GravityParam,
 				    GravityModel,GravityParam>,
 			GravityModel,GravityParam>;
 
+
+
+template class M2QEval<System<GravityTimeInfExpCavesModel,
+			      GravityTimeInfExpCavesParam,
+			       GravityTimeInfExpCavesModel,
+			      GravityTimeInfExpCavesParam>,
+			RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+					       GravityTimeInfExpCavesParam>,
+				     GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesParam>,
+			FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
+						 GravityTimeInfExpCavesParam>,
+				    GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam>,
+			GravityTimeInfExpCavesModel,
+		       GravityTimeInfExpCavesParam>;
+
+
+
+
 template <class S, class A, class F,
 	  class M,class MP>
 M2QEval<S,A,F,M,MP>::M2QEval(){
@@ -221,7 +241,7 @@ bellResFixData(const SimData & sD,
 	       const DynamicData & dD,
 	       const M & m,
 	       MP & mP){
-  int dim = tp.dfLat*tp.dfLong*numFeat;
+  int dim = tp.dfLat*tp.dfLong*lenPsi;
   // prep containers
   R.resize(dim);
   R.setZero();
@@ -425,7 +445,7 @@ bellResPolData(const int time,
 	       MP & mP,
 	       A a){
 
-  int dim = tp.dfLat*tp.dfLong*numFeat;
+  int dim = tp.dfLat*tp.dfLong*lenPsi;
   std::vector<Eigen::VectorXd> phiPsiL;
   std::vector<Eigen::VectorXd> phiPsiLavg;
 
