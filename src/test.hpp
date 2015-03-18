@@ -7,6 +7,7 @@
 #include <iostream>
 #include <numeric>
 #include "utilities.hpp"
+#include "timer.hpp"
 #include "rand.hpp"
 #include "data.hpp"
 #include "system.hpp"

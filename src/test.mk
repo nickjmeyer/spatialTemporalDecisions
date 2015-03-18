@@ -49,7 +49,7 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	mcmcGravityTimeInfExpLCaves.o \
 	mcmcGravityTimeInfExpRCaves.o \
 	runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o settings.o
+	sortMerge.o settings.o timer.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"

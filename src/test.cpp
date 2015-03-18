@@ -45,6 +45,11 @@ int main(int argc, char ** argv){
 
   oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
 
+  oq.qEval.solve();
+
+  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
+	    << " >>>>> " << oq.qEval.bellRes()
+	    << std::endl;
   
   njm::sett.clean();
   return 0;

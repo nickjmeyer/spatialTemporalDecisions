@@ -138,7 +138,8 @@ M2QEval<S,A,F,M,MP>::M2QEval(){
   tp.numNeigh = 5;
 
   tp.gamma = .95;
-  tp.lambda = 3000.0;
+  // tp.lambda = 3000.0;
+  tp.lambda = 1000;
 
   tp.dfLat = 10;
   tp.dfLong = 10;
@@ -273,6 +274,8 @@ bellResFixData(const SimData & sD,
   int i,t,status_i,numNewInfec;
   for(t=0; t<sD.time; t++){
 
+    njm::timer.start("fixBuild");
+    
     // build complete history of simulation
 
     // clear containers and set simple things
@@ -325,22 +328,38 @@ bellResFixData(const SimData & sD,
       dD1T.push_back(dD); // right now dD is completely empty ... trivial
     }
 
+    njm::timer.stop("fixBuild");    
 
+    njm::timer.start("fixFeat");    
     // using the current values build D0
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
+
+    njm::timer.stop("fixFeat");    
+
+    njm::timer.start("fixPhiPsi");
     phiPsiL=featToPhiPsi(features,fD.numNodes);
     
     phiPsiTL.push_back(phiPsiL);
+    njm::timer.stop("fixPhiPsi");
 
-    for(i = 0; i < fD.numNodes; ++i)
-      D0 += phiPsiL.at(i) * phiPsiL.at(i).transpose();
+    Eigen::MatrixXd ppTpp;
+    for(i = 0; i < fD.numNodes; ++i){
+      njm::timer.start("fixD0Mult");
+      ppTpp = phiPsiL.at(i) * phiPsiL.at(i).transpose();
+      njm::timer.stop("fixD0Mult");
+      
+      njm::timer.start("fixD0Add");
+      D0 += ppTpp;
+      njm::timer.stop("fixD0Add");
+    }
 
+    njm::timer.start("fixR");
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
       R += phiPsiL.at(sDt.newInfec.at(i)) * (1.0/double(fD.numNodes));
-
+    njm::timer.stop("fixR");
   }
 
   // sD and dD are at time T
@@ -469,6 +488,8 @@ bellResPolData(const int time,
   
   int t,i,j,k;
   for(t=0; t<time; t++){
+    njm::timer.start("polBuild");
+    
     std::fill(tDt.a.begin(),tDt.a.end(),0);
     std::fill(tDt.p.begin(),tDt.p.end(),0);  
     std::fill(tDt.aPast.begin(),tDt.aPast.end(),0);
@@ -481,9 +502,12 @@ bellResPolData(const int time,
 	tDt.aPast.at(i)=1;
     }
 
+    njm::timer.stop("polBuild");
+
     if((t+1)>=fD.trtStart){
       D1add.setZero();
       for(j=0; j<tp.polReps; j++){
+	njm::timer.start("polFeat");
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
 	std::fill(tDt.p.begin(),tDt.p.end(),0);  
 	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
@@ -491,30 +515,46 @@ bellResPolData(const int time,
 	f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
+
+	njm::timer.stop("polFeat");
+
+	njm::timer.start("polPhiPsi");
 	phiPsiL = featToPhiPsi(features,fD.numNodes);
 	if(j == 0)
 	  phiPsiLavg = phiPsiL;
 	else
 	  for(k = 0; k < fD.numNodes; ++k)
 	    phiPsiLavg.at(k) += phiPsiL.at(k);
+	njm::timer.stop("polPhiPsi");
       }
+      njm::timer.start("polPhiPsi");
       for(k = 0; k < fD.numNodes; ++k)
 	phiPsiLavg.at(k) /= double(tp.polReps);
+      njm::timer.stop("polPhiPsi");
     }
     else{
+      njm::timer.start("polFeat");
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
+      njm::timer.stop("polFeat");
+
+      njm::timer.start("polPhiPsi");
       phiPsiLavg = featToPhiPsi(features,fD.numNodes);
+      njm::timer.stop("polPhiPsi");
     }
 
+    njm::timer.start("polD1");
     for(k = 0; k < fD.numNodes; ++k)
       D1 += phiPsiTL.at(t).at(k) * phiPsiLavg.at(k).transpose();
+    njm::timer.stop("polD1");
   }
 
+  njm::timer.start("polFinish");
   D1 *= tp.gamma; // discount factor
 
   D = D1 - D0;
+  njm::timer.stop("polFinish");
 }
 
 
@@ -523,13 +563,25 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  Eigen::DiagonalMatrix<double,Eigen::Dynamic> P(tp.dfLat*tp.dfLong*numFeat);
-  P.setIdentity();
+  Eigen::SparseMatrix<double> P(tp.dfLat*tp.dfLong*lenPsi,
+				tp.dfLat*tp.dfLong*lenPsi);
+
+  // don't penalize the coefficients that correspond to the intercept
+  // this means all tp.dfLat*tp.dfLong basis functions for the intercept
   
+  int i, I = tp.dfLat*tp.dfLong, J = I*lenPsi;
+  for(i = I; i < J; ++i){
+    P.insert(i,i) = 1;
+  }
+    
+
   Eigen::MatrixXd xTxP = D.transpose() * D;
-  xTxP += tp.lambda * P;
   Eigen::VectorXd xTy = -D.transpose() * R;
+
+  xTxP += tp.lambda * P;
+
   beta = xTxP.fullPivHouseholderQr().solve(xTy);
+  // beta = xTxP.householderQr().solve(xTy); // faster, but less stable
 }
 
 
@@ -553,6 +605,9 @@ qFn(const SimData & sD,
     const M & m,
     MP & mP,
     A a){
+
+  njm::timer.start("qFn");
+  
   // now evaluate Q-function
   std::vector<Eigen::VectorXd> phiPsiL;
   Eigen::VectorXd phiPsi;
@@ -574,5 +629,7 @@ qFn(const SimData & sD,
   }
   phiPsi /= (double)tp.polReps;
 
+  njm::timer.stop("qFn");
+  
   return (phiPsi.transpose()*beta).sum();
 }
