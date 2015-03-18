@@ -77,8 +77,9 @@ class M2QEval {
   std::vector<double> feat2Vec(const int numNodes,
 			       const std::vector<int> & status);
 
-  std::vector<Eigen::VectorXd >featToPhiPsi(const std::vector<double> & feat,
-					    const int numNodes);
+  std::vector<Eigen::SparseMatrix<double>
+	      >featToPhiPsi(const std::vector<double> & feat,
+			    const int numNodes);
   
   M2QEvalTunePar tp;
 
@@ -92,10 +93,10 @@ class M2QEval {
 
   // data for bellman residual
   std::vector<Eigen::SparseMatrix<double> > phiL;  // \lbrace \Phi_\ell \rbrace
-  std::vector<std::vector<Eigen::VectorXd> > phiPsiTL;
+  std::vector<std::vector<Eigen::SparseMatrix<double> > > phiPsiTL;
   
   Eigen::VectorXd R;
-  Eigen::MatrixXd D0,D1,D;
+  Eigen::SparseMatrix<double> D0,D1,D;
   std::vector<SimData> sD1T; // {sD}_{t=1}^T
   std::vector<DynamicData> dD1T; //{dD}_{t=1}^T
 };

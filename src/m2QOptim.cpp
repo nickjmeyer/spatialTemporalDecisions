@@ -268,7 +268,7 @@ bellResFixData(const SimData & sD,
 
   std::vector<double> features;
 
-  std::vector<Eigen::VectorXd> phiPsiL;
+  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
 
   // setup initial SimData
   int i,t,status_i,numNewInfec;
@@ -344,15 +344,10 @@ bellResFixData(const SimData & sD,
     phiPsiTL.push_back(phiPsiL);
     njm::timer.stop("fixPhiPsi");
 
-    Eigen::MatrixXd ppTpp;
     for(i = 0; i < fD.numNodes; ++i){
-      njm::timer.start("fixD0Mult");
-      ppTpp = phiPsiL.at(i) * phiPsiL.at(i).transpose();
-      njm::timer.stop("fixD0Mult");
-      
-      njm::timer.start("fixD0Add");
-      D0 += ppTpp;
-      njm::timer.stop("fixD0Add");
+      njm::timer.start("fixD0");
+      D0 += phiPsiL.at(i) * phiPsiL.at(i).transpose();
+      njm::timer.stop("fixD0");
     }
 
     njm::timer.start("fixR");
@@ -406,7 +401,7 @@ feat2Vec(const int numNodes,
 
 template <class S, class A, class F,
 	  class M,class MP>
-inline std::vector<Eigen::VectorXd>
+inline std::vector<Eigen::SparseMatrix<double> >
 M2QEval<S,A,F,M,MP>::
 featToPhiPsi(const std::vector<double> & feat, const int numNodes){
 
@@ -430,19 +425,19 @@ featToPhiPsi(const std::vector<double> & feat, const int numNodes){
 
   // for each location create psi vector
   double avg;
-  std::vector<Eigen::VectorXd> mats;
+  std::vector<Eigen::SparseMatrix<double> > mats;
   for(n = 0; n < numNodes; ++n){
-    Eigen::VectorXd psiL(lenPsi);
+    Eigen::SparseMatrix<double> psiL(lenPsi,1);
     
     for(i = 0; i < numFeat; ++i)
-     psiL(i) = featFull.at(n*numFeat + i);
+      psiL.insert(i,0) = featFull.at(n*numFeat + i);
     
     for(i = 1; i < numFeat; ++i){
       avg = 0;
       for(j = 0; j < tp.numNeigh; ++j)
 	avg += featFull.at(neighbors.at(n).at(j)*numFeat + i);
       avg /= double(tp.numNeigh);
-      psiL(numFeat + i - 1) = avg;
+      psiL.insert(numFeat + i - 1,0) = avg;
     }
     
     mats.push_back(phiL.at(n) * psiL);
@@ -465,8 +460,8 @@ bellResPolData(const int time,
 	       A a){
 
   int dim = tp.dfLat*tp.dfLong*lenPsi;
-  std::vector<Eigen::VectorXd> phiPsiL;
-  std::vector<Eigen::VectorXd> phiPsiLavg;
+  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
+  std::vector<Eigen::SparseMatrix<double> > phiPsiLavg;
 
   Eigen::MatrixXd D1add;
   D1add.resize(dim,dim);
@@ -563,25 +558,32 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
+  njm::timer.start("solve");
+  
   Eigen::SparseMatrix<double> P(tp.dfLat*tp.dfLong*lenPsi,
 				tp.dfLat*tp.dfLong*lenPsi);
 
   // don't penalize the coefficients that correspond to the intercept
   // this means all tp.dfLat*tp.dfLong basis functions for the intercept
   
-  int i, I = tp.dfLat*tp.dfLong, J = I*lenPsi;
-  for(i = I; i < J; ++i){
-    P.insert(i,i) = 1;
+  // int i, I = tp.dfLat*tp.dfLong, J = I*lenPsi;
+  // for(i = I; i < J; ++i){
+  //   P.insert(i,i) = 1;
+  // }
+  P.setIdentity();
+
+  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
+  solver.compute(D.transpose() * D + tp.lambda*P);
+
+  if(solver.info() != Eigen::Success){
+    std::cout << "In M2QEval::solve(): decomposition failed."
+	      << std::endl;
+    throw(1);
   }
-    
 
-  Eigen::MatrixXd xTxP = D.transpose() * D;
-  Eigen::VectorXd xTy = -D.transpose() * R;
+  beta = solver.solve(-D.transpose() * R);
 
-  xTxP += tp.lambda * P;
-
-  beta = xTxP.fullPivHouseholderQr().solve(xTy);
-  // beta = xTxP.householderQr().solve(xTy); // faster, but less stable
+  njm::timer.start("stop");  
 }
 
 
@@ -609,9 +611,9 @@ qFn(const SimData & sD,
   njm::timer.start("qFn");
   
   // now evaluate Q-function
-  std::vector<Eigen::VectorXd> phiPsiL;
-  Eigen::VectorXd phiPsi;
-  phiPsi.resize(tp.dfLat*tp.dfLong*numFeat);
+  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
+  Eigen::SparseMatrix<double> phiPsi;
+  phiPsi.resize(tp.dfLat*tp.dfLong*lenPsi,1);
   phiPsi.setZero();
   int j,k;
   std::vector<double> features;
@@ -624,8 +626,9 @@ qFn(const SimData & sD,
     f.getFeatures(sD,tD,fD,dD,m,mP);
     features = feat2Vec(fD.numNodes,sD.status);
     phiPsiL = featToPhiPsi(features,fD.numNodes);
+
     for(k = 0; k < fD.numNodes; ++k)
-      phiPsi += phiL.at(k) * phiPsiL.at(k);
+      phiPsi += phiPsiL.at(k);
   }
   phiPsi /= (double)tp.polReps;
 

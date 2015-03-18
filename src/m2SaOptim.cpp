@@ -136,7 +136,7 @@ M2SaEval<S,A,F,M,MP>::M2SaEval(){
   tp.numNeigh = 5;
 
   tp.gamma = .95;
-  tp.lambda = 3000.0;
+  tp.lambda = 1.0;
   
   tp.jitter = .1;
   tp.tol = .005;
