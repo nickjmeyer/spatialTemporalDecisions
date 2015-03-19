@@ -33,28 +33,31 @@ int main(int argc, char ** argv){
   int t;
   for(t = 0; t < s.fD.finalT; ++t){
     if(t >= s.fD.trtStart){
-      oq.qEval.preCompData(s.sD,s.fD);
-
-      oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
-
-      oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
-
-      oq.qEval.solve();
-
-      std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-		<< " >>>>> " << oq.qEval.bellRes()
-		<< std::endl;
-
-      std::fill(s.tD.a.begin(),s.tD.a.end(),0);
-      std::fill(s.tD.p.begin(),s.tD.p.end(),0);
-      
       ra.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelGen,s.paramEst);
-
     }
     s.nextPoint();
 
-    std::cout << "value: " << s.value() << std::endl;
   }
+
+  std::cout << "value: " << s.value() << std::endl;
+
+  oq.qEval.preCompData(s.sD,s.fD);
+
+  oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
+
+  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
+
+  std::cout << oq.qEval.R.sum() << " >> "
+	    << oq.qEval.D0.sum() << " >> "
+	    << oq.qEval.D1.sum() << " >> "
+	    << oq.qEval.D.sum()
+	    << std::endl;
+
+  oq.qEval.solve();
+
+  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
+	    << " >>>>> " << oq.qEval.bellRes()
+	    << std::endl;
 
   
   njm::sett.clean();
