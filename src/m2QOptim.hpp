@@ -55,7 +55,7 @@ class M2QEval {
   void preCompData(const SimData & sD, const FixedData & fD);
 
   // fixed data for bellman residual
-  // sets R,D0,deltaQ (other stuff too, but this is the main stuff)
+  // sets R,D0 (other stuff too, but this is the main stuff)
   void bellResFixData(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
