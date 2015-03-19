@@ -30,6 +30,9 @@ class M2QEvalTunePar : public TuneParam{
 
   double gamma; // discount factor for bellman residual
   double lambda; // penalty coefficient
+
+  int bootReps;
+  double bootSize;
 };
 
 
@@ -74,6 +77,12 @@ class M2QEval {
   void buildRD();
   void buildRD(const std::vector<int> nodes);
 
+  void buildRD1();
+  void buildRD1(const std::vector<int> nodes);
+
+
+  void tune();
+  
   
   F f; // used to generate features
   
@@ -88,6 +97,7 @@ class M2QEval {
 
   int numFeat; // number of features w/ interactions  
   int lenPsi; // number of features w/ interactions AND neighbor average
+  int numNodes;
   
   Eigen::VectorXd beta;
 

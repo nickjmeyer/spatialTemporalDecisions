@@ -143,6 +143,9 @@ M2QEval<S,A,F,M,MP>::M2QEval(){
 
   tp.dfLat = 10;
   tp.dfLong = 10;
+
+  tp.bootReps = 10;
+  tp.bootSize = 0.6;
 }
 
 
@@ -152,6 +155,8 @@ template <class S, class A, class F,
 void M2QEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
   int i,j;
+
+  numNodes = fD.numNodes;
   
   // explanation is in header
   numFeat = f.numFeatures + (f.numFeatures-1) +
@@ -592,7 +597,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildRD(){
-  int numNodes = RL.size();
   std::vector<int> nodes;
   nodes.resize(numNodes);
   int i = 0;
@@ -631,6 +635,144 @@ buildRD(const std::vector<int> nodes){
 
   njm::timer.stop("buildRD");
 }
+
+
+
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+buildRD1(){
+  std::vector<int> nodes;
+  nodes.resize(numNodes);
+  int i = 0;
+  std::for_each(nodes.begin(),nodes.end(),
+		[&i](int & x){
+		  x = i++;
+		});
+  
+  buildRD1(nodes);
+}
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+buildRD1(const std::vector<int> nodes){
+  njm::timer.start("buildRD1");
+  
+  int i,I = nodes.size();
+  int dim = tp.dfLat*tp.dfLong*lenPsi;  
+  D1.resize(dim,dim);
+
+  D1.setZero();
+  for(i = 0; i < I; ++i)
+    R += RL.at(i);
+
+  D = D1 - D0;
+
+  njm::timer.stop("buildRD1");
+}
+
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+tune(){
+  int i,j,b,bS = (tp.bootSize * numNodes + 1);
+  std::vector<int> nodes;
+  ind.reserve(numNodes);
+  for(i = 0; i < numNodes; ++i)
+    nodes.push_back(i);
+
+  int numLambdaPows = 10;
+  std::vector<double> lambdaPows;
+  for(i = 0; i < numLambdaPows; ++i)
+    lambdaPows.push_back(i+1);
+
+  std::vector<double> lambdaCV;
+  lambdaCV.resize(numLambdaVals);
+  std::fill(lambdaCV.begin(),lambda.end(),0.0);
+
+
+  
+  std::pair<double,int> top;
+  for(b = 0; b < tp.bootReps; ++b){
+    std::priority_queue<std::pair<double,int> > ordNodes;
+    for(i = 0; i < numNodes; ++i)
+      ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
+
+
+    std::vector<int> selNodes;
+    for(i = 0; i < bS; ++i){
+      top = ordNodes.top();
+      ordNodes.pop();
+      selNodes.push_back(top.second());
+    }
+
+    buildRD(selNodes);
+
+    for(i = 0; i < lambdaVals; ++i){
+      tp.lambda = std::pow(2.0,lambdaPows.at(i));
+      
+      solve();
+
+      lambdaCV.at(i) += bellRes();
+    }
+  }
+
+
+  // pick off the best
+  std::priority_queue<std::pair<double,double> > ordLambda;
+  for(i = 0; i < lambdaPows; ++i)
+    ordLambda_push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
+  double bestPow = ordLambda.top().second;
+
+  // now grid it up finer
+  lambdaPows.clear();
+  lambdaCV.clear();
+  
+  numLambdaPows = 10 + 1;
+  for(i = 0; i < numLambdaPows; ++i)
+    if(i != 5)
+      lambdaPows.push_back(bestPow - double(i - 5)*0.2);
+  --numLambdaPows;
+
+
+  // error for new lambdas
+  for(b = 0; b < tp.bootReps; ++b){
+    std::priority_queue<std::pair<double,int> > ordNodes;
+    for(i = 0; i < numNodes; ++i)
+      ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
+
+
+    std::vector<int> selNodes;
+    for(i = 0; i < bS; ++i){
+      top = ordNodes.top();
+      ordNodes.pop();
+      selNodes.push_back(top.second());
+    }
+
+    buildRD(selNodes);
+
+    for(i = 0; i < lambdaVals; ++i){
+      tp.lambda = std::pow(2.0,lambdaPows.at(i));
+      
+      solve();
+
+      lambdaCV.at(i) += bellRes();
+    }
+  }
+
+
+  for(i = 0; i < lambdaPows; ++i)
+    ordLambda_push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
+  double bestPow = ordLambda.top().second;
+  
+}
+
 
 
 
