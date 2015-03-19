@@ -246,7 +246,10 @@ bellResFixData(const SimData & sD,
   // prep containers
   R.resize(dim);
   R.setZero();
-  
+
+  D0L.resize(fD.numNodes);
+  D1L.resize(fD.numNodes);
+  std::fill(D0L.begin(),D0L.end(),Eigen::SparseMatrix<double>(dim,dim));
   D0.resize(dim,dim);
   D0.setZero();
   

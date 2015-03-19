@@ -94,6 +94,9 @@ class M2QEval {
   // data for bellman residual
   std::vector<Eigen::SparseMatrix<double> > phiL;  // \lbrace \Phi_\ell \rbrace
   std::vector<std::vector<Eigen::SparseMatrix<double> > > phiPsiTL;
+
+  std::vector<Eigen::SparseMatrix<double> > D0L;
+  std::vector<Eigen::SparseMatrix<double> > D1L;
   
   Eigen::VectorXd R;
   Eigen::SparseMatrix<double> D0,D1,D;
