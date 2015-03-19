@@ -196,7 +196,7 @@ int main(int argc, char ** argv){
     spo.tp.mcReps = ffx.getSett("MC",i);
 
     tick = std::time(NULL);
-    value = spr.run(s,ar,spo,300,s.fD.finalT);
+    value = spr.run(s,ar,spo,100,s.fD.finalT);
     tock = std::time(NULL);
 
     ffx.addObs(i,{value,((double)(tock-tick))/3600.0});
