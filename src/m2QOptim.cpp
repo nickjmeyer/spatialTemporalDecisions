@@ -244,11 +244,18 @@ bellResFixData(const SimData & sD,
 	       MP & mP){
   int dim = tp.dfLat*tp.dfLong*lenPsi;
   // prep containers
-  R.resize(dim);
-  R.setZero();
-  
-  D0.resize(dim,dim);
-  D0.setZero();
+  RL.resize(fD.numNodes);
+  std::fill(RL.begin(),RL.end(),Eigen::VectorXd(dim));
+
+  D0L.resize(fD.numNodes);
+  std::fill(D0L.begin(),D0L.end(),Eigen::SparseMatrix<double>(dim,dim));
+
+  // make sure containers are zero'd out
+  int i;
+  for(i = 0; i < fD.numNodes; ++i){
+    RL.at(i).setZero();
+    D0L.at(i).setZero();
+  }
   
   sD1T.clear();
   dD1T.clear();
@@ -271,7 +278,7 @@ bellResFixData(const SimData & sD,
   std::vector<Eigen::SparseMatrix<double> > phiPsiL;
 
   // setup initial SimData
-  int i,t,status_i,numNewInfec;
+  int t,status_i,numNewInfec;
   for(t=0; t<sD.time; t++){
 
     njm::timer.start("fixBuild");
@@ -346,14 +353,14 @@ bellResFixData(const SimData & sD,
 
     for(i = 0; i < fD.numNodes; ++i){
       njm::timer.start("fixD0");
-      D0 += phiPsiL.at(i) * phiPsiL.at(i).transpose();
+      D0L.at(i) += phiPsiL.at(i) * phiPsiL.at(i).transpose();
       njm::timer.stop("fixD0");
     }
 
     njm::timer.start("fixR");
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
-      R += phiPsiL.at(sDt.newInfec.at(i)) * (1.0/double(fD.numNodes));
+      RL.at(i) += phiPsiL.at(sDt.newInfec.at(i)) * (1.0/double(fD.numNodes));
     njm::timer.stop("fixR");
   }
 
@@ -463,12 +470,13 @@ bellResPolData(const int time,
   std::vector<Eigen::SparseMatrix<double> > phiPsiL;
   std::vector<Eigen::SparseMatrix<double> > phiPsiLavg;
 
-  Eigen::MatrixXd D1add;
-  D1add.resize(dim,dim);
-  D1.setZero();
+  D1L.resize(fD.numNodes);
+  std::fill(D1L.begin(),D1L.end(),Eigen::SparseMatrix<double>(dim,dim));
+
+  int i;
+  for(i = 0; i < fD.numNodes; ++i)
+    D1L.at(i).setZero();
   
-  D1.resize(dim,dim);
-  D1.setZero();
 
   std::vector<double> features;
   TrtData tDt;
@@ -481,7 +489,7 @@ bellResPolData(const int time,
   std::fill(tDt.aPast.begin(),tDt.aPast.end(),0);
   std::fill(tDt.pPast.begin(),tDt.pPast.end(),0);  
   
-  int t,i,j,k;
+  int t,j,k;
   for(t=0; t<time; t++){
     njm::timer.start("polBuild");
     
@@ -500,7 +508,6 @@ bellResPolData(const int time,
     njm::timer.stop("polBuild");
 
     if((t+1)>=fD.trtStart){
-      D1add.setZero();
       for(j=0; j<tp.polReps; j++){
 	njm::timer.start("polFeat");
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
@@ -541,14 +548,15 @@ bellResPolData(const int time,
 
     njm::timer.start("polD1");
     for(k = 0; k < fD.numNodes; ++k)
-      D1 += phiPsiTL.at(t).at(k) * phiPsiLavg.at(k).transpose();
+      D1L.at(k) += phiPsiTL.at(t).at(k) * phiPsiLavg.at(k).transpose();
     njm::timer.stop("polD1");
   }
 
   njm::timer.start("polFinish");
-  D1 *= tp.gamma; // discount factor
 
-  D = D1 - D0;
+  for(k = 0; k < fD.numNodes; ++k)
+    D1L.at(k) *= tp.gamma; // discount factor
+
   njm::timer.stop("polFinish");
 }
 
@@ -576,6 +584,52 @@ solve(){
   beta = solver.solve(-D.transpose() * R);
 
   njm::timer.start("stop");  
+}
+
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+buildRD(){
+  int numNodes = RL.size();
+  std::vector<int> nodes;
+  nodes.resize(numNodes);
+  int i = 0;
+  std::for_each(nodes.begin(),nodes.end(),
+		[&i](int & x){
+		  x = i++;
+		});
+  
+  buildRD(nodes);
+}
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+buildRD(const std::vector<int> nodes){
+  njm::timer.start("buildRD");
+  
+  int i,I = nodes.size();
+  int dim = tp.dfLat*tp.dfLong*lenPsi;  
+  R.resize(dim);
+  D0.resize(dim,dim);
+  D1.resize(dim,dim);
+
+  R.setZero();
+  D0.setZero();
+  D1.setZero();
+  for(i = 0; i < I; ++i)
+    D0 += D0L.at(i);
+  for(i = 0; i < I; ++i)
+    D1 += D1L.at(i);
+  for(i = 0; i < I; ++i)
+    R += RL.at(i);
+
+  D = D1 - D0;
+
+  njm::timer.stop("buildRD");
 }
 
 

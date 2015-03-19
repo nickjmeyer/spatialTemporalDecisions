@@ -71,6 +71,9 @@ class M2QEval {
   		      MP & mP,
   		      A a);
 
+  void buildRD();
+  void buildRD(const std::vector<int> nodes);
+
   
   F f; // used to generate features
   
@@ -94,6 +97,10 @@ class M2QEval {
   // data for bellman residual
   std::vector<Eigen::SparseMatrix<double> > phiL;  // \lbrace \Phi_\ell \rbrace
   std::vector<std::vector<Eigen::SparseMatrix<double> > > phiPsiTL;
+
+  std::vector<Eigen::SparseMatrix<double> > D0L;
+  std::vector<Eigen::SparseMatrix<double> > D1L;
+  std::vector<Eigen::VectorXd> RL;
   
   Eigen::VectorXd R;
   Eigen::SparseMatrix<double> D0,D1,D;
