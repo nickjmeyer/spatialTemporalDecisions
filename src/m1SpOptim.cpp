@@ -2,7 +2,7 @@
 
 
 M1SpOptimTunePar::M1SpOptimTunePar(){
-  mcReps = 100;
+  mcReps = 10;
 
   C = 5.0;
 
