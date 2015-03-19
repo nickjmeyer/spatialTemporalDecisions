@@ -71,6 +71,9 @@ class M2QEval {
   		      MP & mP,
   		      A a);
 
+  void buildRD();
+  void buildRD(const std::vector<int> nodes);
+
   
   F f; // used to generate features
   
@@ -97,6 +100,7 @@ class M2QEval {
 
   std::vector<Eigen::SparseMatrix<double> > D0L;
   std::vector<Eigen::SparseMatrix<double> > D1L;
+  std::vector<Eigen::VectorXd> RL;
   
   Eigen::VectorXd R;
   Eigen::SparseMatrix<double> D0,D1,D;
