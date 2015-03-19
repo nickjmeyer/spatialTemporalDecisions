@@ -12,6 +12,16 @@ void M2QEvalTunePar::putPar(const std::vector<double> & par){
 }
 
 
+std::vector<double> M2QOptimTunePar::getPar() const{
+  return std::vector<double> (0);
+}
+
+
+
+void M2QOptimTunePar::putPar(const std::vector<double> & par){
+}
+
+
 
 template class M2QOptim<System<GravityModel,GravityParam,
 				GravityModel,GravityParam>,
@@ -42,6 +52,18 @@ template <class S, class A, class F,
 	  class M,class MP>
 M2QOptim<S,A,F,M,MP>::M2QOptim(){
   name = "M2Q";
+
+
+  tp.C = 5.0;
+
+  tp.t = 1.0;
+
+  tp.ell = 1.75;
+
+  tp.muMin = 0.1;
+
+  tp.A = 30;
+  tp.B = 1;
 }
 
 
@@ -59,47 +81,71 @@ optim(const S & system,
   qEval.preCompData(s.sD,s.fD);
   qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,
 		       s.modelEst,s.paramEst);
+  qEval.buildRD();
   
 
 
-  // double sd = qEval.tp.sdStart;
-  // std::vector<double> w;
-  // std::vector<double> bestW;
-  // double q,bestQ;
-  
-  // qEval.bellResPolData(s.sD.time,s.fD,
-  // 		       s.modelEst,s.paramEst,agent);
-  // qEval.solve();
-  
-  // bestW = agent.tp.getPar();
-  // bestQ=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
-  // 		  s.modelEst,s.paramEst,agent);
-  
-  // int i;  
-  // while(sd > qEval.tp.sdStop){
-  //   w.clear();
-  //   for(i=0; i<agent.f.numFeatures; i++)
-  //     w.push_back(bestW.at(i) +sd*njm::rnorm01());
-  //   njm::l2norm(w);
-  //   agent.tp.putPar(w);
+  std::vector<double> par=agent.tp.getPar();
+  int i,converged=0,numPar = par.size();
+  std::vector<double> h(numPar,0.0);
+  std::vector<double> parPH(numPar,0.0),parMH(numPar,0.0);
 
-  //   qEval.bellResPolData(s.sD.time,s.fD,
-  // 			 s.modelEst,s.paramEst,agent);
-  //   qEval.solve();
-  //   q=qEval.qFn(s.sD,s.tD,s.fD,s.dD,
-  // 		s.modelEst,s.paramEst,agent);
+
+  double valP, valM;
+  
+  int iter=1;
+  
+  double mu = tp.A/std::pow(tp.B+iter,tp.ell);
+  double cm = tp.C / std::pow(iter,tp.t);
+
+  while(!converged){
+
+    for(i=0; i<numPar; i++){
+      h.at(i) = (njm::rber(0.5) == 1 ? 1.0 : -1.0) * cm;
+      parPH.at(i) = par.at(i) + h.at(i);
+      parMH.at(i) = par.at(i) - h.at(i);
+    }
+
+
     
-  //   if(q > bestQ){
-  //     bestQ = q;
-  //     bestW = w;
-  //     sd*=qEval.tp.sdJump;
-  //   }
-  //   else{
-  //     sd*=qEval.tp.sdDecay;
-  //   }
-  // }
+    agent.tp.putPar(parPH);
+    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+    qEval.buildD1();
+    qEval.solve();
+    valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
 
-  // agent.tp.putPar(bestW);
+    agent.tp.putPar(parMH);
+    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+    qEval.buildD1();
+    qEval.solve();
+    valM = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
+
+    
+    for(i=0; i<numPar; i++)
+      par.at(i) = par.at(i) - mu*(valP - valM)/(2.0*h.at(i));
+
+    
+    if(omp_get_thread_num() == 0)
+      std::cout << "iter: " + njm::toString(iter,"",4,0) +
+    	" || " + njm::toString(valP,"",6,4) + " - " +
+    	njm::toString(valM,"",6,4) + " -> " +
+    	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
+    	" || " + njm::toString(par,", ","") << "\r" << std::flush;
+
+
+    ++iter;
+      
+    mu = tp.A/std::pow(tp.B + iter,tp.ell);
+    cm = tp.C/std::pow(iter,tp.t);
+
+    
+    if(mu < tp.muMin){
+      converged = 1;
+    }
+    
+  }
+
+  agent.tp.putPar(par); // assign optimized par to the agent
 }
 
 
@@ -643,7 +689,7 @@ buildRD(const std::vector<int> nodes){
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-buildRD1(){
+buildD1(){
   std::vector<int> nodes;
   nodes.resize(numNodes);
   int i = 0;
@@ -652,15 +698,15 @@ buildRD1(){
 		  x = i++;
 		});
   
-  buildRD1(nodes);
+  buildD1(nodes);
 }
 
 
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-buildRD1(const std::vector<int> nodes){
-  njm::timer.start("buildRD1");
+buildD1(const std::vector<int> nodes){
+  njm::timer.start("buildD1");
   
   int i,I = nodes.size();
   int dim = tp.dfLat*tp.dfLong*lenPsi;  
@@ -668,11 +714,11 @@ buildRD1(const std::vector<int> nodes){
 
   D1.setZero();
   for(i = 0; i < I; ++i)
-    R += RL.at(i);
+    D1 += D1L.at(i);
 
   D = D1 - D0;
 
-  njm::timer.stop("buildRD1");
+  njm::timer.stop("buildD1");
 }
 
 
@@ -681,9 +727,9 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 tune(){
-  int i,j,b,bS = (tp.bootSize * numNodes + 1);
+  int i,b,bS = (tp.bootSize * numNodes + 1);
   std::vector<int> nodes;
-  ind.reserve(numNodes);
+  nodes.reserve(numNodes);
   for(i = 0; i < numNodes; ++i)
     nodes.push_back(i);
 
@@ -693,8 +739,8 @@ tune(){
     lambdaPows.push_back(i+1);
 
   std::vector<double> lambdaCV;
-  lambdaCV.resize(numLambdaVals);
-  std::fill(lambdaCV.begin(),lambda.end(),0.0);
+  lambdaCV.resize(numLambdaPows);
+  std::fill(lambdaCV.begin(),lambdaCV.end(),0.0);
 
 
   
@@ -709,26 +755,32 @@ tune(){
     for(i = 0; i < bS; ++i){
       top = ordNodes.top();
       ordNodes.pop();
-      selNodes.push_back(top.second());
+      selNodes.push_back(top.second);
     }
 
     buildRD(selNodes);
 
-    for(i = 0; i < lambdaVals; ++i){
+    for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
       
       solve();
 
       lambdaCV.at(i) += bellRes();
+      std::cout << "    lambda (" << tp.lambda << ") -> "
+		<< lambdaCV.at(i) << std::endl;
     }
   }
 
 
   // pick off the best
   std::priority_queue<std::pair<double,double> > ordLambda;
-  for(i = 0; i < lambdaPows; ++i)
-    ordLambda_push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
+  for(i = 0; i < numLambdaPows; ++i)
+    ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
   double bestPow = ordLambda.top().second;
+
+  tp.lambda = std::pow(2.0,bestPow);
+  std::cout << "lambda mid (" << tp.lambda << ") -> "
+	    << -ordLambda.top().first << std::endl;
 
   // now grid it up finer
   lambdaPows.clear();
@@ -752,25 +804,29 @@ tune(){
     for(i = 0; i < bS; ++i){
       top = ordNodes.top();
       ordNodes.pop();
-      selNodes.push_back(top.second());
+      selNodes.push_back(top.second);
     }
 
     buildRD(selNodes);
 
-    for(i = 0; i < lambdaVals; ++i){
+    for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
       
       solve();
 
       lambdaCV.at(i) += bellRes();
+      std::cout << "    lambda (" << tp.lambda << ") -> "
+		<< lambdaCV.at(i) << std::endl;
     }
   }
 
 
-  for(i = 0; i < lambdaPows; ++i)
-    ordLambda_push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
-  double bestPow = ordLambda.top().second;
+  for(i = 0; i < numLambdaPows; ++i)
+    ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
+  tp.lambda = std::pow(2.0,ordLambda.top().second);
   
+  std::cout << "lambda final (" << tp.lambda << ") -> "
+	    << -ordLambda.top().first << std::endl;
 }
 
 

@@ -33,6 +33,9 @@ class M2QEvalTunePar : public TuneParam{
 
   int bootReps;
   double bootSize;
+
+
+  double C,t,ell,muMin,A,B;  
 };
 
 
@@ -77,8 +80,8 @@ class M2QEval {
   void buildRD();
   void buildRD(const std::vector<int> nodes);
 
-  void buildRD1();
-  void buildRD1(const std::vector<int> nodes);
+  void buildD1();
+  void buildD1(const std::vector<int> nodes);
 
 
   void tune();
@@ -119,6 +122,16 @@ class M2QEval {
 };
 
 
+class M2QOptimTunePar : public TuneParam{
+ public:
+  std::vector<double> getPar() const;
+  void putPar(const std::vector<double> & par);
+
+  double C,t,ell,muMin,A,B;  
+};
+
+
+
 
 template <class S, class A, class F,
 	  class M, class MP>
@@ -130,6 +143,8 @@ class M2QOptim : BaseOptim<S,A,M,MP> {
 		     A & agent);
   
   M2QEval<System<M,MP,M,MP>,A,F,M,MP> qEval;
+
+  M2QOptimTunePar tp;
   
   std::string name;
 };

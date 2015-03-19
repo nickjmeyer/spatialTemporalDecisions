@@ -60,6 +60,19 @@ int main(int argc, char ** argv){
   std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
 	    << " >>>>> " << oq.qEval.bellRes()
 	    << std::endl;
+
+  std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
+  oq.qEval.tune();
+  std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
+
+  std::cout << "optimizing...."
+	    << std::endl;
+  
+  oq.optim(s,ra);
+
+  std::cout << std::endl
+	    << "done" << std::endl;
+  
   
   njm::sett.clean();
   return 0;
