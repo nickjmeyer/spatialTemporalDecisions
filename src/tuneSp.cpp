@@ -121,23 +121,26 @@ int main(int argc, char ** argv){
   // std::vector<double> Tvals = {1.0,2.0};
   // std::vector<double> Lvals = {1.0,1.25};
 
-  std::vector<double> Tvals = {0.5,1.0};
-  std::vector<double> Lvals = {1.25,1.75};
+  // std::vector<double> Tvals = {0.5,1.0};
+  // std::vector<double> Lvals = {1.25,1.75};
 
-  
+  std::vector<double> MCvals = {100,75,50,25,10};
+
 
   FFX ffx;
 
   // ffx.addFactor("A",Avals);
   // ffx.addFactor("B",Bvals);
   // ffx.addFactor("C",Cvals);
-  ffx.addFactor("T",Tvals);
-  ffx.addFactor("L",Lvals);
+  // ffx.addFactor("T",Tvals);
+  // ffx.addFactor("L",Lvals);
+
+  ffx.addFactor("MC",MCvals);
 
   ffx.addStat("value");
   ffx.addStat("time");
 
-  ffx.setReps(8);
+  ffx.setReps(4);
 
   typedef GravityTimeInfExpCavesModel MG;
   typedef GravityTimeInfExpCavesParam PG;
@@ -172,7 +175,7 @@ int main(int argc, char ** argv){
 
   
   // baseline value
-  njm::message("Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
+  // njm::message("Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
 
 
   // this is an experiment to set up the tuning, so no tuning necessary
@@ -187,8 +190,10 @@ int main(int argc, char ** argv){
     // spo.tp.A = ffx.getSett("A",i);
     // spo.tp.B = ffx.getSett("B",i);
     // spo.tp.C = ffx.getSett("C",i);
-    spo.tp.t = ffx.getSett("T",i);
-    spo.tp.ell = ffx.getSett("L",i);
+    // spo.tp.t = ffx.getSett("T",i);
+    // spo.tp.ell = ffx.getSett("L",i);
+
+    spo.tp.mcReps = ffx.getSett("MC",i);
 
     tick = std::time(NULL);
     value = spr.run(s,ar,spo,300,s.fD.finalT);
