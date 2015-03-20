@@ -265,7 +265,6 @@ preCompData(const SimData & sD, const FixedData & fD){
     ind = (i*(fD.numNodes-1))/(nbreakLat-1);
     gsl_vector_set(knotsLat,i,mdsLat.at(ind));
   }
-  std::cout << std::endl;
   for(i = 0; i < nbreakLong; ++i){
     ind = (i*(fD.numNodes-1))/(nbreakLong-1);
     gsl_vector_set(knotsLong,i,mdsLong.at(ind));
@@ -634,8 +633,8 @@ solve(){
   solver.compute(D.transpose() * D + tp.lambda*P);
 
   if(solver.info() != Eigen::Success){
-    std::cout << "In M2QEval::solve(): decomposition failed."
-	      << std::endl;
+    // std::cout << "In M2QEval::solve(): decomposition failed."
+    // 	      << std::endl;
     throw(1);
   }
 
@@ -803,9 +802,9 @@ tune(const std::vector<int> & status){
       }
     }
     
-    std::cout << "Inf: [" << double(trainInf)/double(bS)
-	      << ", " << double(testInf)/double(numNodes-bS)
-	      << "]" << std::endl;
+    // std::cout << "Inf: [" << double(trainInf)/double(bS)
+    // 	      << ", " << double(testInf)/double(numNodes-bS)
+    // 	      << "]" << std::endl;
   }
     
 
@@ -826,13 +825,19 @@ tune(const std::vector<int> & status){
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
 
-      setRD(Rtrain,Dtrain);
-      solve();
-
-      setRD(Rtest,Dtest);
-      lambdaCV.at(i) += bellRes();
-      std::cout << "    lambda (" << tp.lambda << ") -> "
-		<< lambdaCV.at(i) << std::endl;
+      try{
+	setRD(Rtrain,Dtrain);
+	solve();
+	
+	setRD(Rtest,Dtest);
+	lambdaCV.at(i) += bellRes();
+      }
+      catch(int e){
+	lambdaCV.at(i) += std::numeric_limits<double>::max();
+      }
+      
+      // std::cout << "    lambda (" << tp.lambda << ") -> "
+      // 		<< lambdaCV.at(i) << std::endl;
     }
   }
 
@@ -844,8 +849,8 @@ tune(const std::vector<int> & status){
   double bestPow = ordLambda.top().second;
 
   tp.lambda = std::pow(2.0,bestPow);
-  std::cout << "lambda mid (" << tp.lambda << ") -> "
-	    << -ordLambda.top().first << std::endl;
+  // std::cout << "lambda mid (" << tp.lambda << ") -> "
+  // 	    << -ordLambda.top().first << std::endl;
 
   // now grid it up finer
   lambdaPows.clear();
@@ -872,13 +877,19 @@ tune(const std::vector<int> & status){
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
 
-      setRD(Rtrain,Dtrain);
-      solve();
-
-      setRD(Rtest,Dtest);
-      lambdaCV.at(i) += bellRes();
-      std::cout << "    lambda (" << tp.lambda << ") -> "
-		<< lambdaCV.at(i) << std::endl;
+      try{
+	setRD(Rtrain,Dtrain);
+	solve();
+	
+	setRD(Rtest,Dtest);
+	lambdaCV.at(i) += bellRes();
+      }
+      catch(int e){
+	lambdaCV.at(i) += std::numeric_limits<double>::max();
+      }
+      
+      // std::cout << "    lambda (" << tp.lambda << ") -> "
+      // 		<< lambdaCV.at(i) << std::endl;
     }
   }
 
@@ -887,8 +898,8 @@ tune(const std::vector<int> & status){
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
   tp.lambda = std::pow(2.0,ordLambda.top().second);
   
-  std::cout << "lambda final (" << tp.lambda << ") -> "
-	    << -ordLambda.top().first << std::endl;
+  // std::cout << "lambda final (" << tp.lambda << ") -> "
+  // 	    << -ordLambda.top().first << std::endl;
 }
 
 
