@@ -58,11 +58,11 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
 
   tp.t = 1.0;
 
-  tp.ell = 1.75;
+  tp.ell = 1.1;
 
-  tp.muMin = 0.1;
+  tp.muMin = 1000;
 
-  tp.A = 30;
+  tp.A = 100000000;
   tp.B = 1;
 }
 
@@ -141,8 +141,8 @@ optim(const S & system,
     
     if(omp_get_thread_num() == 0)
       std::cout << "iter: " + njm::toString(iter,"",4,0) +
-    	" || " + njm::toString(valP,"",6,4) + " - " +
-    	njm::toString(valM,"",6,4) + " -> " +
+    	" || " + njm::toString(valP,"",24,16) + " - " +
+    	njm::toString(valM,"",24,16) + " -> " +
     	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
     	" || " + njm::toString(par,", ","") << "\r" << std::flush;
 
@@ -604,10 +604,19 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  
-  Eigen::SparseMatrix<double> P(tp.dfLat*tp.dfLong*lenPsi,
-				tp.dfLat*tp.dfLong*lenPsi);
+  int dim = tp.dfLat*tp.dfLong*lenPsi;
+  Eigen::SparseMatrix<double> P(dim,dim);
+
   P.setIdentity();
+
+  // int i,intEnd = tp.dfLat*tp.dfLong;
+  // for(i = intEnd; i < dim; ++i)
+  //   P.insert(i,i) = 1.0;
+
+  // Eigen::SparseMatrix<double> DD = D.transpose() * D;
+  // Eigen::SparseQR<Eigen::SparseMatrix<double>,
+  // 		  Eigen::COLAMDOrdering<int> > DDlu(DD);
+  // std::cout << "rank: " << DDlu.rank() << std::endl;
 
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
   solver.compute(D.transpose() * D + tp.lambda*P);

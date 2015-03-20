@@ -41,37 +41,35 @@ int main(int argc, char ** argv){
 
   std::cout << "value: " << s.value() << std::endl;
   
-  oq.qEval.preCompData(s.sD,s.fD);
+  // oq.qEval.preCompData(s.sD,s.fD);
 
-  oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
+  // oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
 
-  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
+  // oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
 
-  oq.qEval.buildRD();
+  // oq.qEval.buildRD();
 
-  std::cout << oq.qEval.R.sum() << " >> "
-  	    << oq.qEval.D0.sum() << " >> "
-  	    << oq.qEval.D1.sum() << " >> "
-  	    << oq.qEval.D.sum()
-  	    << std::endl;
+  // std::cout << oq.qEval.R.sum() << " >> "
+  // 	    << oq.qEval.D0.sum() << " >> "
+  // 	    << oq.qEval.D1.sum() << " >> "
+  // 	    << oq.qEval.D.sum()
+  // 	    << std::endl;
 
-  oq.qEval.solve();
+  // oq.qEval.solve();
 
-  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-  	    << " >>>>> " << oq.qEval.bellRes()
-  	    << std::endl;
+  // std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
+  // 	    << " >>>>> " << oq.qEval.bellRes()
+  // 	    << std::endl;
 
-  std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
-  oq.qEval.tune();
-  std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
+  // std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
+  // oq.qEval.tune();
+  // std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
 
-  std::cout << "optimizing...."
-  	    << std::endl;
-  
+  // std::cout << "optimizing...."
+  // 	    << std::endl;
+
+  oq.qEval.tp.lambda = 2.76e+06;
   oq.optim(s,ra);
-
-  std::cout << std::endl
-  	    << "done" << std::endl;
 
 
   // std::vector<int> nodes;
