@@ -69,7 +69,7 @@ int main(int argc, char ** argv){
   // 	    << std::endl;
 
   oq.qEval.tp.lambda = 2.76e+06;
-  oq.optim(s,ra);
+  // oq.optim(s,ra);
 
 
   // std::vector<int> nodes;
