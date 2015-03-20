@@ -28,8 +28,6 @@ int main(int argc, char ** argv){
   RA ra;
 
   SPO spo;
-  // no tuning for right now....
-  spo.tp.tune = 0;
 
   R_RA r_ra;
   
