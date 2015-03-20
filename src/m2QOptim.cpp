@@ -139,12 +139,12 @@ optim(const S & system,
       par.at(i) = par.at(i) - mu*(valP - valM)/(2.0*h.at(i));
 
     
-    if(omp_get_thread_num() == 0)
-      std::cout << "iter: " + njm::toString(iter,"",4,0) +
-    	" || " + njm::toString(valP,"",24,16) + " - " +
-    	njm::toString(valM,"",24,16) + " -> " +
-    	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
-    	" || " + njm::toString(par,", ","") << "\n" << std::flush;
+    // if(omp_get_thread_num() == 0)
+    //   std::cout << "iter: " + njm::toString(iter,"",4,0) +
+    // 	" || " + njm::toString(valP,"",24,16) + " - " +
+    // 	njm::toString(valM,"",24,16) + " -> " +
+    // 	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
+    // 	" || " + njm::toString(par,", ","") << "\r" << std::flush;
 
 
     ++iter;
