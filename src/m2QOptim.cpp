@@ -125,13 +125,33 @@ optim(const S & system,
     agent.tp.putPar(parPH);
     qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
     qEval.buildD1();
-    qEval.solve();
+    try{
+      qEval.solve();
+    }
+    catch(int e){
+      std::cout << "Decomposition failed on thread "
+		<< omp_get_thread_num() << "."
+		<< std::endl
+		<< "Lambda value is " << qEval.tp.lambda
+		<< std::endl;
+      throw(1);
+    }
     valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
 
     agent.tp.putPar(parMH);
     qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
     qEval.buildD1();
-    qEval.solve();
+    try{
+      qEval.solve();
+    }
+    catch(int e){
+      std::cout << "Decomposition failed on thread "
+		<< omp_get_thread_num() << "."
+		<< std::endl
+		<< "Lambda value is " << qEval.tp.lambda
+		<< std::endl;
+      throw(1);
+    }
     valM = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
 
     
