@@ -71,7 +71,7 @@ endif
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -DRANDOM_SEED__=8
 endif
-ifeq "$(shell hostname)" "Opal3.stat.ncsu.edu"
+ifeq "$(shell hostname)" "opal3.stat.ncsu.edu"
 	CPPFLAGS+= -DRANDOM_SEED__=9
 endif
 
