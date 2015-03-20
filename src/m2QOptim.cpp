@@ -188,11 +188,6 @@ optim(const S & system,
 		      njm::sett.datExt(name));
 	}
       }
-
-      
-      
-      
-
       
       throw(1);
     }
