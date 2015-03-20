@@ -105,6 +105,7 @@ class M2QEval {
 
   int numFeat; // number of features w/ interactions  
   int lenPsi; // number of features w/ interactions AND neighbor average
+  int dim; // (tp.dfLat * tp.dfLong + 1) * lenPsi;
   int numNodes;
   
   Eigen::VectorXd beta;

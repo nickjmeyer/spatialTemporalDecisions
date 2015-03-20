@@ -144,7 +144,7 @@ optim(const S & system,
     	" || " + njm::toString(valP,"",24,16) + " - " +
     	njm::toString(valM,"",24,16) + " -> " +
     	njm::toString(mu,"",6,4) + " , " + njm::toString(cm,"",6,4) +
-    	" || " + njm::toString(par,", ","") << "\r" << std::flush;
+    	" || " + njm::toString(par,", ","") << "\n" << std::flush;
 
 
     ++iter;
@@ -222,6 +222,7 @@ preCompData(const SimData & sD, const FixedData & fD){
   numFeat = f.numFeatures + (f.numFeatures-1) +
     (f.numFeatures-1)*(f.numFeatures-2)/2;
   lenPsi = numFeat*2 - 1;
+  dim = (tp.dfLat * tp.dfLong + 1) * lenPsi;
   
   // obtain closest tp.numNeigh neighbors
   neighbors.clear();
@@ -249,18 +250,29 @@ preCompData(const SimData & sD, const FixedData & fD){
   bsLong = gsl_bspline_alloc(deg,nbreakLong);
 
 
-  double latMin = *std::min_element(fD.centroidsMdsLat.begin(),
-				    fD.centroidsMdsLat.end());
-  double latMax = *std::max_element(fD.centroidsMdsLat.begin(),
-				    fD.centroidsMdsLat.end());
-  double longMin = *std::min_element(fD.centroidsMdsLong.begin(),
-				     fD.centroidsMdsLong.end());
-  double longMax = *std::max_element(fD.centroidsMdsLong.begin(),
-				     fD.centroidsMdsLong.end());
+  std::vector<double> mdsLat = fD.centroidsMdsLat;
+  std::vector<double> mdsLong = fD.centroidsMdsLong;
 
+  std::sort(mdsLat.begin(),mdsLat.end());
+  std::sort(mdsLong.begin(),mdsLong.end());
   
-  gsl_bspline_knots_uniform(latMin,latMax,bsLat);
-  gsl_bspline_knots_uniform(longMin,longMax,bsLong);
+  gsl_vector *knotsLat, *knotsLong;
+  knotsLat = gsl_vector_alloc(nbreakLat);
+  knotsLong = gsl_vector_alloc(nbreakLong);
+
+  int ind;
+  for(i = 0; i < nbreakLat; ++i){
+    ind = (i*(fD.numNodes-1))/(nbreakLat-1);
+    gsl_vector_set(knotsLat,i,mdsLat.at(ind));
+  }
+  std::cout << std::endl;
+  for(i = 0; i < nbreakLong; ++i){
+    ind = (i*(fD.numNodes-1))/(nbreakLong-1);
+    gsl_vector_set(knotsLong,i,mdsLong.at(ind));
+  }
+  
+  gsl_bspline_knots(knotsLat,bsLat);
+  gsl_bspline_knots(knotsLong,bsLong);
 
   gsl_vector *bLat, *bLong;
   bLat = gsl_vector_alloc(tp.dfLat);
@@ -271,19 +283,19 @@ preCompData(const SimData & sD, const FixedData & fD){
   int u,v;
   double bb;
   for(i = 0; i < fD.numNodes; ++i){
-    Eigen::SparseMatrix<double> phi(lenPsi*tp.dfLat*tp.dfLong,lenPsi);
-    phi.reserve(lenPsi*tp.dfLat*tp.dfLong);
+    Eigen::SparseMatrix<double> phi(dim,lenPsi);
     
     gsl_bspline_eval(fD.centroidsMdsLat.at(i),
 		     bLat,bsLat);
     gsl_bspline_eval(fD.centroidsMdsLong.at(i),
 		     bLong,bsLong);
     for(j = 0; j < lenPsi; ++j){
+      phi.insert(j*(tp.dfLat*tp.dfLong + 1),j) = 1.0;
       for(u = 0; u < tp.dfLat; ++u){
 	for(v = 0; v < tp.dfLong; ++v){
 	  bb = gsl_vector_get(bLat,u)*gsl_vector_get(bLong,v);
 	  if(bb != 0.0)
-	    phi.insert(j*tp.dfLat*tp.dfLong + u*tp.dfLong + v,j) = bb;
+	    phi.insert(j*(tp.dfLat*tp.dfLong+1) + u*tp.dfLong + v + 1,j) = bb;
 	}
       }
     }
@@ -294,6 +306,8 @@ preCompData(const SimData & sD, const FixedData & fD){
   gsl_bspline_free(bsLong);
   gsl_vector_free(bLat);
   gsl_vector_free(bLong);
+  gsl_vector_free(knotsLat);
+  gsl_vector_free(knotsLong);
 }
 
 
@@ -307,7 +321,6 @@ bellResFixData(const SimData & sD,
 	       const DynamicData & dD,
 	       const M & m,
 	       MP & mP){
-  int dim = tp.dfLat*tp.dfLong*lenPsi;
   // prep containers
   RL.resize(fD.numNodes);
   std::fill(RL.begin(),RL.end(),Eigen::VectorXd(dim));
@@ -409,6 +422,7 @@ bellResFixData(const SimData & sD,
     
     phiPsiTL.push_back(phiPsiL);
 
+    
     for(i = 0; i < fD.numNodes; ++i){
       D0L.at(i) += phiPsiL.at(i) * phiPsiL.at(i).transpose();
     }
@@ -520,7 +534,6 @@ bellResPolData(const int time,
 	       MP & mP,
 	       A a){
 
-  int dim = tp.dfLat*tp.dfLong*lenPsi;
   std::vector<Eigen::SparseMatrix<double> > phiPsiL;
   std::vector<Eigen::SparseMatrix<double> > phiPsiLavg;
 
@@ -569,7 +582,6 @@ bellResPolData(const int time,
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 
-
 	phiPsiL = featToPhiPsi(features,fD.numNodes);
 	if(j == 0)
 	  phiPsiLavg = phiPsiL;
@@ -604,14 +616,14 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  int dim = tp.dfLat*tp.dfLong*lenPsi;
   Eigen::SparseMatrix<double> P(dim,dim);
 
-  P.setIdentity();
+  // P.setIdentity();
 
-  // int i,intEnd = tp.dfLat*tp.dfLong;
-  // for(i = intEnd; i < dim; ++i)
-  //   P.insert(i,i) = 1.0;
+  int i,ind = tp.dfLat*tp.dfLong + 1;
+  for(i = 0; i < dim; ++i)
+    if(i % ind != 0)
+      P.insert(i,i) = 1.0;
 
   // Eigen::SparseMatrix<double> DD = D.transpose() * D;
   // Eigen::SparseQR<Eigen::SparseMatrix<double>,
@@ -655,7 +667,6 @@ void M2QEval<S,A,F,M,MP>::
 buildRD(const std::vector<int> nodes){
   
   int i,I = nodes.size();
-  int dim = tp.dfLat*tp.dfLong*lenPsi;  
   R.resize(dim);
   D0.resize(dim,dim);
   D1.resize(dim,dim);
@@ -700,7 +711,6 @@ void M2QEval<S,A,F,M,MP>::
 buildD1(const std::vector<int> nodes){
   
   int i,I = nodes.size();
-  int dim = tp.dfLat*tp.dfLong*lenPsi;  
   D1.resize(dim,dim);
 
   D1.setZero();
