@@ -83,6 +83,11 @@ class M2QEval {
   void buildD1();
   void buildD1(const std::vector<int> nodes);
 
+  void getRD(Eigen::VectorXd & R,
+	     Eigen::SparseMatrix<double> & D);
+  void setRD(const Eigen::VectorXd & R,
+	     const Eigen::SparseMatrix<double> & D);
+	     
 
   void tune();
   
@@ -139,6 +144,8 @@ class M2QOptim : BaseOptim<S,A,M,MP> {
  public:
   M2QOptim();
   
+  void reset();
+
   virtual void optim(const S & system,
 		     A & agent);
   

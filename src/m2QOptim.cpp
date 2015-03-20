@@ -49,7 +49,7 @@ M2QOptim<System<GravityTimeInfExpCavesModel,
 
 
 template <class S, class A, class F,
-	  class M,class MP>
+	  class M, class MP>
 M2QOptim<S,A,F,M,MP>::M2QOptim(){
   name = "M2Q";
 
@@ -67,6 +67,11 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
 }
 
 
+template <class S, class A, class F,
+	  class M, class MP>
+void M2QOptim<S,A,F,M,MP>::reset(){
+}
+
 
 template <class S, class A, class F,
 	  class M,class MP>
@@ -74,13 +79,22 @@ void M2QOptim<S,A,F,M,MP>::
 optim(const S & system,
       A & agent){
 
+  // first three steps use weights {1,1,...}
+  if(system.sD.time < (system.fD.trtStart + 3))
+    return;
+
   System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
 		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst);
+		      system.paramEst,system.paramEst);  
 
   qEval.preCompData(s.sD,s.fD);
   qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,
 		       s.modelEst,s.paramEst);
+  qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+
+  if(system.sD.time == (system.fD.trtStart + 3))
+    qEval.tune();
+  
   qEval.buildRD();
   
 
@@ -96,7 +110,7 @@ optim(const S & system,
   int iter=1;
   
   double mu = tp.A/std::pow(tp.B+iter,tp.ell);
-  double cm = tp.C / std::pow(iter,tp.t);
+  double cm = tp.C/std::pow(iter,tp.t);
 
   while(!converged){
 
@@ -332,8 +346,6 @@ bellResFixData(const SimData & sD,
   int t,status_i,numNewInfec;
   for(t=0; t<sD.time; t++){
 
-    njm::timer.start("fixBuild");
-    
     // build complete history of simulation
 
     // clear containers and set simple things
@@ -386,33 +398,24 @@ bellResFixData(const SimData & sD,
       dD1T.push_back(dD); // right now dD is completely empty ... trivial
     }
 
-    njm::timer.stop("fixBuild");    
 
-    njm::timer.start("fixFeat");    
     // using the current values build D0
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
 
-    njm::timer.stop("fixFeat");    
 
-    njm::timer.start("fixPhiPsi");
     phiPsiL=featToPhiPsi(features,fD.numNodes);
     
     phiPsiTL.push_back(phiPsiL);
-    njm::timer.stop("fixPhiPsi");
 
     for(i = 0; i < fD.numNodes; ++i){
-      njm::timer.start("fixD0");
       D0L.at(i) += phiPsiL.at(i) * phiPsiL.at(i).transpose();
-      njm::timer.stop("fixD0");
     }
 
-    njm::timer.start("fixR");
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
       RL.at(i) += phiPsiL.at(sDt.newInfec.at(i)) * (1.0/double(fD.numNodes));
-    njm::timer.stop("fixR");
   }
 
   // sD and dD are at time T
@@ -542,7 +545,6 @@ bellResPolData(const int time,
   
   int t,j,k;
   for(t=0; t<time; t++){
-    njm::timer.start("polBuild");
     
     std::fill(tDt.a.begin(),tDt.a.end(),0);
     std::fill(tDt.p.begin(),tDt.p.end(),0);  
@@ -556,11 +558,9 @@ bellResPolData(const int time,
 	tDt.aPast.at(i)=1;
     }
 
-    njm::timer.stop("polBuild");
 
     if((t+1)>=fD.trtStart){
       for(j=0; j<tp.polReps; j++){
-	njm::timer.start("polFeat");
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
 	std::fill(tDt.p.begin(),tDt.p.end(),0);  
 	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
@@ -569,46 +569,33 @@ bellResPolData(const int time,
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 
-	njm::timer.stop("polFeat");
 
-	njm::timer.start("polPhiPsi");
 	phiPsiL = featToPhiPsi(features,fD.numNodes);
 	if(j == 0)
 	  phiPsiLavg = phiPsiL;
 	else
 	  for(k = 0; k < fD.numNodes; ++k)
 	    phiPsiLavg.at(k) += phiPsiL.at(k);
-	njm::timer.stop("polPhiPsi");
       }
-      njm::timer.start("polPhiPsi");
       for(k = 0; k < fD.numNodes; ++k)
 	phiPsiLavg.at(k) /= double(tp.polReps);
-      njm::timer.stop("polPhiPsi");
     }
     else{
-      njm::timer.start("polFeat");
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
-      njm::timer.stop("polFeat");
 
-      njm::timer.start("polPhiPsi");
       phiPsiLavg = featToPhiPsi(features,fD.numNodes);
-      njm::timer.stop("polPhiPsi");
     }
 
-    njm::timer.start("polD1");
     for(k = 0; k < fD.numNodes; ++k)
       D1L.at(k) += phiPsiTL.at(t).at(k) * phiPsiLavg.at(k).transpose();
-    njm::timer.stop("polD1");
   }
 
-  njm::timer.start("polFinish");
 
   for(k = 0; k < fD.numNodes; ++k)
     D1L.at(k) *= tp.gamma; // discount factor
 
-  njm::timer.stop("polFinish");
 }
 
 
@@ -617,7 +604,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  njm::timer.start("solve");
   
   Eigen::SparseMatrix<double> P(tp.dfLat*tp.dfLong*lenPsi,
 				tp.dfLat*tp.dfLong*lenPsi);
@@ -634,7 +620,6 @@ solve(){
 
   beta = solver.solve(-D.transpose() * R);
 
-  njm::timer.start("stop");  
 }
 
 
@@ -659,7 +644,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildRD(const std::vector<int> nodes){
-  njm::timer.start("buildRD");
   
   int i,I = nodes.size();
   int dim = tp.dfLat*tp.dfLong*lenPsi;  
@@ -671,15 +655,14 @@ buildRD(const std::vector<int> nodes){
   D0.setZero();
   D1.setZero();
   for(i = 0; i < I; ++i)
-    D0 += D0L.at(i);
+    D0 += D0L.at(nodes.at(i));
   for(i = 0; i < I; ++i)
-    D1 += D1L.at(i);
+    D1 += D1L.at(nodes.at(i));
   for(i = 0; i < I; ++i)
-    R += RL.at(i);
+    R += RL.at(nodes.at(i));
 
   D = D1 - D0;
 
-  njm::timer.stop("buildRD");
 }
 
 
@@ -706,7 +689,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildD1(const std::vector<int> nodes){
-  njm::timer.start("buildD1");
   
   int i,I = nodes.size();
   int dim = tp.dfLat*tp.dfLong*lenPsi;  
@@ -714,11 +696,10 @@ buildD1(const std::vector<int> nodes){
 
   D1.setZero();
   for(i = 0; i < I; ++i)
-    D1 += D1L.at(i);
+    D1 += D1L.at(nodes.at(i));
 
   D = D1 - D0;
 
-  njm::timer.stop("buildD1");
 }
 
 
@@ -726,45 +707,95 @@ buildD1(const std::vector<int> nodes){
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
+getRD(Eigen::VectorXd & R,
+      Eigen::SparseMatrix<double> & D){
+  R = this->R;
+  D = this->D;
+}
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+setRD(const Eigen::VectorXd & R,
+      const Eigen::SparseMatrix<double> & D){
+  this->R = R;
+  this->D = D;
+}
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
 tune(){
   int i,b,bS = (tp.bootSize * numNodes + 1);
+
+
+  // all the nodes in a vector
   std::vector<int> nodes;
   nodes.reserve(numNodes);
   for(i = 0; i < numNodes; ++i)
     nodes.push_back(i);
 
-  int numLambdaPows = 10;
+  // get the powers on lambda
+  int numLambdaPows = 15;
   std::vector<double> lambdaPows;
   for(i = 0; i < numLambdaPows; ++i)
-    lambdaPows.push_back(i+1);
+    lambdaPows.push_back(i+10);
 
+  // setup CV error container
   std::vector<double> lambdaCV;
   lambdaCV.resize(numLambdaPows);
   std::fill(lambdaCV.begin(),lambdaCV.end(),0.0);
 
+  // setup CV node containers
+  std::vector<std::vector<int> > selNodesTrain;
+  std::vector<std::vector<int> > selNodesTest;
+  selNodesTrain.resize(tp.bootReps);
+  selNodesTest.resize(tp.bootReps);
 
-  
+
+  // sample the CV nodes
   std::pair<double,int> top;
   for(b = 0; b < tp.bootReps; ++b){
     std::priority_queue<std::pair<double,int> > ordNodes;
     for(i = 0; i < numNodes; ++i)
       ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
 
-
-    std::vector<int> selNodes;
-    for(i = 0; i < bS; ++i){
+    selNodesTrain.at(b).clear();
+    selNodesTest.at(b).clear();
+    for(i = 0; i < numNodes; ++i){
       top = ordNodes.top();
       ordNodes.pop();
-      selNodes.push_back(top.second);
+      if(i < bS)
+	selNodesTrain.at(b).push_back(top.second);
+      else
+	selNodesTest.at(b).push_back(top.second);
     }
+  }
+    
 
-    buildRD(selNodes);
+
+  // D,R containers for testing and training
+  Eigen::VectorXd Rtrain,Rtest;
+  Eigen::SparseMatrix<double> Dtrain,Dtest;
+
+  // CV bellman error
+  for(b = 0; b < tp.bootReps; ++b){
+
+    buildRD(selNodesTrain.at(b));
+    getRD(Rtrain,Dtrain);
+
+    buildRD(selNodesTest.at(b));
+    getRD(Rtest,Dtest);
 
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
-      
+
+      setRD(Rtrain,Dtrain);
       solve();
 
+      setRD(Rtest,Dtest);
       lambdaCV.at(i) += bellRes();
       std::cout << "    lambda (" << tp.lambda << ") -> "
 		<< lambdaCV.at(i) << std::endl;
@@ -789,31 +820,28 @@ tune(){
   numLambdaPows = 10 + 1;
   for(i = 0; i < numLambdaPows; ++i)
     if(i != 5)
-      lambdaPows.push_back(bestPow - double(i - 5)*0.2);
+      lambdaPows.push_back(bestPow + double(i - 5)*0.4);
   --numLambdaPows;
 
 
   // error for new lambdas
+  lambdaCV.resize(numLambdaPows);
+  std::fill(lambdaCV.begin(),lambdaCV.end(),0.0);
   for(b = 0; b < tp.bootReps; ++b){
-    std::priority_queue<std::pair<double,int> > ordNodes;
-    for(i = 0; i < numNodes; ++i)
-      ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
 
+    buildRD(selNodesTrain.at(b));
+    getRD(Rtrain,Dtrain);
 
-    std::vector<int> selNodes;
-    for(i = 0; i < bS; ++i){
-      top = ordNodes.top();
-      ordNodes.pop();
-      selNodes.push_back(top.second);
-    }
-
-    buildRD(selNodes);
+    buildRD(selNodesTest.at(b));
+    getRD(Rtest,Dtest);
 
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
-      
+
+      setRD(Rtrain,Dtrain);
       solve();
 
+      setRD(Rtest,Dtest);
       lambdaCV.at(i) += bellRes();
       std::cout << "    lambda (" << tp.lambda << ") -> "
 		<< lambdaCV.at(i) << std::endl;
@@ -852,8 +880,6 @@ qFn(const SimData & sD,
     MP & mP,
     A a){
 
-  njm::timer.start("qFn");
-  
   // now evaluate Q-function
   std::vector<Eigen::SparseMatrix<double> > phiPsiL;
   Eigen::SparseMatrix<double> phiPsi;
@@ -876,7 +902,6 @@ qFn(const SimData & sD,
   }
   phiPsi /= (double)tp.polReps;
 
-  njm::timer.stop("qFn");
   
   return (phiPsi.transpose()*beta).sum();
 }

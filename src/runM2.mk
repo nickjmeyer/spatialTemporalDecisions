@@ -21,7 +21,7 @@ HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
-BINARY = runM1
+BINARY = runM2
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
