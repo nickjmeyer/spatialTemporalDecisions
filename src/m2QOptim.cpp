@@ -58,11 +58,11 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
 
   tp.t = 1.0;
 
-  tp.ell = 1.1;
+  tp.ell = 1.75;
 
-  tp.muMin = 1000;
+  tp.muMin = 0.1;
 
-  tp.A = 100000000;
+  tp.A = 50;
   tp.B = 1;
 }
 
@@ -93,7 +93,7 @@ optim(const S & system,
   qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
 
   if(system.sD.time == (system.fD.trtStart + 3))
-    qEval.tune();
+    qEval.tune(system.sD.status);
   
   qEval.buildRD();
   
@@ -746,7 +746,7 @@ setRD(const Eigen::VectorXd & R,
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-tune(){
+tune(const std::vector<int> & status){
   int i,b,bS = (tp.bootSize * numNodes + 1);
 
 
@@ -776,10 +776,14 @@ tune(){
 
   // sample the CV nodes
   std::pair<double,int> top;
+  int trainInf,testInf;
   for(b = 0; b < tp.bootReps; ++b){
     std::priority_queue<std::pair<double,int> > ordNodes;
     for(i = 0; i < numNodes; ++i)
       ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
+
+    trainInf = 0;
+    testInf = 0;
 
     selNodesTrain.at(b).clear();
     selNodesTest.at(b).clear();
@@ -790,7 +794,18 @@ tune(){
 	selNodesTrain.at(b).push_back(top.second);
       else
 	selNodesTest.at(b).push_back(top.second);
+
+      if(status.at(top.second) >= 2){
+	if(i < bS)
+	  ++trainInf;
+	else
+	  ++testInf;
+      }
     }
+    
+    std::cout << "Inf: [" << double(trainInf)/double(bS)
+	      << ", " << double(testInf)/double(numNodes-bS)
+	      << "]" << std::endl;
   }
     
 

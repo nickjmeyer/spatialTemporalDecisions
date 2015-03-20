@@ -62,7 +62,7 @@ int main(int argc, char ** argv){
   // 	    << std::endl;
 
   // std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
-  oq.qEval.tune();
+  oq.qEval.tune(s.sD.status);
   // std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
 
   // std::cout << "optimizing...."

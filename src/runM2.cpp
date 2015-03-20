@@ -13,9 +13,10 @@ int main(int argc, char ** argv){
   typedef System<MG,PG,ME,PE> S;
 
   typedef ToyFeatures2<ME,PE> F;
+  typedef FeaturesInt<F,ME,PE> FI;
   typedef RankAgent<F,ME,PE> RA;
 
-  typedef M1SpOptim<S,RA,ME,PE> SPO;
+  typedef M2QOptim<S,RA,FI,ME,PE> SPO;
 
   typedef OptimRunner<S,RA,SPO> R_RA;
 

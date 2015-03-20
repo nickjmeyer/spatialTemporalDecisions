@@ -89,7 +89,7 @@ class M2QEval {
 	     const Eigen::SparseMatrix<double> & D);
 	     
 
-  void tune();
+  void tune(const std::vector<int> & status);
   
   
   F f; // used to generate features

@@ -23,6 +23,7 @@
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SpOptim.hpp"
+#include "m2QOptim.hpp"
 
 
 

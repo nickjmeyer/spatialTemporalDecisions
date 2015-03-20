@@ -16,6 +16,7 @@
 #include "rankAgent.hpp"
 #include "optim.hpp"
 #include "m1SpOptim.hpp"
+#include "m2QOptim.hpp"
 
 
 
