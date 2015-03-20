@@ -39,15 +39,26 @@ int main(int argc, char ** argv){
 
   }
 
-  std::cout << "value: " << s.value() << std::endl;
+  // std::cout << "value: " << s.value() << std::endl;
   
-  oq.qEval.preCompData(s.sD,s.fD);
+  // oq.qEval.preCompData(s.sD,s.fD);
 
-  oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
+  // oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
 
-  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
+  // oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
 
-  oq.qEval.buildRD();
+  // oq.qEval.buildRD();
+
+  Eigen::SparseMatrix<double> a;
+  a.resize(4,2);
+
+  for(int m = 0; m < 4; ++m)
+    for(int n = 0; n < 2; ++n)
+      a.insert(m,n) = m*2 + n + 1000;
+
+  std::cout << a << std::endl;
+
+  std::cout << njm::toString(a,"",64,32) << std::endl;
 
   // std::cout << oq.qEval.R.sum() << " >> "
   // 	    << oq.qEval.D0.sum() << " >> "
@@ -62,14 +73,14 @@ int main(int argc, char ** argv){
   // 	    << std::endl;
 
   // std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
-  oq.qEval.tune(s.sD.status);
+  // oq.qEval.tune(s.sD.status);
   // std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
 
   // std::cout << "optimizing...."
   // 	    << std::endl;
 
-  oq.qEval.tp.lambda = 2.76e+06;
-  oq.optim(s,ra);
+  // oq.qEval.tp.lambda = 2.76e+06;
+  // oq.optim(s,ra);
 
 
   // std::vector<int> nodes;
