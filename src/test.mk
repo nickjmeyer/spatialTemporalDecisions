@@ -8,6 +8,9 @@ endif
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CC=/usr/local/gcc-4.9.2/bin/g++
 endif
+ifeq "$(shell hostname)" "opal3.stat.ncsu.edu"
+	CC=/usr/local/gcc-4.9.2/bin/g++
+endif
 
 
 
@@ -16,7 +19,7 @@ INCLUDE =
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
-PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
+PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
 BINARY = test
 OBJECTS = $(BINARY).o 
@@ -24,7 +27,6 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
 	rankAgent.o \
 	m1SpOptim.o \
-	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
 	model.o modelParam.o \
@@ -49,10 +51,13 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	mcmcGravityTimeInfExpLCaves.o \
 	mcmcGravityTimeInfExpRCaves.o \
 	runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o settings.o timer.o
+	sortMerge.o settings.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
+	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
+endif
+ifeq "$(shell hostname)" "opal3.stat.ncsu.edu"
 	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
 endif
 
@@ -65,6 +70,9 @@ ifeq ("$(shell hostname)","laber-lnx3")
 endif
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
 	CPPFLAGS+= -DRANDOM_SEED__=8
+endif
+ifeq "$(shell hostname)" "Opal3.stat.ncsu.edu"
+	CPPFLAGS+= -DRANDOM_SEED__=9
 endif
 
 
