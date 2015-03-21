@@ -165,6 +165,14 @@ optim(const S & system,
 		    njm::sett.datExt(name));
       }
       for(int t = 0; t < s.sD.time; ++t){
+	name = "feat0_" + njm::toString(t,"",0,0) + ".txt";
+	njm::toFile(njm::toString(qEval.feat0.at(t),"\n","",64,32),
+		    njm::sett.datExt(name));
+	
+	name = "feat1_" + njm::toString(t,"",0,0) + ".txt";
+	njm::toFile(njm::toString(qEval.feat1.at(t),"\n","",64,32),
+		    njm::sett.datExt(name));
+	
 	for(int k = 0; k < qEval.numNodes; ++k){
 	  name= "phiPsiTL_" + njm::toString(t,"",0,0) +
 	    "_" + njm::toString(k,"",0,0) + ".txt";
@@ -451,6 +459,7 @@ bellResFixData(const SimData & sD,
   phiPsiTL.resize(sD.time);
 
   psiTL0.clear();
+  feat0.clear();
 
   // make sure containers are zero'd out
   int i;
@@ -542,6 +551,7 @@ bellResFixData(const SimData & sD,
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
 
+    feat0.push_back(features);
 
     psiL=featToPsi(features);
     psiTL0.push_back(psiL);
@@ -667,6 +677,7 @@ bellResPolData(const int time,
   std::fill(D1L.begin(),D1L.end(),Eigen::SparseMatrix<double>(dim,dim));
 
   psiTL1.clear();
+  feat1.clear();
 
   int i;
   for(i = 0; i < fD.numNodes; ++i)
@@ -674,6 +685,8 @@ bellResPolData(const int time,
   
 
   std::vector<double> features;
+  std::vector<double> featAvg;
+  
   TrtData tDt;
   tDt.a.resize(fD.numNodes);
   tDt.p.resize(fD.numNodes);
@@ -714,12 +727,17 @@ bellResPolData(const int time,
 	
 	if(j == 0){
 	  psiAvgL = psiL;
+	  featAvg = features;
 	}
 	else{
+	  for(k = 0; k < int(features.size()); ++k)
+	    featAvg.at(k) += features.at(k);
 	  for(k = 0; k < fD.numNodes; ++k)
 	    psiAvgL.at(k) += psiL.at(k);
 	}
       }
+      for(k = 0; k < int(features.size()); ++k)
+	featAvg.at(k) /= double(tp.polReps);
       for(k = 0; k < fD.numNodes; ++k)
 	psiAvgL.at(k) /= double(tp.polReps);
     }
@@ -728,8 +746,12 @@ bellResPolData(const int time,
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 
+      featAvg = features;
+
       psiAvgL = featToPsi(features);
     }
+
+    feat1.push_back(featAvg);
 
     psiTL1.push_back(psiAvgL);
     for(k = 0; k < fD.numNodes; ++k){
