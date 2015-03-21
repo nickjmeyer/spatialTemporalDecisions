@@ -98,8 +98,7 @@ class M2QEval {
 			       const std::vector<int> & status);
 
   std::vector<Eigen::SparseMatrix<double>
-	      >featToPhiPsi(const std::vector<double> & feat,
-			    const int numNodes);
+	      >featToPsi(const std::vector<double> & feat);
   
   M2QEvalTunePar tp;
 
@@ -114,6 +113,8 @@ class M2QEval {
   std::vector<std::vector<int> > neighbors;
 
   // data for bellman residual
+  std::vector<std::vector<Eigen::SparseMatrix<double> > > psiTL0;
+  std::vector<std::vector<Eigen::SparseMatrix<double> > > psiTL1;
   std::vector<Eigen::SparseMatrix<double> > phiL;  // \lbrace \Phi_\ell \rbrace
   std::vector<std::vector<Eigen::SparseMatrix<double> > > phiPsiTL;
 
