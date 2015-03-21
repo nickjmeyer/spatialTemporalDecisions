@@ -134,6 +134,47 @@ optim(const S & system,
 		<< std::endl
 		<< "Lambda value is " << qEval.tp.lambda
 		<< std::endl;
+
+      // save as much data as possible
+      
+      njm::toFile(njm::toString(qEval.D0,"\n",64,32),
+		  njm::sett.datExt("D0.txt"));
+      njm::toFile(njm::toString(qEval.D1,"\n",64,32),
+		  njm::sett.datExt("D1.txt"));
+      njm::toFile(njm::toString(qEval.D,"\n",64,32),
+		  njm::sett.datExt("D.txt"));
+      njm::toFile(njm::toString(qEval.R,"\n",64,32),
+		  njm::sett.datExt("R.txt"));
+
+      std::string name;
+      for(int k = 0; k < qEval.numNodes; ++k){
+	name = "D0L_" + njm::toString(k,"") + ".txt";
+	njm::toFile(njm::toString(qEval.D0L.at(k),"\n",64,32),
+		    njm::sett.datExt(name));
+
+	name = "D1L_" + njm::toString(k,"") + ".txt";
+	njm::toFile(njm::toString(qEval.D1L.at(k),"\n",64,32),
+		    njm::sett.datExt(name));
+	
+	name = "RL_" + njm::toString(k,"") + ".txt";
+	njm::toFile(njm::toString(qEval.RL.at(k),"\n",64,32),
+		    njm::sett.datExt(name));
+	
+      	name = "phiL_" + njm::toString(k,"") + ".txt";
+	njm::toFile(njm::toString(qEval.phiL.at(k),"\n",64,32),
+		    njm::sett.datExt(name));
+      }
+      for(int t = 0; t < s.sD.time; ++t){
+	for(int k = 0; k < qEval.numNodes; ++k){
+	  name= "phiPsiTL_" + njm::toString(t,"") +
+	    "_" + njm::toString(k,"") + ".txt";
+	  njm::toFile(njm::toString(qEval.phiPsiTL.at(t).at(k),"\n",64,32),
+		      njm::sett.datExt(name));
+	}
+      }
+      
+
+      
       throw(1);
     }
     valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
