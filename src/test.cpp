@@ -39,38 +39,27 @@ int main(int argc, char ** argv){
 
   }
 
-  // std::cout << "value: " << s.value() << std::endl;
+  std::cout << "value: " << s.value() << std::endl;
   
-  // oq.qEval.preCompData(s.sD,s.fD);
+  oq.qEval.preCompData(s.sD,s.fD);
 
-  // oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
+  oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
 
-  // oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
+  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
 
-  // oq.qEval.buildRD();
+  oq.qEval.buildRD();
 
-  Eigen::SparseMatrix<double> a;
-  a.resize(4,2);
+  std::cout << oq.qEval.R.sum() << " >> "
+  	    << oq.qEval.D0.sum() << " >> "
+  	    << oq.qEval.D1.sum() << " >> "
+  	    << oq.qEval.D.sum()
+  	    << std::endl;
 
-  for(int m = 0; m < 4; ++m)
-    for(int n = 0; n < 2; ++n)
-      a.insert(m,n) = m*2 + n + 1000;
+  oq.qEval.solve();
 
-  std::cout << a << std::endl;
-
-  std::cout << njm::toString(a,"",64,32) << std::endl;
-
-  // std::cout << oq.qEval.R.sum() << " >> "
-  // 	    << oq.qEval.D0.sum() << " >> "
-  // 	    << oq.qEval.D1.sum() << " >> "
-  // 	    << oq.qEval.D.sum()
-  // 	    << std::endl;
-
-  // oq.qEval.solve();
-
-  // std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-  // 	    << " >>>>> " << oq.qEval.bellRes()
-  // 	    << std::endl;
+  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
+  	    << " >>>>> " << oq.qEval.bellRes()
+  	    << std::endl;
 
   // std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
   // oq.qEval.tune(s.sD.status);
