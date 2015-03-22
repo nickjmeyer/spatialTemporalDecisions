@@ -1015,7 +1015,7 @@ tune(const std::vector<int> & status){
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
 
   double bestPow = ordLambda.top().second;
-  if(ordLambda.top().first < std::numeric_limits<double>::max())
+  if((-ordLambda.top().first) < std::numeric_limits<double>::max())
     tp.lambda = std::pow(2.0,bestPow);
   else{
     tp.lambda = -1;
@@ -1070,7 +1070,7 @@ tune(const std::vector<int> & status){
   for(i = 0; i < numLambdaPows; ++i)
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
   
-  if(ordLambda.top().first < std::numeric_limits<double>::max())
+  if((-ordLambda.top().first) < std::numeric_limits<double>::max())
     tp.lambda = std::pow(2.0,ordLambda.top().second);
   else{
     tp.lambda = -1;
