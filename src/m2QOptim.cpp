@@ -79,6 +79,8 @@ void M2QOptim<S,A,F,M,MP>::
 optim(const S & system,
       A & agent){
 
+  njm::message("Optim at time " + njm::toString(system.sD.time,"",0,0));
+
   // first three steps use weights {1,1,...}
   if(system.sD.time < (system.fD.trtStart + 3))
     return;
@@ -94,7 +96,14 @@ optim(const S & system,
 
   if(system.sD.time == (system.fD.trtStart + 3))
     qEval.tune(system.sD.status);
-  
+
+  if(qEval.tp.lambda < 0){
+    njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
+		 " has a non-finite lambda at time " +
+		 njm::toString(system.sD.time,"",0,0));
+    return;
+  }
+
   qEval.buildRD();
   
 
@@ -148,27 +157,45 @@ optim(const S & system,
 
       std::string name;
       for(int k = 0; k < qEval.numNodes; ++k){
-	name = "D0L_" + njm::toString(k,"") + ".txt";
+	name = "D0L_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.D0L.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 
-	name = "D1L_" + njm::toString(k,"") + ".txt";
+	name = "D1L_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.D1L.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 	
-	name = "RL_" + njm::toString(k,"") + ".txt";
+	name = "RL_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.RL.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 	
-      	name = "phiL_" + njm::toString(k,"") + ".txt";
+      	name = "phiL_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.phiL.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
       }
       for(int t = 0; t < s.sD.time; ++t){
+	name = "feat0_" + njm::toString(t,"",0,0) + ".txt";
+	njm::toFile(njm::toString(qEval.feat0.at(t),"\n","",64,32),
+		    njm::sett.datExt(name));
+	
+	name = "feat1_" + njm::toString(t,"",0,0) + ".txt";
+	njm::toFile(njm::toString(qEval.feat1.at(t),"\n","",64,32),
+		    njm::sett.datExt(name));
+	
 	for(int k = 0; k < qEval.numNodes; ++k){
-	  name= "phiPsiTL_" + njm::toString(t,"") +
-	    "_" + njm::toString(k,"") + ".txt";
+	  name= "phiPsiTL_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
 	  njm::toFile(njm::toString(qEval.phiPsiTL.at(t).at(k),"\n",64,32),
+		      njm::sett.datExt(name));
+
+	  name= "psiTL0_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
+	  njm::toFile(njm::toString(qEval.psiTL0.at(t).at(k),"\n",64,32),
+		      njm::sett.datExt(name));
+	  
+	  name= "psiTL1_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
+	  njm::toFile(njm::toString(qEval.psiTL1.at(t).at(k),"\n",64,32),
 		      njm::sett.datExt(name));
 	}
       }
@@ -205,30 +232,41 @@ optim(const S & system,
 
       std::string name;
       for(int k = 0; k < qEval.numNodes; ++k){
-	name = "D0L_" + njm::toString(k,"") + ".txt";
+	name = "D0L_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.D0L.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 
-	name = "D1L_" + njm::toString(k,"") + ".txt";
+	name = "D1L_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.D1L.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 	
-	name = "RL_" + njm::toString(k,"") + ".txt";
+	name = "RL_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.RL.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
 	
-      	name = "phiL_" + njm::toString(k,"") + ".txt";
+      	name = "phiL_" + njm::toString(k,"",0,0) + ".txt";
 	njm::toFile(njm::toString(qEval.phiL.at(k),"\n",64,32),
 		    njm::sett.datExt(name));
       }
       for(int t = 0; t < s.sD.time; ++t){
 	for(int k = 0; k < qEval.numNodes; ++k){
-	  name= "phiPsiTL_" + njm::toString(t,"") +
-	    "_" + njm::toString(k,"") + ".txt";
+	  name= "phiPsiTL_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
 	  njm::toFile(njm::toString(qEval.phiPsiTL.at(t).at(k),"\n",64,32),
+		      njm::sett.datExt(name));
+
+	  name= "psiTL0_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
+	  njm::toFile(njm::toString(qEval.psiTL0.at(t).at(k),"\n",64,32),
+		      njm::sett.datExt(name));
+	  
+	  name= "psiTL1_" + njm::toString(t,"",0,0) +
+	    "_" + njm::toString(k,"",0,0) + ".txt";
+	  njm::toFile(njm::toString(qEval.psiTL1.at(t).at(k),"\n",64,32),
 		      njm::sett.datExt(name));
 	}
       }
+
       
       throw(1);
     }
@@ -427,6 +465,11 @@ bellResFixData(const SimData & sD,
   D0L.resize(fD.numNodes);
   std::fill(D0L.begin(),D0L.end(),Eigen::SparseMatrix<double>(dim,dim));
 
+  phiPsiTL.resize(sD.time);
+
+  psiTL0.clear();
+  feat0.clear();
+
   // make sure containers are zero'd out
   int i;
   for(i = 0; i < fD.numNodes; ++i){
@@ -452,7 +495,8 @@ bellResFixData(const SimData & sD,
 
   std::vector<double> features;
 
-  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
+  std::vector<Eigen::SparseMatrix<double> > psiL;
+  Eigen::SparseMatrix<double> phiPsi;
 
   // setup initial SimData
   int t,status_i,numNewInfec;
@@ -516,19 +560,21 @@ bellResFixData(const SimData & sD,
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
 
+    feat0.push_back(features);
 
-    phiPsiL=featToPhiPsi(features,fD.numNodes);
+    psiL=featToPsi(features);
+    psiTL0.push_back(psiL);
     
-    phiPsiTL.push_back(phiPsiL);
-
-    
+    phiPsiTL.at(t).clear();
     for(i = 0; i < fD.numNodes; ++i){
-      D0L.at(i) += phiPsiL.at(i) * phiPsiL.at(i).transpose();
+      phiPsi = phiL.at(i) * psiL.at(i);
+      phiPsiTL.at(t).push_back(phiPsi);
+      D0L.at(i) += phiPsi * phiPsi.transpose();
     }
 
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
-      RL.at(i) += phiPsiL.at(sDt.newInfec.at(i)) * (1.0/double(fD.numNodes));
+      RL.at(i) += phiPsiTL.at(t).at(sDt.newInfec.at(i)) / double(fD.numNodes);
   }
 
   // sD and dD are at time T
@@ -575,9 +621,9 @@ feat2Vec(const int numNodes,
 
 template <class S, class A, class F,
 	  class M,class MP>
-inline std::vector<Eigen::SparseMatrix<double> >
+std::vector<Eigen::SparseMatrix<double> >
 M2QEval<S,A,F,M,MP>::
-featToPhiPsi(const std::vector<double> & feat, const int numNodes){
+featToPsi(const std::vector<double> & feat){
 
   int n,i,j;
 
@@ -614,12 +660,11 @@ featToPhiPsi(const std::vector<double> & feat, const int numNodes){
       psiL.insert(numFeat + i - 1,0) = avg;
     }
     
-    mats.push_back(phiL.at(n) * psiL);
+    mats.push_back(psiL);
   }
   
   return mats;
 }
-
 
 
 
@@ -633,11 +678,15 @@ bellResPolData(const int time,
 	       MP & mP,
 	       A a){
 
-  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
-  std::vector<Eigen::SparseMatrix<double> > phiPsiLavg;
+  std::vector<Eigen::SparseMatrix<double> > psiL;
+  std::vector<Eigen::SparseMatrix<double> > psiAvgL;
+  Eigen::SparseMatrix<double> phiPsi;
 
   D1L.resize(fD.numNodes);
   std::fill(D1L.begin(),D1L.end(),Eigen::SparseMatrix<double>(dim,dim));
+
+  psiTL1.clear();
+  feat1.clear();
 
   int i;
   for(i = 0; i < fD.numNodes; ++i)
@@ -645,6 +694,8 @@ bellResPolData(const int time,
   
 
   std::vector<double> features;
+  std::vector<double> featAvg;
+  
   TrtData tDt;
   tDt.a.resize(fD.numNodes);
   tDt.p.resize(fD.numNodes);
@@ -681,26 +732,42 @@ bellResPolData(const int time,
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 
-	phiPsiL = featToPhiPsi(features,fD.numNodes);
-	if(j == 0)
-	  phiPsiLavg = phiPsiL;
-	else
+	psiL = featToPsi(features);
+	
+	if(j == 0){
+	  psiAvgL = psiL;
+	  featAvg = features;
+	}
+	else{
+	  for(k = 0; k < int(features.size()); ++k)
+	    featAvg.at(k) += features.at(k);
 	  for(k = 0; k < fD.numNodes; ++k)
-	    phiPsiLavg.at(k) += phiPsiL.at(k);
+	    psiAvgL.at(k) += psiL.at(k);
+	}
       }
+      for(k = 0; k < int(features.size()); ++k)
+	featAvg.at(k) /= double(tp.polReps);
       for(k = 0; k < fD.numNodes; ++k)
-	phiPsiLavg.at(k) /= double(tp.polReps);
+	psiAvgL.at(k) /= double(tp.polReps);
     }
     else{
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 
-      phiPsiLavg = featToPhiPsi(features,fD.numNodes);
+      featAvg = features;
+
+      psiAvgL = featToPsi(features);
     }
 
-    for(k = 0; k < fD.numNodes; ++k)
-      D1L.at(k) += phiPsiTL.at(t).at(k) * phiPsiLavg.at(k).transpose();
+    feat1.push_back(featAvg);
+
+    psiTL1.push_back(psiAvgL);
+    for(k = 0; k < fD.numNodes; ++k){
+      phiPsi = phiL.at(k) * psiAvgL.at(k);
+      D1L.at(k) += (phiPsiTL.at(t).at(k) * psiAvgL.at(k).transpose())
+	* phiL.at(k).transpose();
+    }
   }
 
 
@@ -946,9 +1013,15 @@ tune(const std::vector<int> & status){
   std::priority_queue<std::pair<double,double> > ordLambda;
   for(i = 0; i < numLambdaPows; ++i)
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
-  double bestPow = ordLambda.top().second;
 
-  tp.lambda = std::pow(2.0,bestPow);
+  double bestPow = ordLambda.top().second;
+  if((-ordLambda.top().first) < std::numeric_limits<double>::max())
+    tp.lambda = std::pow(2.0,bestPow);
+  else{
+    tp.lambda = -1;
+    return;
+  }
+  
   // std::cout << "lambda mid (" << tp.lambda << ") -> "
   // 	    << -ordLambda.top().first << std::endl;
 
@@ -996,7 +1069,13 @@ tune(const std::vector<int> & status){
 
   for(i = 0; i < numLambdaPows; ++i)
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
-  tp.lambda = std::pow(2.0,ordLambda.top().second);
+  
+  if((-ordLambda.top().first) < std::numeric_limits<double>::max())
+    tp.lambda = std::pow(2.0,ordLambda.top().second);
+  else{
+    tp.lambda = -1;
+    return;
+  }
   
   // std::cout << "lambda final (" << tp.lambda << ") -> "
   // 	    << -ordLambda.top().first << std::endl;
@@ -1026,7 +1105,7 @@ qFn(const SimData & sD,
     A a){
 
   // now evaluate Q-function
-  std::vector<Eigen::SparseMatrix<double> > phiPsiL;
+  std::vector<Eigen::SparseMatrix<double> > psiL;
   Eigen::SparseMatrix<double> phiPsi;
   phiPsi.resize(tp.dfLat*tp.dfLong*lenPsi,1);
   phiPsi.setZero();
@@ -1040,10 +1119,10 @@ qFn(const SimData & sD,
     f.preCompData(sD,tD,fD,dD,m,mP);
     f.getFeatures(sD,tD,fD,dD,m,mP);
     features = feat2Vec(fD.numNodes,sD.status);
-    phiPsiL = featToPhiPsi(features,fD.numNodes);
+    psiL = featToPsi(features);
 
     for(k = 0; k < fD.numNodes; ++k)
-      phiPsi += phiPsiL.at(k);
+      phiPsi += phiL.at(k) * psiL.at(k);
   }
   phiPsi /= (double)tp.polReps;
 

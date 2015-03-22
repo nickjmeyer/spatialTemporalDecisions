@@ -17,31 +17,41 @@ int main(int argc, char ** argv){
   typedef M2QOptim<S,RA,FI,EM,EP> OQ;
 
   S s;
-  RA ra;
-  OQ oq;
 
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
+  s.modelGen.infProbs(s.sD,s.tD,s.fD,s.dD,s.paramGen);
 
-  s.paramEst_r = s.paramGen_r;
-  s.reset();
+  double prob = 0;
+  for(int i = 0; i < s.sD.numNotInfec; ++i)
+    prob += s.paramGen.infProbs.at(i);
 
-  int i;
-  for(i = 0; i < 0; i++)
-    njm::runif01();
+  std::cout << prob/double(s.sD.numNotInfec) << std::endl;
+
   
-  int t;
-  for(t = 0; t < s.fD.finalT; ++t){
-    if(t >= s.fD.trtStart){
-      ra.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelGen,s.paramEst);
-    }
-    s.nextPoint();
+  // RA ra;
+  // OQ oq;
 
-  }
+  // s.modelGen.fitType = MLE;
+  // s.modelEst.fitType = MLE;
 
-  std::cout << "value: " << s.value() << std::endl;
+  // s.paramEst_r = s.paramGen_r;
+  // s.reset();
+
+  // int i;
+  // for(i = 0; i < 0; i++)
+  //   njm::runif01();
   
-  oq.qEval.preCompData(s.sD,s.fD);
+  // int t;
+  // for(t = 0; t < s.fD.finalT; ++t){
+  //   if(t >= s.fD.trtStart){
+  //     ra.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelGen,s.paramEst);
+  //   }
+  //   s.nextPoint();
+
+  // }
+
+  // std::cout << "value: " << s.value() << std::endl;
+  
+  // oq.qEval.preCompData(s.sD,s.fD);
 
   // oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
 
@@ -60,7 +70,7 @@ int main(int argc, char ** argv){
   // std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
   // 	    << " >>>>> " << oq.qEval.bellRes()
   // 	    << std::endl;
-
+  
   // std::cout << "lambda before: " << oq.qEval.tp.lambda << std::endl;
   // oq.qEval.tune(s.sD.status);
   // std::cout << " lambda after: " << oq.qEval.tp.lambda << std::endl;
