@@ -79,6 +79,8 @@ void M2QOptim<S,A,F,M,MP>::
 optim(const S & system,
       A & agent){
 
+  njm::message("Optim at time " + njm::toString(system.sD.time,"",0,0));
+
   // first three steps use weights {1,1,...}
   if(system.sD.time < (system.fD.trtStart + 3))
     return;
@@ -94,7 +96,14 @@ optim(const S & system,
 
   if(system.sD.time == (system.fD.trtStart + 3))
     qEval.tune(system.sD.status);
-  
+
+  if(!(qEval.tp.lambda < std::numeric_limits<double>::max())){
+    njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
+		 " has a non-finite lambda at time " +
+		 njm::toString(system.sD.time,"",0,0));
+    return;
+  }
+
   qEval.buildRD();
   
 
