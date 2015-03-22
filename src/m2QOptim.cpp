@@ -97,7 +97,7 @@ optim(const S & system,
   if(system.sD.time == (system.fD.trtStart + 3))
     qEval.tune(system.sD.status);
 
-  if(!(qEval.tp.lambda < std::numeric_limits<double>::max())){
+  if(qEval.tp.lambda < 0){
     njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
 		 " has a non-finite lambda at time " +
 		 njm::toString(system.sD.time,"",0,0));
@@ -1013,9 +1013,15 @@ tune(const std::vector<int> & status){
   std::priority_queue<std::pair<double,double> > ordLambda;
   for(i = 0; i < numLambdaPows; ++i)
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
-  double bestPow = ordLambda.top().second;
 
-  tp.lambda = std::pow(2.0,bestPow);
+  double bestPow = ordLambda.top().second;
+  if(ordLambda.top().first < std::numeric_limits<double>::max())
+    tp.lambda = std::pow(2.0,bestPow);
+  else{
+    tp.lambda = -1;
+    return;
+  }
+  
   // std::cout << "lambda mid (" << tp.lambda << ") -> "
   // 	    << -ordLambda.top().first << std::endl;
 
@@ -1063,7 +1069,13 @@ tune(const std::vector<int> & status){
 
   for(i = 0; i < numLambdaPows; ++i)
     ordLambda.push(std::pair<double,double>(-lambdaCV.at(i),lambdaPows.at(i)));
-  tp.lambda = std::pow(2.0,ordLambda.top().second);
+  
+  if(ordLambda.top().first < std::numeric_limits<double>::max())
+    tp.lambda = std::pow(2.0,ordLambda.top().second);
+  else{
+    tp.lambda = -1;
+    return;
+  }
   
   // std::cout << "lambda final (" << tp.lambda << ") -> "
   // 	    << -ordLambda.top().first << std::endl;
