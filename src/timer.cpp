@@ -15,6 +15,13 @@ Timer::Timer(){
 
 Timer::~Timer(){
 #ifndef NJM_NO_TIMER
+  print();
+#endif
+}
+
+
+void Timer::print(){
+#ifndef NJM_NO_TIMER
 
   int i,I = omp_get_max_threads();
   map<string,milliseconds> total;

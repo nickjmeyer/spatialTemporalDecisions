@@ -16,6 +16,8 @@ class Timer {
   Timer();
   ~Timer();
 
+  void print();
+  
   void start(const std::string name);
   void stop(const std::string name);
 

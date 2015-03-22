@@ -352,6 +352,7 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
+  njm::timer.start("preComp");
   int i,j;
 
   numNodes = fD.numNodes;
@@ -445,6 +446,8 @@ preCompData(const SimData & sD, const FixedData & fD){
   gsl_vector_free(bLong);
   gsl_vector_free(knotsLat);
   gsl_vector_free(knotsLong);
+
+  njm::timer.stop("preComp");  
 }
 
 
@@ -501,6 +504,7 @@ bellResFixData(const SimData & sD,
   // setup initial SimData
   int t,status_i,numNewInfec;
   for(t=0; t<sD.time; t++){
+    njm::timer.start("fixSetup");
 
     // build complete history of simulation
 
@@ -554,27 +558,39 @@ bellResFixData(const SimData & sD,
       dD1T.push_back(dD); // right now dD is completely empty ... trivial
     }
 
-
+    njm::timer.stop("fixSetup");
+    
+    njm::timer.start("fixFeat");
     // using the current values build D0
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
+    
+    psiL=featToPsi(features);
+    njm::timer.stop("fixFeat");
 
+    njm::timer.start("data");
     feat0.push_back(features);
 
-    psiL=featToPsi(features);
     psiTL0.push_back(psiL);
-    
+    njm::timer.stop("data");
+
     phiPsiTL.at(t).clear();
     for(i = 0; i < fD.numNodes; ++i){
+      njm::timer.start("fixD0build");
       phiPsi = phiL.at(i) * psiL.at(i);
       phiPsiTL.at(t).push_back(phiPsi);
+      njm::timer.stop("fixD0build");
+      njm::timer.start("fixD0combine");
       D0L.at(i) += phiPsi * phiPsi.transpose();
+      njm::timer.stop("fixD0combine");
     }
 
+    njm::timer.start("fixR");
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
       RL.at(i) += phiPsiTL.at(t).at(sDt.newInfec.at(i)) / double(fD.numNodes);
+    njm::timer.stop("fixR");
   }
 
   // sD and dD are at time T
@@ -708,6 +724,7 @@ bellResPolData(const int time,
   
   int t,j,k;
   for(t=0; t<time; t++){
+    njm::timer.start("polSetup");
     
     std::fill(tDt.a.begin(),tDt.a.end(),0);
     std::fill(tDt.p.begin(),tDt.p.end(),0);  
@@ -721,9 +738,12 @@ bellResPolData(const int time,
 	tDt.aPast.at(i)=1;
     }
 
+    njm::timer.stop("polSetup");    
+
 
     if((t+1)>=fD.trtStart){
       for(j=0; j<tp.polReps; j++){
+	njm::timer.start("polFeat");
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
 	std::fill(tDt.p.begin(),tDt.p.end(),0);  
 	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
@@ -731,48 +751,72 @@ bellResPolData(const int time,
 	f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
-
-	psiL = featToPsi(features);
 	
+	psiL = featToPsi(features);
+	njm::timer.stop("polFeat");
+
 	if(j == 0){
 	  psiAvgL = psiL;
 	  featAvg = features;
 	}
 	else{
+	  njm::timer.start("data");
 	  for(k = 0; k < int(features.size()); ++k)
 	    featAvg.at(k) += features.at(k);
+	  njm::timer.stop("data");
+	  
+	  njm::timer.start("polPsiAvg");
 	  for(k = 0; k < fD.numNodes; ++k)
 	    psiAvgL.at(k) += psiL.at(k);
+	  njm::timer.stop("polPsiAvg");
 	}
       }
+      njm::timer.start("data");
       for(k = 0; k < int(features.size()); ++k)
 	featAvg.at(k) /= double(tp.polReps);
+      njm::timer.stop("data");
+      njm::timer.start("polPsiAvg");
       for(k = 0; k < fD.numNodes; ++k)
 	psiAvgL.at(k) /= double(tp.polReps);
+      njm::timer.stop("polPsiAvg");
     }
     else{
+      njm::timer.start("polFeat");
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
-
-      featAvg = features;
-
+      
       psiAvgL = featToPsi(features);
+      njm::timer.stop("polFeat");
+
+      njm::timer.start("data");
+      featAvg = features;
+      njm::timer.stop("data");
+
     }
 
+    njm::timer.start("data");
     feat1.push_back(featAvg);
-
+    
     psiTL1.push_back(psiAvgL);
+    njm::timer.stop("data");
+
     for(k = 0; k < fD.numNodes; ++k){
+      njm::timer.start("polD1build");
       phiPsi = phiL.at(k) * psiAvgL.at(k);
+      njm::timer.stop("polD1build");
+
+      njm::timer.start("polD1combine");
       D1L.at(k) += (phiPsiTL.at(t).at(k) * psiAvgL.at(k).transpose())
 	* phiL.at(k).transpose();
+      njm::timer.stop("polD1combine");
     }
   }
 
-
+  njm::timer.start("polD1discount");
   for(k = 0; k < fD.numNodes; ++k)
     D1L.at(k) *= tp.gamma; // discount factor
+  njm::timer.stop("polD1discount");
 
 }
 
@@ -782,6 +826,7 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
+  njm::timer.start("solve");
   Eigen::SparseMatrix<double> P(dim,dim);
 
   // P.setIdentity();
@@ -800,13 +845,15 @@ solve(){
   solver.compute(D.transpose() * D + tp.lambda*P);
 
   if(solver.info() != Eigen::Success){
+    njm::timer.stop("solve");
     // std::cout << "In M2QEval::solve(): decomposition failed."
     // 	      << std::endl;
     throw(1);
   }
 
   beta = solver.solve(-D.transpose() * R);
-
+  
+  njm::timer.stop("solve");
 }
 
 
@@ -831,7 +878,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildRD(const std::vector<int> nodes){
-  
   int i,I = nodes.size();
   R.resize(dim);
   D0.resize(dim,dim);
@@ -840,14 +886,23 @@ buildRD(const std::vector<int> nodes){
   R.setZero();
   D0.setZero();
   D1.setZero();
+
+  njm::timer.start("buildD0");
   for(i = 0; i < I; ++i)
     D0 += D0L.at(nodes.at(i));
+  njm::timer.stop("buildD0");
+  njm::timer.start("buildD1");
   for(i = 0; i < I; ++i)
     D1 += D1L.at(nodes.at(i));
+  njm::timer.stop("buildD1");
+  njm::timer.start("buildR");
   for(i = 0; i < I; ++i)
     R += RL.at(nodes.at(i));
+  njm::timer.stop("buildR");
 
+  njm::timer.start("buildD");
   D = D1 - D0;
+  njm::timer.stop("buildD");
 
 }
 
@@ -880,11 +935,14 @@ buildD1(const std::vector<int> nodes){
   D1.resize(dim,dim);
 
   D1.setZero();
+  njm::timer.start("buildD1");
   for(i = 0; i < I; ++i)
     D1 += D1L.at(nodes.at(i));
+  njm::timer.stop("buildD1");
 
+  njm::timer.start("buildD");
   D = D1 - D0;
-
+  njm::timer.stop("buildD");
 }
 
 
@@ -1002,6 +1060,8 @@ tune(const std::vector<int> & status){
       catch(int e){
 	lambdaCV.at(i) += std::numeric_limits<double>::max();
       }
+
+      njm::timer.print();
       
       // std::cout << "    lambda (" << tp.lambda << ") -> "
       // 		<< lambdaCV.at(i) << std::endl;
@@ -1060,6 +1120,8 @@ tune(const std::vector<int> & status){
       catch(int e){
 	lambdaCV.at(i) += std::numeric_limits<double>::max();
       }
+      
+      njm::timer.print();
       
       // std::cout << "    lambda (" << tp.lambda << ") -> "
       // 		<< lambdaCV.at(i) << std::endl;
