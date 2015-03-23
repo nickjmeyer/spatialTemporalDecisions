@@ -15,8 +15,8 @@ endif
 
 
 CPPFLAGS = -std=c++11 -fopenmp -Wall
-INCLUDE = -I/usr/include/superlu/ -I/usr/include/suitesparse/
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu -lumfpack
+INCLUDE = -I/usr/include/superlu/
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG

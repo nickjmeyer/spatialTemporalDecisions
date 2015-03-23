@@ -50,68 +50,21 @@ int main(int argc, char ** argv){
 
   oq.qEval.buildRD();
 
-  std::cout << oq.qEval.R.sum() << " >> "
-	    << oq.qEval.D0.sum() << " >> "
-	    << oq.qEval.D1.sum() << " >> "
-	    << oq.qEval.D.sum() << " >> "
-	    << std::endl;
+  njm::timer.start("SparseLU");
+  for(i = 0; i < 10; ++i){
+    Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
+    solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
+    oq.qEval.beta = solver.solve(oq.qEval.mDtR);
+  }
+  njm::timer.stop("SparseLU");
 
-  oq.qEval.solve();
-
-  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-	    << " >>>>> " << oq.qEval.bellRes()
-	    << std::endl;
-
-
-  oq.qEval.buildRD();
-
-  std::cout << oq.qEval.R.sum() << " >> "
-	    << oq.qEval.D0.sum() << " >> "
-	    << oq.qEval.D1.sum() << " >> "
-	    << oq.qEval.D.sum() << " >> "
-	    << std::endl;
-
-  oq.qEval.solve();
-
-  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-	    << " >>>>> " << oq.qEval.bellRes()
-	    << std::endl;
-  
-
-  oq.qEval.preCompData(s.sD,s.fD);
-
-  oq.qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst);
-
-  oq.qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,ra);
-
-  oq.qEval.buildRD();
-
-  std::cout << oq.qEval.R.sum() << " >> "
-	    << oq.qEval.D0.sum() << " >> "
-	    << oq.qEval.D1.sum() << " >> "
-	    << oq.qEval.D.sum() << " >> "
-	    << std::endl;
-
-  oq.qEval.solve();
-
-  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-	    << " >>>>> " << oq.qEval.bellRes()
-	    << std::endl;
-
-
-  oq.qEval.buildRD();
-
-  std::cout << oq.qEval.R.sum() << " >> "
-	    << oq.qEval.D0.sum() << " >> "
-	    << oq.qEval.D1.sum() << " >> "
-	    << oq.qEval.D.sum() << " >> "
-	    << std::endl;
-
-  oq.qEval.solve();
-
-  std::cout << oq.qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,ra)
-	    << " >>>>> " << oq.qEval.bellRes()
-	    << std::endl;
+  njm::timer.start("SuperLU");
+  for(i = 0; i < 10; ++i){
+    Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
+    solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
+    oq.qEval.beta = solver.solve(oq.qEval.mDtR);
+  }
+  njm::timer.stop("SuperLU");
   
   njm::sett.clean();
   return 0;

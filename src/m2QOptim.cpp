@@ -719,7 +719,7 @@ solve(){
   // 			       + ".log"));
   // std::cout << "solve\n";
   
-  Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
+  Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
 
   solver.compute(DtD + tp.lambda*P);
 
