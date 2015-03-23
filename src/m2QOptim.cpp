@@ -724,6 +724,17 @@ solve(){
   solver.compute(DtD + tp.lambda*P);
 
   if(solver.info() != Eigen::Success){
+    Eigen::SparseQR<Eigen::SparseMatrix<double>,Eigen::COLAMDOrdering<int> > qr;
+    qr.compute(DtD + tp.lambda*P);
+    njm::toFile("rank is " + njm::toString(qr.rank(),"",0,0),
+		njm::sett.datExt("console_"
+				 + njm::toString(omp_get_thread_num(),"",0,0)
+				 + ".log"));
+    
+    njm::toFile("done solve failed",
+		njm::sett.datExt("console_"
+				 + njm::toString(omp_get_thread_num(),"",0,0)
+				 + ".log"));
     // std::cout << "In M2QEval::solve(): decomposition failed."
     // 	      << std::endl;
     throw(1);
