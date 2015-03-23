@@ -721,8 +721,15 @@ solve(){
   
   Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
 
+  Eigen::SparseMatrix<double> DtDP = DtD + tp.lambda*P;
+  njm::toFile(njm::toString(DtDP,"",64,32),
+	      njm::sett.datExt("DtDP_"
+			       + njm::toString(omp_get_thread_num(),"",0,0)
+			       + ".txt"),
+	      std::ios_base::out);
+  
   try{
-    solver.compute(DtD + tp.lambda*P);
+    solver.compute(DtDP);
   }
   catch(...){
     std::cout << "this fails on thread " << omp_get_thread_num() << std::endl;

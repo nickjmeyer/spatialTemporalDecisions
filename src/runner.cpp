@@ -552,6 +552,16 @@ OptimRunner<S,A,Optim>
   firstprivate(system,agent,optim,weights)	\
   private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
+    if(r==0){
+      int threadId = 0;
+      char name[16] = { 0 };
+ 
+      threadId = omp_get_thread_num();
+ 
+      snprintf(name, sizeof(name) - 1, "omp-%02d", threadId);
+ 
+      pthread_setname_np(pthread_self(), name);
+    }
     // record time for each replication
     tickR=std::time(NULL);
 
