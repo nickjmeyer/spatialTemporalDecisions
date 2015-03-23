@@ -552,7 +552,7 @@ OptimRunner<S,A,Optim>
   firstprivate(system,agent,optim,weights)	\
   private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
-    if(r==0){
+    {
       int threadId = 0;
       char name[16] = { 0 };
  
