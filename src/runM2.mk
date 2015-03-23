@@ -15,8 +15,8 @@ endif
 
 
 CPPFLAGS = -std=c++11 -fopenmp -Wall
-INCLUDE = 
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
+INCLUDE = -I/usr/include/superlu/ -I/usr/include/suitesparse/
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu -lumfpack
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
@@ -52,7 +52,7 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	mcmcGravityTimeInfExpLCaves.o \
 	mcmcGravityTimeInfExpRCaves.o \
 	runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o settings.o
+	sortMerge.o settings.o timer.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"

@@ -95,7 +95,7 @@ optim(const S & system,
   qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
 
   if(system.sD.time == (system.fD.trtStart + 3))
-    qEval.tune(system.sD.status);
+    qEval.tune();
 
   if(qEval.tp.lambda < 0){
     njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
@@ -134,147 +134,18 @@ optim(const S & system,
     agent.tp.putPar(parPH);
     qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
     qEval.buildD1();
-    try{
-      qEval.solve();
-    }
-    catch(int e){
-      std::cout << "Decomposition failed on thread "
-		<< omp_get_thread_num() << "."
-		<< std::endl
-		<< "Lambda value is " << qEval.tp.lambda
-		<< std::endl;
-
-      // save as much data as possible
-      
-      njm::toFile(njm::toString(qEval.D0,"\n",64,32),
-		  njm::sett.datExt("D0.txt"));
-      njm::toFile(njm::toString(qEval.D1,"\n",64,32),
-		  njm::sett.datExt("D1.txt"));
-      njm::toFile(njm::toString(qEval.D,"\n",64,32),
-		  njm::sett.datExt("D.txt"));
-      njm::toFile(njm::toString(qEval.R,"\n",64,32),
-		  njm::sett.datExt("R.txt"));
-
-      std::string name;
-      for(int k = 0; k < qEval.numNodes; ++k){
-	name = "D0L_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.D0L.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-
-	name = "D1L_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.D1L.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-	
-	name = "RL_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.RL.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-	
-      	name = "phiL_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.phiL.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-      }
-      for(int t = 0; t < s.sD.time; ++t){
-	name = "feat0_" + njm::toString(t,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.feat0.at(t),"\n","",64,32),
-		    njm::sett.datExt(name));
-	
-	name = "feat1_" + njm::toString(t,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.feat1.at(t),"\n","",64,32),
-		    njm::sett.datExt(name));
-	
-	for(int k = 0; k < qEval.numNodes; ++k){
-	  name= "phiPsiTL_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.phiPsiTL.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-
-	  name= "psiTL0_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.psiTL0.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-	  
-	  name= "psiTL1_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.psiTL1.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-	}
-      }
-      
-
-      
-      throw(1);
-    }
+    qEval.solve();
     valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
 
     agent.tp.putPar(parMH);
     qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
     qEval.buildD1();
-    try{
-      qEval.solve();
-    }
-    catch(int e){
-      std::cout << "Decomposition failed on thread "
-		<< omp_get_thread_num() << "."
-		<< std::endl
-		<< "Lambda value is " << qEval.tp.lambda
-		<< std::endl;
-
-      // save as much data as possible
-      
-      njm::toFile(njm::toString(qEval.D0,"\n",64,32),
-		  njm::sett.datExt("D0.txt"));
-      njm::toFile(njm::toString(qEval.D1,"\n",64,32),
-		  njm::sett.datExt("D1.txt"));
-      njm::toFile(njm::toString(qEval.D,"\n",64,32),
-		  njm::sett.datExt("D.txt"));
-      njm::toFile(njm::toString(qEval.R,"\n",64,32),
-		  njm::sett.datExt("R.txt"));
-
-      std::string name;
-      for(int k = 0; k < qEval.numNodes; ++k){
-	name = "D0L_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.D0L.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-
-	name = "D1L_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.D1L.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-	
-	name = "RL_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.RL.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-	
-      	name = "phiL_" + njm::toString(k,"",0,0) + ".txt";
-	njm::toFile(njm::toString(qEval.phiL.at(k),"\n",64,32),
-		    njm::sett.datExt(name));
-      }
-      for(int t = 0; t < s.sD.time; ++t){
-	for(int k = 0; k < qEval.numNodes; ++k){
-	  name= "phiPsiTL_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.phiPsiTL.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-
-	  name= "psiTL0_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.psiTL0.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-	  
-	  name= "psiTL1_" + njm::toString(t,"",0,0) +
-	    "_" + njm::toString(k,"",0,0) + ".txt";
-	  njm::toFile(njm::toString(qEval.psiTL1.at(t).at(k),"\n",64,32),
-		      njm::sett.datExt(name));
-	}
-      }
-
-      
-      throw(1);
-    }
+    qEval.solve();
     valM = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
 
     
     for(i=0; i<numPar; i++)
-      par.at(i) = par.at(i) - mu*(valP - valM)/(2.0*h.at(i));
+      par.at(i) = par.at(i) + mu*(valP - valM)/(2.0*h.at(i));
 
     
     // if(omp_get_thread_num() == 0)
@@ -289,6 +160,8 @@ optim(const S & system,
       
     mu = tp.A/std::pow(tp.B + iter,tp.ell);
     cm = tp.C/std::pow(iter,tp.t);
+
+
 
     
     if(mu < tp.muMin){
@@ -352,7 +225,6 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
-  njm::timer.start("preComp");
   int i,j;
 
   numNodes = fD.numNodes;
@@ -447,7 +319,17 @@ preCompData(const SimData & sD, const FixedData & fD){
   gsl_vector_free(knotsLat);
   gsl_vector_free(knotsLong);
 
-  njm::timer.stop("preComp");  
+
+  P.resize(dim,dim);
+  P.setZero();
+
+  ind = tp.dfLat*tp.dfLong + 1;
+  for(i = 0; i < dim; ++i)
+    if(i % ind != 0)
+      P.insert(i,i) = 1.0;
+  P.makeCompressed();
+  
+
 }
 
 
@@ -463,15 +345,12 @@ bellResFixData(const SimData & sD,
 	       MP & mP){
   // prep containers
   RL.resize(fD.numNodes);
-  std::fill(RL.begin(),RL.end(),Eigen::VectorXd(dim));
+  std::fill(RL.begin(),RL.end(),Eigen::SparseVector<double>(dim));
 
   D0L.resize(fD.numNodes);
   std::fill(D0L.begin(),D0L.end(),Eigen::SparseMatrix<double>(dim,dim));
 
   phiPsiTL.resize(sD.time);
-
-  psiTL0.clear();
-  feat0.clear();
 
   // make sure containers are zero'd out
   int i;
@@ -504,7 +383,6 @@ bellResFixData(const SimData & sD,
   // setup initial SimData
   int t,status_i,numNewInfec;
   for(t=0; t<sD.time; t++){
-    njm::timer.start("fixSetup");
 
     // build complete history of simulation
 
@@ -558,39 +436,24 @@ bellResFixData(const SimData & sD,
       dD1T.push_back(dD); // right now dD is completely empty ... trivial
     }
 
-    njm::timer.stop("fixSetup");
     
-    njm::timer.start("fixFeat");
     // using the current values build D0
     f.preCompData(sDt,tDt,fD,dD,m,mP);
     f.getFeatures(sDt,tDt,fD,dD,m,mP);
     features=feat2Vec(fD.numNodes,sDt.status);
     
     psiL=featToPsi(features);
-    njm::timer.stop("fixFeat");
-
-    njm::timer.start("data");
-    feat0.push_back(features);
-
-    psiTL0.push_back(psiL);
-    njm::timer.stop("data");
 
     phiPsiTL.at(t).clear();
     for(i = 0; i < fD.numNodes; ++i){
-      njm::timer.start("fixD0build");
       phiPsi = phiL.at(i) * psiL.at(i);
       phiPsiTL.at(t).push_back(phiPsi);
-      njm::timer.stop("fixD0build");
-      njm::timer.start("fixD0combine");
       D0L.at(i) += phiPsi * phiPsi.transpose();
-      njm::timer.stop("fixD0combine");
     }
 
-    njm::timer.start("fixR");
     numNewInfec = sDt.newInfec.size();
     for(i = 0; i < numNewInfec; ++i)
       RL.at(i) += phiPsiTL.at(t).at(sDt.newInfec.at(i)) / double(fD.numNodes);
-    njm::timer.stop("fixR");
   }
 
   // sD and dD are at time T
@@ -661,19 +524,24 @@ featToPsi(const std::vector<double> & feat){
 
   // for each location create psi vector
   double avg;
+  double featVal;
   std::vector<Eigen::SparseMatrix<double> > mats;
   for(n = 0; n < numNodes; ++n){
     Eigen::SparseMatrix<double> psiL(lenPsi,1);
     
-    for(i = 0; i < numFeat; ++i)
-      psiL.insert(i,0) = featFull.at(n*numFeat + i);
+    for(i = 0; i < numFeat; ++i){
+      featVal = featFull.at(n*numFeat + i);
+      if(featVal != 0.0)
+	psiL.insert(i,0) = featVal;
+    }
     
     for(i = 1; i < numFeat; ++i){
       avg = 0;
       for(j = 0; j < tp.numNeigh; ++j)
 	avg += featFull.at(neighbors.at(n).at(j)*numFeat + i);
       avg /= double(tp.numNeigh);
-      psiL.insert(numFeat + i - 1,0) = avg;
+      if(avg != 0.0)
+	psiL.insert(numFeat + i - 1,0) = avg;
     }
     
     mats.push_back(psiL);
@@ -701,9 +569,6 @@ bellResPolData(const int time,
   D1L.resize(fD.numNodes);
   std::fill(D1L.begin(),D1L.end(),Eigen::SparseMatrix<double>(dim,dim));
 
-  psiTL1.clear();
-  feat1.clear();
-
   int i;
   for(i = 0; i < fD.numNodes; ++i)
     D1L.at(i).setZero();
@@ -724,7 +589,6 @@ bellResPolData(const int time,
   
   int t,j,k;
   for(t=0; t<time; t++){
-    njm::timer.start("polSetup");
     
     std::fill(tDt.a.begin(),tDt.a.end(),0);
     std::fill(tDt.p.begin(),tDt.p.end(),0);  
@@ -738,12 +602,10 @@ bellResPolData(const int time,
 	tDt.aPast.at(i)=1;
     }
 
-    njm::timer.stop("polSetup");    
 
 
     if((t+1)>=fD.trtStart){
       for(j=0; j<tp.polReps; j++){
-	njm::timer.start("polFeat");
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
 	std::fill(tDt.p.begin(),tDt.p.end(),0);  
 	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
@@ -753,70 +615,45 @@ bellResPolData(const int time,
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 	
 	psiL = featToPsi(features);
-	njm::timer.stop("polFeat");
 
 	if(j == 0){
 	  psiAvgL = psiL;
 	  featAvg = features;
 	}
 	else{
-	  njm::timer.start("data");
 	  for(k = 0; k < int(features.size()); ++k)
 	    featAvg.at(k) += features.at(k);
-	  njm::timer.stop("data");
 	  
-	  njm::timer.start("polPsiAvg");
 	  for(k = 0; k < fD.numNodes; ++k)
 	    psiAvgL.at(k) += psiL.at(k);
-	  njm::timer.stop("polPsiAvg");
 	}
       }
-      njm::timer.start("data");
       for(k = 0; k < int(features.size()); ++k)
 	featAvg.at(k) /= double(tp.polReps);
-      njm::timer.stop("data");
-      njm::timer.start("polPsiAvg");
       for(k = 0; k < fD.numNodes; ++k)
 	psiAvgL.at(k) /= double(tp.polReps);
-      njm::timer.stop("polPsiAvg");
     }
     else{
-      njm::timer.start("polFeat");
       f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
       
       psiAvgL = featToPsi(features);
-      njm::timer.stop("polFeat");
 
-      njm::timer.start("data");
       featAvg = features;
-      njm::timer.stop("data");
 
     }
 
-    njm::timer.start("data");
-    feat1.push_back(featAvg);
-    
-    psiTL1.push_back(psiAvgL);
-    njm::timer.stop("data");
-
     for(k = 0; k < fD.numNodes; ++k){
-      njm::timer.start("polD1build");
       phiPsi = phiL.at(k) * psiAvgL.at(k);
-      njm::timer.stop("polD1build");
 
-      njm::timer.start("polD1combine");
       D1L.at(k) += (phiPsiTL.at(t).at(k) * psiAvgL.at(k).transpose())
 	* phiL.at(k).transpose();
-      njm::timer.stop("polD1combine");
     }
   }
 
-  njm::timer.start("polD1discount");
   for(k = 0; k < fD.numNodes; ++k)
     D1L.at(k) *= tp.gamma; // discount factor
-  njm::timer.stop("polD1discount");
 
 }
 
@@ -826,34 +663,19 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  njm::timer.start("solve");
-  Eigen::SparseMatrix<double> P(dim,dim);
+  
+  Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
 
-  // P.setIdentity();
-
-  int i,ind = tp.dfLat*tp.dfLong + 1;
-  for(i = 0; i < dim; ++i)
-    if(i % ind != 0)
-      P.insert(i,i) = 1.0;
-
-  // Eigen::SparseMatrix<double> DD = D.transpose() * D;
-  // Eigen::SparseQR<Eigen::SparseMatrix<double>,
-  // 		  Eigen::COLAMDOrdering<int> > DDlu(DD);
-  // std::cout << "rank: " << DDlu.rank() << std::endl;
-
-  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
-  solver.compute(D.transpose() * D + tp.lambda*P);
+  solver.compute(DtD + tp.lambda*P);
 
   if(solver.info() != Eigen::Success){
-    njm::timer.stop("solve");
     // std::cout << "In M2QEval::solve(): decomposition failed."
     // 	      << std::endl;
     throw(1);
   }
 
-  beta = solver.solve(-D.transpose() * R);
+  beta = solver.solve(mDtR);
   
-  njm::timer.stop("solve");
 }
 
 
@@ -887,22 +709,16 @@ buildRD(const std::vector<int> nodes){
   D0.setZero();
   D1.setZero();
 
-  njm::timer.start("buildD0");
   for(i = 0; i < I; ++i)
     D0 += D0L.at(nodes.at(i));
-  njm::timer.stop("buildD0");
-  njm::timer.start("buildD1");
   for(i = 0; i < I; ++i)
     D1 += D1L.at(nodes.at(i));
-  njm::timer.stop("buildD1");
-  njm::timer.start("buildR");
   for(i = 0; i < I; ++i)
     R += RL.at(nodes.at(i));
-  njm::timer.stop("buildR");
 
-  njm::timer.start("buildD");
   D = D1 - D0;
-  njm::timer.stop("buildD");
+  DtD = D.transpose() * D;
+  mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
 
 }
 
@@ -935,14 +751,12 @@ buildD1(const std::vector<int> nodes){
   D1.resize(dim,dim);
 
   D1.setZero();
-  njm::timer.start("buildD1");
   for(i = 0; i < I; ++i)
     D1 += D1L.at(nodes.at(i));
-  njm::timer.stop("buildD1");
 
-  njm::timer.start("buildD");
   D = D1 - D0;
-  njm::timer.stop("buildD");
+  DtD = D.transpose() * D;
+  mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
 }
 
 
@@ -950,7 +764,7 @@ buildD1(const std::vector<int> nodes){
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-getRD(Eigen::VectorXd & R,
+getRD(Eigen::SparseVector<double> & R,
       Eigen::SparseMatrix<double> & D){
   R = this->R;
   D = this->D;
@@ -960,17 +774,36 @@ getRD(Eigen::VectorXd & R,
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-setRD(const Eigen::VectorXd & R,
+setRD(const Eigen::SparseVector<double> & R,
       const Eigen::SparseMatrix<double> & D){
   this->R = R;
   this->D = D;
+}
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+getSolveDat(Eigen::VectorXd & mDtR,
+	    Eigen::SparseMatrix<double> & DtD){
+  mDtR = this->mDtR;
+  DtD = this->DtD;
 }
 
 
 template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
-tune(const std::vector<int> & status){
+setSolveDat(const Eigen::VectorXd & mDtR,
+	    const Eigen::SparseMatrix<double> & DtD){
+  this->mDtR = mDtR;
+  this->DtD = DtD;
+}
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+tune(){
   int i,b,bS = (tp.bootSize * numNodes + 1);
 
 
@@ -1000,14 +833,11 @@ tune(const std::vector<int> & status){
 
   // sample the CV nodes
   std::pair<double,int> top;
-  int trainInf,testInf;
   for(b = 0; b < tp.bootReps; ++b){
     std::priority_queue<std::pair<double,int> > ordNodes;
     for(i = 0; i < numNodes; ++i)
       ordNodes.push(std::pair<double,int>(njm::runif01(),nodes.at(i)));
 
-    trainInf = 0;
-    testInf = 0;
 
     selNodesTrain.at(b).clear();
     selNodesTest.at(b).clear();
@@ -1019,39 +849,41 @@ tune(const std::vector<int> & status){
       else
 	selNodesTest.at(b).push_back(top.second);
 
-      if(status.at(top.second) >= 2){
-	if(i < bS)
-	  ++trainInf;
-	else
-	  ++testInf;
-      }
     }
     
-    // std::cout << "Inf: [" << double(trainInf)/double(bS)
-    // 	      << ", " << double(testInf)/double(numNodes-bS)
-    // 	      << "]" << std::endl;
   }
     
 
 
   // D,R containers for testing and training
-  Eigen::VectorXd Rtrain,Rtest;
-  Eigen::SparseMatrix<double> Dtrain,Dtest;
+  Eigen::VectorXd mDtRtrain;
+  Eigen::SparseVector<double> Rtest;
+  Eigen::SparseMatrix<double> DtDtrain,Dtest;
+
+  std::vector<Eigen::VectorXd> mDtRtrainBoot;
+  std::vector<Eigen::SparseVector<double> > RtestBoot;
+  std::vector<Eigen::SparseMatrix<double> > DtDtrainBoot,DtestBoot;
 
   // CV bellman error
   for(b = 0; b < tp.bootReps; ++b){
 
     buildRD(selNodesTrain.at(b));
-    getRD(Rtrain,Dtrain);
+    getSolveDat(mDtRtrain,DtDtrain);
+
+    mDtRtrainBoot.push_back(mDtRtrain);
+    DtDtrainBoot.push_back(DtDtrain);
 
     buildRD(selNodesTest.at(b));
     getRD(Rtest,Dtest);
+
+    RtestBoot.push_back(Rtest);
+    DtestBoot.push_back(Dtest);
 
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
 
       try{
-	setRD(Rtrain,Dtrain);
+	setSolveDat(mDtRtrain,DtDtrain);
 	solve();
 	
 	setRD(Rtest,Dtest);
@@ -1061,10 +893,6 @@ tune(const std::vector<int> & status){
 	lambdaCV.at(i) += std::numeric_limits<double>::max();
       }
 
-      njm::timer.print();
-      
-      // std::cout << "    lambda (" << tp.lambda << ") -> "
-      // 		<< lambdaCV.at(i) << std::endl;
     }
   }
 
@@ -1082,9 +910,6 @@ tune(const std::vector<int> & status){
     return;
   }
   
-  // std::cout << "lambda mid (" << tp.lambda << ") -> "
-  // 	    << -ordLambda.top().first << std::endl;
-
   // now grid it up finer
   lambdaPows.clear();
   lambdaCV.clear();
@@ -1101,17 +926,17 @@ tune(const std::vector<int> & status){
   std::fill(lambdaCV.begin(),lambdaCV.end(),0.0);
   for(b = 0; b < tp.bootReps; ++b){
 
-    buildRD(selNodesTrain.at(b));
-    getRD(Rtrain,Dtrain);
+    mDtRtrain = mDtRtrainBoot.at(b);
+    DtDtrain = DtDtrainBoot.at(b);
 
-    buildRD(selNodesTest.at(b));
-    getRD(Rtest,Dtest);
+    Rtest = RtestBoot.at(b);
+    Dtest = DtestBoot.at(b);
 
     for(i = 0; i < numLambdaPows; ++i){
       tp.lambda = std::pow(2.0,lambdaPows.at(i));
 
       try{
-	setRD(Rtrain,Dtrain);
+	setSolveDat(mDtRtrain,DtDtrain);
 	solve();
 	
 	setRD(Rtest,Dtest);
@@ -1121,11 +946,8 @@ tune(const std::vector<int> & status){
 	lambdaCV.at(i) += std::numeric_limits<double>::max();
       }
       
-      njm::timer.print();
-      
-      // std::cout << "    lambda (" << tp.lambda << ") -> "
-      // 		<< lambdaCV.at(i) << std::endl;
     }
+
   }
 
 
@@ -1139,8 +961,6 @@ tune(const std::vector<int> & status){
     return;
   }
   
-  // std::cout << "lambda final (" << tp.lambda << ") -> "
-  // 	    << -ordLambda.top().first << std::endl;
 }
 
 
@@ -1150,7 +970,7 @@ template <class S, class A, class F,
 	  class M,class MP>
 double M2QEval<S,A,F,M,MP>::
 bellRes(){
-  return (R + D*beta).squaredNorm();
+  return (R + (D*beta).sparseView()).squaredNorm();
 }
 
 

@@ -6,6 +6,8 @@
 #include <armadillo>
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/Sparse>
+#include <eigen3/Eigen/SuperLUSupport>
+#include <eigen3/Eigen/UmfPackSupport>
 #include <gsl/gsl_bspline.h>
 #include "timer.hpp"
 #include "data.hpp"
@@ -83,13 +85,18 @@ class M2QEval {
   void buildD1();
   void buildD1(const std::vector<int> nodes);
 
-  void getRD(Eigen::VectorXd & R,
+  void getRD(Eigen::SparseVector<double> & R,
 	     Eigen::SparseMatrix<double> & D);
-  void setRD(const Eigen::VectorXd & R,
+  void setRD(const Eigen::SparseVector<double> & R,
 	     const Eigen::SparseMatrix<double> & D);
-	     
 
-  void tune(const std::vector<int> & status);
+  void getSolveDat(Eigen::VectorXd & mDtR,
+		   Eigen::SparseMatrix<double> & DtD);
+  void setSolveDat(const Eigen::VectorXd & mDtR,
+		   const Eigen::SparseMatrix<double> & DtD);
+  
+
+  void tune();
   
   
   F f; // used to generate features
@@ -113,19 +120,16 @@ class M2QEval {
   std::vector<std::vector<int> > neighbors;
 
   // data for bellman residual
-  std::vector<std::vector<double> > feat0;
-  std::vector<std::vector<double> > feat1;
-  std::vector<std::vector<Eigen::SparseMatrix<double> > > psiTL0;
-  std::vector<std::vector<Eigen::SparseMatrix<double> > > psiTL1;
   std::vector<Eigen::SparseMatrix<double> > phiL;  // \lbrace \Phi_\ell \rbrace
   std::vector<std::vector<Eigen::SparseMatrix<double> > > phiPsiTL;
 
   std::vector<Eigen::SparseMatrix<double> > D0L;
   std::vector<Eigen::SparseMatrix<double> > D1L;
-  std::vector<Eigen::VectorXd> RL;
+  std::vector<Eigen::SparseVector<double> > RL;
   
-  Eigen::VectorXd R;
-  Eigen::SparseMatrix<double> D0,D1,D;
+  Eigen::SparseVector<double> R;
+  Eigen::VectorXd mDtR;
+  Eigen::SparseMatrix<double> D0,D1,D,DtD,P;
   std::vector<SimData> sD1T; // {sD}_{t=1}^T
   std::vector<DynamicData> dD1T; //{dD}_{t=1}^T
 };
