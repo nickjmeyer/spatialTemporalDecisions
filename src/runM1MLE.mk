@@ -27,7 +27,6 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
 	rankAgent.o \
 	m1SpOptim.o \
-	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
 	model.o modelParam.o \
