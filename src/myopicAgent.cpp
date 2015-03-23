@@ -1,16 +1,19 @@
 #include "myopicAgent.hpp"
 
 
-template class MyopicAgent<GravityModel,GravityParam>;
-template class MyopicAgent<GravityTimeInfModel,GravityTimeInfParam>;
 template class MyopicAgent<GravityTimeInfExpCavesModel,
 			   GravityTimeInfExpCavesParam>;
+
+template class MyopicAgent<GravityTimeInfExpModel,
+			   GravityTimeInfExpParam>;
+
+template class MyopicAgent<GravityTimeInfModel,GravityTimeInfParam>;
+
+template class MyopicAgent<GravityModel,GravityParam>;
 
 template class MyopicAgent<CaveModel,CaveParam>;
 
 template class MyopicAgent<RangeModel,RangeParam>;
-
-template class MyopicAgent<EbolaModel,EbolaParam>;
 
 
 template <class M, class MP>

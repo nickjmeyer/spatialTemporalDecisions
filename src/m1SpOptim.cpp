@@ -31,19 +31,6 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SpOptim<System<GravityModel,GravityParam,
-				GravityModel,GravityParam>,
-			 RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-				   GravityModel,GravityParam>,
-			 GravityModel,GravityParam>;
-
-template class M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
-				GravityTimeInfModel,GravityTimeInfParam>,
-			 RankAgent<ToyFeatures2<GravityTimeInfModel,
-						GravityTimeInfParam>,
-				   GravityTimeInfModel,GravityTimeInfParam>,
-			 GravityTimeInfModel,GravityTimeInfParam>;
-
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
 				GravityTimeInfExpCavesParam,
 				GravityTimeInfExpCavesModel,
@@ -55,29 +42,64 @@ template class M1SpOptim<System<GravityTimeInfExpCavesModel,
 			 GravityTimeInfExpCavesModel,
 			 GravityTimeInfExpCavesParam>;
 
-template class M1SpOptim<System<GravityModel,GravityParam,
-				RangeModel,RangeParam>,
-			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
-				   RangeModel,RangeParam>,
-			 RangeModel,RangeParam>;
 
-template class M1SpOptim<System<GravityModel,GravityParam,
-				CaveModel,CaveParam>,
-			 RankAgent<ToyFeatures2<CaveModel,CaveParam>,
-				   CaveModel,CaveParam>,
-			 CaveModel,CaveParam>;
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				GravityTimeInfExpModel,
+				GravityTimeInfExpParam>,
+			 RankAgent<ToyFeatures2<GravityTimeInfExpModel,
+						GravityTimeInfExpParam>,
+				   GravityTimeInfExpModel,
+				   GravityTimeInfExpParam>,
+			 GravityTimeInfExpModel,
+			 GravityTimeInfExpParam>;
 
-template class M1SpOptim<System<RangeModel,RangeParam,
-				RangeModel,RangeParam>,
-			 RankAgent<ToyFeatures2<RangeModel,RangeParam>,
-				   RangeModel,RangeParam>,
-			 RangeModel,RangeParam>;
 
-template class M1SpOptim<System<CaveModel,CaveParam,
-				CaveModel,CaveParam>,
-			 RankAgent<ToyFeatures2<CaveModel,CaveParam>,
-				   CaveModel,CaveParam>,
-			 CaveModel,CaveParam>;
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				GravityTimeInfModel,
+				GravityTimeInfParam>,
+			 RankAgent<ToyFeatures2<GravityTimeInfModel,
+						GravityTimeInfParam>,
+				   GravityTimeInfModel,
+				   GravityTimeInfParam>,
+			 GravityTimeInfModel,
+			 GravityTimeInfParam>;
+
+
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				GravityModel,
+				GravityParam>,
+			 RankAgent<ToyFeatures2<GravityModel,
+						GravityParam>,
+				   GravityModel,
+				   GravityParam>,
+			 GravityModel,
+			 GravityParam>;
+
+
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				RangeModel,
+				RangeParam>,
+			 RankAgent<ToyFeatures2<RangeModel,
+						RangeParam>,
+				   RangeModel,
+				   RangeParam>,
+			 RangeModel,
+			 RangeParam>;
+
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
+				CaveModel,
+				CaveParam>,
+			 RankAgent<ToyFeatures2<CaveModel,
+						CaveParam>,
+				   CaveModel,
+				   CaveParam>,
+			 CaveModel,
+			 CaveParam>;
 
 
 template <class S, class A, class M, class MP>

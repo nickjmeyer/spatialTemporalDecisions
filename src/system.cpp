@@ -1,39 +1,32 @@
 #include "system.hpp"
 
-template class System<GravityModel,GravityParam,
-		      GravityModel,GravityParam>;
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
 
-template class System<GravityTimeInfModel,GravityTimeInfParam,
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
+
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 		      GravityTimeInfModel,GravityTimeInfParam>;
 
-template class System<GravityTimeInfSqModel,GravityTimeInfSqParam,
-		      GravityTimeInfSqModel,GravityTimeInfSqParam>;
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      GravityModel,GravityParam>;
 
-template class System<GravityTimeInfSqrtModel,GravityTimeInfSqrtParam,
-		      GravityTimeInfSqrtModel,GravityTimeInfSqrtParam>;
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      RangeModel,RangeParam>;
 
-template class System<GravityTimeInfLogModel,GravityTimeInfLogParam,
-		      GravityTimeInfLogModel,GravityTimeInfLogParam>;
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      CaveModel,CaveParam>;
+
 
 template class System<GravityTimeInfExpModel,GravityTimeInfExpParam,
 		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
-
-template class System<GravityTimeInfExpLCavesModel,GravityTimeInfExpLCavesParam,
-		      GravityTimeInfExpLCavesModel,
-		      GravityTimeInfExpLCavesParam>;
-
-template class System<GravityTimeInfExpRCavesModel,GravityTimeInfExpRCavesParam,
-		      GravityTimeInfExpRCavesModel,
-		      GravityTimeInfExpRCavesParam>;
+template class System<GravityTimeInfModel,GravityTimeInfParam,
+		      GravityTimeInfModel,GravityTimeInfParam>;
 
 template class System<GravityModel,GravityParam,
-		      RangeModel,RangeParam>;
-
-template class System<GravityModel,GravityParam,
-		      CaveModel,CaveParam>;
+		      GravityModel,GravityParam>;
 
 template class System<RangeModel,RangeParam,
 		      RangeModel,RangeParam>;
@@ -41,8 +34,6 @@ template class System<RangeModel,RangeParam,
 template class System<CaveModel,CaveParam,
 		      CaveModel,CaveParam>;
 
-template class System<EbolaModel,EbolaParam,
-		      EbolaModel,EbolaParam>;
 
 
 template <class MG, class MPG,
