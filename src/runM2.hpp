@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <omp.h>
 #include "utilities.hpp"
 #include "rand.hpp"
 #include "data.hpp"

@@ -34,7 +34,8 @@ int main(int argc, char ** argv){
   
 
   int numReps = 100;
-  
+
+  // omp_set_num_threads(1);
 
   njm::message("Priority Score: "
 	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT),""));
