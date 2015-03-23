@@ -721,7 +721,13 @@ solve(){
   
   Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
 
-  solver.compute(DtD + tp.lambda*P);
+  try{
+    solver.compute(DtD + tp.lambda*P);
+  }
+  catch(...){
+    std::cout << "this fails on thread " << omp_get_thread_num() << std::endl;
+    throw(1);
+  }
 
   if(solver.info() != Eigen::Success){
     Eigen::SparseQR<Eigen::SparseMatrix<double>,Eigen::COLAMDOrdering<int> > qr;
