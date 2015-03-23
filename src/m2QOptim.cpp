@@ -730,7 +730,30 @@ solve(){
 		njm::sett.datExt("console_"
 				 + njm::toString(omp_get_thread_num(),"",0,0)
 				 + ".log"));
-    
+    njm::toFile("dim of D is ("
+		+ njm::toString(D.rows(),"",0,0)
+		+ ", "
+		+ njm::toString(D.cols(),"",0,0)
+		+ ")",
+		njm::sett.datExt("console_"
+				 + njm::toString(omp_get_thread_num(),"",0,0)
+				 + ".log"));
+    njm::toFile("dim of DtD is ("
+		+ njm::toString(DtD.rows(),"",0,0)
+		+ ", "
+		+ njm::toString(DtD.cols(),"",0,0)
+		+ ")",
+		njm::sett.datExt("console_"
+				 + njm::toString(omp_get_thread_num(),"",0,0)
+				 + ".log"));
+    njm::toFile("dim of P is ("
+		+ njm::toString(P.rows(),"",0,0)
+		+ ", "
+		+ njm::toString(P.cols(),"",0,0)
+		+ ")",
+		njm::sett.datExt("console_"
+				 + njm::toString(omp_get_thread_num(),"",0,0)
+				 + ".log"));
     njm::toFile("done solve failed",
 		njm::sett.datExt("console_"
 				 + njm::toString(omp_get_thread_num(),"",0,0)
