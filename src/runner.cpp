@@ -496,26 +496,26 @@ OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 		      GravityTimeInfExpCavesParam> >;
 
 
-// template class
-// OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-// 		   GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-// 	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-// 				   GravityTimeInfExpCavesParam>,
-// 		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-// 	    M2QOptim<System<GravityTimeInfExpCavesModel,
-// 			    GravityTimeInfExpCavesParam,
-// 			    GravityTimeInfExpCavesModel,
-// 			    GravityTimeInfExpCavesParam>,
-// 		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-// 					    GravityTimeInfExpCavesParam>,
-// 			       GravityTimeInfExpCavesModel,
-// 			       GravityTimeInfExpCavesParam>,
-// 		     FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
-// 					      GravityTimeInfExpCavesParam>,
-// 				 GravityTimeInfExpCavesModel,
-// 				 GravityTimeInfExpCavesParam>,
-// 		     GravityTimeInfExpCavesModel,
-// 		     GravityTimeInfExpCavesParam> >;
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		   GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+				   GravityTimeInfExpCavesParam>,
+		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+	    M2QOptim<System<GravityTimeInfExpCavesModel,
+			    GravityTimeInfExpCavesParam,
+			    GravityTimeInfExpCavesModel,
+			    GravityTimeInfExpCavesParam>,
+		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
+					    GravityTimeInfExpCavesParam>,
+			       GravityTimeInfExpCavesModel,
+			       GravityTimeInfExpCavesParam>,
+		     FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
+					      GravityTimeInfExpCavesParam>,
+				 GravityTimeInfExpCavesModel,
+				 GravityTimeInfExpCavesParam>,
+		     GravityTimeInfExpCavesModel,
+		     GravityTimeInfExpCavesParam> >;
 
 
 
