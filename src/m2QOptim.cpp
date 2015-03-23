@@ -79,7 +79,7 @@ void M2QOptim<S,A,F,M,MP>::
 optim(const S & system,
       A & agent){
 
-  njm::message("Optim at time " + njm::toString(system.sD.time,"",0,0));
+  // njm::message("Optim at time " + njm::toString(system.sD.time,"",0,0));
 
   // first three steps use weights {1,1,...}
   if(system.sD.time < (system.fD.trtStart + 3))
@@ -98,9 +98,9 @@ optim(const S & system,
     qEval.tune();
 
   if(qEval.tp.lambda < 0){
-    njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
-		 " has a non-finite lambda at time " +
-		 njm::toString(system.sD.time,"",0,0));
+    // njm::message("thread " + njm::toString(omp_get_thread_num(),"",0,0) +
+    // 		 " has a non-finite lambda at time " +
+    // 		 njm::toString(system.sD.time,"",0,0));
     return;
   }
 
@@ -225,10 +225,10 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 preCompData(const SimData & sD, const FixedData & fD){
-  njm::toFile("precomp",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("precomp",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "precomp\n";
   int i,j;
 
@@ -335,10 +335,10 @@ preCompData(const SimData & sD, const FixedData & fD){
   P.makeCompressed();
   
 
-  njm::toFile("done precomp",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done precomp",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done precomp\n";
 }
 
@@ -353,10 +353,10 @@ bellResFixData(const SimData & sD,
 	       const DynamicData & dD,
 	       const M & m,
 	       MP & mP){
-  njm::toFile("fixdata",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("fixdata",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "fixdata\n";
   // prep containers
   RL.resize(fD.numNodes);
@@ -474,10 +474,10 @@ bellResFixData(const SimData & sD,
   // sD and dD are at time T
   sD1T.push_back(sD);
   dD1T.push_back(dD);
-  njm::toFile("done fixdata",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done fixdata",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done fixdata\n";
 }
 
@@ -489,10 +489,10 @@ template <class S, class A, class F,
 std::vector<double> M2QEval<S,A,F,M,MP>::
 feat2Vec(const int numNodes,
 	 const std::vector<int> & status){
-  njm::toFile("feat2vec",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("feat2vec",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "feat2vec\n";
   
   // put features into vector node by node
@@ -516,10 +516,10 @@ feat2Vec(const int numNodes,
   arma::inplace_trans(f.notFeat);
   arma::inplace_trans(f.infFeat);
 
-  njm::toFile("done feat2vec",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done feat2vec",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done feat2vec\n";
   return allFeat;
 }
@@ -533,10 +533,10 @@ template <class S, class A, class F,
 std::vector<Eigen::SparseMatrix<double> >
 M2QEval<S,A,F,M,MP>::
 featToPsi(const std::vector<double> & feat){
-  njm::toFile("feattopsi",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("feattopsi",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "feattopsi\n";
   int n,i,j;
 
@@ -581,10 +581,10 @@ featToPsi(const std::vector<double> & feat){
     mats.push_back(psiL);
   }
 
-  njm::toFile("done feat2psi",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done feat2psi",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done feat2psi\n";
   return mats;
 }
@@ -600,10 +600,10 @@ bellResPolData(const int time,
 	       const M & m,
 	       MP & mP,
 	       A a){
-  njm::toFile("poldata",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("poldata",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
 
   // std::cout << "poldata\n";
   
@@ -700,10 +700,10 @@ bellResPolData(const int time,
   for(k = 0; k < fD.numNodes; ++k)
     D1L.at(k) *= tp.gamma; // discount factor
 
-  njm::toFile("done poldata",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done poldata",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done poldata\n";
 }
 
@@ -713,74 +713,28 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 solve(){
-  njm::toFile("solve",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("solve",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "solve\n";
   
   Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
 
-  Eigen::SparseMatrix<double> DtDP = DtD + tp.lambda*P;
-  njm::toFile(njm::toString(Eigen::MatrixXd(DtDP),"",64,32),
-	      njm::sett.datExt("DtDP_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".txt"),
-	      std::ios_base::out);
-  
-  try{
-    solver.compute(DtDP);
-  }
-  catch(...){
-    std::cout << "this fails on thread " << omp_get_thread_num() << std::endl;
-    throw(1);
-  }
+  solver.compute(DtD + tp.lambda*P);
+
 
   if(solver.info() != Eigen::Success){
-    Eigen::SparseQR<Eigen::SparseMatrix<double>,Eigen::COLAMDOrdering<int> > qr;
-    qr.compute(DtD + tp.lambda*P);
-    njm::toFile("rank is " + njm::toString(qr.rank(),"",0,0),
-		njm::sett.datExt("console_"
-				 + njm::toString(omp_get_thread_num(),"",0,0)
-				 + ".log"));
-    njm::toFile("dim of D is ("
-		+ njm::toString(D.rows(),"",0,0)
-		+ ", "
-		+ njm::toString(D.cols(),"",0,0)
-		+ ")",
-		njm::sett.datExt("console_"
-				 + njm::toString(omp_get_thread_num(),"",0,0)
-				 + ".log"));
-    njm::toFile("dim of DtD is ("
-		+ njm::toString(DtD.rows(),"",0,0)
-		+ ", "
-		+ njm::toString(DtD.cols(),"",0,0)
-		+ ")",
-		njm::sett.datExt("console_"
-				 + njm::toString(omp_get_thread_num(),"",0,0)
-				 + ".log"));
-    njm::toFile("dim of P is ("
-		+ njm::toString(P.rows(),"",0,0)
-		+ ", "
-		+ njm::toString(P.cols(),"",0,0)
-		+ ")",
-		njm::sett.datExt("console_"
-				 + njm::toString(omp_get_thread_num(),"",0,0)
-				 + ".log"));
-    njm::toFile("done solve failed",
-		njm::sett.datExt("console_"
-				 + njm::toString(omp_get_thread_num(),"",0,0)
-				 + ".log"));
     // std::cout << "In M2QEval::solve(): decomposition failed."
     // 	      << std::endl;
     throw(1);
   }
 
   beta = solver.solve(mDtR);
-  njm::toFile("done solve",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done solve",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done solve\n";
 }
 
@@ -806,10 +760,10 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildRD(const std::vector<int> nodes){
-  njm::toFile("buildRD",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("buildRD",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "buildRD\n";
   
   int i,I = nodes.size();
@@ -832,10 +786,10 @@ buildRD(const std::vector<int> nodes){
   DtD = D.transpose() * D;
   mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
 
-  njm::toFile("done buildRD",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done buildRD",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done buidlRD\n";
 }
 
@@ -863,10 +817,10 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 buildD1(const std::vector<int> nodes){
-  njm::toFile("buildD1",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("buildD1",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "buildD1\n";
   
   int i,I = nodes.size();
@@ -880,10 +834,10 @@ buildD1(const std::vector<int> nodes){
   DtD = D.transpose() * D;
   mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
 
-  njm::toFile("done buildD1",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done buildD1",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done buildD1\n";
 }
 
@@ -932,10 +886,10 @@ template <class S, class A, class F,
 	  class M,class MP>
 void M2QEval<S,A,F,M,MP>::
 tune(){
-  njm::toFile("tuning",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("tuning",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "tuning\n";
   int i,b,bS = (tp.bootSize * numNodes + 1);
 
@@ -1094,10 +1048,10 @@ tune(){
     return;
   }
 
-  njm::toFile("done tuning",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done tuning",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done tuning\n";
 }
 
@@ -1124,10 +1078,10 @@ qFn(const SimData & sD,
     MP & mP,
     A a){
 
-  njm::toFile("qfn",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("qfn",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "qfn\n";
   // now evaluate Q-function
   std::vector<Eigen::SparseMatrix<double> > psiL;
@@ -1152,10 +1106,10 @@ qFn(const SimData & sD,
   phiPsi /= (double)tp.polReps;
 
 
-  njm::toFile("done qfn",
-	      njm::sett.datExt("console_"
-			       + njm::toString(omp_get_thread_num(),"",0,0)
-			       + ".log"));
+  // njm::toFile("done qfn",
+  // 	      njm::sett.datExt("console_"
+  // 			       + njm::toString(omp_get_thread_num(),"",0,0)
+  // 			       + ".log"));
   // std::cout << "done qfn\n";
   return (phiPsi.transpose()*beta).sum();
 }
