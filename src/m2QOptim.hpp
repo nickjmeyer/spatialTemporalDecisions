@@ -7,7 +7,6 @@
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/Sparse>
 #include <eigen3/Eigen/SuperLUSupport>
-#include <eigen3/Eigen/UmfPackSupport>
 #include <gsl/gsl_bspline.h>
 #include "timer.hpp"
 #include "data.hpp"
