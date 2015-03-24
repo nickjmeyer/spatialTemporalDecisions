@@ -62,14 +62,14 @@ int main(int argc, char ** argv){
   // typedef GravityModel MEgrav;
   // typedef GravityParam PEgrav;
 
-  typedef RangeModel MErange;
-  typedef RangeParam PErange;
+  // typedef RangeModel MErange;
+  // typedef RangeParam PErange;
 
-  typedef RadiusModel MEradius;
-  typedef RadiusParam PEradius;
+  // typedef RadiusModel MEradius;
+  // typedef RadiusParam PEradius;
 
-  typedef CaveModel MEcave;
-  typedef CaveParam PEcave;
+  // typedef CaveModel MEcave;
+  // typedef CaveParam PEcave;
 
   // runM1<MEexpcaves,PEexpcaves>("expcaves");
   // runM1<MEexp,PEexp>("exp");
