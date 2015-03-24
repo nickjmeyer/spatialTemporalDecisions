@@ -66,13 +66,13 @@ int main(int argc, char ** argv){
   }
   njm::timer.stop("SuperLU");
 
-  njm::timer.start("SuperLU");
+  njm::timer.start("PardisoLU");
   for(i = 0; i < 10; ++i){
     Eigen::PardisoLU<Eigen::SparseMatrix<double> > solver;
-    solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
-    oq.qEval.beta = solver.solve(oq.qEval.mDtR);
+    // solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
+    // oq.qEval.beta = solver.solve(oq.qEval.mDtR);
   }
-  njm::timer.stop("SuperLU");
+  njm::timer.stop("PardisoLU");
   
   njm::sett.clean();
   return 0;

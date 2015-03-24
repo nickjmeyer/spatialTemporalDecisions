@@ -41,8 +41,9 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	modelGravityTimeInfExpRCaves.o modelParamGravityTimeInfExpRCaves.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
+	modelRadius.o modelParamRadius.o \
 	modelCave.o modelParamCave.o \
-	mcmc.o mcmcRange.o mcmcCave.o \
+	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfSq.o \
 	mcmcGravityTimeInfSqrt.o \

@@ -12,12 +12,20 @@ ifeq "$(shell hostname)" "opal3.stat.ncsu.edu"
 	CC=/usr/local/gcc-4.9.2/bin/g++
 endif
 
-
+MKLROOT = /opt/intel/composer_xe_2015.2.164/mkl
 
 CPPFLAGS = -std=c++11 -fopenmp -Wall
-INCLUDE = -I/usr/include/superlu/
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu	\
--L/home/nick/Downloads/libpardiso500-GNU481-X86-64.so
+INCLUDE = -I/usr/include/superlu/					\
+-I/opt/intel/composer_xe_2015.2.164/mkl/include/			\
+-I/usr/include/eigen3/ -Wl,--start-group				\
+-L${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a				\
+-L${MKLROOT}/lib/intel64/libmkl_core.a					\
+-L${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group		\
+-L/opt/intel/composer_xe_2015.2.164/compiler/lib/intel64/libiomp5.so	\
+-ldl -lpthread -lm
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu		\
+-L/home/nick/Downloads/libpardiso500-GNU481-X86-64.so -DMKL_ILP64	\
+-m64 -I${MKLROOT}/include
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
@@ -42,8 +50,9 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	modelGravityTimeInfExpRCaves.o modelParamGravityTimeInfExpRCaves.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
+	modelRadius.o modelParamRadius.o \
 	modelCave.o modelParamCave.o \
-	mcmc.o mcmcRange.o mcmcCave.o \
+	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfSq.o \
 	mcmcGravityTimeInfSqrt.o \

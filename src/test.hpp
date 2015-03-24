@@ -2,7 +2,7 @@
 #define TEST_HPP__
 
 
-
+#define EIGEN_USE_MKL
 
 #include <iostream>
 #include <numeric>
