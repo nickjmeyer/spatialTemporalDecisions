@@ -65,22 +65,19 @@ int main(int argc, char ** argv){
   // typedef RangeModel MErange;
   // typedef RangeParam PErange;
 
-  // typedef RadiusModel MEradius;
-  // typedef RadiusParam PEradius;
+  typedef RadiusModel MEradius;
+  typedef RadiusParam PEradius;
 
   // typedef CaveModel MEcave;
   // typedef CaveParam PEcave;
 
-  // runM1<MEexpcaves,PEexpcaves>("expcaves");
+  runM1<MEexpcaves,PEexpcaves>("expcaves",2);
   // runM1<MEexp,PEexp>("exp");
   // runM1<MElin,PElin>("lin");
   // runM1<MEgrav,PEgrav>("grav");
-  for(int i = 0; i < 4; ++i){
-    runM1<MEexpcaves,PEexpcaves>("expcaves",i);
-    // runM1<MErange,PErange>("range",i);
-    // runM1<MEradius,PEradius>("radius",i);
-    // runM1<MEcave,PEcave>("caves",i);
-  }
+  // runM1<MErange,PErange>("range",i);
+  runM1<MEradius,PEradius>("radius",2);
+  // runM1<MEcave,PEcave>("caves",i);
 
   return 0;
 }
