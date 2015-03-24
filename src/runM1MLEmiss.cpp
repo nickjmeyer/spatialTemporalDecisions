@@ -76,7 +76,7 @@ int main(int argc, char ** argv){
   // runM1<MElin,PElin>("lin");
   // runM1<MEgrav,PEgrav>("grav");
   for(int i = 0; i < 4; ++i){
-    runM1<MEexpcaves,PEexpcaves>("expcaves");
+    runM1<MEexpcaves,PEexpcaves>("expcaves",i);
     // runM1<MErange,PErange>("range",i);
     // runM1<MEradius,PEradius>("radius",i);
     // runM1<MEcave,PEcave>("caves",i);
