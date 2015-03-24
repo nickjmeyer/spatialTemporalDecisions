@@ -50,8 +50,8 @@ void runM1(const std::string nameMod, const int i){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  // typedef GravityTimeInfExpCavesModel MEexpcaves;
-  // typedef GravityTimeInfExpCavesParam PEexpcaves;
+  typedef GravityTimeInfExpCavesModel MEexpcaves;
+  typedef GravityTimeInfExpCavesParam PEexpcaves;
   
   // typedef GravityTimeInfExpModel MEexp;
   // typedef GravityTimeInfExpParam PEexp;
@@ -76,9 +76,10 @@ int main(int argc, char ** argv){
   // runM1<MElin,PElin>("lin");
   // runM1<MEgrav,PEgrav>("grav");
   for(int i = 0; i < 4; ++i){
-    runM1<MErange,PErange>("range",i);
-    runM1<MEradius,PEradius>("radius",i);
-    runM1<MEcave,PEcave>("caves",i);
+    runM1<MEexpcaves,PEexpcaves>("expcaves");
+    // runM1<MErange,PErange>("range",i);
+    // runM1<MEradius,PEradius>("radius",i);
+    // runM1<MEcave,PEcave>("caves",i);
   }
 
   return 0;
