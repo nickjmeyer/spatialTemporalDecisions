@@ -20,6 +20,7 @@ class RankTuneParam : public TuneParam {
   std::vector<double> getPar() const;
   void putPar(const std::vector<double> & par);
 
+  arma::colvec weights_r;
   arma::colvec weights;
 
   double jitterScale;

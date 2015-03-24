@@ -30,6 +30,7 @@ template class RankAgent<ToyFeatures2<CaveModel,CaveParam>,
 
 template <class F, class M, class MP>
 RankAgent<F,M,MP>::RankAgent(){
+  tp.weights_r.ones(f.numFeatures);
   tp.weights.ones(f.numFeatures);
 
   tp.jitterScale = 4.0;
@@ -40,7 +41,7 @@ RankAgent<F,M,MP>::RankAgent(){
 
 template <class F, class M, class MP>
 void RankAgent<F,M,MP>::reset(){
-  tp.weights.ones(f.numFeatures);
+  tp.weights = tp.weights_r;
 }
 
   
