@@ -11,9 +11,11 @@ template class MyopicAgent<GravityTimeInfModel,GravityTimeInfParam>;
 
 template class MyopicAgent<GravityModel,GravityParam>;
 
-template class MyopicAgent<CaveModel,CaveParam>;
-
 template class MyopicAgent<RangeModel,RangeParam>;
+
+template class MyopicAgent<RadiusModel,RadiusParam>;
+
+template class MyopicAgent<CaveModel,CaveParam>;
 
 
 template <class M, class MP>

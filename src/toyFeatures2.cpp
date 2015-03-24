@@ -25,6 +25,8 @@ template class ToyFeatures2<GravityModel,GravityParam>;
 
 template class ToyFeatures2<RangeModel,RangeParam>;
 
+template class ToyFeatures2<RadiusModel,RadiusParam>;
+
 template class ToyFeatures2<CaveModel,CaveParam>;
 
 

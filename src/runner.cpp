@@ -94,6 +94,15 @@ template class PlainRunner<System<RangeModel,
 				     RangeModel,
 				     RangeParam> >;
 
+template class PlainRunner<System<RadiusModel,
+				  RadiusParam,
+				  RadiusModel,
+				  RadiusParam>,
+			   RankAgent<ToyFeatures2<RadiusModel,
+						  RadiusParam>,
+				     RadiusModel,
+				     RadiusParam> >;
+
 template class PlainRunner<System<CaveModel,
 				  CaveParam,
 				  CaveModel,
@@ -397,6 +406,13 @@ template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
 				    GravityTimeInfExpCavesParam,
+				    RadiusModel,
+				    RadiusParam>,
+			     MyopicAgent<RadiusModel,
+					 RadiusParam> >;
+
+template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
 				    CaveModel,
 				    CaveParam>,
 			     MyopicAgent<CaveModel,
@@ -600,6 +616,23 @@ OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 				RangeParam>,
 		      RangeModel,
 		      RangeParam> >;
+
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		   RadiusModel,RadiusParam>,
+	    RankAgent<ToyFeatures2<RadiusModel,
+				   RadiusParam>,
+		      RadiusModel,RadiusParam>,
+	    M1SpOptim<System<GravityTimeInfExpCavesModel,
+			     GravityTimeInfExpCavesParam,
+			     RadiusModel,
+			     RadiusParam>,
+		      RankAgent<ToyFeatures2<RadiusModel,
+					     RadiusParam>,
+				RadiusModel,
+				RadiusParam>,
+		      RadiusModel,
+		      RadiusParam> >;
 
 template class
 OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
@@ -907,6 +940,18 @@ TuneRunner<System<RangeModel,RangeParam,
 					    RangeParam>,
 			       RangeModel,RangeParam>,
 		     RangeModel,RangeParam> >;
+
+template class
+TuneRunner<System<RadiusModel,RadiusParam,
+		  RadiusModel,RadiusParam>,
+	   RankAgent<ToyFeatures2<RadiusModel,RadiusParam>,
+		     RadiusModel,RadiusParam>,
+	   M1SpOptim<System<RadiusModel,RadiusParam,
+			    RadiusModel,RadiusParam>,
+		     RankAgent<ToyFeatures2<RadiusModel,
+					    RadiusParam>,
+			       RadiusModel,RadiusParam>,
+		     RadiusModel,RadiusParam> >;
 
 template class
 TuneRunner<System<CaveModel,CaveParam,

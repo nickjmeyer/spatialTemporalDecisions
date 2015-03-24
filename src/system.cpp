@@ -16,6 +16,9 @@ template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 		      RangeModel,RangeParam>;
 
 template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		      RadiusModel,RadiusParam>;
+
+template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 		      CaveModel,CaveParam>;
 
 
@@ -30,6 +33,9 @@ template class System<GravityModel,GravityParam,
 
 template class System<RangeModel,RangeParam,
 		      RangeModel,RangeParam>;
+
+template class System<RadiusModel,RadiusParam,
+		      RadiusModel,RadiusParam>;
 
 template class System<CaveModel,CaveParam,
 		      CaveModel,CaveParam>;

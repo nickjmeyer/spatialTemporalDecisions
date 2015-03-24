@@ -92,6 +92,17 @@ template class M1SpOptim<System<GravityTimeInfExpCavesModel,
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
 				GravityTimeInfExpCavesParam,
+				RadiusModel,
+				RadiusParam>,
+			 RankAgent<ToyFeatures2<RadiusModel,
+						RadiusParam>,
+				   RadiusModel,
+				   RadiusParam>,
+			 RadiusModel,
+			 RadiusParam>;
+
+template class M1SpOptim<System<GravityTimeInfExpCavesModel,
+				GravityTimeInfExpCavesParam,
 				CaveModel,
 				CaveParam>,
 			 RankAgent<ToyFeatures2<CaveModel,

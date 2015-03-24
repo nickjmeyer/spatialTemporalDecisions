@@ -63,6 +63,9 @@ int main(int argc, char ** argv){
   typedef RangeModel MErange;
   typedef RangeParam PErange;
 
+  typedef RadiusModel MEradius;
+  typedef RadiusParam PEradius;
+
   typedef CaveModel MEcave;
   typedef CaveParam PEcave;
 
@@ -71,6 +74,7 @@ int main(int argc, char ** argv){
   runM1<MElin,PElin>("lin");
   runM1<MEgrav,PEgrav>("grav");
   runM1<MErange,PErange>("range");
+  runM1<MEradius,PEradius>("radius");
   runM1<MEcave,PEcave>("caves");
 
   return 0;

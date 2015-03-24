@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <numeric>
+#include <eigen3/Eigen/SuperLUSupport>
+#include <eigen3/Eigen/PardisoSupport>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"

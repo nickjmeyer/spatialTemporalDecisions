@@ -20,6 +20,9 @@ template class RankAgent<ToyFeatures2<GravityModel,GravityParam>,
 template class RankAgent<ToyFeatures2<RangeModel,RangeParam>,
 			 RangeModel,RangeParam>;
 
+template class RankAgent<ToyFeatures2<RadiusModel,RadiusParam>,
+			 RadiusModel,RadiusParam>;
+
 template class RankAgent<ToyFeatures2<CaveModel,CaveParam>,
 			 CaveModel,CaveParam>;
 

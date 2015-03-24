@@ -16,7 +16,8 @@ endif
 
 CPPFLAGS = -std=c++11 -fopenmp -Wall
 INCLUDE = -I/usr/include/superlu/
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu	\
+-L/home/nick/Downloads/libpardiso500-GNU481-X86-64.so
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
