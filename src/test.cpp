@@ -63,9 +63,41 @@ int main(int argc, char ** argv){
   std::vector<int> ia,ja;
   std::vector<double> a,b,x;
 
-  njm::fromFile(ia,"/home/nick/research/spatialDecisionMaking/data/toy/grid100/2015-03-25-18-39-25/ia_6.txt");
-  njm::fromFile(ja,"/home/nick/research/spatialDecisionMaking/data/toy/grid100/2015-03-25-18-39-25/ja_6.txt");
-  njm::fromFile(a,"/home/nick/research/spatialDecisionMaking/data/toy/grid100/2015-03-25-18-39-25/i_6.txt");
+  Eigen::SparseMatrix<double> mat(6,6);
+  mat.insert(0,0) = 1;
+  mat.insert(3,3) = 1;
+  mat.insert(5,5) = 1;
+
+  mat2Raw(mat,ia,ja,a);
+  
+
+  // njm::fromFile(ia,"ia_6.txt");
+  // njm::fromFile(ja,"ja_6.txt");
+  // njm::fromFile(a,"a_6.txt");
+  // njm::fromFile(b,"b_6.txt");
+
+  std::cout << "ia: [" << *std::min_element(ia.begin(),ia.end())
+	    << ", " << *std::max_element(ia.begin(),ia.end()) << "]"
+	    << "(" << ia.size() << ")" << std::endl;
+  std::cout << "ja: [" << *std::min_element(ja.begin(),ja.end())
+	    << ", " << *std::max_element(ja.begin(),ja.end()) << "]"
+	    << "(" << ja.size() << ")" << std::endl;
+  std::cout << "a: [" << *std::min_element(a.begin(),a.end())
+	    << ", " << *std::max_element(a.begin(),a.end()) << "]"
+	    << "(" << a.size() << ")" << std::endl;
+  std::cout << "b: [" << *std::min_element(b.begin(),b.end())
+	    << ", " << *std::max_element(b.begin(),b.end()) << "]"
+	    << "(" << b.size() << ")" << std::endl;
+
+
+  x = pardisoSymWrap(ia,ja,a,b);
+
+  // ia = {1,2,3};
+  // ja = {1,2};
+  // a = {1,0};
+  // b = {1,1};
+
+  // x = pardisoSymWrap(ia,ja,a,b);  
 
 
   

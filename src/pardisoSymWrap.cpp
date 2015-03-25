@@ -77,6 +77,10 @@ std::vector<double> pardisoSymWrap(const std::vector<int> & iaVec,
   msglvl = 0;           /* Print statistical information in file */
   error = 0;            /* Initialize error flag */
 
+  /* ------- added by nick ------- */
+  iparm[27] = 1;
+  /* ----------------------------- */
+
   /* -------------------------------------------------------------------- */
   /* .. Initialize the internal solver memory pointer. This is only */
   /* necessary for the FIRST call of the PARDISO solver. */
@@ -197,13 +201,13 @@ void mat2Raw(const Eigen::SparseMatrix<double> & mat,
     }
   }
   iaVec.push_back(n_elem + 1);
+  if(int(iaVec.size()) != (mat.rows() + 1))
+    throw(1);
 }
 
 
 Eigen::VectorXd pardisoSolve(const Eigen::SparseMatrix<double> & mat,
 			     const Eigen::VectorXd & vec){
-  omp_set_num_threads(1);
-  
   std::vector<int> ia,ja;
   std::vector<double> a,b,x;
   mat2Raw(mat,ia,ja,a);
@@ -212,23 +216,6 @@ Eigen::VectorXd pardisoSolve(const Eigen::SparseMatrix<double> & mat,
   b.reserve(I);
   for(i = 0; i < I; ++i)
     b.push_back(vec(i));
-
-  int thread = omp_get_thread_num();
-  njm::toFile(ia,
-	      "ia_"+njm::toString(thread,"",0,0)+".txt",
-	      std::ios_base::out," ","\n",64,32);
-
-  njm::toFile(ja,
-	      "ja_"+njm::toString(thread,"",0,0)+".txt",
-	      std::ios_base::out," ","\n",64,32);
-
-  njm::toFile(a,
-	      "a_"+njm::toString(thread,"",0,0)+".txt",
-	      std::ios_base::out," ","\n",64,32);
-
-  njm::toFile(b,
-	      "b_"+njm::toString(thread,"",0,0)+".txt",
-	      std::ios_base::out," ","\n",64,32);
 
   x = pardisoSymWrap(ia,ja,a,b);
 
