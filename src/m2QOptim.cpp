@@ -68,7 +68,7 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
   name = "M2Q";
 
 
-  tp.C = 5.0;
+  tp.C = 10.0;
 
   tp.t = 1.0;
 
