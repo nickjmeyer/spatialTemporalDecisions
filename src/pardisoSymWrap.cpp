@@ -202,7 +202,7 @@ void mat2Raw(const Eigen::SparseMatrix<double> & mat,
 
 Eigen::VectorXd pardisoSolve(const Eigen::SparseMatrix<double> & mat,
 			     const Eigen::VectorXd & vec){
-  mkl_set_num_thread(1);
+  mkl_set_num_threads(1);
   
   std::vector<int> ia,ja;
   std::vector<double> a,b,x;
