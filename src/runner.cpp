@@ -653,6 +653,29 @@ OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 
 
 
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
+		   RadiusModel,RadiusParam>,
+	    RankAgent<ToyFeatures2<RadiusModel,
+				   RadiusParam>,
+		      RadiusModel,RadiusParam>,
+	    M2QOptim<System<GravityTimeInfExpCavesModel,
+			    GravityTimeInfExpCavesParam,
+			    RadiusModel,
+			    RadiusParam>,
+		     RankAgent<ToyFeatures2<RadiusModel,
+					    RadiusParam>,
+			       RadiusModel,
+			       RadiusParam>,
+		     FeaturesInt<ToyFeatures2<RadiusModel,
+					      RadiusParam>,
+				 RadiusModel,
+				 RadiusParam>,
+		     RadiusModel,
+		     RadiusParam> >;
+
+
+
 
 template <class S, class A, class Optim>
 double

@@ -46,6 +46,20 @@ M2QOptim<System<GravityTimeInfExpCavesModel,
 		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
 	 GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
 
+template class
+M2QOptim<System<GravityTimeInfExpCavesModel,
+		GravityTimeInfExpCavesParam,
+		RadiusModel,
+		RadiusParam>,
+	 RankAgent<ToyFeatures2<RadiusModel,
+				RadiusParam>,
+		   RadiusModel,
+		   RadiusParam>,
+	 FeaturesInt<ToyFeatures2<RadiusModel,
+				  RadiusParam>,
+		     RadiusModel,RadiusParam>,
+	 RadiusModel,RadiusParam>;
+
 
 
 template <class S, class A, class F,

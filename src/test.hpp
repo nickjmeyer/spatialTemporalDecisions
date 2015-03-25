@@ -2,12 +2,11 @@
 #define TEST_HPP__
 
 
-#define EIGEN_USE_MKL
 
 #include <iostream>
 #include <numeric>
 #include <eigen3/Eigen/SuperLUSupport>
-#include <eigen3/Eigen/PardisoSupport>
+// #include <eigen3/Eigen/PardisoSupport>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"

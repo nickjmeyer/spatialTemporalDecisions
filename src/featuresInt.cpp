@@ -11,6 +11,9 @@ template class FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
 template class FeaturesInt<ToyFeatures2<RangeModel,RangeParam>,
 			   RangeModel,RangeParam>;
 
+template class FeaturesInt<ToyFeatures2<RadiusModel,RadiusParam>,
+			   RadiusModel,RadiusParam>;
+
 template class FeaturesInt<ToyFeatures2<CaveModel,CaveParam>,
 			   CaveModel,CaveParam>;
 

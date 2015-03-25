@@ -12,16 +12,16 @@ ifeq "$(shell hostname)" "opal3.stat.ncsu.edu"
 	CC=/usr/local/gcc-4.9.2/bin/g++
 endif
 
-MKLROOT = /opt/intel/composer_xe_2015.2.164/mkl
+
 
 CPPFLAGS = -std=c++11 -fopenmp -Wall
-INCLUDE = -I/usr/include/superlu/
+INCLUDE = -I/usr/include/superlu/ -I/usr/include/SuperLU/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
-BINARY = test
+BINARY = runM2miss
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
