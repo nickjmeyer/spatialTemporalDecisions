@@ -79,7 +79,7 @@ ifdef MKLROOT
 
 INCLUDE +=  -m64 -I${MKLROOT}/include
 LINKS += -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64	\
--lmkl_core -lmkl_sequential -lpthread -lm
+-lmkl_core -lmkl_gnu_thread -ldl -lpthread -lm
 
 endif
 
