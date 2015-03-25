@@ -57,6 +57,8 @@ else ifeq ("${HOST}","laber-lnx3")
 
 CC = g++-4.9
 CPPFLAGS += -DRANDOM_SEED__=7
+MKLROOT = /opt/intel/composer_xe_2015/mkl
+CPPFLAGS += -DNJM_USE_MKL
 
 else ifeq "${HOST}" "laber-lnx4.stat.ncsu.edu"
 
