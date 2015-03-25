@@ -733,6 +733,16 @@ solve(){
   // 			       + ".log"));
   // std::cout << "solve\n";
 
+#pragma omp critical
+  {
+    std::cout << "DtD: [" << DtD.rows() << ", " << DtD.cols() << "]"
+	      << "(" << DtD.sum() << ")" << std::endl
+	      << "P: [" << P.rows() << ", " << P.cols() << "]"
+	      << "(" << P.sum() << ")" << std::endl
+	      << "mDtR: [" << mDtR.rows() << ", " << mDtR.cols() << "]"
+	      << "(" << mDtR.sum() << ")" << std::endl;
+  }
+
 #ifdef NJM_USE_MKL
   
   beta = pardisoSolve(DtD + tp.lambda*P, mDtR);
