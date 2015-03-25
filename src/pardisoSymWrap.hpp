@@ -2,6 +2,7 @@
 #ifndef PARDISO_SYM_WRAP_HPP__
 #define PARDISO_SYM_WRAP_HPP__
 
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,7 +11,6 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Sparse>
 
-#include "mkl.h"
 #include "mkl_pardiso.h"
 #include "mkl_types.h"
 
