@@ -11,6 +11,7 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Sparse>
 
+#include "utilities.hpp"
 #include "mkl_pardiso.h"
 #include "mkl_types.h"
 
