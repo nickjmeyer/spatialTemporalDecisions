@@ -4,11 +4,11 @@
 M1SpOptimTunePar::M1SpOptimTunePar(){
   mcReps = 10;
 
-  C = 5.0;
+  C = 10.0;
 
   t = 1.0;
 
-  ell = 1.75;
+  ell = 1.25;
 
   muMin = 0.1;
 

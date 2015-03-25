@@ -8,6 +8,8 @@ template class ProximalAgent<GravityTimeInfExpCavesModel,
 
 template class ProximalAgent<RangeModel,RangeParam>;
 
+template class ProximalAgent<RadiusModel,RadiusParam>;
+
 template class ProximalAgent<CaveModel,CaveParam>;
 
 template class ProximalAgent<EbolaModel,EbolaParam>;

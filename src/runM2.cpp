@@ -26,7 +26,7 @@ int main(int argc, char ** argv){
   s.modelGen.fitType = MLE;
   s.modelEst.fitType = MLE;
 
-  RA ra;
+  RA ra; // running at the good starting weights
 
   SPO spo;
 

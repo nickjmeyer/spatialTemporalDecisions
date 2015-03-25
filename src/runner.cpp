@@ -187,10 +187,22 @@ template class VanillaRunner<System<GravityTimeInfExpCavesModel,
 				   GravityTimeInfExpCavesParam> >;
 template class VanillaRunner<System<GravityTimeInfExpCavesModel,
 				    GravityTimeInfExpCavesParam,
+				    RadiusModel,
+				    RadiusParam>,
+			     NoTrt<RadiusModel,
+				   RadiusParam> >;
+template class VanillaRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
 				    GravityTimeInfExpCavesModel,
 				    GravityTimeInfExpCavesParam>,
 			     ProximalAgent<GravityTimeInfExpCavesModel,
 					   GravityTimeInfExpCavesParam> >;
+template class VanillaRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfExpCavesParam,
+				    RadiusModel,
+				    RadiusParam>,
+			     ProximalAgent<RadiusModel,
+					   RadiusParam> >;
 
 
 

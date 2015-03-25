@@ -7,6 +7,8 @@ template class NoTrt<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
 
 template class NoTrt<RangeModel,RangeParam>;
 
+template class NoTrt<RadiusModel,RadiusParam>;
+
 template class NoTrt<CaveModel,CaveParam>;
 
 template class NoTrt<EbolaModel,EbolaParam>;

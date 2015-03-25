@@ -738,6 +738,9 @@ solve(){
   beta = pardisoSolve(DtD + tp.lambda*P, mDtR);
   
 #else
+
+  std::cout << "Running M2 without MKL!!!!" std::endl;
+  throw(1);
   
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
 

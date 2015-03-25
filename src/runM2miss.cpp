@@ -1,10 +1,15 @@
 #include "runM2miss.hpp"
 
-template <class ME, class PE>
-void runM2(const std::string nameMod, const int i){
+
+int main(int argc, char ** argv){
+  njm::sett.set(argc,argv);
+
   typedef GravityTimeInfExpCavesModel MG;
   typedef GravityTimeInfExpCavesParam PG;
   
+  typedef RadiusModel ME;
+  typedef RadiusParam PE;
+
   typedef System<MG,PG,ME,PE> S;
 
   typedef ToyFeatures2<ME,PE> F;
@@ -21,8 +26,7 @@ void runM2(const std::string nameMod, const int i){
   s.modelGen.fitType = MLE;
   s.modelEst.fitType = MLE;
 
-  RA ra;
-  ra.name += "_" + nameMod + "_" + njm::toString(i,"",0,0);
+  RA ra; // running at the good starting weights
 
   SPO spo;
 
@@ -33,20 +37,6 @@ void runM2(const std::string nameMod, const int i){
 
   njm::message("Priority Score: "
 	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT),""));
-}
-
-
-int main(int argc, char ** argv){
-  njm::sett.set(argc,argv);
-
-  typedef GravityTimeInfExpCavesModel MEexpcaves;
-  typedef GravityTimeInfExpCavesParam PEexpcaves;
-  
-  // typedef RadiusModel MEradius;
-  // typedef RadiusParam PEradius;
-
-  runM2<MEexpcaves,PEexpcaves>("expcaves",2);
-  // runM2<MEradius,PEradius>("radius",2);
 
   return 0;
 }

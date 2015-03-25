@@ -1,4 +1,4 @@
-#include "runM1.hpp"
+#include "runM1MLE.hpp"
 
 
 int main(int argc, char ** argv){
@@ -36,6 +36,9 @@ int main(int argc, char ** argv){
   MA ma;
   RA ra;
 
+  ra.tp.weights_r.zeros(ra.f.numFeatures);
+  ra.tp.weights_r(2) = 1;
+  
   SPO spo;
   // no tuning for right now....
   spo.tp.tune = 0;
