@@ -39,14 +39,14 @@ void runM2(const std::string nameMod, const int i){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  // typedef GravityTimeInfExpCavesModel MEexpcaves;
-  // typedef GravityTimeInfExpCavesParam PEexpcaves;
+  typedef GravityTimeInfExpCavesModel MEexpcaves;
+  typedef GravityTimeInfExpCavesParam PEexpcaves;
   
-  typedef RadiusModel MEradius;
-  typedef RadiusParam PEradius;
+  // typedef RadiusModel MEradius;
+  // typedef RadiusParam PEradius;
 
-  // runM2<MEexpcaves,PEexpcaves>("expcaves",2);
-  runM2<MEradius,PEradius>("radius",2);
+  runM2<MEexpcaves,PEexpcaves>("expcaves",2);
+  // runM2<MEradius,PEradius>("radius",2);
 
   return 0;
 }
