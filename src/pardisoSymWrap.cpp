@@ -208,6 +208,11 @@ Eigen::VectorXd pardisoSolve(const Eigen::SparseMatrix<double> & mat,
   std::vector<double> a,b,x;
   mat2Raw(mat,ia,ja,a);
 
+  int i,I = vec.size();
+  b.reserve(I);
+  for(i = 0; i < I; ++i)
+    b.push_back(vec(i));
+
   int thread = omp_get_thread_num();
   njm::toFile(ia,
 	      "ia_"+njm::toString(thread,"",0,0)+".txt",
@@ -220,11 +225,10 @@ Eigen::VectorXd pardisoSolve(const Eigen::SparseMatrix<double> & mat,
   njm::toFile(a,
 	      "a_"+njm::toString(thread,"",0,0)+".txt",
 	      std::ios_base::out," ","\n",64,32);
-  
-  int i,I = vec.size();
-  b.reserve(I);
-  for(i = 0; i < I; ++i)
-    b.push_back(vec(i));
+
+  njm::toFile(b,
+	      "b_"+njm::toString(thread,"",0,0)+".txt",
+	      std::ios_base::out," ","\n",64,32);
 
   x = pardisoSymWrap(ia,ja,a,b);
 
