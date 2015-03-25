@@ -6,7 +6,6 @@
 #include <iostream>
 #include <numeric>
 #include <eigen3/Eigen/SuperLUSupport>
-// #include <eigen3/Eigen/PardisoSupport>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"
@@ -38,6 +37,7 @@
 #include "m1SgdOptim.hpp"
 #include "m2QOptim.hpp"
 #include "m1SimpleOptim.hpp"
+#include "pardisoSymWrap.hpp"
 
 
 

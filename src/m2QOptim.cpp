@@ -732,8 +732,14 @@ solve(){
   // 			       + njm::toString(omp_get_thread_num(),"",0,0)
   // 			       + ".log"));
   // std::cout << "solve\n";
+
+#ifdef NJM_USE_MKL
   
-  Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
+  beta = pardisoSolve(DtD + tp.lambda*P, mDtR);
+  
+#else
+  
+  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
 
   solver.compute(DtD + tp.lambda*P);
 
@@ -745,6 +751,9 @@ solve(){
   }
 
   beta = solver.solve(mDtR);
+  
+#endif
+  
   // njm::toFile("done solve",
   // 	      njm::sett.datExt("console_"
   // 			       + njm::toString(omp_get_thread_num(),"",0,0)

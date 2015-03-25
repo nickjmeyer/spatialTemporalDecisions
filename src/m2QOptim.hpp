@@ -17,6 +17,10 @@
 #include "tuneParam.hpp"
 #include "featuresInt.hpp"
 
+#ifdef NJM_USE_MKL
+#include "pardisoSymWrap.hpp"
+#endif
+
 class M2QEvalTunePar : public TuneParam{
  public:
   std::vector<double> getPar() const;

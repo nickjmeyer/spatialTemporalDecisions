@@ -1,29 +1,17 @@
 CC=g++
-ifeq ("$(shell hostname)","laber-lnx2")
-	CC=g++-4.9
-endif
-ifeq ("$(shell hostname)","laber-lnx3")
-	CC=g++-4.9
-endif
-ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
-	CC=/usr/local/gcc-4.9.2/bin/g++
-endif
-
-
-
 CPPFLAGS = -std=c++11 -fopenmp -Wall
-INCLUDE = 
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
+INCLUDE = -I/usr/include/superlu/
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
-PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_DEBUG
+PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
-BINARY = tuneTrtProp
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
 	rankAgent.o \
 	m1SpOptim.o \
+	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
 	model.o modelParam.o \
@@ -37,8 +25,9 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	modelGravityTimeInfExpRCaves.o modelParamGravityTimeInfExpRCaves.o \
 	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
+	modelRadius.o modelParamRadius.o \
 	modelCave.o modelParamCave.o \
-	mcmc.o mcmcRange.o mcmcCave.o \
+	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfSq.o \
 	mcmcGravityTimeInfSqrt.o \
@@ -47,23 +36,51 @@ OBJECTS += rand.o system.o utilities.o agent.o \
 	mcmcGravityTimeInfExpCaves.o \
 	mcmcGravityTimeInfExpLCaves.o \
 	mcmcGravityTimeInfExpRCaves.o \
+	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
-	sortMerge.o settings.o
+	sortMerge.o settings.o timer.o
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
-ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
-	CPPFLAGS+= -Wl,-rpath=/usr/lib64/mpich/lib/
+
+
+ifeq ("${HOST}","nick-laptop")
+
+MKLROOT = /opt/intel/composer_xe_2015/mkl
+CPPFLAGS += -DNJM_USE_MKL
+
+else ifeq ("${HOST}","laber-lnx2")
+
+CC = g++-4.9
+CPPFLAGS+= -DRANDOM_SEED__=6
+
+else ifeq ("${HOST}","laber-lnx3")
+
+CC = g++-4.9
+CPPFLAGS += -DRANDOM_SEED__=7
+
+else ifeq "${HOST}" "laber-lnx4.stat.ncsu.edu"
+
+CC = /usr/local/gcc-4.9.2/bin/g++
+CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
+CPPFLAGS += -DRANDOM_SEED__=8
+MKLROOT = /opt/intel/composer_xe_2015/mkl
+CPPFLAGS += -DNJM_USE_MKL
+
+else ifeq "${HOST}" "opal3.stat.ncsu.edu"
+
+CC = /usr/local/gcc-4.9.2/bin/g++
+CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
+CPPFLAGS += -DRANDOM_SEED__=9
+
 endif
 
-## random seeds
-ifeq ("$(shell hostname)","laber-lnx2")
-	CPPFLAGS+= -DRANDOM_SEED__=6
-endif
-ifeq ("$(shell hostname)","laber-lnx3")
-	CPPFLAGS+= -DRANDOM_SEED__=7
-endif
-ifeq "$(shell hostname)" "laber-lnx4.stat.ncsu.edu"
-	CPPFLAGS+= -DRANDOM_SEED__=8
+
+ifdef MKLROOT
+
+INCLUDE +=  -m64 -I${MKLROOT}/include
+LINKS += -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64	\
+-lmkl_core -lmkl_sequential -lpthread -lm
+
 endif
 
 

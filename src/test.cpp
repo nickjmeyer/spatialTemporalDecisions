@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include <omp.h>
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
@@ -50,29 +51,52 @@ int main(int argc, char ** argv){
 
   oq.qEval.buildRD();
 
-  njm::timer.start("SparseLU");
-  for(i = 0; i < 10; ++i){
-    Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
-    solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
-    oq.qEval.beta = solver.solve(oq.qEval.mDtR);
-  }
-  njm::timer.stop("SparseLU");
+  Eigen::VectorXd sparseLU,superLU,pardisoLU;
 
-  njm::timer.start("SuperLU");
-  for(i = 0; i < 10; ++i){
-    Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
-    solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
-    oq.qEval.beta = solver.solve(oq.qEval.mDtR);
-  }
-  njm::timer.stop("SuperLU");
-
-  // njm::timer.start("PardisoLU");
+  // njm::timer.start("SparseLU");
   // for(i = 0; i < 10; ++i){
-  //   Eigen::PardisoLU<Eigen::SparseMatrix<double> > solver;
-  //   // solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
-  //   // oq.qEval.beta = solver.solve(oq.qEval.mDtR);
+  //   Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
+  //   solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
+  //   oq.qEval.beta = solver.solve(oq.qEval.mDtR);
   // }
-  // njm::timer.stop("PardisoLU");
+  // njm::timer.stop("SparseLU");
+  // sparseLU = oq.qEval.beta;
+
+  // njm::timer.start("SuperLU");
+  // for(i = 0; i < 10; ++i){
+  //   Eigen::SuperLU<Eigen::SparseMatrix<double> > solver;
+  //   solver.compute(oq.qEval.DtD + oq.qEval.tp.lambda*oq.qEval.P);
+  //   oq.qEval.beta = solver.solve(oq.qEval.mDtR);
+  // }
+  // njm::timer.stop("SuperLU");
+  // superLU = oq.qEval.beta;
+
+
+  njm::timer.start("PardisoLU");
+  for(i = 0; i < 50; ++i){
+    oq.qEval.beta = pardisoSolve(oq.qEval.DtD
+				 + oq.qEval.tp.lambda*oq.qEval.P,
+				 oq.qEval.mDtR);
+  }
+  njm::timer.stop("PardisoLU");
+  pardisoLU = oq.qEval.beta;
+
+  // std::cout << "max norm: "
+  // 	    << std::max(std::max((sparseLU - superLU).squaredNorm(),
+  // 				 (sparseLU - pardisoLU).squaredNorm()),
+  // 			(superLU - pardisoLU).squaredNorm())
+  // 	    << std::endl;
+
+
+  // Eigen::SparseMatrix<double> singA(4,4);
+  // singA.insert(0,0) = 1;
+  // singA.insert(1,1) = 1;
+  // singA.insert(2,2) = 1;
+  // Eigen::VectorXd singB(4),singX;
+  // singB.setOnes();
+  
+  // singX = pardisoSolve(singA,singB);
+  // std::cout << singX << std::endl;
   
   njm::sett.clean();
   return 0;
