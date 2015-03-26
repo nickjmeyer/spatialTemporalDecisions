@@ -776,7 +776,7 @@ fullRankPen(){
   P2.resize(dim,dim);
   P2.setZero();
   
-  Eigen::VectorXd ones;
+  Eigen::VectorXd ones(dim);
   ones.setOnes();
   Eigen::VectorXd rowSums;
   rowSums = DtD * ones;
