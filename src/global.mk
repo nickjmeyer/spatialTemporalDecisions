@@ -48,6 +48,11 @@ ifeq ("${HOST}","nick-laptop")
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
+else ifeq ("${HOST}","nick-office")
+
+MKLROOT = /opt/intel/composer_xe_2015/mkl
+CPPFLAGS += -DNJM_USE_MKL
+
 else ifeq ("${HOST}","laber-lnx2")
 
 CC = g++-4.9
