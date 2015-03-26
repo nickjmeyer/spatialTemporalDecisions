@@ -742,7 +742,7 @@ solve(){
   
 #else
 
-  std::cout << "Running M2 without MKL!!!!" std::endl;
+  std::cout << "Running M2 without MKL!!!!" << std::endl;
   throw(1);
   
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
