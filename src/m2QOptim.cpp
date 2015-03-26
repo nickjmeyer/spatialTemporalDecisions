@@ -231,6 +231,8 @@ M2QEval<S,A,F,M,MP>::M2QEval(){
 
   tp.bootReps = 10;
   tp.bootSize = 0.6;
+
+  tp.prune = 0.00001;
 }
 
 
@@ -476,6 +478,7 @@ bellResFixData(const SimData & sD,
     phiPsiTL.at(t).clear();
     for(i = 0; i < fD.numNodes; ++i){
       phiPsi = phiL.at(i) * psiL.at(i);
+      phiPsi.prune(tp.prune);
       phiPsiTL.at(t).push_back(phiPsi);
       D0L.at(i) += phiPsi * phiPsi.transpose();
     }
@@ -705,7 +708,7 @@ bellResPolData(const int time,
 
     for(k = 0; k < fD.numNodes; ++k){
       phiPsi = phiL.at(k) * psiAvgL.at(k);
-
+      phiPsi.prune(tp.prune);
       D1L.at(k) += (phiPsiTL.at(t).at(k) * psiAvgL.at(k).transpose())
 	* phiL.at(k).transpose();
     }
@@ -733,19 +736,9 @@ solve(){
   // 			       + ".log"));
   // std::cout << "solve\n";
 
-// #pragma omp critical
-//   {
-//     std::cout << "DtD: [" << DtD.rows() << ", " << DtD.cols() << "]"
-// 	      << "(" << DtD.sum() << ")" << std::endl
-// 	      << "P: [" << P.rows() << ", " << P.cols() << "]"
-// 	      << "(" << P.sum() << ")" << std::endl
-// 	      << "mDtR: [" << mDtR.rows() << ", " << mDtR.cols() << "]"
-// 	      << "(" << mDtR.sum() << ")" << std::endl;
-//   }
-
 #ifdef NJM_USE_MKL
   
-  beta = pardisoSolve(DtD + tp.lambda*P, mDtR);
+  beta = pardisoSolve(DtD + tp.lambda*P + tp.lambda*P2, mDtR);
   
 #else
 
@@ -773,6 +766,26 @@ solve(){
   // 			       + ".log"));
   // std::cout << "done solve\n";
 }
+
+
+
+template <class S, class A, class F,
+	  class M,class MP>
+void M2QEval<S,A,F,M,MP>::
+fullRankPen(){
+  P2.resize(dim,dim);
+  P2.setZero();
+  
+  Eigen::VectorXd ones;
+  ones.setOnes();
+  Eigen::VectorXd rowSums;
+  rowSums = DtD * ones;
+  int i,ind = tp.dfLat*tp.dfLong + 1;
+  for(i = 0; i < dim; ++i){
+    if((i % ind == 0) && (rowSums(i) < tp.prune))
+      P2.insert(i,i) = 1;
+  }
+}  
 
 
 
@@ -820,7 +833,9 @@ buildRD(const std::vector<int> nodes){
 
   D = D1 - D0;
   DtD = D.transpose() * D;
-  mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
+  mDtR = Eigen::SparseVector<double>(-(D.transpose() * R));
+
+  fullRankPen();
 
   // njm::toFile("done buildRD",
   // 	      njm::sett.datExt("console_"
@@ -868,7 +883,9 @@ buildD1(const std::vector<int> nodes){
 
   D = D1 - D0;
   DtD = D.transpose() * D;
-  mDtR = Eigen::SparseVector<double>(-D.transpose() * R);
+  mDtR = Eigen::SparseVector<double>(-(D.transpose() * R));
+
+  fullRankPen();  
 
   // njm::toFile("done buildD1",
   // 	      njm::sett.datExt("console_"

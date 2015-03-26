@@ -38,6 +38,7 @@ class M2QEvalTunePar : public TuneParam{
   int bootReps;
   double bootSize;
 
+  double prune;
 
   double C,t,ell,muMin,A,B;  
 };
@@ -96,6 +97,8 @@ class M2QEval {
 		   Eigen::SparseMatrix<double> & DtD);
   void setSolveDat(const Eigen::VectorXd & mDtR,
 		   const Eigen::SparseMatrix<double> & DtD);
+
+  void fullRankPen();
   
 
   void tune();
@@ -131,7 +134,7 @@ class M2QEval {
   
   Eigen::SparseVector<double> R;
   Eigen::VectorXd mDtR;
-  Eigen::SparseMatrix<double> D0,D1,D,DtD,P;
+  Eigen::SparseMatrix<double> D0,D1,D,DtD,P,P2;
   std::vector<SimData> sD1T; // {sD}_{t=1}^T
   std::vector<DynamicData> dD1T; //{dD}_{t=1}^T
 };
