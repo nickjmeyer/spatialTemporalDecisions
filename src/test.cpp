@@ -17,9 +17,10 @@ int main(int argc, char ** argv){
 
   S s;
 
+
   int numReps = 500;
-  // Starts starts(numReps,s.fD.numNodes);
-  Starts starts("startingLocations.txt");
+  Starts starts(numReps,s.fD.numNodes);
+  // Starts starts("startingLocations.txt");
 
   NT nt;
   VR vr;
@@ -30,10 +31,11 @@ int main(int argc, char ** argv){
   s.paramEst_r = s.paramGen_r;
   s.revert();
 
-  omp_set_num_threads(4);
+  omp_set_num_threads(1);
 
   std::cout << vr.run(s,nt,numReps,s.fD.finalT,starts) << std::endl;
-  
+  std::cout << vr.run(s,nt,numReps,s.fD.finalT,starts) << std::endl;
+  std::cout << vr.run(s,nt,numReps,s.fD.finalT,starts) << std::endl;
   
   njm::sett.clean();
   return 0;

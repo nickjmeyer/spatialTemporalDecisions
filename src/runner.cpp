@@ -225,7 +225,6 @@ VanillaRunner<S,A>
   private(r,t)
   for(r=0; r<numReps; r++){
     system.reset(starts[r]);
-    std::cout << njm::toString(starts[r]," ","\n",0,0);
     
 #pragma omp critical
     {    

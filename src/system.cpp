@@ -179,6 +179,7 @@ void System<MG, MPG,
 
   sD_r.infected = ind;
   int i,j;
+  sD_r.notInfec.clear();
   for(i = 0,j = 0; i < fD.numNodes; ++i){
     if(j < sD_r.numInfected && i == sD_r.infected.at(j))
       ++j;
@@ -215,8 +216,10 @@ void System<MG, MPG,
   // reset DynamicData
   // nothing to do for this....DynamicData isn't used
 
+  // load probs
   modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
 
+  // revert
   revert();
 }
 
