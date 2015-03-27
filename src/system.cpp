@@ -21,7 +21,6 @@ template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
 		      CaveModel,CaveParam>;
 
-
 template class System<GravityTimeInfExpModel,GravityTimeInfExpParam,
 		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
 
