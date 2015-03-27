@@ -28,8 +28,10 @@ int main(int argc, char ** argv){
   s.paramEst_r = s.paramGen_r;
   s.reset();
 
-  omp_set_num_threads(4);
+  omp_set_num_threads(1);
 
+  std::cout << vr.run(s,nt,numReps,s.fD.finalT) << std::endl;
+  std::cout << vr.run(s,nt,numReps,s.fD.finalT) << std::endl;
   std::cout << vr.run(s,nt,numReps,s.fD.finalT) << std::endl;
   
   // typedef GravityTimeInfExpCavesModel GM;
