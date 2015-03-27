@@ -20,12 +20,11 @@ void rescaleD(const double & pastScale, const double & currScale,
 }
 
 template <class S, class NT,class RN>
-double TuneGenNT(S & s){
+double TuneGenNT(S & s, const int numReps, const Starts & starts){
   NT nt;
   RN rn;
 
   double goal = 0.7;
-  int numReps = 500;
   int numYears = s.fD.finalT;
   double tol = 0.01;
 
@@ -40,7 +39,7 @@ double TuneGenNT(S & s){
 
   std::vector<double> par = s.paramGen_r.getPar();
   double power = s.paramGen_r.power;
-  double val = rn.run(s,nt,numReps,numYears);
+  double val = rn.run(s,nt,numReps,numYears,starts);
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
@@ -65,7 +64,7 @@ double TuneGenNT(S & s){
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
       
-      s.reset();
+      s.revert();
       
       above = 0;
     }
@@ -75,7 +74,7 @@ double TuneGenNT(S & s){
     s.paramEst_r.putPar(par);
     s.paramEst_r.power = power;
 
-    s.reset();
+    s.revert();
 
     pastScale = currScale;
     currScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
@@ -84,7 +83,7 @@ double TuneGenNT(S & s){
     s.fD.dist = scaleD;
 
 
-    val = rn.run(s,nt,numReps,numYears);
+    val = rn.run(s,nt,numReps,numYears,starts);
     printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
     fflush(stdout);
   }
@@ -94,7 +93,7 @@ double TuneGenNT(S & s){
 
 
 template <class S, class PA, class RP>
-double TuneGenPA(S & s){
+double TuneGenPA(S & s,const int numReps, const Starts & starts){
   double trtSize = s.modelGen.tuneTrt(s.fD,s.paramGen);
 
   s.paramGen_r.trtPre = s.paramGen_r.trtAct = trtSize;
@@ -103,7 +102,7 @@ double TuneGenPA(S & s){
   PA pa;
   RP rp;
 
-  return rp.run(s,pa,500,s.fD.finalT);
+  return rp.run(s,pa,numReps,s.fD.finalT,starts);
 }
 
 
@@ -131,7 +130,11 @@ int main(int argc, char ** argv){
 
     S s;
     s.paramEst_r = s.paramGen_r;
-    s.reset();
+    s.revert();
+
+    resetRandomSeed();
+    int numReps = 500;
+    Starts starts(numReps,s.fD.numNodes);
 
     MA ma;
     RM rm;
@@ -142,15 +145,15 @@ int main(int argc, char ** argv){
 
     njm::message("Tuning Intercept");
 
-    double valNT = TuneGenNT<S,NT,RN>(s);
+    double valNT = TuneGenNT<S,NT,RN>(s,numReps,starts);
 
     njm::message("Tuning Treatment");
 
-    double valPA = TuneGenPA<S,PA,RP>(s);
+    double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,500,s.fD.finalT);
+    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
 
-    double valRA = rr.run(s,ra,500,s.fD.finalT);
+    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
 
     njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
 		 "\n" +
@@ -195,8 +198,12 @@ int main(int argc, char ** argv){
 
     S s;
     s.paramEst_r = s.paramGen_r;
-    s.reset();
+    s.revert();
 
+    resetRandomSeed();
+    int numReps = 500;
+    Starts starts(numReps,s.fD.numNodes);
+    
     MA ma;
     RM rm;
 
@@ -206,15 +213,15 @@ int main(int argc, char ** argv){
 
     njm::message("Tuning Intercept");
 
-    double valNT = TuneGenNT<S,NT,RN>(s);
+    double valNT = TuneGenNT<S,NT,RN>(s,numReps,starts);
 
     njm::message("Tuning Treatment");
 
-    double valPA = TuneGenPA<S,PA,RP>(s);
+    double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,500,s.fD.finalT);
+    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
 
-    double valRA = rr.run(s,ra,500,s.fD.finalT);
+    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
 
     njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
 		 "\n" +

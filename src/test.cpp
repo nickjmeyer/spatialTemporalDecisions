@@ -18,6 +18,8 @@ int main(int argc, char ** argv){
   S s;
 
   int numReps = 500;
+  Starts starts(numReps,s.fD.numNodes);
+  // Starts starts("startingLocations.txt");
 
   NT nt;
   VR vr;
@@ -82,8 +84,6 @@ int main(int argc, char ** argv){
   // for(i = 0; i < 10; ++i)
   //   oq.qEval.solve();
 
-
-  
   njm::sett.clean();
   return 0;
 }
