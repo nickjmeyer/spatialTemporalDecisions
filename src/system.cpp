@@ -68,7 +68,7 @@ System<MG, MPG,
   this->modelEst = modelEst;
   this->paramGen_r = paramGen;
   this->paramEst_r = paramEst;
-  reset();
+  revert();
 }
 
 
@@ -164,14 +164,70 @@ System<MG, MPG,
   // current time
   sD_r.time = numPoints - 1;
 
-  reset();
+  revert();
 }
 
 
 template <class MG, class MPG,
 	  class ME, class MPE>
 void System<MG, MPG,
-	    ME, MPE>::reset(){
+	    ME, MPE>::reset(const std::vector<int> & ind){
+  // reset SimData
+  sD_r.time = 0;
+  sD_r.numInfected = ind.size();
+  sD_r.numNotInfec = fD.numNodes - sD_r.numInfected;
+
+  sD_r.infected = ind;
+  int i,j;
+  sD_r.notInfec.clear();
+  for(i = 0,j = 0; i < fD.numNodes; ++i){
+    if(j < sD_r.numInfected && i == sD_r.infected.at(j))
+      ++j;
+    else
+      sD_r.notInfec.push_back(i);
+  }
+
+  sD_r.newInfec = sD_r.infected;
+  sD_r.timeInf.resize(fD.numNodes);
+  std::fill(sD_r.timeInf.begin(),sD_r.timeInf.end(),0);
+  for(i = 0; i < sD_r.numInfected; ++i)
+    sD_r.timeInf.at(sD_r.infected.at(i)) = 1;
+
+  sD_r.status.resize(fD.numNodes);
+  std::fill(sD_r.status.begin(),sD_r.status.end(),0);
+  for(i = 0; i < sD_r.numInfected; ++i)
+    sD_r.status.at(sD_r.infected.at(i)) = 2;
+
+  sD_r.history.clear();
+
+
+  // reset TrtData
+  tD_r.a.resize(fD.numNodes);
+  tD_r.p.resize(fD.numNodes);
+  tD_r.aPast.resize(fD.numNodes);
+  tD_r.pPast.resize(fD.numNodes);
+
+  std::fill(tD_r.a.begin(),tD_r.a.end(),0);
+  std::fill(tD_r.p.begin(),tD_r.p.end(),0);
+  std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
+  std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
+
+
+  // reset DynamicData
+  // nothing to do for this....DynamicData isn't used
+
+  // load probs
+  modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
+
+  // revert
+  revert();
+}
+
+
+template <class MG, class MPG,
+	  class ME, class MPE>
+void System<MG, MPG,
+	    ME, MPE>::revert(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
@@ -216,41 +272,6 @@ void System<MG, MPG,
 
   njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
 
-  std::vector<double> start;
-  njm::fromFile(start,njm::sett.srcExt("startingLocations.txt"));
-
-  
-  sD_r.time=0;
-  sD_r.history.clear();
-  sD_r.status.resize(fD.numNodes);
-  std::fill(sD_r.status.begin(),sD_r.status.end(),0);
-  int i;
-  for(i=0; i<(int)start.size(); i++)
-    sD_r.status.at(start.at(i))=2;
-  sD_r.numInfected = 0;
-  sD_r.numNotInfec = 0;    
-  for(i=0; i<fD.numNodes; i++)
-    if(sD_r.status.at(i)==2){
-      sD_r.infected.push_back(i);
-      sD_r.timeInf.push_back(1);
-      sD_r.numInfected++;
-    }
-    else{
-      sD_r.notInfec.push_back(i);
-      sD_r.timeInf.push_back(0);      
-      sD_r.numNotInfec++;
-    }
-  sD_r.newInfec = sD_r.infected;
-  tD_r.a.resize(fD.numNodes);
-  std::fill(tD_r.a.begin(),tD_r.a.end(),0);
-  tD_r.p.resize(fD.numNodes);
-  std::fill(tD_r.p.begin(),tD_r.p.end(),0);
-  tD_r.aPast.resize(fD.numNodes);
-  std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
-  tD_r.pPast.resize(fD.numNodes);
-  std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
-
-
   // only start treatment at time trtStart and on  
   njm::fromFile(fD.trtStart,njm::sett.srcExt("trtStart.txt"));
   // only update every period steps
@@ -264,9 +285,6 @@ void System<MG, MPG,
   modelGen.fitType = MCMC;
 
   paramGen_r.load();
-  modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
-
-  reset();
 }
 
 

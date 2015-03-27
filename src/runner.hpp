@@ -4,6 +4,7 @@
 
 #include <omp.h>
 #include <chrono>
+#include "starts.hpp"
 #include "system.hpp"
 #include "model.hpp"
 #include "modelEbola.hpp"
@@ -58,7 +59,8 @@ class VanillaRunner : BaseRunner<S,A> {
  public:
   virtual double run(S system,
 		     A agent,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 
@@ -67,7 +69,8 @@ class VanillaRunnerNS : BaseRunner<S,A> {
  public:
   virtual double run(S system,
 		     A agent,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 
@@ -77,7 +80,8 @@ class FitOnlyRunner : BaseRunner<S,A> {
  public:
   virtual double run(S system,
 		     A agent,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 
@@ -88,7 +92,8 @@ class OptimRunner : BaseRunner<S,A> {
   virtual double run(S system,
 		     A agent,
 		     Optim optim,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 
@@ -99,7 +104,8 @@ class OptimRunnerNS : BaseRunner<S,A> {
   virtual double run(S system,
 		     A agent,
 		     Optim optim,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 
@@ -130,7 +136,8 @@ class TimerRunner : BaseRunner<S,A> {
  public:
   virtual double run(S system,
 		     A agent,
-		     const int numReps, const int numPoints);
+		     const int numReps, const int numPoints,
+		     const Starts & starts);
 };
 
 

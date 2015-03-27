@@ -4,14 +4,17 @@
 
 #include <vector>
 #include <queue>
+#include "utilities.hpp"
+#include "settings.hpp"
 #include "rand.hpp"
 
 
 class Starts {
  public:
-  Starts(const int numReps, const int numNodes, const int dynamic);
+  Starts(const std::string & file);
+  Starts(const int numReps, const int numNodes);
 
-  std::vector<int> operator[](const int i);
+  std::vector<int> operator[](const int i) const;
 
  private:
   int dynamic;

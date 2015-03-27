@@ -13,7 +13,7 @@ TrainRunner<S,A>
   int r,t;
   for(r=0; r<numReps; r++){
     system.model.assignRand(system.paramGen_r,system.paramEst_r);
-    system.reset();
+    system.revert();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
@@ -133,7 +133,7 @@ PlainRunner<S,A>
       system.paramEst_r.putPar(system.modelGen.mcmc.samples.getPar());
     }
     
-    system.reset();
+    system.revert();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
@@ -159,7 +159,7 @@ PlainRunner<S,A>
   double value=0,valueSq=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.revert();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
@@ -211,7 +211,8 @@ double
 VanillaRunner<S,A>
 ::run(S system,
       A agent,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
   resetRandomSeed();
   
   double value=0;
@@ -219,11 +220,12 @@ VanillaRunner<S,A>
 
   std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value,valueAll)					\
+  shared(value,valueAll,starts)					\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.reset(starts[r]);
+    
 #pragma omp critical
     {    
       valueAll.at(r).clear();
@@ -340,7 +342,8 @@ double
 VanillaRunnerNS<S,A>
 ::run(S system,
       A agent,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
   resetRandomSeed();
   
   double value=0;
@@ -351,7 +354,7 @@ VanillaRunnerNS<S,A>
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.reset(starts[r]);
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
@@ -461,7 +464,8 @@ double
 FitOnlyRunner<S,A>
 ::run(S system,
       A agent,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
   resetRandomSeed();
   
   double value=0;
@@ -473,7 +477,7 @@ FitOnlyRunner<S,A>
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.reset(starts[r]);
     
 #pragma omp critical
     {    
@@ -695,7 +699,8 @@ OptimRunner<S,A,Optim>
 ::run(S system,
       A agent,
       Optim optim,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
 
   resetRandomSeed();
   
@@ -721,7 +726,7 @@ OptimRunner<S,A,Optim>
     // record time for each replication
     tickR=std::time(NULL);
 
-    system.reset();
+    system.reset(starts[r]);
     agent.reset();
     optim.reset();
     
@@ -855,7 +860,8 @@ OptimRunnerNS<S,A,Optim>
 ::run(S system,
       A agent,
       Optim optim,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
 
   double value=0;
   int r,t;
@@ -867,7 +873,7 @@ OptimRunnerNS<S,A,Optim>
   firstprivate(system,agent,optim)		\
   private(r,t)
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.reset(starts[r]);
     agent.reset();
     optim.reset();
     
@@ -1018,7 +1024,7 @@ TuneRunner<S,A,Optim>
       system.modelGen.mcmc.samples.setRand();
       system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
     }
-    system.reset();
+    system.revert();
     agent.tp.weights.ones();
 
 
@@ -1133,7 +1139,8 @@ double
 TimerRunner<S,A>
 ::run(S system,
       A agent,
-      const int numReps, const int numPoints){
+      const int numReps, const int numPoints,
+      const Starts & starts){
   resetRandomSeed();
 
   std::chrono::milliseconds fitTime,trtTime,simTime,diff;
@@ -1153,7 +1160,7 @@ TimerRunner<S,A>
   int r,t;
 
   for(r=0; r<numReps; r++){
-    system.reset();
+    system.reset(starts[r]);
 
     for(t=system.sD.time; t<numPoints; t++){
       // fit

@@ -1,8 +1,18 @@
 #include "starts.hpp"
 
-Starts::Starts(const int numReps, const int numNodes, const int dynamic){
+Starts::Starts(const std::string & file){
+  dynamic = 0;
+  
+  std::vector<int> start;
+  njm::fromFile(start,njm::sett.srcExt(file));
+  ind.clear();
+  ind.push_back(start);
+}
+
+Starts::Starts(const int numReps, const int numNodes){
+  dynamic = 1;
+  
   int num = std::max(numNodes/100,1);
-  this->dynamic = dynamic;
 
   int i,j;
   ind.resize(numReps);
@@ -20,11 +30,14 @@ Starts::Starts(const int numReps, const int numNodes, const int dynamic){
 
       ind.at(i).push_back(top.second);
     }
+
+    // increasing order
+    std::sort(ind.at(i).begin(),ind.at(i).end());
   }
 }
 
 
-std::vector<int> Starts::operator[](const int i){
+std::vector<int> Starts::operator[](const int i) const{
   if(dynamic)
     return ind.at(i);
   else
