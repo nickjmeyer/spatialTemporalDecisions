@@ -68,11 +68,11 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
   name = "M2Q";
 
 
-  tp.C = 10.0;
+  tp.C = 15.0;
 
   tp.t = 1.0;
 
-  tp.ell = 1.75;
+  tp.ell = 1.50;
 
   tp.muMin = 0.1;
 

@@ -30,6 +30,9 @@ int main(int argc, char ** argv){
 
   RA ra; // running at the good starting weights
 
+  ra.tp.weights_r.zeros(ra.f.numFeatures);
+  ra.tp.weights_r(2) = 1;
+
   SPO spo;
 
   R_RA r_ra;
