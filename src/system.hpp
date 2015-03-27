@@ -66,7 +66,9 @@ class System {
   MPE paramEst_r;
 
 
-  virtual void reset();
+  virtual void reset(const std::vector<int> & ind);
+
+  virtual void revert();
 
   virtual void checkPoint();
 
