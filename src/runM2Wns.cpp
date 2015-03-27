@@ -1,4 +1,4 @@
-#include "runM2miss.hpp"
+#include "runM2Wns.hpp"
 
 
 int main(int argc, char ** argv){
@@ -7,8 +7,8 @@ int main(int argc, char ** argv){
   typedef GravityTimeInfExpCavesModel MG;
   typedef GravityTimeInfExpCavesParam PG;
   
-  typedef RadiusModel ME;
-  typedef RadiusParam PE;
+  typedef MG ME;
+  typedef PG PE;
 
   typedef System<MG,PG,ME,PE> S;
 
@@ -22,9 +22,11 @@ int main(int argc, char ** argv){
 
 
   S s;
-
   s.modelGen.fitType = MLE;
   s.modelEst.fitType = MLE;
+
+  int numReps = 96;
+  Starts starts("startingLocations.txt");
 
   RA ra; // running at the good starting weights
 
@@ -33,10 +35,9 @@ int main(int argc, char ** argv){
   R_RA r_ra;
   
 
-  int numReps = 100;
-
   njm::message("Priority Score: "
-	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT),""));
+	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
+			       ""));
 
   return 0;
 }

@@ -1,4 +1,4 @@
-#include "runM2.hpp"
+#include "runM2Miss.hpp"
 
 
 int main(int argc, char ** argv){
@@ -7,8 +7,8 @@ int main(int argc, char ** argv){
   typedef GravityTimeInfExpCavesModel MG;
   typedef GravityTimeInfExpCavesParam PG;
   
-  typedef MG ME;
-  typedef PG PE;
+  typedef RadiusModel ME;
+  typedef RadiusParam PE;
 
   typedef System<MG,PG,ME,PE> S;
 

@@ -1,2 +1,2 @@
-BINARY = runM1MLE
+BINARY = runM1Mle
 include global.mk

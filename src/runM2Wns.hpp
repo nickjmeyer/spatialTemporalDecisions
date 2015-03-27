@@ -1,10 +1,11 @@
-#ifndef RUN_M1_MLE_MISS_MYOP_HPP__
-#define RUN_M1_MLE_MISS_MYOP_HPP__
+#ifndef RUN_M2_WNS_HPP__
+#define RUN_M2_WNS_HPP__
 
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <omp.h>
 #include "utilities.hpp"
 #include "rand.hpp"
 #include "data.hpp"
@@ -23,6 +24,7 @@
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SpOptim.hpp"
+#include "m2QOptim.hpp"
 
 
 
