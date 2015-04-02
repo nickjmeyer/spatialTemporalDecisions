@@ -13,40 +13,37 @@
 #include "mcmcCave.hpp"
 
 
-class CaveModel {
+class CaveModel : public BaseModel {
  public:
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
 		    const FixedData & fD,
-		    const DynamicData & dD,
-		    CaveParam & mP) const;
+		    const DynamicData & dD);
+
+  virtual void infProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+  
+  virtual void update(const SimData & sD,
+		      const TrtData & tD,
+		      const FixedData & fD,
+		      const DynamicData & dD);
 
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const CaveParam & mP) const;
-  
-  virtual void infProbs(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			CaveParam & mP) const;
-  
-  virtual void update(const SimData & sD,
-		      const TrtData & tD,
-		      const FixedData & fD,
-		      const DynamicData & dD,
-		      CaveParam & mP);
+			  const DynamicData & dD) const;
 
-  
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   CaveParam & mP);
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   CaveParam & mP, const CaveParam mPInit);
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
+
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   const std::vector<double> & mPV);
+
+  CaveParam mP;
 
   CaveMcmc mcmc;
 

@@ -1,29 +1,10 @@
 #include "model.hpp"
 
-template class BaseModel<GravityParam>;
 
-template class BaseModel<GravityTimeInfParam>;
-
-template class BaseModel<GravityTimeInfSqParam>;
-
-template class BaseModel<GravityTimeInfSqrtParam>;
-
-template class BaseModel<GravityTimeInfLogParam>;
-
-template class BaseModel<GravityTimeInfExpParam>;
-
-template class BaseModel<GravityTimeInfExpCavesParam>;
-
-template class BaseModel<GravityTimeInfExpLCavesParam>;
-
-template class BaseModel<GravityTimeInfExpRCavesParam>;
-
-template<class MP>
-void BaseModel<MP>::load(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD,
-			 MP & mP) const{
+void GravityModel::load(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD) {
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -34,7 +15,7 @@ void BaseModel<MP>::load(const SimData & sD,
   for(i=0; i<sD.numNotInfec; i++){
     notNode = sD.notInfec.at(i);
     for(j=0; j<sD.numInfected; j++,itBase++)
-      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD,mP);
+      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD);
   }
 
   mP.setAll();
@@ -44,12 +25,10 @@ void BaseModel<MP>::load(const SimData & sD,
 }
 
 
-template <class MP>
-void BaseModel<MP>::infProbs(const SimData & sD,
-			     const TrtData & tD,
-			     const FixedData & fD,
-			     const DynamicData & dD,
-			     MP & mP) const {
+void GravityModel::infProbs(const SimData & sD,
+			    const TrtData & tD,
+			    const FixedData & fD,
+			    const DynamicData & dD){
   mP.infProbs.clear();
   int i,j,node0;
   double prob;
@@ -57,19 +36,17 @@ void BaseModel<MP>::infProbs(const SimData & sD,
     node0 = sD.notInfec.at(i);
     prob=1.0;
     for(j=0; j<sD.numInfected; j++)
-      prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),sD,tD,fD,dD,mP)));
+      prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),sD,tD,fD,dD)));
     mP.infProbs.push_back(1-prob);
   }
 }
 
 
 
-template <class MP>
-void BaseModel<MP>::update(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   MP & mP){
+void GravityModel::update(const SimData & sD,
+			  const TrtData & tD,
+			  const FixedData & fD,
+			  const DynamicData & dD){
   int i,j,k,node0,numNewInfec=sD.newInfec.size();
   double prob;
   std::vector<double> newInfProbs;
@@ -78,7 +55,7 @@ void BaseModel<MP>::update(const SimData & sD,
     if(j == numNewInfec || node0 < sD.newInfec.at(j)){
       prob = 1 - mP.infProbs.at(i+j);
       for(k=0; k<numNewInfec; k++)
-	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),sD,tD,fD,dD,mP)));
+	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),sD,tD,fD,dD)));
       newInfProbs.push_back(1.0 - prob);
       i++;
     }
@@ -91,8 +68,7 @@ void BaseModel<MP>::update(const SimData & sD,
 }
 
 
-double GravityModel::tuneTrt(const FixedData & fD,
-			     const GravityParam & gP){
+double GravityModel::tuneTrt(const FixedData & fD){
   int i,j;
   double avgCaves = 0.0;
   for(i = 0; i < fD.numNodes; i++)
@@ -105,8 +81,8 @@ double GravityModel::tuneTrt(const FixedData & fD,
       if(minDist > fD.dist.at(i*fD.numNodes + j))
 	minDist = fD.dist.at(i*fD.numNodes + j);
 
-  double base = gP.intcp;
-  base -= gP.alpha * minDist/std::pow(avgCaves*avgCaves,gP.power);
+  double base = mP.intcp;
+  base -= mP.alpha * minDist/std::pow(avgCaves*avgCaves,mP.power);
 
    return -(std::log(0.005) - base)/2.0;
 }
@@ -117,20 +93,19 @@ double GravityModel::oneOnOne(const int notNode,
 			      const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
-			      const DynamicData & dD,
-			      const GravityParam & gP) const{
-  double base = gP.intcp;
-  int len = gP.beta.size();
+			      const DynamicData & dD) const {
+  double base = mP.intcp;
+  int len = mP.beta.size();
   for(int i=0; i<len; i++)
-    base += gP.beta.at(i)*fD.covar.at(notNode*len + i);
+    base += mP.beta.at(i)*fD.covar.at(notNode*len + i);
 
-  base -= gP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
-    std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),gP.power);
+  base -= mP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
+    std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),mP.power);
 
   if(tD.p.at(notNode))
-    base -= gP.trtPre;
+    base -= mP.trtPre;
   if(tD.a.at(infNode))
-    base -= gP.trtAct;
+    base -= mP.trtAct;
 
   return base;
 }
@@ -139,26 +114,33 @@ double GravityModel::oneOnOne(const int notNode,
 
 void GravityModel::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP){
-  GravityParam mPInit;
-  std::vector<double> par;
-  int i;
-  for(i=0; i<(5+fD.numCovar); i++)
-    par.push_back(0);
-  mPInit.putPar(par);
-  mPInit.intcp=-3.0;
-  fit(sD,tD,fD,dD,mP,mPInit);
+		       const int & useInit){
+  if(useInit){
+    GravityParam mPInit;
+    std::vector<double> par;
+    int i;
+    for(i=0; i<(5+fD.numCovar); i++)
+      par.push_back(0);
+    mPInit.putPar(par);
+    mPInit.intcp=-3.0;
+    fit(sD,tD,fD,dD,mPInit.getPar());
+  }
+  else{
+    fit(sD,tD,fD,dD,mP.getPar());
+  }
 }
 
 void GravityModel::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
-		       GravityParam & mP, const GravityParam mPInit){
+		       const std::vector<double> & mPV){
   if(fitType == MLE){
     size_t iter=0;
     int status;
 
     gsl_vector *x,*ss;
-    std::vector<double> par = mPInit.getPar();
+    GravityParam mPInit;
+    mPInit.putPar(mPV);
+    std::vector<double> par = mPV;
     int i,dim=par.size();
     std::vector< std::vector<int> > history;
     history=sD.history;
@@ -209,17 +191,17 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     gsl_vector_free(x);
     gsl_vector_free(ss);
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
     
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,mPInit.getPar());
+    mcmc.sample(5000,1000,mPV);
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
   }
   else{
     std::cout << "Not a valid Estimation of "

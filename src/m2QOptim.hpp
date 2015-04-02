@@ -45,8 +45,7 @@ class M2QEvalTunePar : public TuneParam{
 
 
 
-template <class S, class A, class F,
-	  class M, class MP>
+template <class S, class A, class F, class M>
 class M2QEval {
  public:
 
@@ -54,7 +53,7 @@ class M2QEval {
 
   double qFn(const SimData & sD, TrtData & tD,
 	     const FixedData & fD, const DynamicData & dD,
-	     const M & m, MP & mP,
+	     M & m,
 	     A a);
   
   double bellRes();
@@ -71,15 +70,13 @@ class M2QEval {
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD,
-		      const M & m,
-		      MP & mP);
+		      M & m);
 
   // policy generated data for bellman residual
   // sets D1
   void bellResPolData(const int time,
 		      const FixedData & fD,
-		      const M & m,
-  		      MP & mP,
+		      M & m,
   		      A a);
 
   void buildRD();
@@ -140,6 +137,7 @@ class M2QEval {
 };
 
 
+
 class M2QOptimTunePar : public TuneParam{
  public:
   std::vector<double> getPar() const;
@@ -152,8 +150,8 @@ class M2QOptimTunePar : public TuneParam{
 
 
 template <class S, class A, class F,
-	  class M, class MP>
-class M2QOptim : BaseOptim<S,A,M,MP> {
+	  class M>
+class M2QOptim : BaseOptim<S,A,M> {
  public:
   M2QOptim();
   
@@ -162,7 +160,7 @@ class M2QOptim : BaseOptim<S,A,M,MP> {
   virtual void optim(const S & system,
 		     A & agent);
   
-  M2QEval<System<M,MP,M,MP>,A,F,M,MP> qEval;
+  M2QEval<System<M,M>,A,F,M> qEval;
 
   M2QOptimTunePar tp;
   

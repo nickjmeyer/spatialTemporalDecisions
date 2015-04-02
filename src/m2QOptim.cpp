@@ -23,48 +23,38 @@ void M2QOptimTunePar::putPar(const std::vector<double> & par){
 
 
 
-template class M2QOptim<System<GravityModel,GravityParam,
-				GravityModel,GravityParam>,
-			 RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-				      GravityModel,GravityParam>,
-			 FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
-				     GravityModel,GravityParam>,
-			 GravityModel,GravityParam>;
+template class M2QOptim<System<GravityModel,
+			       GravityModel>,
+			RankAgent<ToyFeatures2<GravityModel>,
+				  GravityModel>,
+			FeaturesInt<ToyFeatures2<GravityModel>,
+				    GravityModel>,
+			GravityModel>;
 
 
 template class
 M2QOptim<System<GravityTimeInfExpCavesModel,
-		GravityTimeInfExpCavesParam,
-		GravityTimeInfExpCavesModel,
-		GravityTimeInfExpCavesParam>,
-	 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam>,
-		   GravityTimeInfExpCavesModel,
-		   GravityTimeInfExpCavesParam>,
-	 FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam>,
-		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-	 GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
+		GravityTimeInfExpCavesModel>,
+	 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+		   GravityTimeInfExpCavesModel>,
+	 FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
+		     GravityTimeInfExpCavesModel>,
+	 GravityTimeInfExpCavesModel>;
 
 template class
 M2QOptim<System<GravityTimeInfExpCavesModel,
-		GravityTimeInfExpCavesParam,
-		RadiusModel,
-		RadiusParam>,
-	 RankAgent<ToyFeatures2<RadiusModel,
-				RadiusParam>,
-		   RadiusModel,
-		   RadiusParam>,
-	 FeaturesInt<ToyFeatures2<RadiusModel,
-				  RadiusParam>,
-		     RadiusModel,RadiusParam>,
-	 RadiusModel,RadiusParam>;
+		RadiusModel>,
+	 RankAgent<ToyFeatures2<RadiusModel>,
+		   RadiusModel>,
+	 FeaturesInt<ToyFeatures2<RadiusModel>,
+		     RadiusModel>,
+	 RadiusModel>;
 
 
 
 template <class S, class A, class F,
-	  class M, class MP>
-M2QOptim<S,A,F,M,MP>::M2QOptim(){
+	  class M>
+M2QOptim<S,A,F,M>::M2QOptim(){
   name = "M2Q";
 
 
@@ -82,14 +72,14 @@ M2QOptim<S,A,F,M,MP>::M2QOptim(){
 
 
 template <class S, class A, class F,
-	  class M, class MP>
-void M2QOptim<S,A,F,M,MP>::reset(){
+	  class M>
+void M2QOptim<S,A,F,M>::reset(){
 }
 
 
 template <class S, class A, class F,
-	  class M,class MP>
-void M2QOptim<S,A,F,M,MP>::
+	  class M>
+void M2QOptim<S,A,F,M>::
 optim(const S & system,
       A & agent){
 
@@ -99,14 +89,13 @@ optim(const S & system,
   if(system.sD.time < (system.fD.trtStart + 3))
     return;
 
-  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
-		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst);  
+  System<M,M> s(system.sD,system.tD,system.fD,system.dD,
+		system.modelEst,system.modelEst);
 
   qEval.preCompData(s.sD,s.fD);
   qEval.bellResFixData(s.sD,s.tD,s.fD,s.dD,
-		       s.modelEst,s.paramEst);
-  qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+		       s.modelEst);
+  qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,agent);
 
   if(system.sD.time == (system.fD.trtStart + 3))
     qEval.tune();
@@ -146,16 +135,16 @@ optim(const S & system,
 
     
     agent.tp.putPar(parPH);
-    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,agent);
     qEval.buildD1();
     qEval.solve();
-    valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
+    valP = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,agent);
 
     agent.tp.putPar(parMH);
-    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,s.paramEst,agent);
+    qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,agent);
     qEval.buildD1();
     qEval.solve();
-    valM = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,s.paramEst,agent);
+    valM = qEval.qFn(s.sD,s.tD,s.fD,s.dD,s.modelEst,agent);
 
     
     for(i=0; i<numPar; i++)
@@ -188,37 +177,29 @@ optim(const S & system,
 }
 
 
-template class M2QEval<System<GravityModel,GravityParam,
-			       GravityModel,GravityParam>,
-			RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-				     GravityModel,GravityParam>,
-			FeaturesInt<ToyFeatures2<GravityModel,GravityParam>,
-				    GravityModel,GravityParam>,
-			GravityModel,GravityParam>;
+template class M2QEval<System<GravityModel,
+			      GravityModel>,
+		       RankAgent<ToyFeatures2<GravityModel>,
+				 GravityModel>,
+		       FeaturesInt<ToyFeatures2<GravityModel>,
+				   GravityModel>,
+		       GravityModel>;
 
 
 
 template class M2QEval<System<GravityTimeInfExpCavesModel,
-			      GravityTimeInfExpCavesParam,
-			       GravityTimeInfExpCavesModel,
-			      GravityTimeInfExpCavesParam>,
-			RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-					       GravityTimeInfExpCavesParam>,
-				     GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam>,
-			FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
-						 GravityTimeInfExpCavesParam>,
-				    GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam>,
-			GravityTimeInfExpCavesModel,
-		       GravityTimeInfExpCavesParam>;
+			      GravityTimeInfExpCavesModel>,
+		       RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				 GravityTimeInfExpCavesModel>,
+		       FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				   GravityTimeInfExpCavesModel>,
+		       GravityTimeInfExpCavesModel>;
 
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-M2QEval<S,A,F,M,MP>::M2QEval(){
+template <class S, class A, class F, class M>
+M2QEval<S,A,F,M>::M2QEval(){
   tp.polReps = 10;
   tp.numNeigh = 5;
 
@@ -237,9 +218,8 @@ M2QEval<S,A,F,M,MP>::M2QEval(){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 preCompData(const SimData & sD, const FixedData & fD){
   // njm::toFile("precomp",
   // 	      njm::sett.datExt("console_"
@@ -360,15 +340,13 @@ preCompData(const SimData & sD, const FixedData & fD){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 bellResFixData(const SimData & sD,
 	       const TrtData & tD,
 	       const FixedData & fD,
 	       const DynamicData & dD,
-	       const M & m,
-	       MP & mP){
+	       M & m){
   // njm::toFile("fixdata",
   // 	      njm::sett.datExt("console_"
   // 			       + njm::toString(omp_get_thread_num(),"",0,0)
@@ -469,8 +447,8 @@ bellResFixData(const SimData & sD,
 
     
     // using the current values build D0
-    f.preCompData(sDt,tDt,fD,dD,m,mP);
-    f.getFeatures(sDt,tDt,fD,dD,m,mP);
+    f.preCompData(sDt,tDt,fD,dD,m);
+    f.getFeatures(sDt,tDt,fD,dD,m);
     features=feat2Vec(fD.numNodes,sDt.status);
     
     psiL=featToPsi(features);
@@ -501,9 +479,8 @@ bellResFixData(const SimData & sD,
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-std::vector<double> M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+std::vector<double> M2QEval<S,A,F,M>::
 feat2Vec(const int numNodes,
 	 const std::vector<int> & status){
   // njm::toFile("feat2vec",
@@ -545,10 +522,9 @@ feat2Vec(const int numNodes,
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
+template <class S, class A, class F, class M>
 std::vector<Eigen::SparseMatrix<double> >
-M2QEval<S,A,F,M,MP>::
+M2QEval<S,A,F,M>::
 featToPsi(const std::vector<double> & feat){
   // njm::toFile("feattopsi",
   // 	      njm::sett.datExt("console_"
@@ -609,13 +585,11 @@ featToPsi(const std::vector<double> & feat){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 bellResPolData(const int time,
 	       const FixedData & fD,
-	       const M & m,
-	       MP & mP,
+	       M & m,
 	       A a){
   // njm::toFile("poldata",
   // 	      njm::sett.datExt("console_"
@@ -670,10 +644,10 @@ bellResPolData(const int time,
       for(j=0; j<tp.polReps; j++){
 	std::fill(tDt.a.begin(),tDt.a.end(),0);
 	std::fill(tDt.p.begin(),tDt.p.end(),0);  
-	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
+	a.applyTrt(sD1T.at(t),tDt,fD,dD1T.at(t),m);
 
-	f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
-	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
+	f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m);
+	f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m);
 	features = feat2Vec(fD.numNodes,sD1T.at(t).status);
 	
 	psiL = featToPsi(features);
@@ -696,8 +670,8 @@ bellResPolData(const int time,
 	psiAvgL.at(k) /= double(tp.polReps);
     }
     else{
-      f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
-      f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m,mP);
+      f.preCompData(sD1T.at(t),tDt,fD,dD1T.at(t),m);
+      f.getFeatures(sD1T.at(t),tDt,fD,dD1T.at(t),m);
       features = feat2Vec(fD.numNodes,sD1T.at(t).status);
       
       psiAvgL = featToPsi(features);
@@ -726,9 +700,8 @@ bellResPolData(const int time,
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 solve(){
   // njm::toFile("solve",
   // 	      njm::sett.datExt("console_"
@@ -769,9 +742,8 @@ solve(){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 fullRankPen(){
   P2.resize(dim,dim);
   P2.setZero();
@@ -789,9 +761,8 @@ fullRankPen(){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 buildRD(){
   std::vector<int> nodes;
   nodes.resize(numNodes);
@@ -805,9 +776,8 @@ buildRD(){
 }
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 buildRD(const std::vector<int> nodes){
   // njm::toFile("buildRD",
   // 	      njm::sett.datExt("console_"
@@ -848,9 +818,8 @@ buildRD(const std::vector<int> nodes){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 buildD1(){
   std::vector<int> nodes;
   nodes.resize(numNodes);
@@ -864,9 +833,8 @@ buildD1(){
 }
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 buildD1(const std::vector<int> nodes){
   // njm::toFile("buildD1",
   // 	      njm::sett.datExt("console_"
@@ -896,9 +864,8 @@ buildD1(const std::vector<int> nodes){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 getRD(Eigen::SparseVector<double> & R,
       Eigen::SparseMatrix<double> & D){
   R = this->R;
@@ -906,18 +873,16 @@ getRD(Eigen::SparseVector<double> & R,
 }
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 setRD(const Eigen::SparseVector<double> & R,
       const Eigen::SparseMatrix<double> & D){
   this->R = R;
   this->D = D;
 }
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 getSolveDat(Eigen::VectorXd & mDtR,
 	    Eigen::SparseMatrix<double> & DtD){
   mDtR = this->mDtR;
@@ -925,9 +890,8 @@ getSolveDat(Eigen::VectorXd & mDtR,
 }
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 setSolveDat(const Eigen::VectorXd & mDtR,
 	    const Eigen::SparseMatrix<double> & DtD){
   this->mDtR = mDtR;
@@ -935,9 +899,8 @@ setSolveDat(const Eigen::VectorXd & mDtR,
 }
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-void M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+void M2QEval<S,A,F,M>::
 tune(){
   // njm::toFile("tuning",
   // 	      njm::sett.datExt("console_"
@@ -1111,24 +1074,21 @@ tune(){
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-double M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+double M2QEval<S,A,F,M>::
 bellRes(){
   return (R + (D*beta).sparseView()).squaredNorm();
 }
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-double M2QEval<S,A,F,M,MP>::
+template <class S, class A, class F, class M>
+double M2QEval<S,A,F,M>::
 qFn(const SimData & sD,
     TrtData & tD,
     const FixedData & fD,
     const DynamicData & dD,
-    const M & m,
-    MP & mP,
+    M & m,
     A a){
 
   // njm::toFile("qfn",
@@ -1146,10 +1106,10 @@ qFn(const SimData & sD,
   for(j=0; j<tp.polReps; j++){
     std::fill(tD.a.begin(),tD.a.end(),0);
     std::fill(tD.p.begin(),tD.p.end(),0);
-    a.applyTrt(sD,tD,fD,dD,m,mP);
+    a.applyTrt(sD,tD,fD,dD,m);
 
-    f.preCompData(sD,tD,fD,dD,m,mP);
-    f.getFeatures(sD,tD,fD,dD,m,mP);
+    f.preCompData(sD,tD,fD,dD,m);
+    f.getFeatures(sD,tD,fD,dD,m);
     features = feat2Vec(fD.numNodes,sD.status);
     psiL = featToPsi(features);
 

@@ -12,29 +12,44 @@
 #include "mcmcGravityTimeInf.hpp"
 
 
-class GravityTimeInfModel : public BaseModel<GravityTimeInfParam> {
+class GravityTimeInfModel : public BaseModel {
  public:
+  virtual void load(const SimData & sD,
+		    const TrtData & tD,
+		    const FixedData & fD,
+		    const DynamicData & dD);
+
+  virtual void infProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+  
+  virtual void update(const SimData & sD,
+		      const TrtData & tD,
+		      const FixedData & fD,
+		      const DynamicData & dD);
+
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const GravityTimeInfParam & mP) const;
+			  const DynamicData & dD) const;
 
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
+
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   const std::vector<double> & mPV);
+
+  GravityTimeInfParam mP;
   
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityTimeInfParam & mP);
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityTimeInfParam & mP, const GravityTimeInfParam mPInit);
-
   GravityTimeInfMcmc mcmc;
 
   Estimation fitType;
   
 
-  double tuneTrt(const FixedData & fD, const GravityTimeInfParam & gP);
+  double tuneTrt(const FixedData & fD);
 };
 
 

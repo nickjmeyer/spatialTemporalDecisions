@@ -23,8 +23,8 @@ class M1SimpleOptimTunePar : public TuneParam{
 };
 
 
-template <class S, class A, class M, class MP>
-class M1SimpleOptim : BaseOptim<S,A,M,MP>{
+template <class S, class A, class M>
+class M1SimpleOptim : BaseOptim<S,A,M>{
  public:
   M1SimpleOptim();
   

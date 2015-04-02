@@ -9,7 +9,7 @@
 #include "agent.hpp"
 #include "rankAgent.hpp"
 
-template <class S, class A, class M, class MP>
+template <class S, class A, class M>
 class BaseOptim {
  public:
   virtual void optim(const S & system,

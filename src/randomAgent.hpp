@@ -11,15 +11,14 @@
 
 
 
-template <class M, class MP>
-class RandomAgent : BaseAgent<M, MP> {
+template <class M>
+class RandomAgent : BaseAgent<M> {
  public:
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const M & model,
-			MP & modelParam);
+			M & model);
 
   int numAct;
   int numPre;

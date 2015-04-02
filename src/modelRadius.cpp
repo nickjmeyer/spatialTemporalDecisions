@@ -4,8 +4,7 @@
 void RadiusModel::load(const SimData & sD,
 		       const TrtData & tD,
 		       const FixedData & fD,
-		       const DynamicData & dD,
-		       RadiusParam & mP) const{
+		       const DynamicData & dD){
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -16,7 +15,7 @@ void RadiusModel::load(const SimData & sD,
   for(i=0; i<sD.numNotInfec; i++){
     notNode = sD.notInfec.at(i);
     for(j=0; j<sD.numInfected; j++,itBase++)
-      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD,mP);
+      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD);
   }
   
   mP.setAll();
@@ -30,8 +29,7 @@ void RadiusModel::load(const SimData & sD,
 void RadiusModel::infProbs(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
-			   const DynamicData & dD,
-			   RadiusParam & mP) const {
+			   const DynamicData & dD){
   mP.infProbs.clear();
   int i,j,node0;
   double prob;
@@ -40,7 +38,7 @@ void RadiusModel::infProbs(const SimData & sD,
     prob=1.0;
     for(j=0; j<sD.numInfected; j++)
       prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),
-				     sD,tD,fD,dD,mP)));
+				     sD,tD,fD,dD)));
     mP.infProbs.push_back(1-prob);
   }
 }
@@ -51,8 +49,7 @@ void RadiusModel::infProbs(const SimData & sD,
 void RadiusModel::update(const SimData & sD,
 			 const TrtData & tD,
 			 const FixedData & fD,
-			 const DynamicData & dD,
-			 RadiusParam & mP){
+			 const DynamicData & dD){
   int i,j,k,node0,numNewInfec=sD.newInfec.size();
   double prob;
   std::vector<double> newInfProbs;
@@ -62,7 +59,7 @@ void RadiusModel::update(const SimData & sD,
       prob = 1 - mP.infProbs.at(i+j);
       for(k=0; k<numNewInfec; k++)
 	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),
-				      sD,tD,fD,dD,mP)));
+				      sD,tD,fD,dD)));
       newInfProbs.push_back(1.0 - prob);
       i++;
     }
@@ -81,17 +78,16 @@ double RadiusModel::oneOnOne(const int notNode,
 			     const SimData & sD,
 			     const TrtData & tD,
 			     const FixedData & fD,
-			     const DynamicData & dD,
-			     const RadiusParam & gP) const{
-  double base = gP.intcp;
+			     const DynamicData & dD) const {
+  double base = mP.intcp;
 
-  if(fD.logDist.at(notNode*fD.numNodes + infNode) > gP.radius)
+  if(fD.logDist.at(notNode*fD.numNodes + infNode) > mP.radius)
     base -= 500.0;
 
   if(tD.p.at(notNode))
-    base -= gP.trtPre;
+    base -= mP.trtPre;
   if(tD.a.at(infNode))
-    base -= gP.trtAct;
+    base -= mP.trtAct;
 
   return base;
 }
@@ -99,8 +95,7 @@ double RadiusModel::oneOnOne(const int notNode,
 
 
 void RadiusModel::fit(const SimData & sD, const TrtData & tD,
-		      const FixedData & fD, const DynamicData & dD,
-		      RadiusParam & mP){
+		      const FixedData & fD, const DynamicData & dD){
   RadiusParam mPInit;
   std::vector<double> par;
   par.push_back(-3.0);
@@ -109,18 +104,20 @@ void RadiusModel::fit(const SimData & sD, const TrtData & tD,
   par.push_back(0.0);
   
   mPInit.putPar(par);
-  fit(sD,tD,fD,dD,mP,mPInit);
+  fit(sD,tD,fD,dD,mPInit.getPar());
 }
 
 void RadiusModel::fit(const SimData & sD, const TrtData & tD,
 		      const FixedData & fD, const DynamicData & dD,
-		      RadiusParam & mP, const RadiusParam mPInit){
+		      const std::vector<double> & mPV){
   if(fitType == MLE){
     size_t iter=0;
     int status;
 
     gsl_vector *x,*ss;
-    std::vector<double> par = mPInit.getPar();
+    RadiusParam mPInit;
+    mPInit.putPar(mPV);
+    std::vector<double> par = mPV;
     int i,dim=par.size();
     std::vector< std::vector<int> > history;
     history=sD.history;
@@ -168,16 +165,16 @@ void RadiusModel::fit(const SimData & sD, const TrtData & tD,
     gsl_vector_free(x);
     gsl_vector_free(ss);
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,mPInit.getPar());
+    mcmc.sample(5000,1000,mPV);
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
   }
   else{
     std::cout << "Not a valid Estimation" << std::endl;

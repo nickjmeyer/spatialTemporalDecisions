@@ -1,41 +1,38 @@
 #include "myopicAgent.hpp"
 
 
-template class MyopicAgent<GravityTimeInfExpCavesModel,
-			   GravityTimeInfExpCavesParam>;
+template class MyopicAgent<GravityTimeInfExpCavesModel>;
 
-template class MyopicAgent<GravityTimeInfExpModel,
-			   GravityTimeInfExpParam>;
+template class MyopicAgent<GravityTimeInfExpModel>;
 
-template class MyopicAgent<GravityTimeInfModel,GravityTimeInfParam>;
+template class MyopicAgent<GravityTimeInfModel>;
 
-template class MyopicAgent<GravityModel,GravityParam>;
+template class MyopicAgent<GravityModel>;
 
-template class MyopicAgent<RangeModel,RangeParam>;
+template class MyopicAgent<RangeModel>;
 
-template class MyopicAgent<RadiusModel,RadiusParam>;
+template class MyopicAgent<RadiusModel>;
 
-template class MyopicAgent<CaveModel,CaveParam>;
+template class MyopicAgent<CaveModel>;
 
 
-template <class M, class MP>
-std::string MyopicAgent<M,MP>::name = "myopic";
+template <class M>
+std::string MyopicAgent<M>::name = "myopic";
 
-template <class M, class MP>
-void MyopicAgent<M,MP>::applyTrt(const SimData & sD,
-				 TrtData & tD,
-				 const FixedData & fD,
-				 const DynamicData & dD,
-				 const M & m,
-				 MP & mP){
+template <class M>
+void MyopicAgent<M>::applyTrt(const SimData & sD,
+			      TrtData & tD,
+			      const FixedData & fD,
+			      const DynamicData & dD,
+			      M & m){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 
   int i,j,node0,total,count;
 
-  m.load(sD,tD,fD,dD,mP);
+  m.load(sD,tD,fD,dD);
   
-  notFeat = 1 - arma::prod(mP.infProbsSep,0).t();
+  notFeat = 1 - arma::prod(m.mP.infProbsSep,0).t();
 
   infFeat.zeros(sD.numInfected);
   for(i=0; i<sD.numInfected; i++){

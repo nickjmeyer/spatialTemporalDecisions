@@ -13,41 +13,38 @@
 #include "mcmcRadius.hpp"
 
 
-class RadiusModel {
+class RadiusModel : public BaseModel {
  public:
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
 		    const FixedData & fD,
-		    const DynamicData & dD,
-		    RadiusParam & mP) const;
+		    const DynamicData & dD);
+
+  virtual void infProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+  
+  virtual void update(const SimData & sD,
+		      const TrtData & tD,
+		      const FixedData & fD,
+		      const DynamicData & dD);
 
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const RadiusParam & mP) const;
-  
-  virtual void infProbs(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			RadiusParam & mP) const;
-  
-  virtual void update(const SimData & sD,
-		      const TrtData & tD,
-		      const FixedData & fD,
-		      const DynamicData & dD,
-		      RadiusParam & mP);
+			  const DynamicData & dD) const;
 
-  
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   RadiusParam & mP);
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   RadiusParam & mP, const RadiusParam mPInit);
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
 
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   const std::vector<double> & mPV);
+
+  RadiusParam mP;
+  
   RadiusMcmc mcmc;
 
   Estimation fitType;

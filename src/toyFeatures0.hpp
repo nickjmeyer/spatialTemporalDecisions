@@ -15,29 +15,26 @@ class ToyFeatures0TuneParam : public TuneParam {
   int valReps;
 };
 
-template<class M, class MP>
-class ToyFeatures0 : public BaseFeatures<M,MP> {
+template<class M>
+class ToyFeatures0 : public BaseFeatures<M> {
  public:
   virtual void preCompData(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
+			   M & m);
 
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
+			   M & m);
 
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
-			      const M & m,
-			      MP & mP);
+			      M & m);
   
   std::vector<double> subgraph;
 

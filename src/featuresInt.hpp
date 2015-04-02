@@ -6,7 +6,7 @@
 #include "toyFeatures1.hpp"
 #include "toyFeatures2.hpp"
 
-template <class F, class M, class MP>
+template <class F, class M>
 class FeaturesInt {
  public:
   F f;
@@ -15,22 +15,19 @@ class FeaturesInt {
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
+			   M & m);
   
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
+			   M & m);
 
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
-			      const M & m,
-			      MP & mP);
+			      M & m);
 
   static int numFeatures;
 

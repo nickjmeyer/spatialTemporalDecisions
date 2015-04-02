@@ -6,6 +6,7 @@
 #include <iostream>
 #include <numeric>
 #include <eigen3/Eigen/SuperLUSupport>
+#include <tuple>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"
@@ -17,13 +18,9 @@
 #include "modelParamGravityTimeInf.hpp"
 #include "modelParamGravityTimeInfExp.hpp"
 #include "modelParamGravityTimeInfExpCaves.hpp"
-#include "modelParamGravityTimeInfExpLCaves.hpp"
-#include "modelParamGravityTimeInfExpRCaves.hpp"
 #include "modelGravityTimeInf.hpp"
 #include "modelGravityTimeInfExp.hpp"
 #include "modelGravityTimeInfExpCaves.hpp"
-#include "modelGravityTimeInfExpLCaves.hpp"
-#include "modelGravityTimeInfExpRCaves.hpp"
 #include "modelParamEbola.hpp"
 #include "modelEbola.hpp"
 #include "dataDepth.hpp"

@@ -1,35 +1,31 @@
 #include "rankAgent.hpp"
 
 
-template class RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam>,
-			 GravityTimeInfExpCavesModel,
-			 GravityTimeInfExpCavesParam>;
+template class RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			 GravityTimeInfExpCavesModel>;
 
-template class RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-				      GravityTimeInfExpParam>,
-			 GravityTimeInfExpModel,
-			 GravityTimeInfExpParam>;
+template class RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+			 GravityTimeInfExpModel>;
 
-template class RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
-			 GravityTimeInfModel,GravityTimeInfParam>;
+template class RankAgent<ToyFeatures2<GravityTimeInfModel>,
+			 GravityTimeInfModel>;
 
-template class RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-			 GravityModel,GravityParam>;
+template class RankAgent<ToyFeatures2<GravityModel>,
+			 GravityModel>;
 
-template class RankAgent<ToyFeatures2<RangeModel,RangeParam>,
-			 RangeModel,RangeParam>;
+template class RankAgent<ToyFeatures2<RangeModel>,
+			 RangeModel>;
 
-template class RankAgent<ToyFeatures2<RadiusModel,RadiusParam>,
-			 RadiusModel,RadiusParam>;
+template class RankAgent<ToyFeatures2<RadiusModel>,
+			 RadiusModel>;
 
-template class RankAgent<ToyFeatures2<CaveModel,CaveParam>,
-			 CaveModel,CaveParam>;
+template class RankAgent<ToyFeatures2<CaveModel>,
+			 CaveModel>;
 
 
 
-template <class F, class M, class MP>
-RankAgent<F,M,MP>::RankAgent(){
+template <class F, class M>
+RankAgent<F,M>::RankAgent(){
   tp.weights_r.ones(f.numFeatures);
   tp.weights.ones(f.numFeatures);
 
@@ -39,19 +35,18 @@ RankAgent<F,M,MP>::RankAgent(){
 }
 
 
-template <class F, class M, class MP>
-void RankAgent<F,M,MP>::reset(){
+template <class F, class M>
+void RankAgent<F,M>::reset(){
   tp.weights = tp.weights_r;
 }
 
   
-template <class F, class M, class MP>
-void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
-				 TrtData & tD,
-				 const FixedData & fD,
-				 const DynamicData & dD,
-				 const M & m,
-				 MP & mP){
+template <class F, class M>
+void RankAgent<F,M>::applyTrt(const SimData & sD,
+			      TrtData & tD,
+			      const FixedData & fD,
+			      const DynamicData & dD,
+			      M & m){
   if(sD.notInfec.empty())
     return;
 
@@ -60,8 +55,8 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
   numAct = getNumAct(sD,tD,fD,dD);
 
   // precompute data and get baseline features
-  f.preCompData(sD,tD,fD,dD,m,mP);
-  f.getFeatures(sD,tD,fD,dD,m,mP);
+  f.preCompData(sD,tD,fD,dD,m);
+  f.getFeatures(sD,tD,fD,dD,m);
 
   // jitter the current weights
   arma::colvec jitter;
@@ -156,7 +151,7 @@ void RankAgent<F,M,MP>::applyTrt(const SimData & sD,
 
     // if more iterations, update features
     if((i+1) < numChunks){
-      f.updateFeatures(sD,tD,fD,dD,m,mP);
+      f.updateFeatures(sD,tD,fD,dD,m);
     }
     
   }

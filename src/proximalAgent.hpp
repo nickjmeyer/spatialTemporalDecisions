@@ -14,15 +14,14 @@
 #include "modelGravityTimeInfExpCaves.hpp"
 
 
-template <class M, class MP>
-class ProximalAgent : BaseAgent<M, MP> {
+template <class M>
+class ProximalAgent : public BaseAgent<M> {
  public:
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const M & model,
-			MP & modelParam);
+			M & model);
 
   int numAct;
   int numPre;

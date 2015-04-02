@@ -27,8 +27,8 @@ class M1SpOptimTunePar : public TuneParam{
 };
 
 
-template <class S, class A, class M, class MP>
-class M1SpOptim : BaseOptim<S,A,M,MP>{
+template <class S, class A, class M>
+class M1SpOptim : BaseOptim<S,A,M>{
  public:
   M1SpOptim();
 
@@ -36,7 +36,7 @@ class M1SpOptim : BaseOptim<S,A,M,MP>{
   
   virtual void optim(const S & system,
 		     A & agent);
-  virtual void tune(const System<M,MP,M,MP> & system,
+  virtual void tune(const System<M,M> & system,
 		    A agent);
   
   M1SpOptimTunePar tp;

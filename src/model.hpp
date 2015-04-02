@@ -8,6 +8,9 @@
 #include "data.hpp"
 #include "settings.hpp"
 #include "modelParam.hpp"
+#include "modelParamCave.hpp"
+#include "modelParamRadius.hpp"
+#include "modelParamRange.hpp"
 #include "modelParamGravityTimeInf.hpp"
 #include "modelParamGravityTimeInfSq.hpp"
 #include "modelParamGravityTimeInfSqrt.hpp"
@@ -20,61 +23,72 @@
 
 enum Estimation {MLE = 0,MCMC = 1};
 
-template<class MP>
 class BaseModel {
  public:
 
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
 		    const FixedData & fD,
-		    const DynamicData & dD,
-		    MP & mP) const;
-
-  virtual double oneOnOne(const int notNode, const int infNode,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const MP & mP) const = 0;
+		    const DynamicData & dD) = 0;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
-			const DynamicData & dD,
-			MP & mP) const;
+			const DynamicData & dD) = 0;
   
   virtual void update(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
-		      const DynamicData & dD,
-		      MP & mP);
-};
+		      const DynamicData & dD) = 0;
 
-
-
-class GravityModel : public BaseModel<GravityParam> {
- public:
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const GravityParam & mP) const;
+			  const DynamicData & dD) const = 0;
 
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD) = 0;
+
+};
+
+
+
+class GravityModel : public BaseModel {
+ public:
+
+  virtual void load(const SimData & sD,
+		    const TrtData & tD,
+		    const FixedData & fD,
+		    const DynamicData & dD);
+
+  virtual void infProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
   
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityParam & mP);
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityParam & mP, const GravityParam mPInit);
+  virtual void update(const SimData & sD,
+		      const TrtData & tD,
+		      const FixedData & fD,
+		      const DynamicData & dD);
+
+  virtual double oneOnOne(const int notNode, const int infNode,
+			  const SimData & sD,
+			  const TrtData & tD,
+			  const FixedData & fD,
+			  const DynamicData & dD) const ;
+
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   const std::vector<double> & mPV);
+
+  GravityParam mP;
 
   GravityMcmc mcmc;
 
   Estimation fitType;
   
-
-  double tuneTrt(const FixedData & fD, const GravityParam & gP);
+  double tuneTrt(const FixedData & fD);
 };
 
 

@@ -1,81 +1,77 @@
 #include "system.hpp"
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      GravityTimeInfExpCavesModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      GravityTimeInfExpModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      GravityTimeInfModel,GravityTimeInfParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      GravityTimeInfModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      GravityModel,GravityParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      GravityModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      RangeModel,RangeParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      RangeModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      RadiusModel,RadiusParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      RadiusModel>;
 
-template class System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		      CaveModel,CaveParam>;
+template class System<GravityTimeInfExpCavesModel,
+		      CaveModel>;
 
-template class System<GravityTimeInfExpModel,GravityTimeInfExpParam,
-		      GravityTimeInfExpModel,GravityTimeInfExpParam>;
+template class System<GravityTimeInfExpModel,
+		      GravityTimeInfExpModel>;
 
-template class System<GravityTimeInfModel,GravityTimeInfParam,
-		      GravityTimeInfModel,GravityTimeInfParam>;
+template class System<GravityTimeInfModel,
+		      GravityTimeInfModel>;
 
-template class System<GravityModel,GravityParam,
-		      GravityModel,GravityParam>;
+template class System<GravityModel,
+		      GravityModel>;
 
-template class System<RangeModel,RangeParam,
-		      RangeModel,RangeParam>;
+template class System<RangeModel,
+		      RangeModel>;
 
-template class System<RadiusModel,RadiusParam,
-		      RadiusModel,RadiusParam>;
+template class System<RadiusModel,
+		      RadiusModel>;
 
-template class System<CaveModel,CaveParam,
-		      CaveModel,CaveParam>;
+template class System<CaveModel,
+		      CaveModel>;
 
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-System<MG, MPG,
-       ME, MPE>::System(){
+template <class MG,
+	  class ME>
+System<MG,
+       ME>::System(){
   initialize();
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-System<MG, MPG,
-       ME, MPE>::System(const SimData & sD,
+template <class MG,
+	  class ME>
+System<MG,
+       ME>::System(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
 			const MG & modelGen,
-			const ME & modelEst,
-			const MPG & paramGen,
-			const MPE & paramEst){
+		   const ME & modelEst){
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
   this->dD_r = dD;
-  this->modelGen = modelGen;
-  this->modelEst = modelEst;
-  this->paramGen_r = paramGen;
-  this->paramEst_r = paramEst;
+  this->modelGen_r = modelGen;
+  this->modelEst_r = modelEst;
   revert();
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-System<MG, MPG,
-       ME, MPE>::System(const std::string file){
+template <class MG,
+	  class ME>
+System<MG,
+       ME>::System(const std::string file){
   initialize();
 
   std::vector<int> historyFile;
@@ -168,10 +164,10 @@ System<MG, MPG,
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::reset(const std::vector<int> & ind){
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::reset(const std::vector<int> & ind){
   // reset SimData
   sD_r.time = 0;
   sD_r.numInfected = ind.size();
@@ -217,43 +213,43 @@ void System<MG, MPG,
   // nothing to do for this....DynamicData isn't used
 
   // load probs
-  modelGen.load(sD_r,tD_r,fD,dD_r,paramGen_r);
+  modelGen.load(sD_r,tD_r,fD,dD_r);
 
   // revert
   revert();
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::revert(){
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::revert(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
 
-  paramGen = paramGen_r;
-  paramEst = paramEst_r;
+  modelGen = modelGen_r;
+  modelEst = modelEst_r;
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::checkPoint(){
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::checkPoint(){
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
   
-  paramGen_r = paramGen;
-  paramEst_r = paramEst;
+  modelGen_r = modelGen;
+  modelEst_r = modelEst;
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::initialize(){
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.dist,njm::sett.srcExt("d.txt"));
@@ -284,14 +280,14 @@ void System<MG, MPG,
   modelEst.fitType = MCMC;
   modelGen.fitType = MCMC;
 
-  paramGen_r.load();
+  modelGen_r.mP.load();
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG,MPG,
-	    ME,MPE>::preCompData(){
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::preCompData(){
   int i,j,tot;
 
   double maxVal = std::numeric_limits<double>::lowest();
@@ -372,19 +368,19 @@ void System<MG,MPG,
 }
 
 
-template <class MG, class MPG,
-	  class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::nextPoint(){
-  modelGen.infProbs(sD,tD,fD,dD,paramGen);
-  nextPoint(paramGen.infProbs);
+template <class MG,
+	  class ME>
+void System<MG,
+	    ME>::nextPoint(){
+  modelGen.infProbs(sD,tD,fD,dD);
+  nextPoint(modelGen.mP.infProbs);
 }
 
 
-template<class MG, class MPG,
-	 class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>
+template<class MG,
+	 class ME>
+void System<MG,
+	    ME>
 ::nextPoint(const std::vector<double> & infProbs){
   int i;
   for(i=0; i<sD.numInfected; i++)
@@ -422,10 +418,10 @@ void System<MG, MPG,
 
 
 
-template<class MG, class MPG,
-	 class ME, class MPE>
-void System<MG, MPG,
-	    ME, MPE>::updateStatus(){
+template<class MG,
+	 class ME>
+void System<MG,
+	    ME>::updateStatus(){
   int i,j,k,isInf;
   for(i=0,j=0,k=0; i<fD.numNodes; i++){
     if(j == sD.numInfected)
@@ -455,90 +451,12 @@ void System<MG, MPG,
 }
 
 
-template<class MG, class MPG,
-	 class ME, class MPE>
-double System<MG, MPG,
-	      ME, MPE>::value(){
+template<class MG,
+	 class ME>
+double System<MG,
+	      ME>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// System Light
-
-
-
-template class SystemLight<GravityModel,GravityParam>;
-
-
-template<class M, class MP>
-SystemLight<M, MP>::SystemLight(const SimData & sD,
-				const TrtData & tD,
-				const FixedData & fD,
-				const DynamicData & dD,
-				const M & modelGen,
-				const MP & paramGen){
-  this->sD_r = sD;
-  this->tD_r = tD;
-  this->fD = fD;
-  this->dD_r = dD;
-  this->modelGen = modelGen;
-  this->paramGen_r = paramGen;
-
-  reset();
-}
-
-
-template<class M, class MP>
-void SystemLight<M, MP>::reset(){
-  sD = sD_r;
-  tD = tD_r;
-  dD = dD_r;
-
-  paramGen = paramGen_r;
-}
-
-
-
-template<class M, class MP>
-void
-SystemLight<M, MP>::nextPoint(const int isFinal){
-  int i;
-  for(i=0; i<sD.numInfected; i++)
-    sD.timeInf.at(sD.infected.at(i))++;
-  
-  int node,numNewInf=0;
-  sD.newInfec.clear();
-  for(i=0; i<sD.numNotInfec; i++){
-    if(njm::runif01() < paramGen.infProbs.at(i)){
-      node = sD.notInfec.at(i);
-      sD.infected.push_back(node);
-      sD.newInfec.push_back(node);
-      sD.notInfec.at(i)=fD.numNodes; // assign it the max value
-      numNewInf++;
-    }
-  }
-  std::sort(sD.infected.begin(),sD.infected.end());
-  std::sort(sD.notInfec.begin(),sD.notInfec.end());
-  sD.numInfected+=numNewInf;
-  sD.numNotInfec-=numNewInf;
-
-  sD.notInfec.erase(sD.notInfec.begin() + sD.numNotInfec, sD.notInfec.end());
-
-  sD.history.push_back(sD.status);
-  
-  sD.time++; // turn the calendar
-
-  if(!isFinal)
-    modelGen.update(sD,tD,fD,dD,paramGen);
-}
-
-
-
-template<class M, class MP>
-double SystemLight<M, MP>::value(){
-  return ((double)sD.numInfected)/((double)fD.numNodes);
-}
 
 

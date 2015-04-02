@@ -1,27 +1,24 @@
 #include "noTrtAgent.hpp"
 
 
-template class NoTrt<GravityModel,GravityParam>;
-template class NoTrt<GravityTimeInfModel,GravityTimeInfParam>;
-template class NoTrt<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>;
+template class NoTrt<GravityModel>;
+template class NoTrt<GravityTimeInfModel>;
+template class NoTrt<GravityTimeInfExpCavesModel>;
 
-template class NoTrt<RangeModel,RangeParam>;
+template class NoTrt<RangeModel>;
 
-template class NoTrt<RadiusModel,RadiusParam>;
+template class NoTrt<RadiusModel>;
 
-template class NoTrt<CaveModel,CaveParam>;
+template class NoTrt<CaveModel>;
 
-template class NoTrt<EbolaModel,EbolaParam>;
+template<class M>
+std::string NoTrt<M>::name = "noTrt";
 
-template<class M, class MP>
-std::string NoTrt<M,MP>::name = "noTrt";
-
-template<class M, class MP>
-void NoTrt<M,MP>::applyTrt(const SimData & sD,
-			   TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   const M & model,
-			   MP & modelParam){
+template<class M>
+void NoTrt<M>::applyTrt(const SimData & sD,
+			TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD,
+			M & model){
 }
 

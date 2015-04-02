@@ -13,30 +13,44 @@
 
 
 class
-GravityTimeInfExpCavesModel : public BaseModel<GravityTimeInfExpCavesParam> {
+GravityTimeInfExpCavesModel : public BaseModel {
  public:
+  virtual void load(const SimData & sD,
+		    const TrtData & tD,
+		    const FixedData & fD,
+		    const DynamicData & dD);
+
+  virtual void infProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+  
+  virtual void update(const SimData & sD,
+		      const TrtData & tD,
+		      const FixedData & fD,
+		      const DynamicData & dD);
+
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD,
-			  const GravityTimeInfExpCavesParam & mP) const;
+			  const DynamicData & dD) const;
 
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
+
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   const std::vector<double> & mPV);
+
+  GravityTimeInfExpCavesParam mP;
   
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityTimeInfExpCavesParam & mP);
-  void fit(const SimData & sD, const TrtData & tD,
-	   const FixedData & fD, const DynamicData & dD,
-	   GravityTimeInfExpCavesParam & mP,
-	   const GravityTimeInfExpCavesParam mPInit);
-
   GravityTimeInfExpCavesMcmc mcmc;
 
   Estimation fitType;
   
 
-  double tuneTrt(const FixedData & fD, const GravityTimeInfExpCavesParam & gP);
+  double tuneTrt(const FixedData & fD);
 };
 
 

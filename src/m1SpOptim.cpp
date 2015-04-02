@@ -32,114 +32,78 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam>,
-			 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-						GravityTimeInfExpCavesParam>,
-				   GravityTimeInfExpCavesModel,
-				   GravityTimeInfExpCavesParam>,
-			 GravityTimeInfExpCavesModel,
-			 GravityTimeInfExpCavesParam>;
+				GravityTimeInfExpCavesModel>,
+			 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				   GravityTimeInfExpCavesModel>,
+			 GravityTimeInfExpCavesModel>;
 
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				GravityTimeInfExpModel,
-				GravityTimeInfExpParam>,
-			 RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-						GravityTimeInfExpParam>,
-				   GravityTimeInfExpModel,
-				   GravityTimeInfExpParam>,
-			 GravityTimeInfExpModel,
-			 GravityTimeInfExpParam>;
+				GravityTimeInfExpModel>,
+			 RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+				   GravityTimeInfExpModel>,
+			 GravityTimeInfExpModel>;
 
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				GravityTimeInfModel,
-				GravityTimeInfParam>,
-			 RankAgent<ToyFeatures2<GravityTimeInfModel,
-						GravityTimeInfParam>,
-				   GravityTimeInfModel,
-				   GravityTimeInfParam>,
-			 GravityTimeInfModel,
-			 GravityTimeInfParam>;
+				GravityTimeInfModel>,
+			 RankAgent<ToyFeatures2<GravityTimeInfModel>,
+				   GravityTimeInfModel>,
+			 GravityTimeInfModel>;
 
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				GravityModel,
-				GravityParam>,
-			 RankAgent<ToyFeatures2<GravityModel,
-						GravityParam>,
-				   GravityModel,
-				   GravityParam>,
-			 GravityModel,
-			 GravityParam>;
+				GravityModel>,
+			 RankAgent<ToyFeatures2<GravityModel>,
+				   GravityModel>,
+			 GravityModel>;
 
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				RangeModel,
-				RangeParam>,
-			 RankAgent<ToyFeatures2<RangeModel,
-						RangeParam>,
-				   RangeModel,
-				   RangeParam>,
-			 RangeModel,
-			 RangeParam>;
+				RangeModel>,
+			 RankAgent<ToyFeatures2<RangeModel>,
+				   RangeModel>,
+			 RangeModel>;
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				RadiusModel,
-				RadiusParam>,
-			 RankAgent<ToyFeatures2<RadiusModel,
-						RadiusParam>,
-				   RadiusModel,
-				   RadiusParam>,
-			 RadiusModel,
-			 RadiusParam>;
+				RadiusModel>,
+			 RankAgent<ToyFeatures2<RadiusModel>,
+				   RadiusModel>,
+			 RadiusModel>;
 
 template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam,
-				CaveModel,
-				CaveParam>,
-			 RankAgent<ToyFeatures2<CaveModel,
-						CaveParam>,
-				   CaveModel,
-				   CaveParam>,
-			 CaveModel,
-			 CaveParam>;
+				CaveModel>,
+			 RankAgent<ToyFeatures2<CaveModel>,
+				   CaveModel>,
+			 CaveModel>;
 
 
-template <class S, class A, class M, class MP>
-M1SpOptim<S,A,M,MP>::M1SpOptim(){
+template <class S, class A, class M>
+M1SpOptim<S,A,M>::M1SpOptim(){
   name = "M1Sp";
 }
 
 
-template <class S, class A, class M, class MP>
-void M1SpOptim<S,A,M,MP>::reset(){
+template <class S, class A, class M>
+void M1SpOptim<S,A,M>::reset(){
   tp.A = 30;
   tp.B = 1;
 }
 
 
-template <class S, class A, class M, class MP>
-void M1SpOptim<S,A,M,MP>
+template <class S, class A, class M>
+void M1SpOptim<S,A,M>
 ::optim(const S & system,
 	A & agent){
 
-  System<M,MP,M,MP> s(system.sD,system.tD,system.fD,system.dD,
-		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst);
+  System<M,M> s(system.sD,system.tD,system.fD,system.dD,
+		system.modelEst,system.modelEst);
 
   if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + 1))
     tune(s,agent);
 
   
-  PlainRunner<System<M,MP,M,MP>,A> runner;
+  PlainRunner<System<M,M>,A> runner;
 
   std::vector<double> par=agent.tp.getPar();
   int i,converged=0,numPar = par.size();
@@ -200,25 +164,24 @@ void M1SpOptim<S,A,M,MP>
 
 
 
-template <class S, class A, class M, class MP>
-void M1SpOptim<S,A,M,MP>
-::tune(const System<M,MP,M,MP> & system,
+template <class S, class A, class M>
+void M1SpOptim<S,A,M>
+::tune(const System<M,M> & system,
        A agent){
 
   std::cout << "thread "
 	    << omp_get_thread_num()
 	    << " is tuning!!!!!!!" << std::endl;
-  System<M,MP,M,MP> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
-		      system.modelEst,system.modelEst,
-		      system.paramEst,system.paramEst);
+  System<M,M> s(system.sD_r,system.tD_r,system.fD,system.dD_r,
+		system.modelEst,system.modelEst);
   s.modelEst.fitType = MLE;
   s.fD.finalT = s.sD.time + 2*s.fD.period;
 
-  M1SpOptim<System<M,MP,M,MP>,A,M,MP> o;
+  M1SpOptim<System<M,M>,A,M> o;
   o.tp.tune = 0;
   
-  TuneRunner<System<M,MP,M,MP>,A,
-	     M1SpOptim<System<M,MP,M,MP>,A,M,MP> > r;
+  TuneRunner<System<M,M>,A,
+	     M1SpOptim<System<M,M>,A,M> > r;
   
   std::vector<double> scale;
   scale.push_back(0.5);

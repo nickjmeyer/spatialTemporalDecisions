@@ -1,8 +1,74 @@
 #include "modelGravityTimeInfExp.hpp"
 
 
-double GravityTimeInfExpModel::tuneTrt(const FixedData & fD,
-				       const GravityTimeInfExpParam & gP){
+void GravityTimeInfExpModel::load(const SimData & sD,
+				  const TrtData & tD,
+				  const FixedData & fD,
+				  const DynamicData & dD) {
+  mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
+  mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
+
+  arma::mat::iterator itBase;
+  itBase = mP.infProbsBase.begin();
+  
+  int i,j,notNode;
+  for(i=0; i<sD.numNotInfec; i++){
+    notNode = sD.notInfec.at(i);
+    for(j=0; j<sD.numInfected; j++,itBase++)
+      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD);
+  }
+
+  mP.setAll();
+  
+  mP.infProbs = arma::conv_to<std::vector<double> >
+    ::from(1-arma::prod(mP.infProbsSep,0));
+}
+
+
+void GravityTimeInfExpModel::infProbs(const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD){
+  mP.infProbs.clear();
+  int i,j,node0;
+  double prob;
+  for(i=0; i<sD.numNotInfec; i++){
+    node0 = sD.notInfec.at(i);
+    prob=1.0;
+    for(j=0; j<sD.numInfected; j++)
+      prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),sD,tD,fD,dD)));
+    mP.infProbs.push_back(1-prob);
+  }
+}
+
+
+
+void GravityTimeInfExpModel::update(const SimData & sD,
+				    const TrtData & tD,
+				    const FixedData & fD,
+				    const DynamicData & dD){
+  int i,j,k,node0,numNewInfec=sD.newInfec.size();
+  double prob;
+  std::vector<double> newInfProbs;
+  for(i=0,j=0; i < sD.numNotInfec; ){ // purposely don't increment i or j here
+    node0 = sD.notInfec.at(i);
+    if(j == numNewInfec || node0 < sD.newInfec.at(j)){
+      prob = 1 - mP.infProbs.at(i+j);
+      for(k=0; k<numNewInfec; k++)
+	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),sD,tD,fD,dD)));
+      newInfProbs.push_back(1.0 - prob);
+      i++;
+    }
+    else{
+      j++;
+    }
+  }
+
+  mP.infProbs = newInfProbs;
+}
+
+
+double GravityTimeInfExpModel::tuneTrt(const FixedData & fD){
   int i,j;
   double avgCaves = 0.0;
   for(i = 0; i < fD.numNodes; i++)
@@ -15,8 +81,8 @@ double GravityTimeInfExpModel::tuneTrt(const FixedData & fD,
       if(minDist > fD.dist.at(i*fD.numNodes + j))
 	minDist = fD.dist.at(i*fD.numNodes + j);
 
-  double base = gP.intcp;
-  base -= gP.alpha * minDist/std::pow(avgCaves*avgCaves,gP.power);
+  double base = mP.intcp;
+  base -= mP.alpha * minDist/std::pow(avgCaves*avgCaves,mP.power);
 
   return -(std::log(0.005) - base)/2.0;
 }
@@ -28,23 +94,21 @@ GravityTimeInfExpModel::oneOnOne(const int notNode,
 				 const SimData & sD,
 				 const TrtData & tD,
 				 const FixedData & fD,
-				 const DynamicData & dD,
-				 const
-				 GravityTimeInfExpParam & gP) const{
-  double base = gP.intcp;
-  int len = gP.beta.size();
+				 const DynamicData & dD) const {
+  double base = mP.intcp;
+  int len = mP.beta.size();
   for(int i=0; i<len; i++)
-    base += gP.beta.at(i)*fD.covar.at(notNode*len + i);
+    base += mP.beta.at(i)*fD.covar.at(notNode*len + i);
 
-  base -= gP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
-    std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),gP.power);
+  base -= mP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
+    std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),mP.power);
 
-  base += gP.xi * (std::exp(sD.timeInf.at(infNode)-1.0)-1.0);
+  base += mP.xi * (std::exp(sD.timeInf.at(infNode)-1.0)-1.0);
   
   if(tD.p.at(notNode))
-    base -= gP.trtPre;
+    base -= mP.trtPre;
   if(tD.a.at(infNode))
-    base -= gP.trtAct;
+    base -= mP.trtAct;
 
   return base;
 }
@@ -52,8 +116,7 @@ GravityTimeInfExpModel::oneOnOne(const int notNode,
 
 
 void GravityTimeInfExpModel::fit(const SimData & sD, const TrtData & tD,
-				 const FixedData & fD, const DynamicData & dD,
-				 GravityTimeInfExpParam & mP){
+				 const FixedData & fD, const DynamicData & dD){
   GravityTimeInfExpParam mPInit;
   std::vector<double> par;
   int i;
@@ -61,13 +124,12 @@ void GravityTimeInfExpModel::fit(const SimData & sD, const TrtData & tD,
     par.push_back(0);
   mPInit.putPar(par);
   mPInit.intcp=-3.0;
-  fit(sD,tD,fD,dD,mP,mPInit);
+  fit(sD,tD,fD,dD,mPInit.getPar());
 }
 
 void GravityTimeInfExpModel::fit(const SimData & sD, const TrtData & tD,
 				 const FixedData & fD, const DynamicData & dD,
-				 GravityTimeInfExpParam & mP,
-				 const GravityTimeInfExpParam mPInit){
+				 const std::vector<double> &  mPV){
 
   if(fitType == MLE){
   
@@ -75,7 +137,9 @@ void GravityTimeInfExpModel::fit(const SimData & sD, const TrtData & tD,
     int status;
 
     gsl_vector *x,*ss;
-    std::vector<double> par = mPInit.getPar();
+    GravityTimeInfExpParam mPInit;
+    mPInit.putPar(mPV);
+    std::vector<double> par = mPV;
     int i,dim=par.size();
     std::vector< std::vector<int> > history;
     history=sD.history;
@@ -122,17 +186,17 @@ void GravityTimeInfExpModel::fit(const SimData & sD, const TrtData & tD,
     gsl_vector_free(x);
     gsl_vector_free(ss);
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
     
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,mPInit.getPar());
+    mcmc.sample(5000,1000,mPV);
 
     mcmc.samples.setMean();
     mP.putPar(mcmc.samples.getPar());
 
-    load(sD,tD,fD,dD,mP);
+    load(sD,tD,fD,dD);
   }
   else{
     std::cout << "Not a valid Estimation" << std::endl;

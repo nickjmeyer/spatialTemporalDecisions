@@ -13,36 +13,33 @@ void ToyFeatures2TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class ToyFeatures2<GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam>;
+template class ToyFeatures2<GravityTimeInfExpCavesModel>;
 
-template class ToyFeatures2<GravityTimeInfExpModel,
-			    GravityTimeInfExpParam>;
+template class ToyFeatures2<GravityTimeInfExpModel>;
 
-template class ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>;
+template class ToyFeatures2<GravityTimeInfModel>;
 
-template class ToyFeatures2<GravityModel,GravityParam>;
+template class ToyFeatures2<GravityModel>;
 
-template class ToyFeatures2<RangeModel,RangeParam>;
+template class ToyFeatures2<RangeModel>;
 
-template class ToyFeatures2<RadiusModel,RadiusParam>;
+template class ToyFeatures2<RadiusModel>;
 
-template class ToyFeatures2<CaveModel,CaveParam>;
+template class ToyFeatures2<CaveModel>;
 
 
 
 
-template <class M, class MP>
-int ToyFeatures2<M,MP>::numFeatures = 4;
+template <class M>
+int ToyFeatures2<M>::numFeatures = 4;
 
 
-template <class M, class MP>
-void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     const M & m,
-				     MP & mP){
+template <class M>
+void ToyFeatures2<M>::preCompData(const SimData & sD,
+				  const TrtData & tD,
+				  const FixedData & fD,
+				  const DynamicData & dD,
+				  M & m){
   // pre compute stuff
 
   // ////////////////////////////////////////
@@ -70,7 +67,7 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
   // ////////////////////////////////////////
 
   // load estimated probabilities of infection
-  m.load(sD,tD,fD,dD,mP);
+  m.load(sD,tD,fD,dD);
 
   // ////////////////////////////////////////
   // tock=std::chrono::high_resolution_clock::now();
@@ -133,7 +130,7 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
 	// neighbors of i
 	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD1,*itD0,sD,tD,fD,dD,mP)));
+				 (j,m.oneOnOne(*itD1,*itD0,sD,tD,fD,dD)));
 	
 	// i is a neighbor of j
 	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
@@ -171,13 +168,12 @@ void ToyFeatures2<M,MP>::preCompData(const SimData & sD,
 
 
 
-template <class M, class MP>
-void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     const M & m,
-				     MP & mP){
+template <class M>
+void ToyFeatures2<M>::getFeatures(const SimData & sD,
+				  const TrtData & tD,
+				  const FixedData & fD,
+				  const DynamicData & dD,
+				  M & m){
   // ////////////////////////////////////////
   // // temporary timing stuff
   // static std::vector<std::chrono::milliseconds> featTime(numFeatures);
@@ -214,8 +210,8 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   
   // feature 0
   // probability of infection or infecting
-  infFeat.col(featNum) = 1 - arma::prod(mP.infProbsSep,1);
-  notFeat.col(featNum) = 1 - arma::prod(mP.infProbsSep,0).t();
+  infFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,1);
+  notFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,0).t();
   
   // ////////////////////////////////////////
   // tock=std::chrono::high_resolution_clock::now();
@@ -256,7 +252,7 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
     notFeat(i,featNum) = modProbTot*notFeat(i,0);
   }
   
-  infFeat.col(featNum) = (1.0-mP.infProbsSep) * notFeat.col(featNum);
+  infFeat.col(featNum) = (1.0-m.mP.infProbsSep) * notFeat.col(featNum);
 
 
   // ////////////////////////////////////////
@@ -283,7 +279,7 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
 
-  infFeat.col(featNum) = (1.0 - mP.infProbsSep) * notFeat.col(0);
+  infFeat.col(featNum) = (1.0 - m.mP.infProbsSep) * notFeat.col(0);
 
 
   // ////////////////////////////////////////
@@ -406,13 +402,12 @@ void ToyFeatures2<M,MP>::getFeatures(const SimData & sD,
 
 
 
-template <class M, class MP>
-void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
-					const TrtData & tD,
-					const FixedData & fD,
-					const DynamicData & dD,
-					const M & m,
-					MP & mP){
+template <class M>
+void ToyFeatures2<M>::updateFeatures(const SimData & sD,
+				     const TrtData & tD,
+				     const FixedData & fD,
+				     const DynamicData & dD,
+				     M & m){
 
   // ////////////////////////////////////////
   // // temporary timing stuff
@@ -440,26 +435,26 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
     pre = tDPre.p.at(node0);
     
     if(now != pre && now == 1){ // adding trt
-      mP.infProbsBase.col(i) -= mP.trtPre;
-      mP.setCol(i);
+      m.mP.infProbsBase.col(i) -= m.mP.trtPre;
+      m.mP.setCol(i);
 
       num=notNeighOfNum.at(i);
       for(j = 0; j < num; j++){
 	neighOf = notNeighOf.at(i).at(j);
 
-	notNeigh.at(neighOf.first).at(neighOf.second).second -= mP.trtPre;
+	notNeigh.at(neighOf.first).at(neighOf.second).second -= m.mP.trtPre;
       }
     }
     
     else if(now != pre && now == 0){ // removing trt
-      mP.infProbsBase.col(i) += mP.trtPre;
-      mP.setCol(i);
+      m.mP.infProbsBase.col(i) += m.mP.trtPre;
+      m.mP.setCol(i);
 
       num=notNeighOfNum.at(i);
       for(j = 0; j < num; j++){
 	neighOf = notNeighOf.at(i).at(j);
 
-	notNeigh.at(neighOf.first).at(neighOf.second).second += mP.trtPre;
+	notNeigh.at(neighOf.first).at(neighOf.second).second += m.mP.trtPre;
       }
     }
   }
@@ -471,12 +466,12 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
     pre = tDPre.a.at(node0);
     
     if(now != pre && now == 1){ // adding trt
-      mP.infProbsBase.row(i) -= mP.trtAct;
-      mP.setRow(i);
+      m.mP.infProbsBase.row(i) -= m.mP.trtAct;
+      m.mP.setRow(i);
     }
     else if(now != pre && now == 0){ // removing trt
-      mP.infProbsBase.row(i) += mP.trtAct;
-      mP.setRow(i);
+      m.mP.infProbsBase.row(i) += m.mP.trtAct;
+      m.mP.setRow(i);
     }
   }
 
@@ -501,7 +496,7 @@ void ToyFeatures2<M,MP>::updateFeatures(const SimData & sD,
   // ////////////////////////////////////////
 
 
-  getFeatures(sD,tD,fD,dD,m,mP);
+  getFeatures(sD,tD,fD,dD,m);
 }
 
 

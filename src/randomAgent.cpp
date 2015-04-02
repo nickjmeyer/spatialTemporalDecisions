@@ -1,18 +1,17 @@
 #include "randomAgent.hpp"
 
 
-template class RandomAgent<GravityModel,GravityParam>;
+template class RandomAgent<GravityModel>;
 
-template<class M, class MP>
-const std::string RandomAgent<M,MP>::name = "random";
+template<class M>
+const std::string RandomAgent<M>::name = "random";
 
-template <class M, class MP>
-void RandomAgent<M,MP>::applyTrt(const SimData & sD,
-				 TrtData & tD,
-				 const FixedData & fD,
-				 const DynamicData & dD,
-				 const M & m,
-				 MP & mP){
+template <class M>
+void RandomAgent<M>::applyTrt(const SimData & sD,
+			      TrtData & tD,
+			      const FixedData & fD,
+			      const DynamicData & dD,
+			      M & m){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 

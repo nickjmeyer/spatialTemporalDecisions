@@ -6,15 +6,14 @@
 #include "model.hpp"
 #include "modelParam.hpp"
 
-template <class M, class MP>
+template <class M>
 class BaseAgent {
  public:
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const M & model,
-			MP & modelParam) = 0;
+			M & model) = 0;
 
   std::string name;
 };

@@ -13,29 +13,26 @@ class ToyFeatures2TuneParam : public TuneParam {
   virtual void putPar(const std::vector<double> & par);
 };
 
-template<class M, class MP>
-class ToyFeatures2 : public BaseFeatures<M,MP> {
+template<class M>
+class ToyFeatures2 : public BaseFeatures<M> {
  public:
   virtual void preCompData(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
+			   M & m);
 
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP);
-
+			   M & m);
+			   
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
-			      const M & m,
-			      MP & mP);
+			      M & m);
   
   // neighbors of not infected
   std::vector<std::vector<std::pair<int,double> > > notNeigh;

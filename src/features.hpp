@@ -4,29 +4,26 @@
 #include "data.hpp"
 #include "system.hpp"
 
-template <class M, class MP>
+template <class M>
 class BaseFeatures {
  public:
   virtual void preCompData(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP) = 0;
+			   M & m) = 0;
   
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD,
-			   const M & m,
-			   MP & mP) = 0;
+			   M & m) = 0;
 
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
-			      const M & m,
-			      MP & mP) = 0;
+			      M & m) = 0;
 
   TrtData tDPre;
 

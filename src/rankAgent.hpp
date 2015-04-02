@@ -27,8 +27,8 @@ class RankTuneParam : public TuneParam {
 };
 
 
-template < class F, class M, class MP>
-class RankAgent : BaseAgent<M,MP> {
+template <class F, class M>
+class RankAgent : public BaseAgent<M> {
  public:
   RankAgent();
 
@@ -38,8 +38,7 @@ class RankAgent : BaseAgent<M,MP> {
 			TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD,
-			const M & m,
-			MP & mP);
+			M & m);
 
   F f;
 

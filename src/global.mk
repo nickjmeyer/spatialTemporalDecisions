@@ -16,17 +16,12 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	toyFeatures2.o \
 	model.o modelParam.o \
 	modelGravityTimeInf.o modelParamGravityTimeInf.o \
-	modelGravityTimeInfSq.o modelParamGravityTimeInfSq.o \
-	modelGravityTimeInfSqrt.o modelParamGravityTimeInfSqrt.o \
-	modelGravityTimeInfLog.o modelParamGravityTimeInfLog.o \
 	modelGravityTimeInfExp.o modelParamGravityTimeInfExp.o \
 	modelGravityTimeInfExpCaves.o modelParamGravityTimeInfExpCaves.o \
-	modelGravityTimeInfExpLCaves.o modelParamGravityTimeInfExpLCaves.o \
-	modelGravityTimeInfExpRCaves.o modelParamGravityTimeInfExpRCaves.o \
-	modelEbola.o modelParamEbola.o \
 	modelRange.o modelParamRange.o \
 	modelRadius.o modelParamRadius.o \
 	modelCave.o modelParamCave.o \
+	modelMulti.o modelParamMulti.o \
 	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfSq.o \
