@@ -4,21 +4,20 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  MultiModel mm;
+  typedef GravityTimeInfExpCavesModel M;
+  typedef System<M,M> S;
+  typedef NoTrt<M> N;
+  typedef VanillaRunner<S,N> R;
 
-  typedef GravityModel M0;
-    
-  mm.m.push_back(M0());
+  S s;
+  N n;
+  R r;
 
-  Starts starts("startingLocations.txt");
-  System<M0,M0> s;
-  s.reset(starts[0]);
-  s.revert();
+  int numReps = 500;
+  Starts starts(numReps,s.fD.numNodes);
+  
+  std::cout << r.run(s,n,500,s.fD.finalT,starts) << std::endl;
 
-  for(int i = 0; i < 10; ++i)
-    s.nextPoint();
-
-  mm.m.at(0).load(s.sD,s.tD,s.fD,s.dD);
   
   njm::sett.clean();
   return 0;

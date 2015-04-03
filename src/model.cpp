@@ -1,52 +1,6 @@
 #include "model.hpp"
 
 
-void BaseModel::load(const SimData & sD,
-		     const TrtData & tD,
-		     const FixedData & fD,
-		     const DynamicData & dD) {
-  std::cout << "Base" << std::endl;
-  throw(1);
-}
-
-
-void BaseModel::infProbs(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD){
-  throw(1);
-}
-
-
-
-void BaseModel::update(const SimData & sD,
-		       const TrtData & tD,
-		       const FixedData & fD,
-		       const DynamicData & dD){
-  throw(1);
-}
-
-
-double BaseModel::oneOnOne(const int notNode,
-			   const int infNode,
-			   const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD) const {
-  throw(1);
-  return 0.0;
-}
-
-
-
-void BaseModel::fit(const SimData & sD, const TrtData & tD,
-		    const FixedData & fD, const DynamicData & dD,
-		    const int & useInit){
-  throw(1);
-}
-
-
-
 void BaseModel::setType(const Estimation & est){
   fitType = est;
 }

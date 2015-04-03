@@ -1,13 +1,25 @@
 #include "modelMulti.hpp"
 
 
+MultiModel::MultiModel(){
+  m.push_back(new GravityTimeInfExpModel);
+  m.push_back(new GravityTimeInfExpCavesModel);
+}
+
+MultiModel::~MultiModel(){
+  int i,s = m.size();
+  for(i = 0; i < s; ++i)
+    delete m.at(i);
+}
+
+
 void MultiModel::load(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD){
   int i,s = m.size();
   for(i = 0; i < s; ++i)
-    m.at(i).load(sD,tD,fD,dD);
+    m.at(i)->load(sD,tD,fD,dD);
 }
 
 void MultiModel::infProbs(const SimData & sD,
@@ -16,7 +28,7 @@ void MultiModel::infProbs(const SimData & sD,
 			  const DynamicData & dD){
   int i,s = m.size();
   for(i = 0; i < s; ++i)
-    m.at(i).infProbs(sD,tD,fD,dD);
+    m.at(i)->infProbs(sD,tD,fD,dD);
 }
   
 void MultiModel::update(const SimData & sD,
@@ -25,7 +37,7 @@ void MultiModel::update(const SimData & sD,
 			const DynamicData & dD){
   int i,s = m.size();
   for(i = 0; i < s; ++i)
-    m.at(i).update(sD,tD,fD,dD);
+    m.at(i)->update(sD,tD,fD,dD);
 }
   
 
@@ -36,7 +48,7 @@ double MultiModel::oneOnOne(const int notNode,
 			    const TrtData & tD,
 			    const FixedData & fD,
 			    const DynamicData & dD) const {
-  return m.at(ind).oneOnOne(notNode,infNode,sD,tD,fD,dD);
+  return m.at(ind)->oneOnOne(notNode,infNode,sD,tD,fD,dD);
 }
 
 
@@ -47,8 +59,8 @@ MultiModel::fit(const SimData & sD, const TrtData & tD,
 		const int & useInit){
   int i,s = m.size();
   for(i = 0; i < s; ++i){
-    m.at(i).fitType = fitType;
-    m.at(i).fit(sD,tD,fD,dD,useInit);
+    m.at(i)->fitType = fitType;
+    m.at(i)->fit(sD,tD,fD,dD,useInit);
   }
 }
 

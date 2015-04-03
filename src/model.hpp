@@ -25,31 +25,32 @@ enum Estimation {MLE = 0,MCMC = 1};
 
 class BaseModel {
  public:
+  virtual ~BaseModel() {}
 
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
 		    const FixedData & fD,
-		    const DynamicData & dD);
+		    const DynamicData & dD) = 0;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
-			const DynamicData & dD);
+			const DynamicData & dD) = 0;
   
   virtual void update(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
-		      const DynamicData & dD);
+		      const DynamicData & dD) = 0;
 
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
-			  const DynamicData & dD) const;
+			  const DynamicData & dD) const = 0;
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
-		   const int & useInit);
+		   const int & useInit) = 0;
 
   virtual void setType(const Estimation & est);
 

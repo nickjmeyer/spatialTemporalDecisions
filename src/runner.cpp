@@ -53,6 +53,11 @@ template class PlainRunner<System<GravityTimeInfExpCavesModel,
 				     GravityTimeInfExpCavesModel> >;
 
 
+template class PlainRunner<System<GravityTimeInfExpCavesModel,
+				  GravityTimeInfExpCavesModel>,
+			   NoTrt<GravityTimeInfExpCavesModel> >;
+
+
 template class PlainRunner<System<GravityTimeInfExpModel,
 				  GravityTimeInfExpModel>,
 			   RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
@@ -406,7 +411,7 @@ FitOnlyRunner<S,A>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t == system.fD.trtStart);
+			    t > system.fD.trtStart);
 
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
@@ -606,7 +611,7 @@ OptimRunner<S,A,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t==system.fD.trtStart);
+			    t > system.fD.trtStart);
 	
 	optim.optim(system,agent);
 	
@@ -734,7 +739,7 @@ OptimRunnerNS<S,A,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t==system.fD.trtStart);
+			    t > system.fD.trtStart);
 
 	optim.optim(system,agent);
 	
@@ -869,7 +874,7 @@ TuneRunner<S,A,Optim>
       
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t==system.fD.trtStart);
+			    t > system.fD.trtStart);
 	  
 	optim.optim(system,agent);
 

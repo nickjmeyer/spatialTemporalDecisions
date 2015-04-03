@@ -9,6 +9,9 @@
 #include "data.hpp"
 #include "settings.hpp"
 #include "model.hpp"
+#include "modelGravityTimeInf.hpp"
+#include "modelGravityTimeInfExp.hpp"
+#include "modelGravityTimeInfExpCaves.hpp"
 #include "modelCave.hpp"
 #include "modelRadius.hpp"
 #include "modelRange.hpp"
@@ -17,6 +20,9 @@
 class
 MultiModel : public BaseModel {
  public:
+  MultiModel();
+  ~MultiModel();
+  
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
 		    const FixedData & fD,
@@ -45,7 +51,7 @@ MultiModel : public BaseModel {
   void modSel(const int & ind);
   int ind;
 
-  std::vector<BaseModel> m;
+  std::vector<BaseModel *> m;
 };
 
 

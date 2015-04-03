@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS = -std=c++11 -fopenmp -Wall
+CPPFLAGS = -std=c++11 -fopenmp -Wall -Werror
 INCLUDE = -I/usr/include/superlu/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
