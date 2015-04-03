@@ -44,6 +44,8 @@ class RangeModel : public BaseModel {
 		   const FixedData & fD, const DynamicData & dD,
 		   const std::vector<double> & mPV);
 
+  virtual BaseParam * getPar(){return & mP;}  
+
   RangeParam mP;
   
   RangeMcmc mcmc;

@@ -47,9 +47,14 @@ MultiModel : public BaseModel {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   const int & useInit);
-  
+
+  virtual BaseParam * getPar(){return m.at(ind)->getPar();}
+
+  int size();
   void modSel(const int & ind);
   int ind;
+
+  BaseModel * operator[](const int i);
 
   std::vector<BaseModel *> m;
 };

@@ -43,7 +43,8 @@ class GravityTimeInfExpModel : public BaseModel {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   const std::vector<double> & mPV);
-  
+
+  virtual BaseParam * getPar(){return & mP;}  
 
   GravityTimeInfExpParam mP;
 

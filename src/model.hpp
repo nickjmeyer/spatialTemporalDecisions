@@ -52,6 +52,8 @@ class BaseModel {
 		   const FixedData & fD, const DynamicData & dD,
 		   const int & useInit) = 0;
 
+  virtual BaseParam * getPar() = 0;
+
   virtual void setType(const Estimation & est);
 
   Estimation fitType;
@@ -90,7 +92,9 @@ class GravityModel : public BaseModel {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   const std::vector<double> & mPV);
-
+  
+  virtual BaseParam * getPar(){return & mP;}
+  
   GravityParam mP;
 
   GravityMcmc mcmc;

@@ -42,69 +42,14 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 				  M & m){
   // pre compute stuff
 
-  // ////////////////////////////////////////
-  // // temporary timing stuff
-  // static int numTimers=3;
-  // static std::vector<std::chrono::milliseconds> preTime(numTimers);
-  // static int is_init=0;
-  // if(!is_init)
-  //   for(int i=0; i<numTimers; i++)
-  //     preTime.at(i) = std::chrono::milliseconds::zero();
-  // is_init=1;
-
-  // std::chrono::time_point< std::chrono::high_resolution_clock > tick,tock;
-  // std::chrono::milliseconds diff;
-  // static int timeReps = 0;
-  // timeReps++;
-
-  // int curTimer=0;
-  // ////////////////////////////////////////
-
-  
-
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
-
   // load estimated probabilities of infection
   m.load(sD,tD,fD,dD);
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // preTime.at(curTimer++)+=diff;
-  // ////////////////////////////////////////
-
-
-  
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
 
   // extract subgraph connectiviy for not infected
   int i;
   subGraphNotInfec.resize(sD.numNotInfec);
   for(i=0; i<sD.numNotInfec; i++)
     subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // preTime.at(curTimer++)+=diff;
-  // ////////////////////////////////////////
-  
-
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
 
 
   // obtain neighbors and probabilities not infected infects other not infected
@@ -140,30 +85,6 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 	notNeighOfNum.at(j)++;
       }
   }
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // preTime.at(curTimer++)+=diff;
-  // ////////////////////////////////////////
-
-  
-  // ////////////////////////////////////////
-  // double total;
-  // printf(" preTime: ");
-  // for(i=0; i<numTimers; i++){
-  //   total = (double(preTime.at(i).count()))/(double(timeReps));
-  //   printf("% 20.10f ",total);
-  // }
-  // printf("\n");
-  // fflush(stdout);
-  // std::cout << std::string(40,'-') << std::endl	<< std::endl;
-  // ////////////////////////////////////////
-  
 }
 
 
@@ -174,23 +95,6 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
 				  M & m){
-  // ////////////////////////////////////////
-  // // temporary timing stuff
-  // static std::vector<std::chrono::milliseconds> featTime(numFeatures);
-  // static int is_init=0;
-  // if(!is_init)
-  //   for(int i=0; i<numFeatures; i++)
-  //     featTime.at(i) = std::chrono::milliseconds::zero();
-  // is_init=1;
-
-  // std::chrono::time_point< std::chrono::high_resolution_clock > tick,tock;
-  // std::chrono::milliseconds diff;
-  // static int timeReps = 0;
-  // timeReps++;
-  
-  // ////////////////////////////////////////
-  
-  
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -199,37 +103,18 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   
   // start feature construction
 
-
   
   int i,j,featNum=0;
   std::vector<int>::const_iterator itD0,itD1,beg;
 
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
   
   // feature 0
   // probability of infection or infecting
   infFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,1);
   notFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,0).t();
   
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // featTime.at(featNum)+=diff;
-  // ////////////////////////////////////////
 
-  
   featNum++;
-
-
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
 
   
   
@@ -254,26 +139,9 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   
   infFeat.col(featNum) = (1.0-m.mP.infProbsSep) * notFeat.col(featNum);
 
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // featTime.at(featNum)+=diff;
-  // ////////////////////////////////////////
-
   
   featNum++;
 
-
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
-
-  
   
   // feature 2
   // weighted subgraph connectivity measures
@@ -281,28 +149,9 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 
   infFeat.col(featNum) = (1.0 - m.mP.infProbsSep) * notFeat.col(0);
 
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // featTime.at(featNum)+=diff;
-  // ////////////////////////////////////////
-
-
-
-    
     
   featNum++;
 
-  
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
-  
 
   // feature 3
   // density estimate
@@ -329,66 +178,10 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     infFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
-
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // featTime.at(featNum)+=diff;
-  // ////////////////////////////////////////
-
-
-  
-  // ////////////////////////////////////////
-  // double total;
-  // std::cout << "  infMean: " << arma::mean(infFeat)
-  // 	    << "    infSD: " << arma::stddev(infFeat)
-  // 	    << "  notMean: " << arma::mean(notFeat)
-  // 	    << "    notSD: " << arma::stddev(notFeat)
-  // 	    << "     time: ";
-  // for(i=0; i<numFeatures; i++){
-  //   total = (double(featTime.at(i).count()))/(double(timeReps));
-  //   printf("% 20.10f ",total);
-  // }
-  // printf("\n");
-  // fflush(stdout);
-  // std::cout << std::string(40,'-') << std::endl	<< std::endl;
-  // ////////////////////////////////////////
-
   featNum++;
 
   tDPre = tD;
 
-  // ////////////////////////////////////////
-  // static arma::mat cInf = arma::zeros<arma::mat>(numFeatures,numFeatures);
-  // static arma::mat cNot = arma::zeros<arma::mat>(numFeatures,numFeatures);
-  // static int countInf=0,countNot=0;
-  // if(infFeat.n_rows > 1){
-  //   countInf++;
-  //   cInf += arma::cor(infFeat);
-  // }
-  // if(notFeat.n_rows > 1){
-  //   countNot++;
-  //   cNot += arma::cor(notFeat);
-  // }
-  
-  // std::cout << "Count : " << "(" << countInf << ", " << countNot << ")"
-  // 	    << std::endl << std::endl
-  // 	    << "Infected: "
-  // 	    << std::endl
-  // 	    << (cInf / arma::as_scalar(double(countInf)))
-  // 	    << std::endl
-  // 	    << "Not Infected: "
-  // 	    << std::endl
-  // 	    << (cNot / arma::as_scalar(double(countNot)))
-  // 	    << std::endl
-  // 	    << std::string(64,'-')
-  // 	    << std::endl << std::endl;
-  // ////////////////////////////////////////
 
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
@@ -408,23 +201,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
 				     M & m){
-
-  // ////////////////////////////////////////
-  // // temporary timing stuff
-  // static std::chrono::milliseconds updTime=std::chrono::milliseconds::zero();
-
-  // std::chrono::time_point< std::chrono::high_resolution_clock > tick,tock;
-  // std::chrono::milliseconds diff;
-  // static int timeReps = 0;
-  // timeReps++;
-  // ////////////////////////////////////////
-
-
-  
-  // ////////////////////////////////////////
-  // tick=std::chrono::high_resolution_clock::now();
-  // ////////////////////////////////////////
-  
   int i,j,node0,now,pre,num;
   std::pair<int,int> neighOf;
 
@@ -474,28 +250,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
       m.mP.setRow(i);
     }
   }
-
-
-  // ////////////////////////////////////////
-  // tock=std::chrono::high_resolution_clock::now();
-  // diff=std::chrono::milliseconds::zero();
-  // diff += std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tock.time_since_epoch());
-  // diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-  //   (tick.time_since_epoch());
-  // updTime+=diff;
-  // ////////////////////////////////////////
-
-  
-  // ////////////////////////////////////////
-  // double total;
-  // total = (double(updTime.count()))/(double(timeReps));
-  // printf("  updTime: % 20.10f \n",total);
-  // fflush(stdout);
-  // std::cout << std::string(40,'-') << std::endl	<< std::endl;
-  // ////////////////////////////////////////
-
-
   getFeatures(sD,tD,fD,dD,m);
 }
 

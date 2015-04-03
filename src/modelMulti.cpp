@@ -65,7 +65,16 @@ MultiModel::fit(const SimData & sD, const TrtData & tD,
 }
 
 
+int MultiModel::size(){
+  return int(m.size());
+}
+
 
 void MultiModel::modSel(const int & ind){
   this->ind = ind;
+}
+
+
+BaseModel * MultiModel::operator[](const int i){
+  return m.at(i);
 }

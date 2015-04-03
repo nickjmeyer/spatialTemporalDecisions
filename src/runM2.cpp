@@ -1,5 +1,5 @@
 #include "runM2.hpp"
-
+ 
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
@@ -23,9 +23,7 @@ int main(int argc, char ** argv){
   s.modelGen.fitType = MLE;
   s.modelEst.fitType = MLE;
 
-  // int numReps = 96;
-  int numReps = 4;
-  omp_set_num_threads(2);
+  int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
 
   RA ra; // running at the good starting weights

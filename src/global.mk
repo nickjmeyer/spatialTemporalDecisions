@@ -14,6 +14,7 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
+	toyFeatures2Multi.o \
 	model.o modelParam.o \
 	modelGravityTimeInf.o modelParamGravityTimeInf.o \
 	modelGravityTimeInfExp.o modelParamGravityTimeInfExp.o \

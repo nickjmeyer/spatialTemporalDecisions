@@ -10,7 +10,6 @@
 #include "modelParamGravityTimeInf.hpp"
 #include "modelParamGravityTimeInfExp.hpp"
 #include "modelParamGravityTimeInfExpCaves.hpp"
-#include "modelParamEbola.hpp"
 #include "modelParamRange.hpp"
 #include "modelParamRadius.hpp"
 #include "modelParamCave.hpp"

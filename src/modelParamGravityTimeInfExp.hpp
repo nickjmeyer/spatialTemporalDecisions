@@ -36,6 +36,12 @@ class GravityTimeInfExpParam : public BaseParam {
   virtual void setRow(const int r);
   virtual void setCol(const int c);
   virtual void setInd(const int r, const int c);
+
+  virtual double & getTrtAct(){return trtAct;}
+  virtual double & getTrtPre(){return trtPre;}
+  virtual arma::mat & getBase(){return infProbsBase;}
+  virtual arma::mat & getSep(){return infProbsSep;}
+  
 };
 
 
