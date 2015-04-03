@@ -119,15 +119,21 @@ GravityTimeInfExpCavesModel::oneOnOne(const int notNode,
 
 void
 GravityTimeInfExpCavesModel::fit(const SimData & sD, const TrtData & tD,
-				 const FixedData & fD, const DynamicData & dD){
-  GravityTimeInfExpCavesParam mPInit;
-  std::vector<double> par;
-  int i;
-  for(i=0; i<(6+fD.numCovar); i++)
-    par.push_back(0);
-  mPInit.putPar(par);
-  mPInit.intcp=-3.0;
-  fit(sD,tD,fD,dD,mPInit.getPar());
+				 const FixedData & fD, const DynamicData & dD,
+				 const int & useInit){
+  if(useInit){
+    fit(sD,tD,fD,dD,mP.getPar());
+  }
+  else{
+    GravityTimeInfExpCavesParam mPInit;
+    std::vector<double> par;
+    int i;
+    for(i=0; i<(6+fD.numCovar); i++)
+      par.push_back(0);
+    mPInit.putPar(par);
+    mPInit.intcp=-3.0;
+    fit(sD,tD,fD,dD,mPInit.getPar());
+  }
 }
 
 void GravityTimeInfExpCavesModel::fit(const SimData & sD, const TrtData & tD,

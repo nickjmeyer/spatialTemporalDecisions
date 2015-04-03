@@ -1,10 +1,63 @@
 #include "model.hpp"
 
 
+void BaseModel::load(const SimData & sD,
+		     const TrtData & tD,
+		     const FixedData & fD,
+		     const DynamicData & dD) {
+  std::cout << "Base" << std::endl;
+  throw(1);
+}
+
+
+void BaseModel::infProbs(const SimData & sD,
+			 const TrtData & tD,
+			 const FixedData & fD,
+			 const DynamicData & dD){
+  throw(1);
+}
+
+
+
+void BaseModel::update(const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD){
+  throw(1);
+}
+
+
+double BaseModel::oneOnOne(const int notNode,
+			   const int infNode,
+			   const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD) const {
+  throw(1);
+  return 0.0;
+}
+
+
+
+void BaseModel::fit(const SimData & sD, const TrtData & tD,
+		    const FixedData & fD, const DynamicData & dD,
+		    const int & useInit){
+  throw(1);
+}
+
+
+
+void BaseModel::setType(const Estimation & est){
+  fitType = est;
+}
+
+
 void GravityModel::load(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD) {
+  std::cout << "Gravity" << std::endl;
+  
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -116,6 +169,9 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
 		       const int & useInit){
   if(useInit){
+    fit(sD,tD,fD,dD,mP.getPar());
+  }
+  else{
     GravityParam mPInit;
     std::vector<double> par;
     int i;
@@ -124,9 +180,6 @@ void GravityModel::fit(const SimData & sD, const TrtData & tD,
     mPInit.putPar(par);
     mPInit.intcp=-3.0;
     fit(sD,tD,fD,dD,mPInit.getPar());
-  }
-  else{
-    fit(sD,tD,fD,dD,mP.getPar());
   }
 }
 

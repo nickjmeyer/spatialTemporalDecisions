@@ -31,8 +31,6 @@ class GravityTimeInfSqrtModel : public BaseModel<GravityTimeInfSqrtParam> {
 
   GravityTimeInfSqrtMcmc mcmc;
 
-  Estimation fitType;
-  
 
   double tuneTrt(const FixedData & fD, const GravityTimeInfSqrtParam & gP);
 };

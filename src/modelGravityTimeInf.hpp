@@ -36,7 +36,8 @@ class GravityTimeInfModel : public BaseModel {
 			  const DynamicData & dD) const;
 
   virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD);
+		   const FixedData & fD, const DynamicData & dD,
+		   const int & useInit);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -46,8 +47,6 @@ class GravityTimeInfModel : public BaseModel {
   
   GravityTimeInfMcmc mcmc;
 
-  Estimation fitType;
-  
 
   double tuneTrt(const FixedData & fD);
 };

@@ -42,8 +42,7 @@ class M2SaEvalTunePar : public TuneParam{
 
 
 
-template <class S, class A, class F,
-	  class M, class MP>
+template <class S, class A, class F, class M>
 class M2SaEval {
  public:
 
@@ -51,7 +50,7 @@ class M2SaEval {
 
   double qFn(const SimData & sD, TrtData & tD,
 	     const FixedData & fD, const DynamicData & dD,
-	     const M & m, MP & mP,
+	     M & m,
 	     A a);
   
   double bellRes();
@@ -68,15 +67,13 @@ class M2SaEval {
 		      const TrtData & tD,
 		      const FixedData & fD,
 		      const DynamicData & dD,
-		      const M & m,
-		      MP & mP);
+		      M & m);
 
   // policy generated data for bellman residual
   // sets D1
   void bellResPolData(const int time,
 		      const FixedData & fD,
-		      const M & m,
-  		      MP & mP,
+		      M & m,
   		      A a);
   
   // builds the spatial penalty
@@ -113,16 +110,15 @@ class M2SaEval {
 
 
 
-template <class S, class A, class F,
-	  class M,class MP>
-class M2SaOptim : BaseOptim<S,A,M,MP> {
+template <class S, class A, class F, class M>
+class M2SaOptim : BaseOptim<S,A,M> {
  public:
   M2SaOptim();
   
   virtual void optim(const S & system,
 		     A & agent);
   
-  M2SaEval<System<M,MP,M,MP>,A,F,M,MP> qEval;
+  M2SaEval<System<M,M>,A,F,M> qEval;
   
   std::string name;
 };

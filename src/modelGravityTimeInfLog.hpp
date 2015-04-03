@@ -31,8 +31,6 @@ class GravityTimeInfLogModel : public BaseModel<GravityTimeInfLogParam> {
 
   GravityTimeInfLogMcmc mcmc;
 
-  Estimation fitType;
-  
 
   double tuneTrt(const FixedData & fD, const GravityTimeInfLogParam & gP);
 };

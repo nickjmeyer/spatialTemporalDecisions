@@ -5,6 +5,8 @@ void GravityTimeInfModel::load(const SimData & sD,
 			       const TrtData & tD,
 			       const FixedData & fD,
 			       const DynamicData & dD) {
+  std::cout << "Time Inf" << std::endl;
+  
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
 
@@ -115,15 +117,21 @@ double GravityTimeInfModel::oneOnOne(const int notNode,
 
 
 void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,
-			      const FixedData & fD, const DynamicData & dD){
-  GravityTimeInfParam mPInit;
-  std::vector<double> par;
-  int i;
-  for(i=0; i<(6+fD.numCovar); i++)
-    par.push_back(0);
-  mPInit.putPar(par);
-  mPInit.intcp=-3.0;
-  fit(sD,tD,fD,dD,mPInit.getPar());
+			      const FixedData & fD, const DynamicData & dD,
+			      const int & useInit){
+  if(useInit){
+    fit(sD,tD,fD,dD,mP.getPar());
+  }
+  else{
+    GravityTimeInfParam mPInit;
+    std::vector<double> par;
+    int i;
+    for(i=0; i<(6+fD.numCovar); i++)
+      par.push_back(0);
+    mPInit.putPar(par);
+    mPInit.intcp=-3.0;
+    fit(sD,tD,fD,dD,mPInit.getPar());
+  }
 }
 
 void GravityTimeInfModel::fit(const SimData & sD, const TrtData & tD,

@@ -22,7 +22,7 @@
 #include "modelGravityTimeInfExp.hpp"
 #include "modelGravityTimeInfExpCaves.hpp"
 #include "modelParamEbola.hpp"
-#include "modelEbola.hpp"
+#include "modelMulti.hpp"
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"

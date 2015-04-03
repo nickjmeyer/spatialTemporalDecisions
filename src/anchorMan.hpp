@@ -30,21 +30,20 @@ class AnchorManTunePar : public TuneParam {
 };
 
 
-template <class S, class A, class F,
-	  class M, class MP>
-class AnchorMan : BaseOptim<S,A,M,MP> {
+template <class S, class A, class F, class M>
+class AnchorMan : BaseOptim<S,A,M> {
  public:
   AnchorMan();
 
-  M1SgdOptim<System<M,MP,M,MP>,A,M,MP> m1Opt;
-  M2SaOptim<System<M,MP,M,MP>,A,F,M,MP> m2Opt;
+  M1SgdOptim<System<M,M>,A,M> m1Opt;
+  M2SaOptim<System<M,M>,A,F,M> m2Opt;
 
   std::vector<double> m1W,m2W;
 
   virtual void optim(const S & system,
 		     A & agent);
 
-  int toSwitch(System<M,MP,M,MP> & system,
+  int toSwitch(System<M,M> & system,
 	       A & agent, const int T);
   
   AnchorManTunePar tp;

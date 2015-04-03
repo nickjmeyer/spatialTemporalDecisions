@@ -21,7 +21,7 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	modelRange.o modelParamRange.o \
 	modelRadius.o modelParamRadius.o \
 	modelCave.o modelParamCave.o \
-	modelMulti.o modelParamMulti.o \
+	modelMulti.o \
 	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfSq.o \

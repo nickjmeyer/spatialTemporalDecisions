@@ -48,69 +48,41 @@ TrainRunner<S,A>
 // 				     GravityTimeInfModel,GravityTimeInfParam> >;
 
 template class PlainRunner<System<GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam,
-				  GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam>,
-			   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-						  GravityTimeInfExpCavesParam>,
-				     GravityTimeInfExpCavesModel,
-				     GravityTimeInfExpCavesParam> >;
+				  GravityTimeInfExpCavesModel>,
+			   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				     GravityTimeInfExpCavesModel> >;
 
 
 template class PlainRunner<System<GravityTimeInfExpModel,
-				  GravityTimeInfExpParam,
-				  GravityTimeInfExpModel,
-				  GravityTimeInfExpParam>,
-			   RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-						  GravityTimeInfExpParam>,
-				     GravityTimeInfExpModel,
-				     GravityTimeInfExpParam> >;
+				  GravityTimeInfExpModel>,
+			   RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+				     GravityTimeInfExpModel> >;
 
 
 template class PlainRunner<System<GravityTimeInfModel,
-				  GravityTimeInfParam,
-				  GravityTimeInfModel,
-				  GravityTimeInfParam>,
-			   RankAgent<ToyFeatures2<GravityTimeInfModel,
-						  GravityTimeInfParam>,
-				     GravityTimeInfModel,
-				     GravityTimeInfParam> >;
+				  GravityTimeInfModel>,
+			   RankAgent<ToyFeatures2<GravityTimeInfModel>,
+				     GravityTimeInfModel> >;
 
 template class PlainRunner<System<GravityModel,
-				  GravityParam,
-				  GravityModel,
-				  GravityParam>,
-			   RankAgent<ToyFeatures2<GravityModel,
-						  GravityParam>,
-				     GravityModel,
-				     GravityParam> >;
+				  GravityModel>,
+			   RankAgent<ToyFeatures2<GravityModel>,
+				     GravityModel> >;
 
 template class PlainRunner<System<RangeModel,
-				  RangeParam,
-				  RangeModel,
-				  RangeParam>,
-			   RankAgent<ToyFeatures2<RangeModel,
-						  RangeParam>,
-				     RangeModel,
-				     RangeParam> >;
+				  RangeModel>,
+			   RankAgent<ToyFeatures2<RangeModel>,
+				     RangeModel> >;
 
 template class PlainRunner<System<RadiusModel,
-				  RadiusParam,
-				  RadiusModel,
-				  RadiusParam>,
-			   RankAgent<ToyFeatures2<RadiusModel,
-						  RadiusParam>,
-				     RadiusModel,
-				     RadiusParam> >;
+				  RadiusModel>,
+			   RankAgent<ToyFeatures2<RadiusModel>,
+				     RadiusModel> >;
 
 template class PlainRunner<System<CaveModel,
-				  CaveParam,
-				  CaveModel,
-				  CaveParam>,
-			   RankAgent<ToyFeatures2<CaveModel,
-						  CaveParam>,
-				     CaveModel,
-				     CaveParam> >;
+				  CaveModel>,
+			   RankAgent<ToyFeatures2<CaveModel>,
+				     CaveModel> >;
 
 
 
@@ -129,15 +101,15 @@ PlainRunner<S,A>
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
       
-      system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
-      system.paramEst_r.putPar(system.modelGen.mcmc.samples.getPar());
+      system.modelGen_r.mP.putPar(system.modelGen.mcmc.samples.getPar());
+      system.modelEst_r.mP.putPar(system.modelGen.mcmc.samples.getPar());
     }
     
     system.revert();
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -163,7 +135,7 @@ PlainRunner<S,A>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       system.updateStatus();
       
       system.nextPoint();
@@ -180,29 +152,17 @@ PlainRunner<S,A>
 
 
 template class VanillaRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam>,
-			     NoTrt<GravityTimeInfExpCavesModel,
-				   GravityTimeInfExpCavesParam> >;
+				    GravityTimeInfExpCavesModel>,
+			     NoTrt<GravityTimeInfExpCavesModel> >;
 template class VanillaRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    RadiusModel,
-				    RadiusParam>,
-			     NoTrt<RadiusModel,
-				   RadiusParam> >;
+				    RadiusModel>,
+			     NoTrt<RadiusModel> >;
 template class VanillaRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam>,
-			     ProximalAgent<GravityTimeInfExpCavesModel,
-					   GravityTimeInfExpCavesParam> >;
+				    GravityTimeInfExpCavesModel>,
+			     ProximalAgent<GravityTimeInfExpCavesModel> >;
 template class VanillaRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    RadiusModel,
-				    RadiusParam>,
-			     ProximalAgent<RadiusModel,
-					   RadiusParam> >;
+				    RadiusModel>,
+			     ProximalAgent<RadiusModel> >;
 
 
 
@@ -234,7 +194,7 @@ VanillaRunner<S,A>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       
       system.updateStatus();
       
@@ -267,73 +227,60 @@ VanillaRunner<S,A>
 
 
 
-template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				      GravityModel,GravityParam>,
-			       NoTrt<GravityModel,GravityParam> >;
-template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
-				      GravityTimeInfModel,GravityTimeInfParam>,
-			       NoTrt<GravityTimeInfModel,GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityModel,
+				      GravityModel>,
+			       NoTrt<GravityModel> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,
+				      GravityTimeInfModel>,
+			       NoTrt<GravityTimeInfModel> >;
 template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam,
-				      GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam>,
-			       NoTrt<GravityTimeInfExpCavesModel,
-				     GravityTimeInfExpCavesParam> >;
+				      GravityTimeInfExpCavesModel>,
+			       NoTrt<GravityTimeInfExpCavesModel> >;
 
-template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				      GravityModel,GravityParam>,
-			       RandomAgent<GravityModel,GravityParam> >;
 
-template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				      GravityModel,GravityParam>,
-			       ProximalAgent<GravityModel,GravityParam> >;
-template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
-				      GravityTimeInfModel,GravityTimeInfParam>,
-			       ProximalAgent<GravityTimeInfModel,
-					     GravityTimeInfParam> >;
+template class VanillaRunnerNS<System<GravityModel,
+				      GravityModel>,
+			       RandomAgent<GravityModel> >;
+
+
+template class VanillaRunnerNS<System<GravityModel,
+				      GravityModel>,
+			       ProximalAgent<GravityModel> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,
+				      GravityTimeInfModel>,
+			       ProximalAgent<GravityTimeInfModel> >;
 template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam,
-				      GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam>,
-			       ProximalAgent<GravityTimeInfExpCavesModel,
-					     GravityTimeInfExpCavesParam> >;
+				      GravityTimeInfExpCavesModel>,
+			       ProximalAgent<GravityTimeInfExpCavesModel> >;
 
-template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				      GravityModel,GravityParam>,
-			       MyopicAgent<GravityModel,GravityParam> >;
-template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
-				      GravityTimeInfModel,GravityTimeInfParam>,
-			       MyopicAgent<GravityTimeInfModel,
-					   GravityTimeInfParam> >;
+
+template class VanillaRunnerNS<System<GravityModel,
+				      GravityModel>,
+			       MyopicAgent<GravityModel> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,
+				      GravityTimeInfModel>,
+			       MyopicAgent<GravityTimeInfModel> >;
 template class VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam,
-				      GravityTimeInfExpCavesModel,
-				      GravityTimeInfExpCavesParam>,
-			       MyopicAgent<GravityTimeInfExpCavesModel,
-					   GravityTimeInfExpCavesParam> >;
+				      GravityTimeInfExpCavesModel>,
+			       MyopicAgent<GravityTimeInfExpCavesModel> >;
+
+
+template class VanillaRunnerNS<System<GravityModel,
+				      GravityModel>,
+			       RankAgent<ToyFeatures2<GravityModel>,
+					 GravityModel> >;
+template class VanillaRunnerNS<System<GravityTimeInfModel,
+				      GravityTimeInfModel>,
+			       RankAgent<ToyFeatures2<GravityTimeInfModel>,
+					 GravityTimeInfModel> >;
 
 
 
-template class VanillaRunnerNS<System<GravityModel,GravityParam,
-				      GravityModel,GravityParam>,
-			       RankAgent<ToyFeatures2<GravityModel,
-						      GravityParam>,
-					 GravityModel,GravityParam> >;
-template class VanillaRunnerNS<System<GravityTimeInfModel,GravityTimeInfParam,
-				      GravityTimeInfModel,GravityTimeInfParam>,
-			       RankAgent<ToyFeatures2<GravityTimeInfModel,
-						      GravityTimeInfParam>,
-					 GravityTimeInfModel,
-					 GravityTimeInfParam> >;
 template class
 VanillaRunnerNS<System<GravityTimeInfExpCavesModel,
-		       GravityTimeInfExpCavesParam,
-		       GravityTimeInfExpCavesModel,
-		       GravityTimeInfExpCavesParam>,
-		RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				       GravityTimeInfExpCavesParam>,
-			  GravityTimeInfExpCavesModel,
-			  GravityTimeInfExpCavesParam> >;
+		       GravityTimeInfExpCavesModel>,
+		RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			  GravityTimeInfExpCavesModel> >;
 
 
 
@@ -358,7 +305,7 @@ VanillaRunnerNS<S,A>
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       
       system.updateStatus();
       
@@ -380,82 +327,54 @@ VanillaRunnerNS<S,A>
 
 
 
-template class FitOnlyRunner<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     MyopicAgent<GravityModel,GravityParam> >;
+template class FitOnlyRunner<System<GravityModel,
+				    GravityModel>,
+			     MyopicAgent<GravityModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam>,
-			     MyopicAgent<GravityTimeInfExpCavesModel,
-					 GravityTimeInfExpCavesParam> >;
+				    GravityTimeInfExpCavesModel>,
+			     MyopicAgent<GravityTimeInfExpCavesModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityTimeInfExpModel,
-				    GravityTimeInfExpParam>,
-			     MyopicAgent<GravityTimeInfExpModel,
-					 GravityTimeInfExpParam> >;
+				    GravityTimeInfExpModel>,
+			     MyopicAgent<GravityTimeInfExpModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityTimeInfModel,
-				    GravityTimeInfParam>,
-			     MyopicAgent<GravityTimeInfModel,
-					 GravityTimeInfParam> >;
+				    GravityTimeInfModel>,
+			     MyopicAgent<GravityTimeInfModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    GravityModel,
-				    GravityParam>,
-			     MyopicAgent<GravityModel,
-					 GravityParam> >;
+				    GravityModel>,
+			     MyopicAgent<GravityModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    RangeModel,
-				    RangeParam>,
-			     MyopicAgent<RangeModel,
-					 RangeParam> >;
+				    RangeModel>,
+			     MyopicAgent<RangeModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    RadiusModel,
-				    RadiusParam>,
-			     MyopicAgent<RadiusModel,
-					 RadiusParam> >;
+				    RadiusModel>,
+			     MyopicAgent<RadiusModel> >;
 
 template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfExpCavesParam,
-				    CaveModel,
-				    CaveParam>,
-			     MyopicAgent<CaveModel,
-					 CaveParam> >;
+				    CaveModel>,
+			     MyopicAgent<CaveModel> >;
 
 
-template class FitOnlyRunner<System<GravityModel,GravityParam,
-				    GravityModel,GravityParam>,
-			     RankAgent<ToyFeatures2<GravityModel,
-						    GravityParam>,
-				       GravityModel,GravityParam> >;
-template class FitOnlyRunner<System<GravityTimeInfModel,GravityTimeInfParam,
-				    GravityTimeInfModel,GravityTimeInfParam>,
-			     RankAgent<ToyFeatures2<GravityTimeInfModel,
-						    GravityTimeInfParam>,
-				       GravityTimeInfModel,
-				       GravityTimeInfParam> >;
+template class FitOnlyRunner<System<GravityModel,
+				    GravityModel>,
+			     RankAgent<ToyFeatures2<GravityModel>,
+				       GravityModel> >;
+template class FitOnlyRunner<System<GravityTimeInfModel,
+				    GravityTimeInfModel>,
+			     RankAgent<ToyFeatures2<GravityTimeInfModel>,
+				       GravityTimeInfModel> >;
 
 
 template class
 FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-		     GravityTimeInfExpCavesParam,
-		     GravityTimeInfExpCavesModel,
-		     GravityTimeInfExpCavesParam>,
-	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				     GravityTimeInfExpCavesParam>,
-			GravityTimeInfExpCavesModel,
-			GravityTimeInfExpCavesParam> >;
+		     GravityTimeInfExpCavesModel>,
+	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			GravityTimeInfExpCavesModel> >;
 
 
 
@@ -485,14 +404,13 @@ FitOnlyRunner<S,A>
       valueAll.at(r).push_back(system.value());
     }
     for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart &&
-	 (((t-system.fD.trtStart) % system.fD.period) ==0))
+      if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    system.paramEst);
-      
-      if(t>=system.fD.trtStart)
+			    t == system.fD.trtStart);
+
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
+      }
       
       system.updateStatus();
       
@@ -524,171 +442,118 @@ FitOnlyRunner<S,A>
 
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				   GravityTimeInfExpCavesParam>,
-		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityTimeInfExpCavesModel>,
+	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+		      GravityTimeInfExpCavesModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam>,
-		      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-					     GravityTimeInfExpCavesParam>,
-				GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesParam>,
-		      GravityTimeInfExpCavesModel,
-		      GravityTimeInfExpCavesParam> >;
+			     GravityTimeInfExpCavesModel>,
+		      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				GravityTimeInfExpCavesModel>,
+		      GravityTimeInfExpCavesModel> >;
 
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				   GravityTimeInfExpCavesParam>,
-		      GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityTimeInfExpCavesModel>,
+	    RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+		      GravityTimeInfExpCavesModel>,
 	    M2QOptim<System<GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam,
-			    GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam>,
-		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-					    GravityTimeInfExpCavesParam>,
-			       GravityTimeInfExpCavesModel,
-			       GravityTimeInfExpCavesParam>,
-		     FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel,
-					      GravityTimeInfExpCavesParam>,
-				 GravityTimeInfExpCavesModel,
-				 GravityTimeInfExpCavesParam>,
-		     GravityTimeInfExpCavesModel,
-		     GravityTimeInfExpCavesParam> >;
+			    GravityTimeInfExpCavesModel>,
+		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			       GravityTimeInfExpCavesModel>,
+		     FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				 GravityTimeInfExpCavesModel>,
+		     GravityTimeInfExpCavesModel> >;
 
 
 
 // misspecified
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   GravityTimeInfExpModel,GravityTimeInfExpParam>,
-	    RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-				   GravityTimeInfExpParam>,
-		      GravityTimeInfExpModel,GravityTimeInfExpParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityTimeInfExpModel>,
+	    RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+		      GravityTimeInfExpModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     GravityTimeInfExpModel,
-			     GravityTimeInfExpParam>,
-		      RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-					     GravityTimeInfExpParam>,
-				GravityTimeInfExpModel,
-				GravityTimeInfExpParam>,
-		      GravityTimeInfExpModel,
-		      GravityTimeInfExpParam> >;
+			     GravityTimeInfExpModel>,
+		      RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+				GravityTimeInfExpModel>,
+		      GravityTimeInfExpModel> >;
+
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   GravityTimeInfModel,GravityTimeInfParam>,
-	    RankAgent<ToyFeatures2<GravityTimeInfModel,
-				   GravityTimeInfParam>,
-		      GravityTimeInfModel,GravityTimeInfParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityTimeInfModel>,
+	    RankAgent<ToyFeatures2<GravityTimeInfModel>,
+		      GravityTimeInfModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     GravityTimeInfModel,
-			     GravityTimeInfParam>,
-		      RankAgent<ToyFeatures2<GravityTimeInfModel,
-					     GravityTimeInfParam>,
-				GravityTimeInfModel,
-				GravityTimeInfParam>,
-		      GravityTimeInfModel,
-		      GravityTimeInfParam> >;
+			     GravityTimeInfModel>,
+		      RankAgent<ToyFeatures2<GravityTimeInfModel>,
+				GravityTimeInfModel>,
+		      GravityTimeInfModel> >;
+
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   GravityModel,GravityParam>,
-	    RankAgent<ToyFeatures2<GravityModel,
-				   GravityParam>,
-		      GravityModel,GravityParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityModel>,
+	    RankAgent<ToyFeatures2<GravityModel>,
+		      GravityModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     GravityModel,
-			     GravityParam>,
-		      RankAgent<ToyFeatures2<GravityModel,
-					     GravityParam>,
-				GravityModel,
-				GravityParam>,
-		      GravityModel,
-		      GravityParam> >;
+			     GravityModel>,
+		      RankAgent<ToyFeatures2<GravityModel>,
+				GravityModel>,
+		      GravityModel> >;
+
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   RangeModel,RangeParam>,
-	    RankAgent<ToyFeatures2<RangeModel,
-				   RangeParam>,
-		      RangeModel,RangeParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   RangeModel>,
+	    RankAgent<ToyFeatures2<RangeModel>,
+		      RangeModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     RangeModel,
-			     RangeParam>,
-		      RankAgent<ToyFeatures2<RangeModel,
-					     RangeParam>,
-				RangeModel,
-				RangeParam>,
-		      RangeModel,
-		      RangeParam> >;
+			     RangeModel>,
+		      RankAgent<ToyFeatures2<RangeModel>,
+				RangeModel>,
+		      RangeModel> >;
+
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   RadiusModel,RadiusParam>,
-	    RankAgent<ToyFeatures2<RadiusModel,
-				   RadiusParam>,
-		      RadiusModel,RadiusParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   RadiusModel>,
+	    RankAgent<ToyFeatures2<RadiusModel>,
+		      RadiusModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     RadiusModel,
-			     RadiusParam>,
-		      RankAgent<ToyFeatures2<RadiusModel,
-					     RadiusParam>,
-				RadiusModel,
-				RadiusParam>,
-		      RadiusModel,
-		      RadiusParam> >;
+			     RadiusModel>,
+		      RankAgent<ToyFeatures2<RadiusModel>,
+				RadiusModel>,
+		      RadiusModel> >;
+
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   CaveModel,CaveParam>,
-	    RankAgent<ToyFeatures2<CaveModel,
-				   CaveParam>,
-		      CaveModel,CaveParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   CaveModel>,
+	    RankAgent<ToyFeatures2<CaveModel>,
+		      CaveModel>,
 	    M1SpOptim<System<GravityTimeInfExpCavesModel,
-			     GravityTimeInfExpCavesParam,
-			     CaveModel,
-			     CaveParam>,
-		      RankAgent<ToyFeatures2<CaveModel,
-					     CaveParam>,
-				CaveModel,
-				CaveParam>,
-		      CaveModel,
-		      CaveParam> >;
+			     CaveModel>,
+		      RankAgent<ToyFeatures2<CaveModel>,
+				CaveModel>,
+		      CaveModel> >;
 
 
 
 template class
-OptimRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		   RadiusModel,RadiusParam>,
-	    RankAgent<ToyFeatures2<RadiusModel,
-				   RadiusParam>,
-		      RadiusModel,RadiusParam>,
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   RadiusModel>,
+	    RankAgent<ToyFeatures2<RadiusModel>,
+		      RadiusModel>,
 	    M2QOptim<System<GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam,
-			    RadiusModel,
-			    RadiusParam>,
-		     RankAgent<ToyFeatures2<RadiusModel,
-					    RadiusParam>,
-			       RadiusModel,
-			       RadiusParam>,
-		     FeaturesInt<ToyFeatures2<RadiusModel,
-					      RadiusParam>,
-				 RadiusModel,
-				 RadiusParam>,
-		     RadiusModel,
-		     RadiusParam> >;
+			    RadiusModel>,
+		     RankAgent<ToyFeatures2<RadiusModel>,
+			       RadiusModel>,
+		     FeaturesInt<ToyFeatures2<RadiusModel>,
+				 RadiusModel>,
+		     RadiusModel> >;
 
 
 
@@ -740,20 +605,15 @@ OptimRunner<S,A,Optim>
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
-	if(t==system.fD.trtStart)
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst);
-	else
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst,system.paramEst);
-
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    t==system.fD.trtStart);
 	
 	optim.optim(system,agent);
 	
 	weights.push_back(agent.tp.getPar());
 	
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       }
       
       system.updateStatus();
@@ -834,22 +694,15 @@ OptimRunner<S,A,Optim>
 
 
 template class
-OptimRunnerNS<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				     GravityTimeInfExpCavesParam>,
-			GravityTimeInfExpCavesModel,
-			GravityTimeInfExpCavesParam>,
+OptimRunnerNS<System<GravityTimeInfExpCavesModel,
+		     GravityTimeInfExpCavesModel>,
+	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			GravityTimeInfExpCavesModel>,
 	      M1SpOptim<System<GravityTimeInfExpCavesModel,
-			       GravityTimeInfExpCavesParam,
-			       GravityTimeInfExpCavesModel,
-			       GravityTimeInfExpCavesParam>,
-			RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-					       GravityTimeInfExpCavesParam>,
-				  GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam>,
-			GravityTimeInfExpCavesModel,
-			GravityTimeInfExpCavesParam> >;
+			       GravityTimeInfExpCavesModel>,
+			RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+				  GravityTimeInfExpCavesModel>,
+			GravityTimeInfExpCavesModel> >;
 
 
 
@@ -880,18 +733,13 @@ OptimRunnerNS<S,A,Optim>
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
-	if(t==system.fD.trtStart)
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst);
-	else
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst,system.paramEst);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    t==system.fD.trtStart);
 
-	
 	optim.optim(system,agent);
 	
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       }
       
       system.updateStatus();
@@ -919,92 +767,80 @@ OptimRunnerNS<S,A,Optim>
 
 
 template class
-TuneRunner<System<GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam,
-		  GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
-	   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-				  GravityTimeInfExpCavesParam>,
-		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam>,
+TuneRunner<System<GravityTimeInfExpCavesModel,
+		  GravityTimeInfExpCavesModel>,
+	   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+		     GravityTimeInfExpCavesModel>,
 	   M1SpOptim<System<GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam,
-			    GravityTimeInfExpCavesModel,
-			    GravityTimeInfExpCavesParam>,
-		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel,
-					    GravityTimeInfExpCavesParam>,
-			       GravityTimeInfExpCavesModel,
-			       GravityTimeInfExpCavesParam>,
-		     GravityTimeInfExpCavesModel,GravityTimeInfExpCavesParam> >;
+			    GravityTimeInfExpCavesModel>,
+		     RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
+			       GravityTimeInfExpCavesModel>,
+		     GravityTimeInfExpCavesModel> >;
 
 template class
-TuneRunner<System<GravityTimeInfExpModel,GravityTimeInfExpParam,
-		  GravityTimeInfExpModel,GravityTimeInfExpParam>,
-	   RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-				  GravityTimeInfExpParam>,
-		     GravityTimeInfExpModel,GravityTimeInfExpParam>,
-	   M1SpOptim<System<GravityTimeInfExpModel,GravityTimeInfExpParam,
-			    GravityTimeInfExpModel,GravityTimeInfExpParam>,
-		     RankAgent<ToyFeatures2<GravityTimeInfExpModel,
-					    GravityTimeInfExpParam>,
-			       GravityTimeInfExpModel,GravityTimeInfExpParam>,
-		     GravityTimeInfExpModel,GravityTimeInfExpParam> >;
+TuneRunner<System<GravityTimeInfExpModel,
+		  GravityTimeInfExpModel>,
+	   RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+		     GravityTimeInfExpModel>,
+	   M1SpOptim<System<GravityTimeInfExpModel,
+			    GravityTimeInfExpModel>,
+		     RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
+			       GravityTimeInfExpModel>,
+		     GravityTimeInfExpModel> >;
 
 template class
-TuneRunner<System<GravityTimeInfModel,GravityTimeInfParam,
-		  GravityTimeInfModel,GravityTimeInfParam>,
-	   RankAgent<ToyFeatures2<GravityTimeInfModel,GravityTimeInfParam>,
-		     GravityTimeInfModel,GravityTimeInfParam>,
-	   M1SpOptim<System<GravityTimeInfModel,GravityTimeInfParam,
-			    GravityTimeInfModel,GravityTimeInfParam>,
-		     RankAgent<ToyFeatures2<GravityTimeInfModel,
-					    GravityTimeInfParam>,
-			       GravityTimeInfModel,GravityTimeInfParam>,
-		     GravityTimeInfModel,GravityTimeInfParam> >;
+TuneRunner<System<GravityTimeInfModel,
+		  GravityTimeInfModel>,
+	   RankAgent<ToyFeatures2<GravityTimeInfModel>,
+		     GravityTimeInfModel>,
+	   M1SpOptim<System<GravityTimeInfModel,
+			    GravityTimeInfModel>,
+		     RankAgent<ToyFeatures2<GravityTimeInfModel>,
+			       GravityTimeInfModel>,
+		     GravityTimeInfModel> >;
 
 template class
-TuneRunner<System<GravityModel,GravityParam,
-		  GravityModel,GravityParam>,
-	   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-		     GravityModel,GravityParam>,
-	   M1SpOptim<System<GravityModel,GravityParam,
-			    GravityModel,GravityParam>,
-		     RankAgent<ToyFeatures2<GravityModel,
-					    GravityParam>,
-			       GravityModel,GravityParam>,
-		     GravityModel,GravityParam> >;
+TuneRunner<System<GravityModel,
+		  GravityModel>,
+	   RankAgent<ToyFeatures2<GravityModel>,
+		     GravityModel>,
+	   M1SpOptim<System<GravityModel,
+			    GravityModel>,
+		     RankAgent<ToyFeatures2<GravityModel>,
+			       GravityModel>,
+		     GravityModel> >;
 template class
-TuneRunner<System<RangeModel,RangeParam,
-		  RangeModel,RangeParam>,
-	   RankAgent<ToyFeatures2<RangeModel,RangeParam>,
-		     RangeModel,RangeParam>,
-	   M1SpOptim<System<RangeModel,RangeParam,
-			    RangeModel,RangeParam>,
-		     RankAgent<ToyFeatures2<RangeModel,
-					    RangeParam>,
-			       RangeModel,RangeParam>,
-		     RangeModel,RangeParam> >;
+TuneRunner<System<RangeModel,
+		  RangeModel>,
+	   RankAgent<ToyFeatures2<RangeModel>,
+		     RangeModel>,
+	   M1SpOptim<System<RangeModel,
+			    RangeModel>,
+		     RankAgent<ToyFeatures2<RangeModel>,
+			       RangeModel>,
+		     RangeModel> >;
 
 template class
-TuneRunner<System<RadiusModel,RadiusParam,
-		  RadiusModel,RadiusParam>,
-	   RankAgent<ToyFeatures2<RadiusModel,RadiusParam>,
-		     RadiusModel,RadiusParam>,
-	   M1SpOptim<System<RadiusModel,RadiusParam,
-			    RadiusModel,RadiusParam>,
-		     RankAgent<ToyFeatures2<RadiusModel,
-					    RadiusParam>,
-			       RadiusModel,RadiusParam>,
-		     RadiusModel,RadiusParam> >;
+TuneRunner<System<RadiusModel,
+		  RadiusModel>,
+	   RankAgent<ToyFeatures2<RadiusModel>,
+		     RadiusModel>,
+	   M1SpOptim<System<RadiusModel,
+			    RadiusModel>,
+		     RankAgent<ToyFeatures2<RadiusModel>,
+			       RadiusModel>,
+		     RadiusModel> >;
 
 template class
-TuneRunner<System<CaveModel,CaveParam,
-		  CaveModel,CaveParam>,
-	   RankAgent<ToyFeatures2<CaveModel,CaveParam>,
-		     CaveModel,CaveParam>,
-	   M1SpOptim<System<CaveModel,CaveParam,
-			    CaveModel,CaveParam>,
-		     RankAgent<ToyFeatures2<CaveModel,
-					    CaveParam>,
-			       CaveModel,CaveParam>,
-		     CaveModel,CaveParam> >;
+TuneRunner<System<CaveModel,
+		  CaveModel>,
+	   RankAgent<ToyFeatures2<CaveModel>,
+		     CaveModel>,
+	   M1SpOptim<System<CaveModel,
+			    CaveModel>,
+		     RankAgent<ToyFeatures2<CaveModel>,
+			       CaveModel>,
+		     CaveModel> >;
 
 
 
@@ -1022,7 +858,7 @@ TuneRunner<S,A,Optim>
   for(r=0; r<numReps; r++){
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
-      system.paramGen_r.putPar(system.modelGen.mcmc.samples.getPar());
+      system.modelGen_r.mP.putPar(system.modelGen.mcmc.samples.getPar());
     }
     system.revert();
     agent.tp.weights.ones();
@@ -1032,17 +868,13 @@ TuneRunner<S,A,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       
       if(t>=system.fD.trtStart){
-	if(t==system.fD.trtStart)
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst);
-	else
-	  system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			      system.paramEst,system.paramEst);
+	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    t==system.fD.trtStart);
 	  
 	optim.optim(system,agent);
 
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
+		       system.modelEst);
       }
       
       system.updateStatus();

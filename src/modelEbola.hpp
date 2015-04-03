@@ -46,8 +46,6 @@ class EbolaModel {
   void fit(const SimData & sD, const TrtData & tD,
 	   const FixedData & fD, const DynamicData & dD,
 	   EbolaParam & mP, const EbolaParam & mPInit);
-
-  Estimation fitType;
 };
 
 

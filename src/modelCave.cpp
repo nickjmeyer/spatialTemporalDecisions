@@ -94,16 +94,22 @@ double CaveModel::oneOnOne(const int notNode,
 
 
 void CaveModel::fit(const SimData & sD, const TrtData & tD,
-		    const FixedData & fD, const DynamicData & dD){
-  CaveParam mPInit;
-  std::vector<double> par;
-  par.push_back(-3.0);
-  par.push_back(0.0);
-  par.push_back(0.0);
-  par.push_back(0.0);
+		    const FixedData & fD, const DynamicData & dD,
+		    const int & useInit){
+  if(useInit){
+    fit(sD,tD,fD,dD,mP.getPar());
+  }
+  else{
+    CaveParam mPInit;
+    std::vector<double> par;
+    par.push_back(-3.0);
+    par.push_back(0.0);
+    par.push_back(0.0);
+    par.push_back(0.0);
   
-  mPInit.putPar(par);
-  fit(sD,tD,fD,dD,mPInit.getPar());
+    mPInit.putPar(par);
+    fit(sD,tD,fD,dD,mPInit.getPar());
+  }
 }
 
 void CaveModel::fit(const SimData & sD, const TrtData & tD,

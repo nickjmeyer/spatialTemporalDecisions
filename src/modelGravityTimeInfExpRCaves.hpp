@@ -33,8 +33,6 @@ GravityTimeInfExpRCavesModel : public BaseModel<GravityTimeInfExpRCavesParam> {
 
   GravityTimeInfExpRCavesMcmc mcmc;
 
-  Estimation fitType;
-  
 
   double tuneTrt(const FixedData & fD, const GravityTimeInfExpRCavesParam & gP);
 };

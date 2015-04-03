@@ -37,7 +37,8 @@ class RangeModel : public BaseModel {
 			  const DynamicData & dD) const;
 
   virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD);
+		   const FixedData & fD, const DynamicData & dD,
+		   const int & useInit);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -46,8 +47,6 @@ class RangeModel : public BaseModel {
   RangeParam mP;
   
   RangeMcmc mcmc;
-
-  Estimation fitType;
 };
 
 
