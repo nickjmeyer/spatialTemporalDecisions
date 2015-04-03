@@ -24,7 +24,7 @@ int main(int argc, char ** argv){
   s.modelEst.fitType = MLE;
 
   // int numReps = 96;
-  int numReps = 4;
+  int numReps = 8;
   Starts starts(numReps,s.fD.numNodes);
 
   RA ra; // running at the good starting weights

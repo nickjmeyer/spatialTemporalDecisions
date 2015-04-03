@@ -24,7 +24,8 @@ int main(int argc, char ** argv){
   s.modelEst.fitType = MLE;
 
   // int numReps = 96;
-  int numReps = 3;
+  int numReps = 4;
+  omp_set_num_threads(2);
   Starts starts(numReps,s.fD.numNodes);
 
   RA ra; // running at the good starting weights
