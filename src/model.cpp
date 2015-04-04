@@ -6,6 +6,16 @@ void BaseModel::setType(const Estimation & est){
 }
 
 
+Estimation BaseModel::getType() const{
+  return fitType;
+}
+
+
+Estimation & BaseModel::getType() {
+  return fitType;
+}
+
+
 void GravityModel::load(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,

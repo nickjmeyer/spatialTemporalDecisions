@@ -21,7 +21,10 @@ class
 MultiModel : public BaseModel {
  public:
   MultiModel();
+  MultiModel(const MultiModel & mm);
   ~MultiModel();
+
+  MultiModel & operator=(const MultiModel & mm);
   
   virtual void load(const SimData & sD,
 		    const TrtData & tD,
@@ -50,11 +53,19 @@ MultiModel : public BaseModel {
 
   virtual BaseParam * getPar(){return m.at(ind)->getPar();}
 
-  int size();
-  void modSel(const int & ind);
-  int ind;
+  virtual void setType(const Estimation & est);
+
+  void fill();
 
   BaseModel * operator[](const int i);
+
+  int size();
+  void modSel(const int & ind);
+
+  
+  static int numModels;
+
+  int ind;
 
   std::vector<BaseModel *> m;
 };

@@ -6,11 +6,11 @@ int main(int argc, char ** argv){
 
   typedef GravityTimeInfExpCavesModel MG;
   
-  typedef RadiusModel ME;
+  typedef MultiModel ME;
 
   typedef System<MG,ME> S;
 
-  typedef ToyFeatures2<ME> F;
+  typedef ToyFeatures2Multi<ME> F;
   typedef FeaturesInt<F,ME> FI;
   typedef RankAgent<F,ME> RA;
 
@@ -20,13 +20,12 @@ int main(int argc, char ** argv){
 
 
   S s;
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
+  s.modelGen.setType(MLE);
+  s.modelEst.setType(MLE);
 
-  // int numReps = 96;
-  int numReps = 8;
+  int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
-
+ 
   RA ra; // running at the good starting weights
 
   ra.tp.weights_r.zeros(ra.f.numFeatures);

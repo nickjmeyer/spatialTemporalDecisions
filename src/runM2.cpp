@@ -20,8 +20,8 @@ int main(int argc, char ** argv){
 
 
   S s;
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
+  s.modelGen.setType(MLE);
+  s.modelEst.setType(MLE);
 
   int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);

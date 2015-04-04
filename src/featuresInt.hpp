@@ -5,6 +5,7 @@
 #include "toyFeatures0.hpp"
 #include "toyFeatures1.hpp"
 #include "toyFeatures2.hpp"
+#include "toyFeatures2Multi.hpp"
 
 template <class F, class M>
 class FeaturesInt {

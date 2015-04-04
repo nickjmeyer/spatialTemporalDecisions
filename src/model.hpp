@@ -55,6 +55,8 @@ class BaseModel {
   virtual BaseParam * getPar() = 0;
 
   virtual void setType(const Estimation & est);
+  virtual Estimation getType() const;
+  virtual Estimation & getType();
 
   Estimation fitType;
 };
@@ -94,7 +96,7 @@ class GravityModel : public BaseModel {
 		   const std::vector<double> & mPV);
   
   virtual BaseParam * getPar(){return & mP;}
-  
+
   GravityParam mP;
 
   GravityMcmc mcmc;

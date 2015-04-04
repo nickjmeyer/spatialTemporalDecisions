@@ -21,6 +21,11 @@ template class System<GravityTimeInfExpCavesModel,
 template class System<GravityTimeInfExpCavesModel,
 		      CaveModel>;
 
+template class System<GravityTimeInfExpCavesModel,
+		      MultiModel>;
+
+
+
 template class System<GravityTimeInfExpModel,
 		      GravityTimeInfExpModel>;
 
@@ -39,6 +44,8 @@ template class System<RadiusModel,
 template class System<CaveModel,
 		      CaveModel>;
 
+template class System<MultiModel,
+		      MultiModel>;
 
 
 template <class MG,
@@ -277,10 +284,10 @@ void System<MG,
 
   preCompData();
 
-  modelEst.fitType = MCMC;
-  modelGen.fitType = MCMC;
+  modelGen.setType(MCMC);
+  modelEst.setType(MCMC);
 
-  modelGen_r.mP.load();
+  modelGen_r.getPar()->load();
 }
 
 
@@ -373,7 +380,7 @@ template <class MG,
 void System<MG,
 	    ME>::nextPoint(){
   modelGen.infProbs(sD,tD,fD,dD);
-  nextPoint(modelGen.mP.infProbs);
+  nextPoint(modelGen.getPar()->getInfProbs());
 }
 
 

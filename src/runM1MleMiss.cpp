@@ -5,27 +5,25 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   typedef GravityTimeInfExpCavesModel MG;
-  typedef GravityTimeInfExpCavesParam PG;
   
   typedef RadiusModel ME;
-  typedef RadiusParam PE;
 
-  typedef System<MG,PG,ME,PE> S;
+  typedef System<MG,ME> S;
 
-  typedef MyopicAgent<ME,PE> MA;
+  typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures2<ME,PE> F;
-  typedef RankAgent<F,ME,PE> RA;
+  typedef ToyFeatures2<ME> F;
+  typedef RankAgent<F,ME> RA;
 
-  typedef M1SpOptim<S,RA,ME,PE> SPO;
+  typedef M1SpOptim<S,RA,ME> SPO;
 
   typedef FitOnlyRunner<S,MA> R_MA;
   typedef OptimRunner<S,RA,SPO> R_RA;
 
 
   S s;
-  s.modelGen.fitType = MLE;
-  s.modelEst.fitType = MLE;
+  s.modelGen.setType(MLE);
+  s.modelEst.setType(MLE);
 
   int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);

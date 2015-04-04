@@ -33,6 +33,7 @@ class RadiusParam : public BaseParam {
   virtual void setCol(const int c);
   virtual void setInd(const int r, const int c);
 
+  virtual std::vector<double> & getInfProbs(){return infProbs;}
   virtual double & getTrtAct(){return trtAct;}
   virtual double & getTrtPre(){return trtPre;}
   virtual arma::mat & getBase(){return infProbsBase;}

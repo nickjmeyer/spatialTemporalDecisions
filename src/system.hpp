@@ -20,6 +20,7 @@
 #include "modelRange.hpp"
 #include "modelRadius.hpp"
 #include "modelCave.hpp"
+#include "modelMulti.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

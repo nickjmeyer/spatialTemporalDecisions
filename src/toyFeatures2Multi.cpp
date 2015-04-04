@@ -16,7 +16,7 @@ template class ToyFeatures2Multi<MultiModel>;
 
 
 template <class M>
-int ToyFeatures2Multi<M>::numFeatures = 10;
+int ToyFeatures2Multi<M>::numFeatures = M::numModels*3 + 1;
 
 
 template <class M>
@@ -109,6 +109,7 @@ void ToyFeatures2Multi<M>::getFeatures(const SimData & sD,
   int i,j,featNum=0;
   std::vector<int>::const_iterator itD0,itD1,beg;
 
+  arma::colvec infProbs;
   
   for(s = 0; s < S; ++s){ // begin model dependent features
     m.modSel(s);
@@ -117,6 +118,8 @@ void ToyFeatures2Multi<M>::getFeatures(const SimData & sD,
     // probability of infection or infecting
     infFeat.col(featNum) = 1 - arma::prod(m.getPar()->getSep(),1);
     notFeat.col(featNum) = 1 - arma::prod(m.getPar()->getSep(),0).t();
+
+    infProbs = notFeat.col(featNum);
   
     featNum++;
   
@@ -133,11 +136,11 @@ void ToyFeatures2Multi<M>::getFeatures(const SimData & sD,
       for(j = 0; j < num; j++){
 	neigh=notNeigh.at(s).at(i).at(j);
       
-	modProb = 1.0 - notFeat(neigh.first,0);
+	modProb = 1.0 - infProbs(neigh.first);
 	modProb *= 1.0/(1.0 + std::exp(neigh.second));
 	modProbTot += 1.0 - modProb;
       }
-      notFeat(i,featNum) = modProbTot*notFeat(i,0);
+      notFeat(i,featNum) = modProbTot*infProbs(i);
     }
   
     infFeat.col(featNum) = (1.0-m.getPar()->getSep()) * notFeat.col(featNum);
@@ -147,9 +150,9 @@ void ToyFeatures2Multi<M>::getFeatures(const SimData & sD,
   
     // feature 2
     // weighted subgraph connectivity measures
-    notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
+    notFeat.col(featNum) = infProbs % subGraphNotInfec;
 
-    infFeat.col(featNum) = (1.0 - m.getPar()->getSep()) * notFeat.col(0);
+    infFeat.col(featNum) = (1.0 - m.getPar()->getSep()) * infProbs;
 
     featNum++;
 

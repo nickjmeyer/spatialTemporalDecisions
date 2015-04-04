@@ -29,6 +29,7 @@
 #include "rankAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
+#include "toyFeatures2Multi.hpp"
 #include "featuresInt.hpp"
 #include "runner.hpp"
 #include "settings.hpp"

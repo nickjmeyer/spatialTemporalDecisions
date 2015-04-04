@@ -15,6 +15,9 @@ template class FeaturesInt<ToyFeatures2<RadiusModel>,
 template class FeaturesInt<ToyFeatures2<CaveModel>,
 			   CaveModel>;
 
+template class FeaturesInt<ToyFeatures2Multi<MultiModel>,
+			   MultiModel>;
+
 
 template <class F, class M>
 int FeaturesInt<F,M>::numFeatures = F::numFeatures + 1;

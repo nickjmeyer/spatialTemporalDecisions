@@ -561,6 +561,20 @@ OptimRunner<System<GravityTimeInfExpCavesModel,
 		     RadiusModel> >;
 
 
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   MultiModel>,
+	    RankAgent<ToyFeatures2Multi<MultiModel>,
+		      MultiModel>,
+	    M2QOptim<System<GravityTimeInfExpCavesModel,
+			    MultiModel>,
+		     RankAgent<ToyFeatures2Multi<MultiModel>,
+			       MultiModel>,
+		     FeaturesInt<ToyFeatures2Multi<MultiModel>,
+				 MultiModel>,
+		     MultiModel> >;
+
+
 
 
 template <class S, class A, class Optim>

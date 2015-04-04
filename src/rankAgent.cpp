@@ -23,6 +23,10 @@ template class RankAgent<ToyFeatures2<CaveModel>,
 			 CaveModel>;
 
 
+template class RankAgent<ToyFeatures2Multi<MultiModel>,
+			 MultiModel>;
+
+
 
 template <class F, class M>
 RankAgent<F,M>::RankAgent(){

@@ -25,13 +25,8 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	modelMulti.o \
 	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
 	mcmcGravityTimeInf.o \
-	mcmcGravityTimeInfSq.o \
-	mcmcGravityTimeInfSqrt.o \
-	mcmcGravityTimeInfLog.o \
 	mcmcGravityTimeInfExp.o \
 	mcmcGravityTimeInfExpCaves.o \
-	mcmcGravityTimeInfExpLCaves.o \
-	mcmcGravityTimeInfExpRCaves.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

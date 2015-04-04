@@ -12,8 +12,6 @@
 #include "system.hpp"
 #include "modelParam.hpp"
 #include "model.hpp"
-#include "modelParamEbola.hpp"
-#include "modelEbola.hpp"
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"

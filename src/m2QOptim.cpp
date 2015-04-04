@@ -50,6 +50,15 @@ M2QOptim<System<GravityTimeInfExpCavesModel,
 		     RadiusModel>,
 	 RadiusModel>;
 
+template class
+M2QOptim<System<GravityTimeInfExpCavesModel,
+		MultiModel>,
+	 RankAgent<ToyFeatures2Multi<MultiModel>,
+		   MultiModel>,
+	 FeaturesInt<ToyFeatures2Multi<MultiModel>,
+		     MultiModel>,
+	 MultiModel>;
+
 
 
 template <class S, class A, class F,
@@ -89,6 +98,7 @@ optim(const S & system,
   if(system.sD.time < (system.fD.trtStart + 3))
     return;
 
+  // okay to use modelGen here since the generative model is never used
   System<M,M> s(system.sD,system.tD,system.fD,system.dD,
 		system.modelEst,system.modelEst);
 

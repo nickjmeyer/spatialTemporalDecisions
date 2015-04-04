@@ -12,6 +12,7 @@
 #include "tuneParam.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
+#include "toyFeatures2Multi.hpp"
 #include "calcCentrality.hpp"
 
 
