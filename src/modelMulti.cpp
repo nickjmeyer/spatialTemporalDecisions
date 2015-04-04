@@ -51,8 +51,8 @@ void MultiModel::fill(){
   // ***************************************** //
   m.clear();
   m.push_back(new RadiusModel);
-  m.push_back(new RangeModel);
   m.push_back(new CaveModel);
+  // m.push_back(new RangeModel);
 }
 
 
