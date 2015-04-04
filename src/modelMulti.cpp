@@ -15,12 +15,11 @@ MultiModel::MultiModel(){
 MultiModel::MultiModel(const MultiModel & mm){
   fill();
   ind = mm.ind;
-  numModels = mm.numModels;
   setType(mm.getType());
   int s, S = size();
   for(s = 0; s < S; ++s)
     (*m.at(s)) = (*mm.m.at(s));
-
+  
   if(int(m.size()) != numModels){
     std::cout << "MultiMode: number of models is not correct."
 	      << std::endl;
@@ -47,14 +46,14 @@ MultiModel & MultiModel::operator=(const MultiModel & mm){
 
 
 void MultiModel::fill(){
+  // ***************************************** //
+  // make sure to change numModels in hpp file
+  // ***************************************** //
   m.clear();
   m.push_back(new RadiusModel);
   m.push_back(new RangeModel);
   m.push_back(new CaveModel);
 }
-
-
-int MultiModel::numModels = 3;
 
 
 void MultiModel::setType(const Estimation & est){

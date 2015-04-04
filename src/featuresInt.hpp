@@ -30,7 +30,7 @@ class FeaturesInt {
 			      const DynamicData & dD,
 			      M & m);
 
-  static int numFeatures;
+  const static int numFeatures = F::numFeatures + 1;
 
   arma::mat infFeat;
   arma::mat notFeat;

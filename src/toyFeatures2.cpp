@@ -31,10 +31,6 @@ template class ToyFeatures2<CaveModel>;
 
 
 template <class M>
-int ToyFeatures2<M>::numFeatures = 4;
-
-
-template <class M>
 void ToyFeatures2<M>::preCompData(const SimData & sD,
 				  const TrtData & tD,
 				  const FixedData & fD,

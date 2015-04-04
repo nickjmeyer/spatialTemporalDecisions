@@ -52,7 +52,7 @@ class ToyFeatures2Multi : public BaseFeatures<M> {
   arma::mat infFeat;
   arma::mat notFeat;
 
-  static int numFeatures;
+  const static int numFeatures = M::numModels*3 + 1;
 
   ToyFeatures2MultiTuneParam tp;
 

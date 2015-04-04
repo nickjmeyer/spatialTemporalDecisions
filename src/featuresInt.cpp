@@ -20,9 +20,6 @@ template class FeaturesInt<ToyFeatures2Multi<MultiModel>,
 
 
 template <class F, class M>
-int FeaturesInt<F,M>::numFeatures = F::numFeatures + 1;
-
-template <class F, class M>
 void FeaturesInt<F,M>::preCompData(const SimData & sD,
 				   const TrtData & tD,
 				   const FixedData & fD,

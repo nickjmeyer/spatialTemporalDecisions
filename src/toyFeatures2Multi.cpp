@@ -16,10 +16,6 @@ template class ToyFeatures2Multi<MultiModel>;
 
 
 template <class M>
-int ToyFeatures2Multi<M>::numFeatures = M::numModels*3 + 1;
-
-
-template <class M>
 void ToyFeatures2Multi<M>::preCompData(const SimData & sD,
 				       const TrtData & tD,
 				       const FixedData & fD,

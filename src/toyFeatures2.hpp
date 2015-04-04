@@ -50,7 +50,7 @@ class ToyFeatures2 : public BaseFeatures<M> {
   arma::mat infFeat;
   arma::mat notFeat;
 
-  static int numFeatures;
+  const static int numFeatures = 4;
 
   ToyFeatures2TuneParam tp;
 
