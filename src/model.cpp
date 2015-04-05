@@ -20,7 +20,6 @@ void GravityModel::load(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD) {
-  std::cout << "Gravity" << std::endl;
   
   mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
   mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
