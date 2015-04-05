@@ -50,9 +50,10 @@ void MultiModel::fill(){
   // make sure to change numModels in hpp file
   // ***************************************** //
   m.clear();
-  m.push_back(new RadiusModel);
+  // m.push_back(new RadiusModel);
   m.push_back(new CaveModel);
   // m.push_back(new RangeModel);
+  m.push_back(new GravityModel);
 }
 
 
