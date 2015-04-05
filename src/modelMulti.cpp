@@ -53,7 +53,8 @@ void MultiModel::fill(){
   // m.push_back(new RadiusModel);
   // m.push_back(new CaveModel);
   // m.push_back(new RangeModel);
-  m.push_back(new GravityTimeInfExpCavesModel);
+  // m.push_back(new GravityTimeInfExpCavesModel);
+  m.push_back(new GravityModel);
 }
 
 
