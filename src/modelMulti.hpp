@@ -63,7 +63,7 @@ MultiModel : public BaseModel {
   void modSel(const int & ind);
 
   
-  const static int numModels = 2;
+  const static int numModels = 1;
 
   int ind;
 
