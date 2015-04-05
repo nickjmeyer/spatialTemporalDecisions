@@ -22,8 +22,8 @@ int main(int argc, char ** argv){
 
 
   S s;
-  s.modelGen.setType(MLE);
-  s.modelEst.setType(MLE);
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
   int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);

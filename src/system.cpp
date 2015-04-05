@@ -284,8 +284,8 @@ void System<MG,
 
   preCompData();
 
-  modelGen.setType(MCMC);
-  modelEst.setType(MCMC);
+  modelGen_r.setType(INVALID);
+  modelEst_r.setType(INVALID);
 
   modelGen_r.getPar()->load();
 }

@@ -21,7 +21,7 @@
 #include "modelParamGravityTimeInfExpRCaves.hpp"
 #include "mcmc.hpp"
 
-enum Estimation {MLE = 0,MCMC = 1};
+enum Estimation {INVALID = -1, MLE = 0, MCMC = 1};
 
 class BaseModel {
  public:
