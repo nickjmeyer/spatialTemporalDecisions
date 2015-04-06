@@ -133,10 +133,15 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     
 
     // number of locations to add treatment too for this iteration
-    addPre = (int)((i+1)*numPre/std::min(numChunks,numPre)) -
-      (int)(i*numPre/std::min(numChunks,numPre));
-    addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
-      (int)(i*numAct/std::min(numChunks,numAct));
+    addPre = 0;
+    if(numPre > 0)
+      addPre = (int)((i+1)*numPre/std::min(numChunks,numPre)) -
+	(int)(i*numPre/std::min(numChunks,numPre));
+    
+    addAct = 0;
+    if(numAct > 0)
+      addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
+	(int)(i*numAct/std::min(numChunks,numAct));
 
 
     // add active treatment
