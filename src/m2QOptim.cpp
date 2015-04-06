@@ -95,7 +95,8 @@ optim(const S & system,
   njm::message("Optim at time " + njm::toString(system.sD.time,"",0,0));
 
   // first three steps use weights {1,1,...}
-  if(system.sD.time < (system.fD.trtStart + 3))
+  // if(system.sD.time < (system.fD.trtStart + 3))
+  if(system.sD.time < (system.fD.trtStart + 1))
     return;
 
   // okay to use modelGen here since the generative model is never used
@@ -107,7 +108,8 @@ optim(const S & system,
 		       s.modelEst);
   qEval.bellResPolData(s.sD.time,s.fD,s.modelEst,agent);
 
-  if(system.sD.time == (system.fD.trtStart + 3))
+  // if(system.sD.time == (system.fD.trtStart + 3))
+  if(system.sD.time <= (system.fD.trtStart + 3))
     qEval.tune();
 
   if(qEval.tp.lambda < 0){
