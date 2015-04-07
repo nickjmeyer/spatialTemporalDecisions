@@ -38,7 +38,8 @@ int main(int argc, char ** argv){
   RA ra;
 
   ra.tp.weights_r.zeros(ra.f.numFeatures);
-  ra.tp.weights_r(2) = 1;
+  // ra.tp.weights_r(2) = 1;
+  ra.tp.weights_r(0) = 1;
   
   SPO spo;
   // no tuning for right now....
