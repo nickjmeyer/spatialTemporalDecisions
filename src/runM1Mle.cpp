@@ -57,6 +57,11 @@ int main(int argc, char ** argv){
     njm::message("  Prop treated: " + njm::toString(*it,""));
 
     s.fD.propTrt = *it;
+
+    nt.name = "noTrt_" + njm::toString((*it)*100,"",0,0);
+    pa.name = "proximal_" + njm::toString((*it)*100,"",0,0);
+    ma.name = "myopic_" + njm::toString((*it)*100,"",0,0);
+    ra.name = "rank_" + njm::toString((*it)*100,"",0,0);
     
     njm::message("  No treatment: "
 		 + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
