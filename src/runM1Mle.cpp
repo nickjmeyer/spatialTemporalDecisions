@@ -29,7 +29,7 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 96;
+  int numReps = 300;
   Starts starts(numReps,s.fD.numNodes);
 
   NT nt;
@@ -50,18 +50,27 @@ int main(int argc, char ** argv){
   R_RA r_ra;
   
 
-  njm::message("  No treatment: "
-  	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
-  			       ""));
-  njm::message("      Proximal: "
-  	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
-  			       ""));
-  njm::message("        Myopic: "
-  	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
-  			       ""));
-  njm::message("Priority Score: "
-	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
-			       ""));
+  std::vector<double> props = {0.05,0.10,0.15,0.20};
+  std::vector<double>::iterator it,end;
+  end = props.end();
+  for(it = props.begin(); it != end; ++it){
+    njm::message("  Prop treated: " + njm::toString(*it,""));
+
+    s.fD.propTrt = *it;
+    
+    njm::message("  No treatment: "
+		 + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
+				 ""));
+    njm::message("      Proximal: "
+		 + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
+				 ""));
+    njm::message("        Myopic: "
+		 + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
+				 ""));
+    njm::message("Priority Score: "
+		 + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
+				 ""));
+  }
 
   return 0;
 }

@@ -42,6 +42,8 @@ struct FixedData {
 
   int finalT;
 
+  double propTrt;
+
   double priorTrtMean;
   
   std::vector<double> dist;
