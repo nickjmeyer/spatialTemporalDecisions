@@ -50,7 +50,8 @@ int main(int argc, char ** argv){
   R_RA r_ra;
   
 
-  std::vector<double> props = {0.05,0.10,0.15,0.20};
+  std::vector<double> props = {0.01,0.02,0.03,0.04,0.05,
+			       0.06,0.07,0.08,0.09,0.10};
   std::vector<double>::iterator it,end;
   end = props.end();
   for(it = props.begin(); it != end; ++it){
@@ -75,6 +76,8 @@ int main(int argc, char ** argv){
     njm::message("Priority Score: "
 		 + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
 				 ""));
+
+    std::cout << std::endl << std::endl;
   }
 
   return 0;
