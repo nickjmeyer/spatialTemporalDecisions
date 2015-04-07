@@ -38,7 +38,6 @@ int main(int argc, char ** argv){
   RA ra;
 
   ra.tp.weights_r.zeros(ra.f.numFeatures);
-  
   ra.tp.weights_r(2) = 1;
   
   SPO spo;
