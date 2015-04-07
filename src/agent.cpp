@@ -5,8 +5,10 @@ int getNumPre(const SimData & sD,
 	      const TrtData & tD,
 	      const FixedData & fD,
 	      const DynamicData & dD){
-  return std::min((int)std::floor(0.06*((double)fD.numNodes)+1),
+  return std::min((int)std::floor(0.12*((double)fD.numNodes)+1),
   		  sD.numNotInfec);
+  // return std::min((int)std::floor(0.06*((double)fD.numNodes)+1),
+  // 		  sD.numNotInfec);
   // return std::min(1,sD.numNotInfec);
 }
 
