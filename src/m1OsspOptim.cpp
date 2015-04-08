@@ -79,8 +79,8 @@ void M1OsspOptim<S,A,F,M>
   std::set<std::pair<std::vector<int>,std::vector<int> > >::iterator it,end;
   end = apSet.end();
 
-  std::cout << "value: " << s.value() << std::endl;
-  std::cout << "apSet: " << J << std::endl;
+  // std::cout << "value: " << s.value() << std::endl;
+  // std::cout << "apSet: " << J << std::endl;
 
 
   // initialize runner and original state
@@ -89,8 +89,8 @@ void M1OsspOptim<S,A,F,M>
   int b;
   double qvalue;
   for(j = 0, it = apSet.begin(); j < J; ++j, ++it){
-    printf("\r% 4d",j);
-    fflush(stdout);
+    // printf("\r% 4d",j);
+    // fflush(stdout);
     qvalue = 0;
     for(b = 0; b < tp.B; ++b){
       // restore original state
@@ -115,7 +115,7 @@ void M1OsspOptim<S,A,F,M>
       // this also is our estimate of Q
       // if we include past rewards it doesn't effect
       // the ranking of current rewards
-      qvalue += runner.run(s,ra,tp.mcReps,s.fD.finalT);
+      qvalue += - runner.run(s,ra,tp.mcReps,s.fD.finalT);
     }
     qvalue /= double(tp.B);
 
@@ -124,7 +124,7 @@ void M1OsspOptim<S,A,F,M>
     agent.aCand.push_back((*it).first);
     agent.pCand.push_back((*it).second);
   }
-  printf("\n");
+  // printf("\n");
 }
 
 
