@@ -28,6 +28,8 @@ class OsspAgent : public BaseAgent<M> {
  public:
   OsspAgent();
 
+  void reset();
+
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,

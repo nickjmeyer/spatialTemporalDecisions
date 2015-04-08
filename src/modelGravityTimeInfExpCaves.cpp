@@ -132,6 +132,7 @@ GravityTimeInfExpCavesModel::fit(const SimData & sD, const TrtData & tD,
       par.push_back(0);
     mPInit.putPar(par);
     mPInit.intcp=-3.0;
+    mPInit.getPar();
     fit(sD,tD,fD,dD,mPInit.getPar());
   }
 }

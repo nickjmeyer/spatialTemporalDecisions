@@ -9,6 +9,7 @@
 #include "system.hpp"
 #include "agent.hpp"
 #include "rankAgent.hpp"
+#include "osspAgent.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
 #include "runner.hpp"
@@ -20,11 +21,11 @@ class M1OsspOptimTunePar : public TuneParam{
   std::vector<double> getPar() const;
   void putPar(const std::vector<double> & par);
 
-  int N;
+  int N,B,mcReps;
 };
 
 
-template <class S, class A, class M>
+template <class S, class A, class F, class M>
 class M1OsspOptim : BaseOptim<S,A,M>{
  public:
   M1OsspOptim();

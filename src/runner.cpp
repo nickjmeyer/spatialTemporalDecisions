@@ -302,7 +302,7 @@ VanillaRunnerNS<S,A>
   int r,t;
 
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value)							\
+  shared(value,starts)						\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -397,7 +397,7 @@ FitOnlyRunner<S,A>
 
   std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value,valueAll)					\
+  shared(value,valueAll,starts)					\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -575,6 +575,18 @@ OptimRunner<System<GravityTimeInfExpCavesModel,
 		     MultiModel> >;
 
 
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   GravityTimeInfExpCavesModel>,
+	    OsspAgent<GravityTimeInfExpCavesModel>,
+	    M1OsspOptim<System<GravityTimeInfExpCavesModel,
+			       GravityTimeInfExpCavesModel>,
+			OsspAgent<GravityTimeInfExpCavesModel>,
+			ToyFeatures2<GravityTimeInfExpCavesModel>,
+			GravityTimeInfExpCavesModel> >;
+
+
+
 
 
 template <class S, class A, class Optim>
@@ -603,7 +615,7 @@ OptimRunner<S,A,Optim>
   int threads = omp_get_max_threads();
   
 #pragma omp parallel for num_threads(threads)	\
-  shared(value,valueAll,tock,tick)		\
+  shared(value,valueAll,tock,tick,starts)	\
   firstprivate(system,agent,optim,weights)	\
   private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
@@ -724,6 +736,17 @@ OptimRunnerNS<System<GravityTimeInfExpCavesModel,
 			GravityTimeInfExpCavesModel> >;
 
 
+template class
+OptimRunnerNS<System<GravityTimeInfExpCavesModel,
+		     GravityTimeInfExpCavesModel>,
+	      OsspAgent<GravityTimeInfExpCavesModel>,
+	      M1OsspOptim<System<GravityTimeInfExpCavesModel,
+				 GravityTimeInfExpCavesModel>,
+			  OsspAgent<GravityTimeInfExpCavesModel>,
+			  ToyFeatures2<GravityTimeInfExpCavesModel>,
+			  GravityTimeInfExpCavesModel> >;
+
+
 
 
 template <class S, class A, class Optim>
@@ -741,7 +764,7 @@ OptimRunnerNS<S,A,Optim>
   int threads = omp_get_max_threads();
   
 #pragma omp parallel for num_threads(threads)	\
-  shared(value)					\
+  shared(value,starts)				\
   firstprivate(system,agent,optim)		\
   private(r,t)
   for(r=0; r<numReps; r++){

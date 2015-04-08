@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS = -std=c++11 -fopenmp -Wall -Werror -Wno-error=comment
+CPPFLAGS = -std=c++11 -Wall -Werror -Wno-error=comment -fopenmp
 INCLUDE = -I/usr/include/superlu/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
@@ -9,8 +9,9 @@ PROF = $(DEBUG) -pg
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgent.o \
+	rankAgent.o osspAgent.o \
 	m1SpOptim.o \
+	m1OsspOptim.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \

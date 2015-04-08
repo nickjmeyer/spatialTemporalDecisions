@@ -42,7 +42,7 @@ struct FixedData {
 
   int finalT;
 
-  double propTrt;
+  // double propTrt;
 
   double priorTrtMean;
   
