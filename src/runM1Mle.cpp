@@ -32,7 +32,7 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 300;
+  int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
 
   NT nt;
@@ -69,6 +69,13 @@ int main(int argc, char ** argv){
 	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
 			       ""));
 
+  osspo.name += "_double";
+  osspo.tp.B *= 2;
+  osspo.tp.mcReps *= 2;
+  njm::message("Priority Score: "
+	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
+			       ""));
+  
   return 0;
 }
 
