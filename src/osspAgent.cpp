@@ -88,7 +88,18 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
       i = 0;
       while(cur < num)
 	cur += probs.at(++i);
-      ind = mInd.at(i);
+      try{
+	ind = mInd.at(i);
+      }
+      catch(...){
+	std::cout << "i: " << i
+		  << std::endl
+		  << "mInd: " << mInd.size()
+		  << std::endl
+		  << "probs: " << probs.size()
+		  << std::endl;
+      }
+	  
     }
   }
   else{
