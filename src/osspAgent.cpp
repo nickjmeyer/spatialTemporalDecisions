@@ -40,8 +40,14 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
   if(qvalues.size() > 1){
     int i,I;
     double mx = *std::max_element(qvalues.begin(),qvalues.end());
+    int numMx = 0;
+    I = qvalues.size();
+    for(i = 0; i < I; ++i){
+      if(qvalues.at(i) == mx)
+	++numMx;
+    }
     
-    if(njm::runif01() < tp.eps){
+    if(numMx == int(qvalues.size()) || njm::runif01() < tp.eps){
       // uniformly take best actions
       std::vector<int> mInd;
       I = qvalues.size();
@@ -88,18 +94,7 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
       i = 0;
       while(cur < num)
 	cur += probs.at(++i);
-      try{
-	ind = mInd.at(i);
-      }
-      catch(...){
-	std::cout << "i: " << i
-		  << std::endl
-		  << "mInd: " << mInd.size()
-		  << std::endl
-		  << "probs: " << probs.size()
-		  << std::endl;
-      }
-	  
+      ind = mInd.at(i);
     }
   }
   else{
