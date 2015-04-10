@@ -21,7 +21,7 @@ class OsspAgentTuneParam : public TuneParam {
   std::vector<double> getPar() const;
   void putPar(const std::vector<double> & par);
 
-  double lambda;
+  double eps;
 };
 
 
@@ -47,8 +47,6 @@ class OsspAgent : public BaseAgent<M> {
 
   std::string name;
 };
-
-
 
 
 #endif

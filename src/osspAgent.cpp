@@ -4,7 +4,7 @@ template class OsspAgent<GravityTimeInfExpCavesModel>;
 
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
-  lambda = 1.0;
+  eps = 0.8;
 }
 
 
@@ -36,33 +36,64 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
 			    const FixedData & fD,
 			    const DynamicData & dD,
 			    M & m){
-  // // soft max
-  // std::vector<double> probs = qvalues;
-  // std::for_each(probs.begin(),probs.end(),
-  // 		[this](double & x)
-  // 		{
-  // 		  x = std::exp(tp.lambda*x);
-  // 		});
+  int ind = 0;
+  if(qvalues.size() > 1){
+    int i,I;
+    double mx = *std::max_element(qvalues.begin(),qvalues.end());
+    
+    if(njm::runif01() < tp.eps){
+      // uniformly take best actions
+      std::vector<int> mInd;
+      I = qvalues.size();
+      for(i = 0; i < I; ++i){
+	if(qvalues.at(i) == mx){
+	  mInd.push_back(i);
+	}
+      }
 
-  // double total = std::accumulate(probs.begin(),probs.end(),0.0);
-  // std::for_each(probs.begin(),probs.end(),
-  // 		[&total](double & x)
-  // 		{
-  // 		  x /= total;
-  // 		});
+      std::priority_queue<std::pair<double,int> > pq;
+      I = mInd.size();
+      for(i = 0; i < I; ++i)
+	pq.push(std::pair<double,int>(njm::runif01(),i));
+      ind = mInd.at(pq.top().second);
+    }
+    else{
+      // take soft max of sub best actions
+      std::vector<double> mQ;
+      std::vector<int> mInd;
+      I = qvalues.size();
+      for(i = 0; i < I; ++i){
+	if(qvalues.at(i) < mx){
+	  mQ.push_back(qvalues.at(i));
+	  mInd.push_back(i);
+	}
+      }
 
-  // double cur = probs.at(0);
-  // double num = njm::runif01();
-  // int ind = 0;
-  // while(cur < num)
-  //   cur += probs.at(++ind);
+      std::vector<double> probs = mQ;
+      std::for_each(probs.begin(),probs.end(),
+		    [this](double & x)
+		    {
+		      x = std::exp(x);
+		    });
 
-  // max
-  std::priority_queue<std::pair<double,int> > p;
-  int i,I = qvalues.size();
-  for(i = 0; i < I; ++i)
-    p.push(std::pair<double,int>(qvalues.at(i),i));
-  int ind = p.top().second;
+      double total = std::accumulate(probs.begin(),probs.end(),0.0);
+      std::for_each(probs.begin(),probs.end(),
+		    [&total](double & x)
+		    {
+		      x /= total;
+		    });
+  
+      double cur = probs.at(0);
+      double num = njm::runif01();
+      i = 0;
+      while(cur < num)
+	cur += probs.at(++i);
+      ind = mInd.at(i);
+    }
+  }
+  else{
+    ind = 0;
+  }
   
   tD.a = aCand.at(ind);
   tD.p = pCand.at(ind);

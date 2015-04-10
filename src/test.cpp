@@ -25,7 +25,7 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 10;
+  int numReps = 2;
   Starts starts(numReps,s.fD.numNodes);
  
   // NT nt;
@@ -47,6 +47,9 @@ int main(int argc, char ** argv){
   njm::timer.start("rank");
   oor.run(s,oa,oo,numReps,s.fD.finalT,starts);
   njm::timer.stop("rank");
+
+
+  /////////////////////////////////////////////////////////
 
   // int i;
   // s.reset(starts[0]);
