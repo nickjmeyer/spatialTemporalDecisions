@@ -68,13 +68,6 @@ int main(int argc, char ** argv){
   njm::message("Priority Score: "
 	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
 			       ""));
-
-  osspo.name += "_double";
-  osspo.tp.B *= 2;
-  osspo.tp.mcReps *= 2;
-  njm::message("Priority Score: "
-	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
-			       ""));
   
   return 0;
 }
