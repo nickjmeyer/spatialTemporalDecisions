@@ -115,67 +115,55 @@ void FFX::saveObs(const std::string & file) const{
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  std::vector<double> scaleVals = {1,2,4,8};
+  std::vector<double> scaleVals = {2,4,8};
+  std::vector<double> nVals = {100,500,1000};
 
   FFX ffx;
 
   ffx.addFactor("scale",scaleVals);
+  ffx.addFactor("N",nVals);
 
   ffx.addStat("value");
   ffx.addStat("time");
 
-  ffx.setReps(8);
+  ffx.setReps(4);
 
   typedef GravityTimeInfExpCavesModel MG;
-  typedef GravityTimeInfExpCavesParam PG;
   
   typedef MG ME;
-  typedef PG PE;
 
-  typedef System<MG,PG,ME,PE> S;
-  
-  typedef ToyFeatures2<ME,PE> F;
-  
-  typedef RankAgent<F,ME,PE> AR;
+  typedef System<MG,ME> S;
 
-  typedef M1SpOptim<S,AR,ME,PE> SPO;
+  typedef ToyFeatures2<ME> F;
+  typedef OsspAgent<ME> OA;
 
-  typedef OptimRunnerNS<S,AR,SPO> SPR;
+  typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
-  typedef FitOnlyRunner<S,AR> FR;
+  typedef OptimRunner<S,OA,OSSPO> R_OA;
 
   S s;
-  s.modelGen.fitType = MLE;  // for speed
-  s.modelEst.fitType = MLE;  // for speed
-  
-  AR ar;
-  ar.reset();
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
-  SPO spo;
-  
-  SPR spr;
+  int numReps = 96;
+  Starts starts(numReps,s.fD.numNodes);
 
-  FR fr;
+  OA oa;
 
-  // baseline value
-  njm::message(" Fit only: " + njm::toString(fr.run(s,ar,300,s.fD.finalT)));
-  
-  // this is an experiment done after tuning on grid 100, so we know
-  // good values for the grid 100
-  spo.tp.tune = 0;
+  OSSPO osspo;
 
-  // original agent tp
-  njm::message("Original: " + njm::toString(spr.run(s,ar,spo,300,s.fD.finalT)));
+  R_OA r_oa;  
 
   double value;
   int done = 0;
   int i, M = ffx.maxInd;
   int tick,tock;
   for(i = 0; i < M; ++i){
-    ar.tp.jitterScale = ffx.getSett("scale",i);
+    osspo.tp.jitterScale = ffx.getSett("scale",i);
+    osspo.tp.N = ffx.getSett("N",i);
 
     tick = std::time(NULL);
-    value = spr.run(s,ar,spo,300,s.fD.finalT);
+    value = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
     tock = std::time(NULL);
 
     ffx.addObs(i,{value,((double)(tock-tick))/3600.0});

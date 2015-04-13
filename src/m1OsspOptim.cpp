@@ -50,6 +50,7 @@ void M1OsspOptim<S,A,F,M>
   M1SpOptim<System<M,M>,RankAgent<F,M>,M> spo;
   spo.tp.tune = 0;
   RankAgent<F,M> ra;
+  ra.tp.jitterScale = tp.jitterScale;
   
   spo.optim(s,ra);
 

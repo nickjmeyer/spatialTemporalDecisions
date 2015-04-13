@@ -63,9 +63,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   f.getFeatures(sD,tD,fD,dD,m);
 
   // jitter the current weights
-  arma::colvec jitter;
-  arma::mat featStddev;
-  jitter.zeros(f.numFeatures);
+  std::vector<double> noTrtScore;
+  double jitter,mn;
   
   int i,j,node0,addPre,addAct;
   int cI = 0,cN = 0;
@@ -76,26 +75,40 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   
   for(i = 0; i < numChunks; i++){
 
-    // get jitter
-    featStddev.zeros(0,f.numFeatures);
-    for(j = 0; j < sD.numNotInfec; ++j){
-      if(tD.p.at(sD.notInfec.at(j)) == 0)
-	featStddev.insert_rows(0,f.notFeat.row(j));
-    }
-    for(j = 0; j < sD.numInfected; ++j){
-      if(tD.a.at(sD.infected.at(j)) == 0)
-	featStddev.insert_rows(0,f.infFeat.row(j));
-    }
-    featStddev = arma::cov(featStddev);
-    jitter = arma::sqrt(featStddev.diag())/tp.jitterScale;
-    
-    for(j = 0; j < f.numFeatures; j++)
-      jitter(j) *= njm::rnorm01();
-
     // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
     notRanks = f.notFeat * (tp.weights + jitter);
 
+    // get jitter
+    noTrtScore.clear();
+    for(j = 0; j < sD.numNotInfec; ++j){
+      if(tD.p.at(sD.notInfec.at(j)) == 0)
+	noTrtScore.push_back(notRanks(j));
+    }
+    for(j = 0; j < sD.numInfected; ++j){
+      if(tD.a.at(sD.infected.at(j)) == 0)
+	noTrtScore.push_back(infRanks(j));
+    }
+    
+    // get mean
+    mn = std::accumulate(noTrtScore.begin(),noTrtScore.end(),0.0);
+    mn /= double(noTrtScore.size());
+    // get SS
+    jitter = std::accumulate(noTrtScore.begin(),noTrtScore.end(),0.0,
+			     [&mn](const double & a, const double & b){
+			       return a + (b-mn)*(b-mn);
+			     });
+    // sample standard deviation
+    jitter = std::sqrt(jitter/double(noTrtScore.size() - 1));
+    // scale
+    jitter /= tp.jitterScale;
+    // generate normal
+    jitter *= njm::rnorm01();
+
+    // apply jitter
+    infRanks += jitter;
+    notRanks += jitter;
+    
 
     // sort the locations by their ranks
     // if treated, get lowest value possible
