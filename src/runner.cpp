@@ -178,7 +178,7 @@ VanillaRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -296,7 +296,7 @@ VanillaRunnerNS<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -390,7 +390,7 @@ FitOnlyRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -598,7 +598,7 @@ OptimRunner<S,A,Optim>
       const int numReps, const int numPoints,
       const Starts & starts){
 
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
@@ -1015,7 +1015,7 @@ TimerRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
 
   std::chrono::milliseconds fitTime,trtTime,simTime,diff;
   fitTime=std::chrono::milliseconds::zero();

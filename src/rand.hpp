@@ -14,6 +14,7 @@ class RandParr{
 
   RandParr(int numRand_);
   void reset();
+  void reset(const int seed);
   void fixSeed(const int fix);
   double getRunif01();
   double getRnorm01();
@@ -39,10 +40,14 @@ class RandParr{
 };
 
 
-void resetRandomSeed();
-void fixRandomSeed(const int fix);
-
 namespace njm{
+  extern unsigned randomSeed;
+  
+  void resetRandomSeed();
+  void resetRandomSeed(const int seed);
+  
+  void fixThreadSeed(const int fix);
+
   double runif01();
   double runif(double a, double b);
   
