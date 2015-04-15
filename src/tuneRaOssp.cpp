@@ -162,7 +162,7 @@ int main(int argc, char ** argv){
     osspo.tp.jitterScale = ffx.getSett("scale",i);
     osspo.tp.N = ffx.getSett("N",i);
 
-    njm::randomSeed = unsigned(i / ffx.numReps);
+    njm::randomSeed = unsigned(i / ffx.numCombo);
 
     tick = std::time(NULL);
     value = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
