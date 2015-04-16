@@ -136,7 +136,8 @@ double RandParr::getRunif01(){
   double r=*(runif01Iter.at(thread)++);
 
   // if there are no more samples, refill
-  if(runif01Iter.at(thread) == runif01End.at(thread) && !isfixed.at(thread)){
+  if(runif01Iter.at(thread) == runif01End.at(thread)
+     && !isfixed.at(thread)){
 #pragma omp critical
     {
       int i;
@@ -145,7 +146,8 @@ double RandParr::getRunif01(){
       runif01Iter.at(thread)=runif01Vals.at(thread).begin();
     }
   }
-  if(runif01Iter.at(thread) == runif01End.at(thread) && isfixed.at(thread)){
+  else if(runif01Iter.at(thread) == runif01End.at(thread)
+	  && isfixed.at(thread)){
 #pragma omp critical
     {
       runif01Iter.at(thread) = runif01Vals_fixed.at(thread).begin();
@@ -160,7 +162,8 @@ double RandParr::getRnorm01(){
   double r=*(rnorm01Iter.at(thread)++);
 
   // if there are no more samples, refill
-  if(rnorm01Iter.at(thread) == rnorm01End.at(thread) && !isfixed.at(thread)){
+  if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
+     && !isfixed.at(thread)){
 #pragma omp critical
     {
       int i;
@@ -169,7 +172,8 @@ double RandParr::getRnorm01(){
       rnorm01Iter.at(thread)=rnorm01Vals.at(thread).begin();
     }
   }
-  if(rnorm01Iter.at(thread) == rnorm01End.at(thread) && isfixed.at(thread)){
+  else if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
+	  && isfixed.at(thread)){
 #pragma omp critical
     {
       rnorm01Iter.at(thread) = rnorm01Vals_fixed.at(thread).begin();

@@ -59,8 +59,13 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   numAct = getNumAct(sD,tD,fD,dD);
 
   // precompute data and get baseline features
+  njm::timer.start("precomp");
   f.preCompData(sD,tD,fD,dD,m);
+  njm::timer.stop("precomp");
+  
+  njm::timer.start("features");
   f.getFeatures(sD,tD,fD,dD,m);
+  njm::timer.stop("features");
 
   // jitter the current weights
   std::vector<double> noTrtScore;
@@ -75,6 +80,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   
   for(i = 0; i < numChunks; i++){
 
+    njm::timer.start("ranks");
     // calculate ranks
     infRanks = f.infFeat * (tp.weights + jitter);
     notRanks = f.notFeat * (tp.weights + jitter);
@@ -108,8 +114,11 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // apply jitter
     infRanks += jitter;
     notRanks += jitter;
+
+    njm::timer.stop("ranks");
     
 
+    njm::timer.start("sorting");
     // sort the locations by their ranks
     // if treated, get lowest value possible
     std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
@@ -121,7 +130,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       else
 	sortInfected.push(std::pair<double,int>(infRanks(j),j));
     }
-    
+
+
     for(j=0; j<sD.numNotInfec; j++){
       if(tD.p.at(sD.notInfec.at(j)))
 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
@@ -129,22 +139,33 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       else
 	sortNotInfec.push(std::pair<double,int>(notRanks(j),j));
     }
+    njm::timer.stop("sorting");
 
 
     std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
     for(j = 0; j < (numAct - cI); j++){
-      selInfected.push(std::pair<double,int>(njm::runif01(),
+      njm::timer.start("rand");
+      double num = njm::runif01();
+      njm::timer.stop("rand");
+      njm::timer.start("shuffle");
+      selInfected.push(std::pair<double,int>(num,
 					     sortInfected.top().second));
       sortInfected.pop();
+      njm::timer.stop("shuffle");      
     }
 
     for(j = 0; j < (numPre - cN); j++){
-      selNotInfec.push(std::pair<double,int>(njm::runif01(),
+      njm::timer.start("rand");
+      double num = njm::runif01();
+      njm::timer.stop("rand");
+      njm::timer.start("shuffle");
+      selNotInfec.push(std::pair<double,int>(num,
 					     sortNotInfec.top().second));
       sortNotInfec.pop();
+      njm::timer.stop("shuffle");
     }
     
-
+    njm::timer.start("trt");
     // number of locations to add treatment too for this iteration
     addPre = 0;
     if(numPre > 0)
@@ -171,9 +192,13 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       selNotInfec.pop();
     }
 
+    njm::timer.stop("trt");
+
     // if more iterations, update features
     if((i+1) < numChunks){
+      njm::timer.start("features");
       f.updateFeatures(sD,tD,fD,dD,m);
+      njm::timer.stop("features");
     }
     
   }
