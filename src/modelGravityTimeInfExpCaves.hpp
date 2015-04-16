@@ -6,6 +6,7 @@
 #include <cmath>
 #include <gsl/gsl_multimin.h>
 #include "data.hpp"
+#include "timer.hpp"
 #include "settings.hpp"
 #include "model.hpp"
 #include "modelParamGravityTimeInfExpCaves.hpp"

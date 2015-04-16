@@ -100,7 +100,6 @@ PlainRunner<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints){
-  njm::timer.start("run");
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
@@ -116,27 +115,19 @@ PlainRunner<S,A>
     njm::timer.stop("init");
 
     for(t=system.sD.time; t<numPoints; t++){
-      njm::timer.start("inner");
-      
-      njm::timer.start("apply");
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
-      njm::timer.stop("apply");
 
       njm::timer.start("status");
       system.updateStatus();
       njm::timer.stop("status");
 
-      njm::timer.start("next");
       system.nextPoint();
-      njm::timer.stop("next");
-      njm::timer.stop("inner");
     }
     value += system.value();
   }
 
-  njm::timer.stop("run");
   return value/((double)numReps);
 }
 

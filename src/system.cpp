@@ -379,8 +379,13 @@ template <class MG,
 	  class ME>
 void System<MG,
 	    ME>::nextPoint(){
+  njm::timer.start("modelInfProbs");
   modelGen.infProbs(sD,tD,fD,dD);
+  njm::timer.stop("modelInfProbs");
+
+  njm::timer.start("next");
   nextPoint(modelGen.getPar()->getInfProbs());
+  njm::timer.stop("next");
 }
 
 

@@ -96,21 +96,29 @@ GravityTimeInfExpCavesModel::oneOnOne(const int notNode,
 				      const TrtData & tD,
 				      const FixedData & fD,
 				      const DynamicData & dD) const {
+  njm::timer.start("beta");
   double base = mP.intcp;
   int len = mP.beta.size();
   for(int i=0; i<len; i++)
     base += mP.beta.at(i)*fD.covar.at(notNode*len + i);
+  njm::timer.stop("beta");
 
+  njm::timer.start("gravity");
   base -= mP.alpha * fD.dist.at(notNode*fD.numNodes + infNode)/
     std::pow(fD.caves.at(notNode)*fD.caves.at(infNode),mP.power);
+  njm::timer.stop("gravity");
 
+  njm::timer.start("xi");
   double caveTime = (sD.timeInf.at(infNode)-1.0)/fD.propCaves.at(infNode);
   base += mP.xi * (std::exp(caveTime)-1.0);
-  
+  njm::timer.stop("xi");
+
+  njm::timer.start("trt");
   if(tD.p.at(notNode))
     base -= mP.trtPre;
   if(tD.a.at(infNode))
     base -= mP.trtAct;
+  njm::timer.stop("trt");
 
   return base;
 }

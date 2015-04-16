@@ -19,14 +19,14 @@ int main(int argc, char ** argv){
   PR pr;
 
 
-  int numReps = 100;
+  int numReps = 1000;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
 
   pr.run(s,ra,numReps,s.fD.finalT);
-  
-  
+
+
   njm::sett.clean();
   return 0;
 }
