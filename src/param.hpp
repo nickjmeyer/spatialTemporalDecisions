@@ -6,7 +6,7 @@
 #include <eigen3/Eigen/Eigen>
 #include "data.hpp"
 
-class BaseParam {
+class ParamBase {
  protected:
   
   std::vector<double> pars;
@@ -17,16 +17,20 @@ class BaseParam {
   virtual unsigned int initParsSize(const FixedData & fD) = 0;
   
   // initialize the internal book-keeping data
-  virtual void initInternal(const FixeData & fD) = 0;
+  virtual void initInternal(const FixedData & fD) = 0;
   
   // update the internal book-keeping data
   // called inside of putPar() to guarantee up-to-date book-keeping data
-  virtual void updateInternal() = 0;
-  
- public:
+  virtual void updateBefore() = 0;
+  virtual void updateAfter() = 0;
+
   // initializes pars = {0,...}, beg = pars.begin(), end = pars.end()
   // calls initInternal, initParsSize
-  BaseParam(const FixedData & fD);
+  // should be called from derived constructor
+  virtual void init(const FixedData & fD);
+  
+ public:
+  virtual ~ParamBase() { };
   
   // retreive pars
   std::vector<double> getPar() const;
@@ -34,11 +38,22 @@ class BaseParam {
   // change pars
   // requires that newParInt has at least parsSize elements left
   // requires that beg,end point to begin() and end() of pars
-  void putPar(std::vector<double>::iterator & newParIt);
+  std::vector<double>::iterator putPar(std::vector<double>::iterator newParIt);
 
-  // modify the probs matrix
-  virtual void updateFill(Eigen::MatrixXd & probs) = 0;
-}
+  // set the probs matrix
+  virtual void setFill(std::vector<double> & probs,
+		       const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD) const = 0;
+
+  // update the probs matrix
+  virtual void updateFill(std::vector<double> & probs,
+			  const SimData & sD,
+			  const TrtData & tD,
+			  const FixedData & fD,
+			  const DynamicData & dD) const = 0;
+};
 
 
 #endif
