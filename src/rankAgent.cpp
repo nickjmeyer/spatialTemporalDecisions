@@ -1,30 +1,8 @@
 #include "rankAgent.hpp"
 
 
-template class RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-			 GravityTimeInfExpCavesModel>;
-
-template class RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
-			 GravityTimeInfExpModel>;
-
-template class RankAgent<ToyFeatures2<GravityTimeInfModel>,
-			 GravityTimeInfModel>;
-
-template class RankAgent<ToyFeatures2<GravityModel>,
-			 GravityModel>;
-
-template class RankAgent<ToyFeatures2<RangeModel>,
-			 RangeModel>;
-
-template class RankAgent<ToyFeatures2<RadiusModel>,
-			 RadiusModel>;
-
-template class RankAgent<ToyFeatures2<CaveModel>,
-			 CaveModel>;
-
-
-template class RankAgent<ToyFeatures2Multi<MultiModel>,
-			 MultiModel>;
+template class RankAgent<ToyFeatures2<ModelGravity>,
+			 ModelGravity>;
 
 
 

@@ -6,10 +6,7 @@
 
 class ParamBeta : public ParamBase {
  protected:
-  std::vector<double> parsOld;
-  std::vector<double> covar;
   std::vector<double> covarBeta;
-  std::vector<double> covarBetaOld;
   int numNodes;
   
   virtual unsigned int initParsSize(const FixedData & fD);
@@ -21,19 +18,21 @@ class ParamBeta : public ParamBase {
   virtual void updateAfter();
 
  public:
-  ParamBeta(const FixedData & fD) { init(fD); };
+  std::vector<double> covar;
+  ParamBeta() { };
+  virtual ParamBase * clone() const { return new ParamBeta(*this); };
 
   virtual void setFill(std::vector<double> & probs,
 		       const SimData & sD,
 		       const TrtData & tD,
 		       const FixedData & fD,
-		       const DynamicData & dD) const;
+		       const DynamicData & dD);
 
-  virtual void updateFill(std::vector<double> & probs,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD) const;
+  virtual void modFill(std::vector<double> & probs,
+		       const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD);
 
 };
 

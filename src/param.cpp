@@ -1,5 +1,12 @@
 #include "param.hpp"
 
+ParamBase::ParamBase(const ParamBase & p){
+  pars = p.pars;
+  beg = pars.begin();
+  end = pars.end();
+  parsSize = p.parsSize;
+}
+
 
 void ParamBase::init(const FixedData & fD){
   // scalar parameter
@@ -22,8 +29,8 @@ std::vector<double> ParamBase::getPar() const {
 }
 
 
-std::vector<double>::iterator
-ParamBase::putPar(std::vector<double>::iterator newParIt){
+std::vector<double>::const_iterator
+ParamBase::putPar(std::vector<double>::const_iterator newParIt){
   updateBefore();
   std::vector<double>::iterator it;
   for(it = beg; it != end; ++it, ++newParIt)

@@ -1,14 +1,12 @@
-#ifndef PARAM_GRAVITY_HPP__
-#define PARAM_GRAVITY_HPP__
+#ifndef PARAM_TIME_HPP__
+#define PARAM_TIME_HPP__
 
 
 #include "param.hpp"
 
-class ParamGravity : public ParamBase {
+class ParamTime : public ParamBase {
  protected:
-  std::vector<double> grav;
-  std::vector<double> dist;
-  std::vector<double> cc;
+  std::vector<int> time;
   int numNodes;
   
   virtual unsigned int initParsSize(const FixedData & fD);
@@ -20,8 +18,8 @@ class ParamGravity : public ParamBase {
   virtual void updateAfter();
 
  public:
-  ParamGravity() { };
-  virtual ParamBase * clone() const {return new ParamGravity(*this);};
+  ParamTime( ) { };
+  virtual ParamBase * clone() const {return new ParamTime(*this);};
 
   virtual void setFill(std::vector<double> & probs,
 		       const SimData & sD,
@@ -35,6 +33,8 @@ class ParamGravity : public ParamBase {
 		       const FixedData & fD,
 		       const DynamicData & dD);
 };
+
+
 
 
 

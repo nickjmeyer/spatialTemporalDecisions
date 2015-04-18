@@ -8,10 +8,8 @@ unsigned int ParamGravity::initParsSize(const FixedData & fD){
 
 
 void ParamGravity::initInternal(const FixedData & fD){
-  parsOld = pars;
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);
-  gravOld = grav;
   
   dist = fD.dist;
   
@@ -27,8 +25,6 @@ void ParamGravity::initInternal(const FixedData & fD){
 
 
 void ParamGravity::updateBefore(){
-  parsOld = pars;
-  gravOld = grav;
 }
 
 
@@ -46,30 +42,22 @@ void ParamGravity::setFill(std::vector<double> & probs,
 			   const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
-			   const DynamicData & dD) const {
+			   const DynamicData & dD){
   int i,I = numNodes*numNodes;
   std::vector<double>::iterator it0;
   std::vector<double>::const_iterator it1;
   for(i = 0,
 	it0 = probs.begin(),
 	it1 = grav.begin(); i < I; ++it0,++it1,++i){ // not infected
-    *it0 += *it1;
+    *it0 -= *it1;
   }
 }
 
 
-void ParamGravity::updateFill(std::vector<double> & probs,
-			      const SimData & sD,
-			      const TrtData & tD,
-			      const FixedData & fD,
-			      const DynamicData & dD) const {
-  int i,I = numNodes*numNodes;
-  std::vector<double>::iterator it0;
-  std::vector<double>::const_iterator it1,it2;
-  for(i = 0, it0 = probs.begin(),
-	it1 = grav.begin(),
-	it2 = gravOld.begin(); i < I; ++it0,++it1,++it2,++i){ // not infected
-    *it0 += *it1 - *it2;
-  }
+void ParamGravity::modFill(std::vector<double> & probs,
+			   const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD){
 }
 

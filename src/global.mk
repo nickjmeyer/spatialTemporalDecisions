@@ -3,7 +3,7 @@ CPPFLAGS = -std=c++11 -Wall -Werror -Wno-error=comment -fopenmp
 INCLUDE = -I/usr/include/superlu/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
-DEBUG = -g3 -ggdb
+DEBUG = -g
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
 OBJECTS = $(BINARY).o 
@@ -15,24 +15,16 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
-	toyFeatures2Multi.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \
 	paramGravity.o \
+	paramTime.o \
+	paramTimeExpCaves.o \
 	paramTrt.o \
-	model.o modelParam.o \
-	modelGravityTimeInf.o modelParamGravityTimeInf.o \
-	modelGravityTimeInfExp.o modelParamGravityTimeInfExp.o \
-	modelGravityTimeInfExpCaves.o modelParamGravityTimeInfExpCaves.o \
-	modelRange.o modelParamRange.o \
-	modelRadius.o modelParamRadius.o \
-	modelCave.o modelParamCave.o \
-	modelMulti.o \
-	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
-	mcmcGravityTimeInf.o \
-	mcmcGravityTimeInfExp.o \
-	mcmcGravityTimeInfExpCaves.o \
+	model.o \
+	modelGravity.o \
+	mcmc.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

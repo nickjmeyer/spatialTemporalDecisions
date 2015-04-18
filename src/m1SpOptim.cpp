@@ -31,51 +31,11 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpCavesModel>,
-			 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-				   GravityTimeInfExpCavesModel>,
-			 GravityTimeInfExpCavesModel>;
-
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfExpModel>,
-			 RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
-				   GravityTimeInfExpModel>,
-			 GravityTimeInfExpModel>;
-
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityTimeInfModel>,
-			 RankAgent<ToyFeatures2<GravityTimeInfModel>,
-				   GravityTimeInfModel>,
-			 GravityTimeInfModel>;
-
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				GravityModel>,
-			 RankAgent<ToyFeatures2<GravityModel>,
-				   GravityModel>,
-			 GravityModel>;
-
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				RangeModel>,
-			 RankAgent<ToyFeatures2<RangeModel>,
-				   RangeModel>,
-			 RangeModel>;
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				RadiusModel>,
-			 RankAgent<ToyFeatures2<RadiusModel>,
-				   RadiusModel>,
-			 RadiusModel>;
-
-template class M1SpOptim<System<GravityTimeInfExpCavesModel,
-				CaveModel>,
-			 RankAgent<ToyFeatures2<CaveModel>,
-				   CaveModel>,
-			 CaveModel>;
+template class M1SpOptim<System<ModelGravity,
+				ModelGravity>,
+			 RankAgent<ToyFeatures2<ModelGravity>,
+				   ModelGravity>,
+			 ModelGravity>;
 
 
 template <class S, class A, class M>

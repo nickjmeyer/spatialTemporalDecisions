@@ -7,11 +7,9 @@
 #include <limits>
 #include "data.hpp"
 #include "model.hpp"
+#include "modelGravity.hpp"
 #include "agent.hpp"
 #include "features.hpp"
-#include "modelParamRange.hpp"
-#include "modelRange.hpp"
-#include "modelGravityTimeInfExpCaves.hpp"
 
 
 template <class M>

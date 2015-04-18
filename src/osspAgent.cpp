@@ -1,6 +1,6 @@
 #include "osspAgent.hpp"
 
-template class OsspAgent<GravityTimeInfExpCavesModel>;
+template class OsspAgent<ModelGravity>;
 
 
 OsspAgentTuneParam::OsspAgentTuneParam(){

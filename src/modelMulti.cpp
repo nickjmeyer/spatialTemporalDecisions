@@ -5,7 +5,7 @@ MultiModel::MultiModel(){
   fill();
 
   if(int(m.size()) != numModels){
-    std::cout << "MultiMode: number of models is not correct."
+    std::cout << "MultiModel: number of models is not correct."
 	      << std::endl;
     throw(1);
   }
@@ -21,7 +21,7 @@ MultiModel::MultiModel(const MultiModel & mm){
     (*m.at(s)) = (*mm.m.at(s));
   
   if(int(m.size()) != numModels){
-    std::cout << "MultiMode: number of models is not correct."
+    std::cout << "MultiModel: number of models is not correct."
 	      << std::endl;
     throw(1);
   }

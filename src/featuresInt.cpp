@@ -1,22 +1,7 @@
 #include "featuresInt.hpp"
 
-template class FeaturesInt<ToyFeatures2<GravityModel>,
-			   GravityModel>;
-
-template class FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
-			   GravityTimeInfExpCavesModel>;
-
-template class FeaturesInt<ToyFeatures2<RangeModel>,
-			   RangeModel>;
-
-template class FeaturesInt<ToyFeatures2<RadiusModel>,
-			   RadiusModel>;
-
-template class FeaturesInt<ToyFeatures2<CaveModel>,
-			   CaveModel>;
-
-template class FeaturesInt<ToyFeatures2Multi<MultiModel>,
-			   MultiModel>;
+template class FeaturesInt<ToyFeatures2<ModelGravity>,
+			   ModelGravity>;
 
 
 template <class F, class M>

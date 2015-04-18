@@ -26,13 +26,7 @@
 #include "m2QOptim.hpp"
 #include "pardisoSymWrap.hpp"
 
-#include "param.hpp"
-#include "paramIntercept.hpp"
-#include "paramBeta.hpp"
-#include "paramGravity.hpp"
-#include "paramTime.hpp"
-#include "paramTimeExpCaves.hpp"
-#include "paramTrt.hpp"
-
+#include "model.hpp"
+#include "modelGravity.hpp"
 
 #endif

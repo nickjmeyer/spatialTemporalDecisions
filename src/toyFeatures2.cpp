@@ -13,19 +13,7 @@ void ToyFeatures2TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class ToyFeatures2<GravityTimeInfExpCavesModel>;
-
-template class ToyFeatures2<GravityTimeInfExpModel>;
-
-template class ToyFeatures2<GravityTimeInfModel>;
-
-template class ToyFeatures2<GravityModel>;
-
-template class ToyFeatures2<RangeModel>;
-
-template class ToyFeatures2<RadiusModel>;
-
-template class ToyFeatures2<CaveModel>;
+template class ToyFeatures2<ModelGravity>;
 
 
 
@@ -40,7 +28,9 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 
   // load estimated probabilities of infection
   njm::timer.start("modelLoad");
-  m.load(sD,tD,fD,dD);
+  m.modFill(sD,tD,fD,dD);
+  m.infProbs(sD,tD,fD,dD);
+  m.revProbs(sD,tD,fD,dD);
   njm::timer.stop("modelLoad");
 
   // extract subgraph connectiviy for not infected
@@ -76,7 +66,7 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
 	// neighbors of i
 	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD1,*itD0,sD,tD,fD,dD)));
+				 (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
 	
 	// i is a neighbor of j
 	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
@@ -114,8 +104,8 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   
   // feature 0
   // probability of infection or infecting
-  infFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,1);
-  notFeat.col(featNum) = 1 - arma::prod(m.mP.infProbsSep,0).t();
+  infFeat.col(featNum) = arma::conv_to<arma::colvec>::from(m.revProbs());
+  notFeat.col(featNum) = arma::conv_to<arma::colvec>::from(m.infProbs());
   
 
   featNum++;
@@ -141,7 +131,18 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     notFeat(i,featNum) = modProbTot*notFeat(i,0);
   }
   
-  infFeat.col(featNum) = (1.0-m.mP.infProbsSep) * notFeat.col(featNum);
+  arma::mat weightMat(sD.numInfected,sD.numNotInfec);
+  double val;
+  int node0;
+  for(i = 0; i < sD.numInfected; ++i){
+    node0 = sD.infected.at(i);
+    for(j = 0; j < sD.numNotInfec; ++j){
+      val = m.oneOnOne(sD.notInfec.at(j),node0,fD.numNodes);
+      weightMat(i,j) = 1.0 - 1.0/(1.0 + std::exp(val));
+    }
+  }
+				     
+  infFeat.col(featNum) = weightMat * notFeat.col(featNum);
 
   
   featNum++;
@@ -151,7 +152,7 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
 
-  infFeat.col(featNum) = (1.0 - m.mP.infProbsSep) * notFeat.col(0);
+  infFeat.col(featNum) = weightMat * notFeat.col(0);
 
     
   featNum++;
@@ -206,55 +207,29 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const DynamicData & dD,
 				     M & m){
   njm::timer.start("update");
-  int i,j,node0,now,pre,num;
+  int i,j,num;
   std::pair<int,int> neighOf;
 
-  // update not infected probabilities
+  m.modFill(sD,tD,fD,dD);
+  njm::timer.start("blah0");
+  m.infProbs(sD,tD,fD,dD);
+  njm::timer.stop("blah0");
+  njm::timer.start("blah1");
+  m.revProbs(sD,tD,fD,dD);
+  njm::timer.stop("blah1");
+
+  // update neighbor probs
   for(i = 0; i < sD.numNotInfec; i++){
-    node0 = sD.notInfec.at(i);
-    now = tD.p.at(node0);
-    pre = tDPre.p.at(node0);
-    
-    if(now != pre && now == 1){ // adding trt
-      m.mP.infProbsBase.col(i) -= m.mP.trtPre;
-      m.mP.setCol(i);
+    num=notNeighOfNum.at(i);
+    for(j = 0; j < num; j++){
+      neighOf = notNeighOf.at(i).at(j);
 
-      num=notNeighOfNum.at(i);
-      for(j = 0; j < num; j++){
-	neighOf = notNeighOf.at(i).at(j);
-
-	notNeigh.at(neighOf.first).at(neighOf.second).second -= m.mP.trtPre;
-      }
-    }
-    
-    else if(now != pre && now == 0){ // removing trt
-      m.mP.infProbsBase.col(i) += m.mP.trtPre;
-      m.mP.setCol(i);
-
-      num=notNeighOfNum.at(i);
-      for(j = 0; j < num; j++){
-	neighOf = notNeighOf.at(i).at(j);
-
-	notNeigh.at(neighOf.first).at(neighOf.second).second += m.mP.trtPre;
-      }
+      notNeigh.at(neighOf.first).at(neighOf.second).second =
+	m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
+		   fD.numNodes);
     }
   }
 
-  // update infected probabilities
-  for(i = 0; i < sD.numInfected; i++){
-    node0 = sD.infected.at(i);
-    now = tD.a.at(node0);
-    pre = tDPre.a.at(node0);
-    
-    if(now != pre && now == 1){ // adding trt
-      m.mP.infProbsBase.row(i) -= m.mP.trtAct;
-      m.mP.setRow(i);
-    }
-    else if(now != pre && now == 0){ // removing trt
-      m.mP.infProbsBase.row(i) += m.mP.trtAct;
-      m.mP.setRow(i);
-    }
-  }
   njm::timer.stop("update");
   getFeatures(sD,tD,fD,dD,m);
 }

@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
 
 
 
-  typedef GravityTimeInfExpCavesModel MG;
+  typedef ModelGravity MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   typedef ToyFeatures2<MG> F;
@@ -18,68 +18,20 @@ int main(int argc, char ** argv){
   RA ra;
   PR pr;
 
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
-  // int numReps = 1000;
-  // Starts starts("startingLocations.txt");
+  std::vector<double> par = s.modelGen_r.getPar();
+  s.modelEst_r.putPar(par.begin());
 
-  // s.reset(starts[0]);
+  int numReps = 1;
+  Starts starts("startingLocations.txt");
 
-  // pr.run(s,ra,numReps,s.fD.finalT);
+  s.reset(starts[0]);
 
-  ParamBase * pB = new ParamIntercept(s.fD);
-
-  std::cout << njm::toString(pB->getPar()," ","\n");
-
-  std::vector<double> pars = {1};
-  std::vector<double>::iterator beg = pars.begin();
-
-  pB->putPar(beg);
-
-  std::cout << njm::toString(pB->getPar()," ","\n");
-
-  std::cout << (beg == pars.end()) << std::endl;
-
-
-  std::vector<double> probs = {0,1,2};
-
-  std::cout << njm::toString(probs," ","\n");
-
-  pB->setFill(probs);
-  
-  std::cout << njm::toString(probs," ","\n");
-
-  pars = {2};
-  pB->putPar(pars.begin());
-  pB->updateFill(probs);
-  
-  std::cout << njm::toString(probs," ","\n");
-
-  probs = {0,1,2};
-
-  pars = {1};
-  pB->putPar(pars.begin());
-  pB->setFill(probs);
-  std::cout << njm::toString(probs," ","\n");
-
-  pars = {2};
-  pB->putPar(pars.begin());
-  pB->setFill(probs);
-  std::cout << njm::toString(probs," ","\n");
-
-  pB->updateFill(probs);
-  std::cout << njm::toString(probs," ","\n");
-
-  pars = {-1};
-  pB->putPar(pars.begin());
-  pB->updateFill(probs);
-  std::cout << njm::toString(probs," ","\n");
-  
-  
-
-  
-  
-  
-  delete pB;
+  njm::message(pr.run(s,ra,numReps,s.fD.finalT));
+  // std::cout << "\n\nFuckers\n\n";
+  // njm::message(pr.run(s,ra,1,s.fD.finalT));
 
 
   njm::sett.clean();

@@ -11,21 +11,22 @@ void test(const std::string & name, const int cond){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef GravityTimeInfExpCavesModel MG;
+  typedef ModelGravity MG;
   typedef MG ME;
   typedef System<MG,ME> S;
 
   S s;
 
   std::cout << "Testing ParamIntercept" << std::endl;
-  ParamBase * pB = new ParamIntercept(s.fD);
+  ParamBase * pB = new ParamIntercept();
+  pB->init(s.fD);
 
   std::vector<double> ans;
   ans = {0};
   test("init",pB->getPar() == ans);
 
   std::vector<double> pars = {1};
-  std::vector<double>::iterator beg = pars.begin();
+  std::vector<double>::const_iterator beg = pars.begin();
 
   beg = pB->putPar(beg);
 
@@ -42,47 +43,12 @@ int main(int argc, char ** argv){
   ans = {1,2,3};
   test("setFill",probs == ans);
 
-  pars = {2};
-  pB->putPar(pars.begin());
-  pB->updateFill(probs,s.sD,s.tD,s.fD,s.dD);
-
-  ans = {2,3,4};
-  test("updateFill",probs == ans);
-
-  probs = {0,1,2};
-
-  pars = {1};
-  pB->putPar(pars.begin());
-  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
-
-  ans = {1,2,3};
-  test("putPar,setFill",probs == ans);
-
-  pars = {2};
-  pB->putPar(pars.begin());
-  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
-  
-  ans = {3,4,5};
-  test("putPar,setFill",probs == ans);
-
-  pB->updateFill(probs,s.sD,s.tD,s.fD,s.dD);
-
-  ans = {4,5,6};
-  test("updateFill",probs == ans);
-
-  pars = {-1};
-  pB->putPar(pars.begin());
-  pB->updateFill(probs,s.sD,s.tD,s.fD,s.dD);
-
-  ans = {1,2,3};
-  test("putPar,updateFill",probs == ans);
-  
-
   delete pB;
 
   std::cout << "Testing ParamBeta" << std::endl;
   
-  pB = new ParamBeta(s.fD);
+  pB = new ParamBeta();
+  pB->init(s.fD);
 
   ans = std::vector<double>(s.fD.numCovar,0);
 
@@ -128,36 +94,11 @@ int main(int argc, char ** argv){
   test("setFill",diff < 1e-16);
 
 
-  i = 0;
-  std::for_each(pars.begin(),pars.end(),
-		[&i](double & x){x = (i - 3)*(i + 2) - 1;});
-
-  for(i = 0; i < s.fD.numNodes; ++i){
-    covarBeta.at(i) = 0;
-    for(j = 0; j < s.fD.numCovar; ++j){
-      covarBeta.at(i) += s.fD.covar.at(i*s.fD.numCovar + j) * pars.at(j);
-    }
-  }
-  ans = std::vector<double>(s.fD.numNodes * s.fD.numNodes,0);
-  for(i = 0; i < s.fD.numNodes; ++i){
-    for(j = 0; j < s.fD.numNodes; ++j){
-      ans.at(i*s.fD.numNodes + j) = covarBeta.at(i);
-    }
-  }
-
-  pB->putPar(pars.begin());
-  pB->updateFill(probs,s.sD,s.tD,s.fD,s.dD);
-  
-  diff = 0;
-  for(i = 0; i < (s.fD.numNodes * s.fD.numNodes); ++i)
-    diff += (ans.at(i) - probs.at(i))*(ans.at(i) - probs.at(i));
-
-  test("updateFill",diff < 1e-16);
-
   delete pB;
 
 
-  pB = new ParamGravity(s.fD);
+  pB = new ParamGravity();
+  pB->init(s.fD);
   std::cout << "Testing ParamGravity" << std::endl;
 
   pars = {0,0};
@@ -176,7 +117,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      ans.push_back(pars.at(0) * s.fD.dist.at(i*s.fD.numNodes + j) /
+      ans.push_back(-pars.at(0) * s.fD.dist.at(i*s.fD.numNodes + j) /
 		    std::pow(s.fD.caves.at(i)*s.fD.caves.at(j),
 			     pars.at(1)));
     }
@@ -196,22 +137,42 @@ int main(int argc, char ** argv){
   test("setFill",diff < 1e-10);
 
 
-  pars = {-2,3};
+  delete pB;
+
+
+
+
+  pB = new ParamTrt();
+  pB->init(s.fD);
+  std::cout << "Testing ParamTrt" << std::endl;
+
+  pars = {0,0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1,1};
   beg = pars.begin();
   beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  s.tD.a = s.tD.p = std::vector<int>(s.fD.numNodes,0);
+
+  s.tD.a.at(0) = s.tD.a.at(3) = s.tD.a.at(7) = 1;
+  s.tD.p.at(0) = s.tD.a.at(4) = s.tD.a.at(8) = 1;
 
   ans.clear();
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      ans.push_back(pars.at(0) * s.fD.dist.at(i*s.fD.numNodes + j) /
-		    std::pow(s.fD.caves.at(i)*s.fD.caves.at(j),
-			     pars.at(1)));
+      ans.push_back(-pars.at(0) * double(s.tD.a.at(j)) -
+		    pars.at(1) * double(s.tD.p.at(i)));
     }
   }
 
-  pB->updateFill(probs,s.sD,s.tD,s.fD,s.dD);
-
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
   diff = 0.0;
   for(i = 0, k = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j, ++k){
@@ -219,13 +180,245 @@ int main(int argc, char ** argv){
     }
   }
 
-  test("updateFill",diff < 1e-10);
+  test("setFill",diff < 1e-10);
   
+  s.tD.a.at(0) = s.tD.a.at(3) = 0;
+  s.tD.p.at(0) = 0;
 
+  s.tD.a.at(2) = s.tD.a.at(9) = 1;
+  s.tD.p.at(5) = s.tD.p.at(6) = 1;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(-pars.at(0) * double(s.tD.a.at(j)) -
+		    pars.at(1) * double(s.tD.p.at(i)));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+
+  s.tD.a.at(0) = s.tD.a.at(3) = 1;
+
+  s.tD.a.at(1) = s.tD.a.at(8) = 1;
+  s.tD.p.at(2) = s.tD.p.at(7) = 1;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(-pars.at(0) * double(s.tD.a.at(j)) -
+		    pars.at(1) * double(s.tD.p.at(i)));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill2",diff < 1e-10);
+
+  delete pB;
+
+  pB = new ParamTime();
+  pB->init(s.fD);
+  std::cout << "Testing ParamTime" << std::endl;
+
+  pars = {0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1};
+  beg = pars.begin();
+  beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  s.sD.timeInf = std::vector<int>(s.fD.numNodes,0);
+  s.sD.timeInf.at(0) = 2;
+  s.sD.timeInf.at(1) = 7;
+  s.sD.timeInf.at(4) = 8;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) * double(s.sD.timeInf.at(j)-1));
+    }
+  }
+
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("setFill",diff < 1e-10);
+
+  s.sD.timeInf.at(1) = 4;
+  s.sD.timeInf.at(3) = 3;
+  s.sD.timeInf.at(4) = 10;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) * double(s.sD.timeInf.at(j)-1));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+  s.sD.timeInf.at(1) = 1;
+  s.sD.timeInf.at(7) = 3;
+  s.sD.timeInf.at(4) = 0;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) * double(s.sD.timeInf.at(j)-1));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill2",diff < 1e-10);
 
   delete pB;
   
+
+  pB = new ParamTimeExpCaves();
+  pB->init(s.fD);
+  std::cout << "Testing ParamTimeExpCaves" << std::endl;
+
+  pars = {0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1};
+  beg = pars.begin();
+  beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  s.sD.timeInf = std::vector<int>(s.fD.numNodes,0);
+  s.sD.timeInf.at(0) = 2;
+  s.sD.timeInf.at(1) = 7;
+  s.sD.timeInf.at(4) = 4;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) *
+		    std::exp(double(s.sD.timeInf.at(j)-1)/
+			     s.fD.propCaves.at(j)));
+    }
+  }
+
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
   
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("setFill",diff < 1e-10);
+
+  s.sD.timeInf.at(1) = 4;
+  s.sD.timeInf.at(3) = 3;
+  s.sD.timeInf.at(4) = 2;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) *
+		    std::exp(double(s.sD.timeInf.at(j)-1)/
+			     s.fD.propCaves.at(j)));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+  s.sD.timeInf.at(1) = 1;
+  s.sD.timeInf.at(7) = 3;
+  s.sD.timeInf.at(4) = 0;
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0) *
+		    std::exp(double(s.sD.timeInf.at(j)-1)/
+			     s.fD.propCaves.at(j)));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  std::cout << diff << std::endl;
+  test("modFill2",diff < 1e-10);
+
+  
+  delete pB;
+
   njm::sett.clean();
   return 0;
 }

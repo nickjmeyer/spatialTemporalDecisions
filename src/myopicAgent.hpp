@@ -9,10 +9,6 @@
 #include "model.hpp"
 #include "agent.hpp"
 #include "features.hpp"
-#include "modelParamRange.hpp"
-#include "modelParamCave.hpp"
-#include "modelRange.hpp"
-#include "modelCave.hpp"
 
 template <class M>
 class MyopicAgent : public BaseAgent<M> {

@@ -7,12 +7,10 @@ unsigned int ParamIntercept::initParsSize(const FixedData & fD){
 
 
 void ParamIntercept::initInternal(const FixedData & fD){
-  parsOld = *beg;
 }
 
 
 void ParamIntercept::updateBefore(){
-  parsOld = *beg;
 }
 
 
@@ -24,7 +22,7 @@ void ParamIntercept::setFill(std::vector<double> & probs,
 			     const SimData & sD,
 			     const TrtData & tD,
 			     const FixedData & fD,
-			     const DynamicData & dD) const {
+			     const DynamicData & dD){
   double val = *beg;
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
@@ -33,15 +31,11 @@ void ParamIntercept::setFill(std::vector<double> & probs,
 }
 
 
-void ParamIntercept::updateFill(std::vector<double> & probs,
-				const SimData & sD,
-				const TrtData & tD,
-				const FixedData & fD,
-				const DynamicData & dD) const {
-  double diff = *beg - parsOld;
-  std::for_each(probs.begin(),probs.end(),
-		[&diff](double & x){
-		  x += diff;
-		});
+void ParamIntercept::modFill(std::vector<double> & probs,
+			     const SimData & sD,
+			     const TrtData & tD,
+			     const FixedData & fD,
+			     const DynamicData & dD){
+  // do nothing
 }
 							   
