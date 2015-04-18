@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
 
 
 
-  typedef GravityTimeInfExpCavesModel MG;
+  typedef GravityModel MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   typedef ToyFeatures2<MG> F;
@@ -18,14 +18,21 @@ int main(int argc, char ** argv){
   RA ra;
   PR pr;
 
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
-  int numReps = 1000;
+  s.modelEst_r = s.modelGen_r;
+  
+
+  int numReps = 1;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
-
-  pr.run(s,ra,numReps,s.fD.finalT);
-
+  
+  njm::message(pr.run(s,ra,numReps,s.fD.finalT));
+  // std::cout << "\n\nFUCKERS\n\n";
+  // njm::message(pr.run(s,ra,1,s.fD.finalT));
+  
 
   njm::sett.clean();
   return 0;

@@ -220,7 +220,7 @@ void System<MG,
   // nothing to do for this....DynamicData isn't used
 
   // load probs
-  modelGen.load(sD_r,tD_r,fD,dD_r);
+  modelGen_r.load(sD_r,tD_r,fD,dD_r);
 
   // revert
   revert();
@@ -382,6 +382,12 @@ void System<MG,
   njm::timer.start("modelInfProbs");
   modelGen.infProbs(sD,tD,fD,dD);
   njm::timer.stop("modelInfProbs");
+
+  // std::vector<double> infProbs = modelGen.getPar()->getInfProbs();
+  // std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
+  // 					       infProbs.end(),
+  // 					       0.0)
+  // 	    << std::endl;
 
   njm::timer.start("next");
   nextPoint(modelGen.getPar()->getInfProbs());
