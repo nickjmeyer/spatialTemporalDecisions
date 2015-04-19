@@ -42,7 +42,7 @@ int main(int argc, char ** argv){
   std::vector<double> par = s.modelGen_r.getPar();
   s.modelEst_r.putPar(par.begin());
 
-  int numReps = 500;
+  int numReps = 1000;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
