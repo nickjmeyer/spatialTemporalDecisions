@@ -345,12 +345,6 @@ void System<MG,
   modelGen.infProbs(sD,tD,fD,dD);
   njm::timer.stop("modelInfProbs");
 
-  std::vector<double> infProbs = modelGen.infProbs();
-  std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
-  					       infProbs.end(),
-  					       0.0)
-  	    << std::endl;
-
   njm::timer.start("next");
   nextPoint(modelGen.infProbs());
   njm::timer.stop("next");

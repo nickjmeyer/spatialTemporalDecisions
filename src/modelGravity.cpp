@@ -15,7 +15,8 @@ ModelGravity::ModelGravity(const FixedData & fD)
 
 
 ModelGravity::ModelGravity(const ModelGravity & m){
-  int i = 0, numPars = m.pars.size();
+  int i, numPars = m.pars.size();
+  pars.clear();
   for(i = 0; i < numPars; ++i)
     pars.push_back(m.pars.at(i)->clone());
 

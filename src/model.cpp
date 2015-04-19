@@ -3,6 +3,7 @@
 
 ModelBase::ModelBase(const std::vector<ParamBase *> & newPars,
 		     const FixedData & fD){
+  set = 0;
   pars = newPars;
   std::for_each(pars.begin(),pars.end(),
 		[&fD](ParamBase * p){
@@ -14,7 +15,7 @@ ModelBase::ModelBase(const std::vector<ParamBase *> & newPars,
 ModelBase::~ModelBase(){
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    delete pars.at(i);
+    delete pars[i];
   }
 }
 
@@ -42,11 +43,11 @@ void ModelBase::infProbs(const SimData & sD,
   int i,j,node0;
   double prob;
   for(i=0; i<sD.numNotInfec; i++){
-    node0 = sD.notInfec.at(i) * fD.numNodes;
+    node0 = sD.notInfec[i] * fD.numNodes;
     prob=1.0;
     for(j=0; j<sD.numInfected; j++)
-      prob *= 1.0/(1.0+std::exp(probs.at(node0 + sD.infected.at(j))));
-    expitInfProbs.at(i) = 1.0-prob;
+      prob *= 1.0/(1.0+std::exp(probs[node0 + sD.infected[j]]));
+    expitInfProbs[i] = 1.0-prob;
   }
 }
 
@@ -65,11 +66,11 @@ void ModelBase::revProbs(const SimData & sD,
   int i,j,node0;
   double prob;
   for(i=0; i<sD.numInfected; i++){
-    node0 = sD.infected.at(i);
+    node0 = sD.infected[i];
     prob=1.0;
     for(j=0; j<sD.numNotInfec; j++)
-      prob *= 1.0/(1.0+std::exp(probs.at(node0 +
-					 sD.notInfec.at(j)*fD.numNodes)));
+      prob *= 1.0/(1.0+std::exp(probs[node0 +
+					 sD.notInfec[j]*fD.numNodes]));
     expitRevProbs.push_back(1.0-prob);
   }
 }
@@ -88,7 +89,7 @@ void ModelBase::setFill(const SimData & sD,
   int i,numPars = pars.size();
   probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
   for(i = 0; i < numPars; ++i)
-    pars.at(i)->setFill(probs,sD,tD,fD,dD);
+    pars[i]->setFill(probs,sD,tD,fD,dD);
   set = 1;
 }
 
@@ -100,7 +101,7 @@ void ModelBase::modFill(const SimData & sD,
   if(set == 1){
     int i,numPars = pars.size();
     for(i = 0; i < numPars; ++i)
-      pars.at(i)->modFill(probs,sD,tD,fD,dD);
+      pars[i]->modFill(probs,sD,tD,fD,dD);
   }
   else if(set == 0){
     setFill(sD,tD,fD,dD);
@@ -112,7 +113,7 @@ void ModelBase::modFill(const SimData & sD,
 double ModelBase::oneOnOne(const int notNode,
 			   const int infNode,
 			   const int numNodes) const {
-  return probs.at(notNode * numNodes + infNode);
+  return probs[notNode * numNodes + infNode];
 }
 
 
@@ -120,7 +121,7 @@ std::vector<double> ModelBase::getPar() const{
   std::vector<double> all,add;
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    add = pars.at(i)->getPar();
+    add = pars[i]->getPar();
     all.insert(all.end(),add.begin(),add.end());
   }
   return all;
@@ -133,7 +134,7 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
   
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    it = pars.at(i)->putPar(it);
+    it = pars[i]->putPar(it);
   }
   return it;
 }

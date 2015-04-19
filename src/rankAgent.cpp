@@ -41,10 +41,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   f.getFeatures(sD,tD,fD,dD,m);
 
   // jitter the current weights
-  std::vector<double> noTrtScore;
-  double jitter,mn;
+  std::vector<double> noTrtScore(0);
+  double jitter=0,mn=0;
   
-  int i,j,node0,addPre,addAct;
+  int i=0,j=0,node0=0,addPre=0,addAct=0;
   int cI = 0,cN = 0;
   
   int numChunks = std::log((double)fD.numNodes) + 1.0;
