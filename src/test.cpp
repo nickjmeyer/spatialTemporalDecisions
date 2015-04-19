@@ -24,12 +24,14 @@ int main(int argc, char ** argv){
   s.modelEst_r = s.modelGen_r;
   
 
-  int numReps = 1;
+  int numReps = 1000;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
-  
+
+  njm::timer.start("everything");
   njm::message(pr.run(s,ra,numReps,s.fD.finalT));
+  njm::timer.stop("everything");
   // std::cout << "\n\nFUCKERS\n\n";
   // njm::message(pr.run(s,ra,1,s.fD.finalT));
   
