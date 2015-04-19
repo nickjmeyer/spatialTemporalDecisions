@@ -24,7 +24,7 @@ int main(int argc, char ** argv){
   s.modelEst_r = s.modelGen_r;
   
 
-  int numReps = 1000;
+  int numReps = 10000;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
