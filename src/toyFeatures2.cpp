@@ -15,6 +15,8 @@ void ToyFeatures2TuneParam::putPar(const std::vector<double> & par){
 
 template class ToyFeatures2<ModelGravity>;
 
+template class ToyFeatures2<ModelTime>;
+
 template class ToyFeatures2<ModelTimeExpCaves>;
 
 
@@ -30,7 +32,8 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 
   // load estimated probabilities of infection
   njm::timer.start("modelLoad");
-  m.modFill(sD,tD,fD,dD);
+  // m.modFill(sD,tD,fD,dD);
+  m.setFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
   njm::timer.stop("modelLoad");
 
@@ -187,6 +190,10 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   featNum++;
 
   tDPre = tD;
+
+
+  std::cout << "infFeat: " << arma::sum(infFeat,0)
+	    << "notFeat: " << arma::sum(notFeat,0);
 
 
 #ifndef NJM_NO_DEBUG

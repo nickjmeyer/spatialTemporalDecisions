@@ -9,6 +9,7 @@
 #include "data.hpp"
 #include "model.hpp"
 #include "modelGravity.hpp"
+#include "modelTime.hpp"
 #include "modelTimeExpCaves.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"

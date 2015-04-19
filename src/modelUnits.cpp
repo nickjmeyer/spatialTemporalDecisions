@@ -12,7 +12,9 @@ void test(const std::string & name, const int cond){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCaves MG;
+  // typedef ModelTimeExpCaves MG;
+  typedef ModelTime MG;
+  // typedef ModelGravity MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   // typedef NoTrt<MG> NT;
@@ -31,8 +33,8 @@ int main(int argc, char ** argv){
   // PR pr;
   FR pr;
   
-  int numReps = 2;
-  omp_set_num_threads(2);
+  int numReps = 1;
+  // omp_set_num_threads(2);
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
@@ -43,6 +45,8 @@ int main(int argc, char ** argv){
   s.revert();
 
   std::vector<double> infProbs;
+  // s.modelGen.setFill(s.sD,s.tD,s.fD,s.dD);
+  // s.modelGen.setQuick(s.sD,s.tD,s.fD,s.dD);
   s.modelGen.infProbs(s.sD,s.tD,s.fD,s.dD);
   infProbs = s.modelGen.infProbs();
   std::cout << njm::toString(s.sD.infected," ","\n");
@@ -50,6 +54,10 @@ int main(int argc, char ** argv){
   std::cout << std::accumulate(infProbs.begin(),infProbs.end(),0.0)
 	    << std::endl
 	    << s.modelGen.oneOnOne(0,89,s.fD.numNodes)
+	    << std::endl
+	    << s.modelGen.oneOnOne(1,89,s.fD.numNodes)
+	    << std::endl
+	    << s.modelGen.oneOnOne(2,89,s.fD.numNodes)
 	    << std::endl;
 
   s.nextPoint();

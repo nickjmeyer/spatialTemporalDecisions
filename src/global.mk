@@ -24,8 +24,10 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	paramTrt.o \
 	model.o \
 	modelGravity.o \
+	modelTime.o \
 	modelTimeExpCaves.o \
 	mcmc.o \
+	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfExpCaves.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
