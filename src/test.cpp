@@ -40,6 +40,7 @@ int main(int argc, char ** argv){
   ////////////////////////////////////////
 
   typedef GravityTimeInfExpCavesModel MG;
+  // typedef GravityModel MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   // typedef NoTrt<MG> NT;
@@ -58,8 +59,8 @@ int main(int argc, char ** argv){
   // PR pr;
   FR pr;
   
-  int numReps = 2;
-  omp_set_num_threads(2);
+  int numReps = 1;
+  // omp_set_num_threads(2);
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);
@@ -76,6 +77,10 @@ int main(int argc, char ** argv){
   std::cout << std::accumulate(infProbs.begin(),infProbs.end(),0.0)
 	    << std::endl
 	    << s.modelGen.oneOnOne(0,89,s.sD,s.tD,s.fD,s.dD)
+	    << std::endl
+	    << s.modelGen.oneOnOne(1,89,s.sD,s.tD,s.fD,s.dD)
+	    << std::endl
+	    << s.modelGen.oneOnOne(2,89,s.sD,s.tD,s.fD,s.dD)
 	    << std::endl;
 
   s.nextPoint();

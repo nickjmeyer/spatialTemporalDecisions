@@ -383,11 +383,26 @@ void System<MG,
   modelGen.infProbs(sD,tD,fD,dD);
   njm::timer.stop("modelInfProbs");
 
-  // std::vector<double> infProbs = modelGen.getPar()->getInfProbs();
-  // std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
-  // 					       infProbs.end(),
-  // 					       0.0)
-  // 	    << std::endl;
+  int tot = 0;
+  for(int i  = 0; i < fD.numNodes; ++i)
+    if(tD.a.at(i) == 1)
+      tot += i;
+  std::cout << "a: " << tot
+	    << std::endl;
+
+  tot = 0;
+  for(int i  = 0; i < fD.numNodes; ++i)
+    if(tD.p.at(i) == 1)
+      tot += i;
+  
+  std::cout << "p: " << tot
+	    << std::endl;
+  
+  std::vector<double> infProbs = modelGen.getPar()->getInfProbs();
+  std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
+  					       infProbs.end(),
+  					       0.0)
+  	    << std::endl;
 
   njm::timer.start("next");
   nextPoint(modelGen.getPar()->getInfProbs());
