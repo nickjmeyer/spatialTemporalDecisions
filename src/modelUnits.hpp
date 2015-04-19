@@ -28,5 +28,6 @@
 
 #include "model.hpp"
 #include "modelGravity.hpp"
+#include "modelTimeExpCaves.hpp"
 
 #endif

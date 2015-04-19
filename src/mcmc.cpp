@@ -69,8 +69,8 @@ void GravitySamples::setPar(const int i){
 
 
 std::vector<double> GravitySamples::getPar() const {
-  std::vector<double> par = betaSet;
-  par.push_back(intcpSet);
+  std::vector<double> par (1,intcpSet);
+  par.insert(par.end(),betaSet.begin(),betaSet.end());
   par.push_back(alphaSet);
   par.push_back(powerSet);
   par.push_back(trtActSet);
@@ -143,7 +143,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn){
 			     0.1, // power
 			     0.0, // trtAct
 			     0.0}; // trtPre
-  par.insert(par.begin(),beta.begin(),beta.end());
+  par.insert(par.begin()+1,beta.begin(),beta.end());
   sample(numSamples,numBurn,par);
 }
 
@@ -162,18 +162,20 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
 
   int i,j;
   // set containers for current and candidate samples
-  std::vector<double>::const_iterator it = par.begin();
-  it += numCovar;
-  beta_cur.clear();
-  beta_cur.insert(beta_cur.end(),par.begin(),it);
-  beta_can = beta_cur;
+  std::vector<double>::const_iterator it = par.begin(),it1;
   intcp_cur=intcp_can= *it++;
+  
+  beta_cur.clear();
+  for(i = 0; i < numCovar; ++i)
+    beta_cur.push_back(*it++);
+  beta_can = beta_cur;
+  
   alpha_cur=alpha_can= (*it < 0.00001 ? 0.01 : *it);
   ++it;
   power_cur=power_can= (*it < 0.00001 ? 0.01 : *it);
   ++it;
-  trtPre_cur=trtPre_can= *it++;
   trtAct_cur=trtAct_can= *it++;
+  trtPre_cur=trtPre_can= *it++;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();

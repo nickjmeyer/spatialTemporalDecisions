@@ -12,7 +12,7 @@ void test(const std::string & name, const int cond){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelGravity MG;
+  typedef ModelTimeExpCaves MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   // typedef NoTrt<MG> NT;
@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
   // PR pr;
   FR pr;
   
-  int numReps = 6;
+  int numReps = 2;
   omp_set_num_threads(2);
   Starts starts("startingLocations.txt");
 

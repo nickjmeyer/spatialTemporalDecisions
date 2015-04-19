@@ -4,6 +4,9 @@
 template class RankAgent<ToyFeatures2<ModelGravity>,
 			 ModelGravity>;
 
+template class RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
 
 
 template <class F, class M>

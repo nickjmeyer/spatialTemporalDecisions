@@ -44,7 +44,6 @@ class ModelGravityFitData {
  public:
   ModelGravityFitData(const ModelGravity & m,
 		      const std::vector<double> & all,
-		      const SimData & sD,
 		      const FixedData & fD,
 		      const std::vector<std::vector<int> > & history);
 

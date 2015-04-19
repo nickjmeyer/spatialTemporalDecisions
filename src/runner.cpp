@@ -252,6 +252,11 @@ template class FitOnlyRunner<System<ModelGravity,
 			     RankAgent<ToyFeatures2<ModelGravity>,
 				       ModelGravity> >;
 
+template class FitOnlyRunner<System<ModelTimeExpCaves,
+				    ModelTimeExpCaves>,
+			     RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+				       ModelTimeExpCaves> >;
+
 
 template <class S, class A>
 double

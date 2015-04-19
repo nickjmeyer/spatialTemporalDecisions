@@ -3,6 +3,9 @@
 template class System<ModelGravity,
 		      ModelGravity>;
 
+template class System<ModelTimeExpCaves,
+		      ModelTimeExpCaves>;
+
 
 template <class MG,
 	  class ME>
