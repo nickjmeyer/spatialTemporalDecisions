@@ -29,6 +29,7 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   // load estimated probabilities of infection
   njm::timer.start("modelLoad");
   m.modFill(sD,tD,fD,dD);
+  m.setQuick(sD,tD,fD,dD);
   m.infProbs(sD,tD,fD,dD);
   m.revProbs(sD,tD,fD,dD);
   njm::timer.stop("modelLoad");
@@ -131,18 +132,19 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     notFeat(i,featNum) = modProbTot*notFeat(i,0);
   }
   
-  arma::mat weightMat(sD.numInfected,sD.numNotInfec);
-  double val;
-  int node0;
-  for(i = 0; i < sD.numInfected; ++i){
-    node0 = sD.infected.at(i);
-    for(j = 0; j < sD.numNotInfec; ++j){
-      val = m.oneOnOne(sD.notInfec.at(j),node0,fD.numNodes);
-      weightMat(i,j) = 1.0 - 1.0/(1.0 + std::exp(val));
-    }
-  }
+  // arma::mat weightMat(sD.numInfected,sD.numNotInfec);
+  // double val;
+  // int node0;
+  // for(i = 0; i < sD.numInfected; ++i){
+  //   node0 = sD.infected.at(i);
+  //   for(j = 0; j < sD.numNotInfec; ++j){
+  //     val = m.oneOnOne(sD.notInfec.at(j),node0,fD.numNodes);
+  //     weightMat(i,j) = 1.0 - 1.0/(1.0 + std::exp(val));
+  //   }
+  // }
+  arma::mat weightMat(m.getQuick().data(),sD.numInfected,sD.numNotInfec,false);
 				     
-  infFeat.col(featNum) = weightMat * notFeat.col(featNum);
+  infFeat.col(featNum) = (1.0 - weightMat) * notFeat.col(featNum);
 
   
   featNum++;
@@ -152,7 +154,7 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
 
-  infFeat.col(featNum) = weightMat * notFeat.col(0);
+  infFeat.col(featNum) = (1.0 - weightMat) * notFeat.col(0);
 
     
   featNum++;
@@ -211,6 +213,7 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
   std::pair<int,int> neighOf;
 
   m.modFill(sD,tD,fD,dD);
+  m.setQuick(sD,tD,fD,dD);
   njm::timer.start("blah0");
   m.infProbs(sD,tD,fD,dD);
   njm::timer.stop("blah0");

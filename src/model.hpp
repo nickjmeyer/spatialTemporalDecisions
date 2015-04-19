@@ -18,6 +18,9 @@ class ModelBase {
   std::vector<double> probs;
   std::vector<double> expitInfProbs;
   std::vector<double> expitRevProbs;
+  std::vector<double> quick;
+  int ready;
+  int numInfected,numNotInfec;
 
  public:
   ModelBase(){ };
@@ -50,6 +53,13 @@ class ModelBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD);
+
+  virtual void setQuick(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+
+  virtual std::vector<double> & getQuick();
   
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const int numNodes) const;

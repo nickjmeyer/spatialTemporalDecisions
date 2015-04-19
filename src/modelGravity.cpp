@@ -24,6 +24,10 @@ ModelGravity::ModelGravity(const ModelGravity & m){
   probs = m.probs;
   expitInfProbs = m.expitInfProbs;
   expitRevProbs = m.expitRevProbs;
+  quick = m.quick;
+  ready = m.ready;
+  numInfected = m.numInfected;
+  numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   mcmc = m.mcmc;
 }

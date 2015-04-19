@@ -4,6 +4,7 @@
 ModelBase::ModelBase(const std::vector<ParamBase *> & newPars,
 		     const FixedData & fD){
   set = 0;
+  ready = 0;
   pars = newPars;
   std::for_each(pars.begin(),pars.end(),
 		[&fD](ParamBase * p){
@@ -39,16 +40,29 @@ void ModelBase::infProbs(const SimData & sD,
 			 const TrtData & tD,
 			 const FixedData & fD,
 			 const DynamicData & dD){
-  expitInfProbs.resize(sD.numNotInfec);
-  int i,j,node0;
-  double prob;
-  for(i=0; i<sD.numNotInfec; i++){
-    node0 = sD.notInfec[i] * fD.numNodes;
-    prob=1.0;
-    for(j=0; j<sD.numInfected; j++)
-      prob *= 1.0/(1.0+std::exp(probs[node0 + sD.infected[j]]));
-    expitInfProbs[i] = 1.0-prob;
+  if(ready == 1){
+    expitInfProbs.resize(sD.numNotInfec);
+    int i,j,k;
+    double prob;
+    for(i = 0, k = 0; i < sD.numNotInfec; ++i){
+      prob=1.0;
+      for(j = 0; j < sD.numInfected; ++j,++k)
+	prob *= quick[k];
+      expitInfProbs[i] = 1.0-prob;
+    }
   }
+  else if(ready == 0){
+    expitInfProbs.resize(sD.numNotInfec);
+    int i,j,k;
+    double prob;
+    for(i = 0; i < sD.numNotInfec; ++i){
+      k = sD.notInfec[i] * fD.numNodes;
+      prob=1.0;
+      for(j = 0; j < sD.numInfected; ++j)
+	prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
+      expitInfProbs[i] = 1.0-prob;
+    }
+  }    
 }
 
 
@@ -61,17 +75,31 @@ void ModelBase::revProbs(const SimData & sD,
 			 const TrtData & tD,
 			 const FixedData & fD,
 			 const DynamicData & dD){
-  expitRevProbs.clear();
-  expitRevProbs.reserve(sD.numInfected);
-  int i,j,node0;
-  double prob;
-  for(i=0; i<sD.numInfected; i++){
-    node0 = sD.infected[i];
-    prob=1.0;
-    for(j=0; j<sD.numNotInfec; j++)
-      prob *= 1.0/(1.0+std::exp(probs[node0 +
-					 sD.notInfec[j]*fD.numNodes]));
-    expitRevProbs.push_back(1.0-prob);
+  if(ready == 1){
+    expitRevProbs.resize(sD.numInfected);
+    int i,j,k;
+    double prob;
+    for(i = 0,k = 0; i < sD.numInfected; ++i){
+      prob=1.0;
+      for(j = 0; j < sD.numNotInfec; ++j,++k)
+	prob *= quick[k];
+      expitRevProbs[i] = 1.0-prob;
+    }
+  }
+  else if(ready == 0){
+    expitRevProbs.resize(sD.numInfected);
+    int i,j,k;
+    double prob;
+    for(i = 0; i < sD.numInfected; ++i){
+      k = sD.infected[i];
+      prob=1.0;
+      for(j = 0; j < sD.numNotInfec; ++j)
+	prob *= 1.0 / (1.0 + std::exp(probs[k + sD.notInfec[j]*fD.numNodes]));
+      expitRevProbs[i] = 1.0-prob;
+    }
+  }
+  else{
+    throw(1);
   }
 }
 
@@ -91,6 +119,7 @@ void ModelBase::setFill(const SimData & sD,
   for(i = 0; i < numPars; ++i)
     pars[i]->setFill(probs,sD,tD,fD,dD);
   set = 1;
+  ready = 0;
 }
 
 
@@ -106,6 +135,27 @@ void ModelBase::modFill(const SimData & sD,
   else if(set == 0){
     setFill(sD,tD,fD,dD);
   }
+  ready = 0;
+}
+
+
+void ModelBase::setQuick(const SimData & sD,
+			 const TrtData & tD,
+			 const FixedData & fD,
+			 const DynamicData & dD){
+  int i,j,k,pK;
+  quick.resize(sD.numNotInfec * sD.numInfected);
+  for(i = 0,k = 0; i < sD.numNotInfec; ++i){
+    pK = sD.notInfec[i]*fD.numNodes;
+    for(j = 0; j < sD.numInfected; ++j,++k){
+      quick[k] = 1.0/(1.0 + std::exp(probs[pK + sD.infected[j]]));
+    }
+  }
+}
+
+
+std::vector<double> & ModelBase::getQuick() {
+  return quick;
 }
 
 
@@ -115,6 +165,7 @@ double ModelBase::oneOnOne(const int notNode,
 			   const int numNodes) const {
   return probs[notNode * numNodes + infNode];
 }
+
 
 
 std::vector<double> ModelBase::getPar() const{
