@@ -29,7 +29,7 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 300;
+  int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
 
   NT nt;
