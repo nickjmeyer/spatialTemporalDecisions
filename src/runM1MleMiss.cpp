@@ -13,12 +13,15 @@ int main(int argc, char ** argv){
   typedef MyopicAgent<ME> MA;
   
   typedef ToyFeatures2<ME> F;
-  typedef RankAgent<F,ME> RA;
-
-  typedef M1SpOptim<S,RA,ME> SPO;
+  // typedef RankAgent<F,ME> RA;
+  typedef OsspAgent<ME> OA;
+  
+  // typedef M1SpOptim<S,RA,ME> SPO;
+  typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef FitOnlyRunner<S,MA> R_MA;
-  typedef OptimRunner<S,RA,SPO> R_RA;
+  // typedef OptimRunner<S,RA,SPO> R_RA;
+  typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
   S s;
@@ -29,17 +32,20 @@ int main(int argc, char ** argv){
   Starts starts(numReps,s.fD.numNodes);
 
   MA ma;
-  RA ra;
+  // RA ra;
+  OA oa;
 
-  ra.tp.weights_r.zeros(ra.f.numFeatures);
-  ra.tp.weights_r(2) = 1;
+  // ra.tp.weights_r.zeros(ra.f.numFeatures);
+  // ra.tp.weights_r(2) = 1;
   
-  SPO spo;
-  // no tuning for right now....
-  spo.tp.tune = 0;
+  // SPO spo;
+  // // no tuning for right now....
+  // spo.tp.tune = 0;
+  OSSPO osspo;
 
   R_MA r_ma;
-  R_RA r_ra;
+  // R_RA r_ra;
+  R_OA r_oa;
   
 
   njm::message("        Myopic: "

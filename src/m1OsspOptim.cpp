@@ -2,9 +2,11 @@
 
 
 M1OsspOptimTunePar::M1OsspOptimTunePar(){
-  N = 1000;
+  // N = 1000;
+  N = 100;
   B = 100;
   mcReps = 10;
+  
   // N = 10;
   // B = 5;
   // mcReps = 2;
