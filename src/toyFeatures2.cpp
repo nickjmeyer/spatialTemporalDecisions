@@ -186,8 +186,8 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 
   tDPre = tD;
 
-  std::cout << "infProbs: " << arma::sum(infFeat,0)
-	    << "notProbs: " << arma::sum(notFeat,0);
+  // std::cout << "infProbs: " << arma::sum(infFeat,0)
+  // 	    << "notProbs: " << arma::sum(notFeat,0);
 
 
 #ifndef NJM_NO_DEBUG
