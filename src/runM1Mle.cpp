@@ -50,35 +50,21 @@ int main(int argc, char ** argv){
   R_RA r_ra;
   
 
-  std::vector<double> props = {0.01,0.02,0.03,0.04,0.05,
-			       0.06,0.07,0.08,0.09,0.10};
-  std::vector<double>::iterator it,end;
-  end = props.end();
-  for(it = props.begin(); it != end; ++it){
-    njm::message("  Prop treated: " + njm::toString(*it,""));
+  s.fD.propTrt = 0.06;
 
-    s.fD.propTrt = *it;
-
-    nt.name = "noTrt_" + njm::toString((*it)*100,"",0,0);
-    pa.name = "proximal_" + njm::toString((*it)*100,"",0,0);
-    ma.name = "myopic_" + njm::toString((*it)*100,"",0,0);
-    ra.name = "rank_" + njm::toString((*it)*100,"",0,0);
     
-    njm::message("  No treatment: "
-		 + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
-				 ""));
-    njm::message("      Proximal: "
-		 + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
-				 ""));
-    njm::message("        Myopic: "
-		 + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
-				 ""));
-    njm::message("Priority Score: "
-		 + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
-				 ""));
-
-    std::cout << std::endl << std::endl;
-  }
+  njm::message("  No treatment: "
+	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
+			       ""));
+  njm::message("      Proximal: "
+	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
+			       ""));
+  njm::message("        Myopic: "
+	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
+			       ""));
+  njm::message("Priority Score: "
+	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
+			       ""));
 
   return 0;
 }
