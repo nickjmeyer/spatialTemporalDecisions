@@ -2,6 +2,8 @@
 
 template class OsspAgent<GravityTimeInfExpCavesModel>;
 
+template class OsspAgent<RadiusModel>;
+
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
   eps = 0.8;

@@ -52,7 +52,7 @@ int main(int argc, char ** argv){
 	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
 			       ""));
   njm::message("Priority Score: "
-	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
+	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
 			       ""));
 
   return 0;

@@ -586,6 +586,17 @@ OptimRunner<System<GravityTimeInfExpCavesModel,
 			GravityTimeInfExpCavesModel> >;
 
 
+template class
+OptimRunner<System<GravityTimeInfExpCavesModel,
+		   RadiusModel>,
+	    OsspAgent<RadiusModel>,
+	    M1OsspOptim<System<GravityTimeInfExpCavesModel,
+			       RadiusModel>,
+			OsspAgent<RadiusModel>,
+			ToyFeatures2<RadiusModel>,
+			RadiusModel> >;
+
+
 
 
 
