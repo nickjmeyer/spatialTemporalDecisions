@@ -114,13 +114,22 @@ void RandParr::fixSeed(const int fix){
   if(fix){
     runif01Iter_hold.at(thread) = runif01Iter.at(thread);
     rnorm01Iter_hold.at(thread) = rnorm01Iter.at(thread);
+
+    runif01End_hold.at(thread) = runif01End.at(thread);
+    rnorm01End_hold.at(thread) = rnorm01End.at(thread);
     
     runif01Iter.at(thread) = runif01Vals_fixed.at(thread).begin();
     rnorm01Iter.at(thread) = rnorm01Vals_fixed.at(thread).begin();
+
+    runif01End.at(thread) = runif01Vals_fixed.at(thread).end();
+    rnorm01End.at(thread) = rnorm01Vals_fixed.at(thread).end();
   }
   else{
     runif01Iter.at(thread) = runif01Iter_hold.at(thread);
     rnorm01Iter.at(thread) = rnorm01Iter_hold.at(thread);
+
+    runif01End.at(thread) = runif01End_hold.at(thread);
+    rnorm01End.at(thread) = rnorm01End_hold.at(thread);
   }
 }
 
