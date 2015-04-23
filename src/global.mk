@@ -3,7 +3,7 @@ CPPFLAGS = -std=c++11 -Wall -Werror -Wno-error=comment -fopenmp
 INCLUDE = -I/usr/include/superlu/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
-DEBUG = -g
+DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
 OBJECTS = $(BINARY).o 
