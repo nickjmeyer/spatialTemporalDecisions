@@ -70,7 +70,6 @@ std::vector<double> ModelBase::infProbs(){
   return expitInfProbs;
 }
 
-
 void ModelBase::revProbs(const SimData & sD,
 			 const TrtData & tD,
 			 const FixedData & fD,

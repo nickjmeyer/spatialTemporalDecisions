@@ -47,6 +47,7 @@ int main(int argc, char ** argv){
   // SPO spo;
   // // no tuning for right now....
   // spo.tp.tune = 0;
+  
   OSSPO osspo;
 
   R_NT r_nt;
@@ -66,8 +67,8 @@ int main(int argc, char ** argv){
 	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
 			       ""));
   njm::message("Priority Score: "
-	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
-			       ""));
+  	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
+  			       ""));
   
   return 0;
 }

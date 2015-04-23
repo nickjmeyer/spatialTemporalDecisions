@@ -21,8 +21,6 @@ void fn3(const DynamicData & dD){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-
-
   typedef ModelGravity MG;
   typedef MG ME;
   typedef System<MG,ME> S;
@@ -54,6 +52,7 @@ int main(int argc, char ** argv){
   // // std::cout << "\n\nFuckers\n\n";
   // // njm::message(pr.run(s,ra,1,s.fD.finalT));
 
+  
 
   njm::sett.clean();
   return 0;

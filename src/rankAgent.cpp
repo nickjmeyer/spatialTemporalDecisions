@@ -47,8 +47,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   f.getFeatures(sD,tD,fD,dD,m);
 
   // jitter the current weights
-  std::vector<double> noTrtScore(0);
-  double jitter=0,mn=0;
+  arma::colvec jitter;
+  arma::mat featStddev;
+  jitter.zeros(f.numFeatures);
   
   int i=0,j=0,node0=0,addPre=0,addAct=0;
   int cI = 0,cN = 0;
@@ -58,39 +59,26 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   numChunks = std::min(std::max(numPre,numAct),numChunks);
   
   for(i = 0; i < numChunks; i++){
-    // calculate ranks
-    infRanks = f.infFeat * (tp.weights + jitter);
-    notRanks = f.notFeat * (tp.weights + jitter);
 
     // get jitter
-    noTrtScore.clear();
+    featStddev.zeros(0,f.numFeatures);
     for(j = 0; j < sD.numNotInfec; ++j){
       if(tD.p.at(sD.notInfec.at(j)) == 0)
-	noTrtScore.push_back(notRanks(j));
+	featStddev.insert_rows(0,f.notFeat.row(j));
     }
     for(j = 0; j < sD.numInfected; ++j){
       if(tD.a.at(sD.infected.at(j)) == 0)
-	noTrtScore.push_back(infRanks(j));
+	featStddev.insert_rows(0,f.infFeat.row(j));
     }
-    
-    // get mean
-    mn = std::accumulate(noTrtScore.begin(),noTrtScore.end(),0.0);
-    mn /= double(noTrtScore.size());
-    // get SS
-    jitter = std::accumulate(noTrtScore.begin(),noTrtScore.end(),0.0,
-			     [&mn](const double & a, const double & b){
-			       return a + (b-mn)*(b-mn);
-			     });
-    // sample standard deviation
-    jitter = std::sqrt(jitter/double(noTrtScore.size() - 1));
-    // scale
-    jitter /= tp.jitterScale;
-    // generate normal
-    jitter *= njm::rnorm01();
+    featStddev = arma::cov(featStddev);
+    jitter = arma::sqrt(featStddev.diag())/tp.jitterScale;
 
-    // apply jitter
-    infRanks += jitter;
-    notRanks += jitter;
+    for(j = 0; j < f.numFeatures; j++)
+      jitter(j) *= njm::rnorm01();
+
+    // calculate ranks
+    infRanks = f.infFeat * (tp.weights + jitter);
+    notRanks = f.notFeat * (tp.weights + jitter);
 
 
     // sort the locations by their ranks

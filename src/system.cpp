@@ -371,7 +371,6 @@ void System<MG,
 					       0.0)
 	    << std::endl;
 					       
-
   njm::timer.start("next");
   nextPoint(modelGen.infProbs());
   njm::timer.stop("next");

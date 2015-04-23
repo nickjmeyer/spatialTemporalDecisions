@@ -31,21 +31,6 @@ TrainRunner<S,A>
 
 
 
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   NoTrt<GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   ProximalAgent<GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-// 				     GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityTimeInfModel,GravityTimeInfParam,
-// 				  GravityTimeInfModel,GravityTimeInfParam>,
-// 			   RankAgent<ToyFeatures2<GravityTimeInfModel,
-// 						  GravityTimeInfParam>,
-// 				     GravityTimeInfModel,GravityTimeInfParam> >;
 
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
@@ -56,7 +41,6 @@ template class PlainRunner<System<ModelGravity,
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
 			   NoTrt<ModelGravity> >;
-
 
 
 

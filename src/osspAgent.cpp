@@ -2,6 +2,8 @@
 
 template class OsspAgent<ModelGravity>;
 
+template class OsspAgent<RadiusModel>;
+
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
   eps = 0.8;
@@ -92,8 +94,11 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
       double cur = probs.at(0);
       double num = njm::runif01();
       i = 0;
-      while(cur < num)
+      I = probs.size();
+      while(cur < num && i < I)
 	cur += probs.at(++i);
+      if(i >= I)
+	i = I-1;
       ind = mInd.at(i);
     }
   }
