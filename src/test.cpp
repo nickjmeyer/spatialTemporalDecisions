@@ -45,7 +45,7 @@ int main(int argc, char ** argv){
   omp_set_num_threads(1);
 
   njm::timer.start("rank");
-  oor.run(s,oa,oo,numReps,s.fD.finalT,starts);
+  njm::message(oor.run(s,oa,oo,numReps,s.fD.finalT,starts));
   njm::timer.stop("rank");
 
 
