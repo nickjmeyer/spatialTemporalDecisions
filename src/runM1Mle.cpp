@@ -15,17 +15,17 @@ int main(int argc, char ** argv){
   typedef MyopicAgent<ME> MA;
   
   typedef ToyFeatures2<ME> F;
-  typedef RankAgent<F,ME> RA;
-  // typedef OsspAgent<ME> OA;
+  // typedef RankAgent<F,ME> RA;
+  typedef OsspAgent<ME> OA;
 
-  typedef M1SpOptim<S,RA,ME> SPO;
-  // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
+  // typedef M1SpOptim<S,RA,ME> SPO;
+  typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef VanillaRunner<S,NT> R_NT;
   typedef VanillaRunner<S,PA> R_PA;
   typedef FitOnlyRunner<S,MA> R_MA;
-  typedef OptimRunner<S,RA,SPO> R_RA;
-  // typedef OptimRunner<S,OA,OSSPO> R_OA;
+  // typedef OptimRunner<S,RA,SPO> R_RA;
+  typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
   S s;
@@ -38,23 +38,23 @@ int main(int argc, char ** argv){
   NT nt;
   PA pa;
   MA ma;
-  RA ra;
-  // OA oa;
+  // RA ra;
+  OA oa;
 
-  ra.tp.weights_r.zeros(ra.f.numFeatures);
-  ra.tp.weights_r(2) = 1;
+  // ra.tp.weights_r.zeros(ra.f.numFeatures);
+  // ra.tp.weights_r(2) = 1;
   
-  SPO spo;
-  // no tuning for right now....
-  spo.tp.tune = 0;
+  // SPO spo;
+  // // no tuning for right now....
+  // spo.tp.tune = 0;
   
-  // OSSPO osspo;
+  OSSPO osspo;
 
   R_NT r_nt;
   R_PA r_pa;
   R_MA r_ma;
-  R_RA r_ra;
-  // R_OA r_oa;
+  // R_RA r_ra;
+  R_OA r_oa;
   
 
   njm::message("  No treatment: "
@@ -67,11 +67,8 @@ int main(int argc, char ** argv){
 	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
 			       ""));
   njm::message("Priority Score: "
-  	       + njm::toString(r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts),
+  	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
   			       ""));
-  // njm::message("Priority Score: "
-  // 	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
-  // 			       ""));
   
   return 0;
 }
