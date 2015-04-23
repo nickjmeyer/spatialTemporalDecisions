@@ -31,12 +31,6 @@ template class M1OsspOptim<System<ModelGravity,
 			   ToyFeatures2<ModelGravity>,
 			   ModelGravity>;
 
-template class M1OsspOptim<System<GravityTimeInfExpCavesModel,
-				  RadiusModel>,
-			   OsspAgent<RadiusModel>,
-			   ToyFeatures2<RadiusModel>,
-			   RadiusModel>;
-
 
 template <class S, class A, class F, class M>
 M1OsspOptim<S,A,F,M>::M1OsspOptim(){

@@ -2,8 +2,6 @@
 
 template class OsspAgent<ModelGravity>;
 
-template class OsspAgent<RadiusModel>;
-
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
   eps = 0.8;
