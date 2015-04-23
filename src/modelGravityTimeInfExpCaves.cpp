@@ -106,7 +106,7 @@ GravityTimeInfExpCavesModel::oneOnOne(const int notNode,
 
   double caveTime = (sD.timeInf.at(infNode)-1.0)/fD.propCaves.at(infNode);
   base += mP.xi * (std::exp(caveTime)-1.0);
-  
+
   if(tD.p.at(notNode))
     base -= mP.trtPre;
   if(tD.a.at(infNode))

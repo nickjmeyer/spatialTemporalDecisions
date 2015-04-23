@@ -47,7 +47,6 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   for(i=0; i<sD.numNotInfec; i++)
     subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
 
-
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
   notNeigh.resize(sD.numNotInfec);
@@ -67,7 +66,7 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   int j;
   beg=sD.notInfec.begin();
   for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
-    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++)
+    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
 	// neighbors of i
 	notNeigh.at(i).push_back(std::pair<int,double>
@@ -80,6 +79,7 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 	notNeighNum.at(i)++;
 	notNeighOfNum.at(j)++;
       }
+    }
   }
 }
 
@@ -178,6 +178,9 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 
   tDPre = tD;
 
+  // std::cout << "infProbs: " << arma::sum(infFeat,0)
+  // 	    << "notProbs: " << arma::sum(notFeat,0);
+
 
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
@@ -186,7 +189,6 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     throw 1;
   }
 #endif
-    
 }
 
 

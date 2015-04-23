@@ -7,6 +7,7 @@
 #include <queue>
 #include <limits>
 #include "system.hpp"
+#include "timer.hpp"
 #include "agent.hpp"
 #include "dataDepth.hpp"
 #include "tuneParam.hpp"

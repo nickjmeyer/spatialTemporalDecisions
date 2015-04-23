@@ -1,46 +1,57 @@
 #include "rand.hpp"
 
-// static unsigned randomSeed=std::time(NULL);
+// set random seed
 #ifdef RANDOM_SEED__
-static unsigned randomSeed= RANDOM_SEED__;
+unsigned njm::randomSeed = RANDOM_SEED__;
 #else
-static unsigned randomSeed= 8;
+unsigned njm::randomSeed = 8;
 #endif
-static boost::mt19937 rng( randomSeed );
-static boost::uniform_real<> unif01(0.0,1.0);
-static boost::normal_distribution<> norm01(0.0, 1.0);
-static boost::variate_generator<boost::mt19937,
-				boost::uniform_real<>
-				> genUnif01(rng, unif01);
-static boost::variate_generator<boost::mt19937,
-				boost::normal_distribution<> 
-				> genNorm01(rng, norm01);
 
-static RandParr randParr(1000000);
+boost::uniform_real<> unif01(0.0,1.0);
+boost::normal_distribution<> norm01(0.0, 1.0);
+boost::variate_generator<boost::mt19937,
+			 boost::uniform_real<>
+			 > genUnif01(boost::mt19937(njm::randomSeed),
+				     unif01);
+boost::variate_generator<boost::mt19937,
+			 boost::normal_distribution<> 
+			 > genNorm01(boost::mt19937(njm::randomSeed),
+				     norm01);
+
+RandParr randParr(1000000);
 
 
 
 RandParr::RandParr(int numRand_){
   numRand=numRand_;
-  initialize();
+  reset();
 }
 
 
 void RandParr::reset(){
-  genUnif01.engine().seed(randomSeed);
+  reset(njm::randomSeed);
+}
+
+
+void RandParr::reset(const int seed){
+  genUnif01.engine().seed(seed);
   genUnif01.distribution().reset();
   
-  genNorm01.engine().seed(randomSeed);
+  genNorm01.engine().seed(seed);
   genNorm01.distribution().reset();
   
   initialize();
 }
 
 
-void resetRandomSeed(){
+void njm::resetRandomSeed(){
   randParr.reset();
 }
 
+
+void njm::resetRandomSeed(const int seed){
+  randParr.reset(seed);
+}
 
 
 void RandParr::initialize(){
@@ -114,7 +125,7 @@ void RandParr::fixSeed(const int fix){
 }
 
 
-void fixRandomSeed(const int fix){
+void njm::fixThreadSeed(const int fix){
   randParr.fixSeed(fix);
 }
 
@@ -125,7 +136,8 @@ double RandParr::getRunif01(){
   double r=*(runif01Iter.at(thread)++);
 
   // if there are no more samples, refill
-  if(runif01Iter.at(thread) == runif01End.at(thread) && !isfixed.at(thread)){
+  if(runif01Iter.at(thread) == runif01End.at(thread)
+     && !isfixed.at(thread)){
 #pragma omp critical
     {
       int i;
@@ -134,7 +146,8 @@ double RandParr::getRunif01(){
       runif01Iter.at(thread)=runif01Vals.at(thread).begin();
     }
   }
-  if(runif01Iter.at(thread) == runif01End.at(thread) && isfixed.at(thread)){
+  else if(runif01Iter.at(thread) == runif01End.at(thread)
+	  && isfixed.at(thread)){
 #pragma omp critical
     {
       runif01Iter.at(thread) = runif01Vals_fixed.at(thread).begin();
@@ -149,7 +162,8 @@ double RandParr::getRnorm01(){
   double r=*(rnorm01Iter.at(thread)++);
 
   // if there are no more samples, refill
-  if(rnorm01Iter.at(thread) == rnorm01End.at(thread) && !isfixed.at(thread)){
+  if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
+     && !isfixed.at(thread)){
 #pragma omp critical
     {
       int i;
@@ -158,7 +172,8 @@ double RandParr::getRnorm01(){
       rnorm01Iter.at(thread)=rnorm01Vals.at(thread).begin();
     }
   }
-  if(rnorm01Iter.at(thread) == rnorm01End.at(thread) && isfixed.at(thread)){
+  else if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
+	  && isfixed.at(thread)){
 #pragma omp critical
     {
       rnorm01Iter.at(thread) = rnorm01Vals_fixed.at(thread).begin();
