@@ -6,6 +6,8 @@ M1OsspOptimTunePar::M1OsspOptimTunePar(){
   N = 100;
   B = 100;
   mcReps = 10;
+
+  jitterScale = 4.0;
   
   // N = 10;
   // B = 5;
@@ -58,6 +60,7 @@ void M1OsspOptim<S,A,F,M>
   M1SpOptim<System<M,M>,RankAgent<F,M>,M> spo;
   spo.tp.tune = 0;
   RankAgent<F,M> ra;
+  ra.tp.jitterScale = tp.jitterScale;
   
   spo.optim(s,ra);
 

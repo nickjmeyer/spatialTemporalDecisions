@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "utilities.hpp"
+#include "timer.hpp"
 #include "data.hpp"
 #include "modelParam.hpp"
 #include "modelParamGravityTimeInf.hpp"

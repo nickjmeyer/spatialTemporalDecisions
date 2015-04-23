@@ -39,15 +39,20 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   // pre compute stuff
 
   // load estimated probabilities of infection
+  njm::timer.start("modelLoad");
   m.load(sD,tD,fD,dD);
+  njm::timer.stop("modelLoad");
 
   // extract subgraph connectiviy for not infected
+  njm::timer.start("subGraph");
   int i;
   subGraphNotInfec.resize(sD.numNotInfec);
   for(i=0; i<sD.numNotInfec; i++)
     subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+  njm::timer.stop("subGraph");
 
 
+  njm::timer.start("neighbors");
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
   notNeigh.resize(sD.numNotInfec);
@@ -67,7 +72,7 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   int j;
   beg=sD.notInfec.begin();
   for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
-    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++)
+    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
 	// neighbors of i
 	notNeigh.at(i).push_back(std::pair<int,double>
@@ -80,7 +85,9 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
 	notNeighNum.at(i)++;
 	notNeighOfNum.at(j)++;
       }
+    }
   }
+  njm::timer.stop("neighbors");
 }
 
 
@@ -91,6 +98,7 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
 				  M & m){
+  njm::timer.start("features");
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -178,6 +186,9 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 
   tDPre = tD;
 
+  // std::cout << "infProbs: " << arma::sum(infFeat,0)
+  // 	    << "notProbs: " << arma::sum(notFeat,0);
+
 
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
@@ -186,7 +197,7 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     throw 1;
   }
 #endif
-    
+  njm::timer.stop("features");    
 }
 
 
@@ -197,6 +208,7 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
 				     M & m){
+  njm::timer.start("update");
   int i,j,node0,now,pre,num;
   std::pair<int,int> neighOf;
 
@@ -246,6 +258,7 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
       m.mP.setRow(i);
     }
   }
+  njm::timer.stop("update");
   getFeatures(sD,tD,fD,dD,m);
 }
 

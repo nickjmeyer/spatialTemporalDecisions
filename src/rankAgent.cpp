@@ -88,7 +88,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     }
     featStddev = arma::cov(featStddev);
     jitter = arma::sqrt(featStddev.diag())/tp.jitterScale;
-    
+
     for(j = 0; j < f.numFeatures; j++)
       jitter(j) *= njm::rnorm01();
 
@@ -108,7 +108,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       else
 	sortInfected.push(std::pair<double,int>(infRanks(j),j));
     }
-    
+
+
     for(j=0; j<sD.numNotInfec; j++){
       if(tD.p.at(sD.notInfec.at(j)))
 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
@@ -131,7 +132,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       sortNotInfec.pop();
     }
     
-
     // number of locations to add treatment too for this iteration
     addPre = 0;
     if(numPre > 0)

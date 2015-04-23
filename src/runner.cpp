@@ -31,22 +31,6 @@ TrainRunner<S,A>
 
 
 
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   NoTrt<GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   ProximalAgent<GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityModel,GravityParam,
-// 				  GravityModel,GravityParam>,
-// 			   RankAgent<ToyFeatures2<GravityModel,GravityParam>,
-// 				     GravityModel,GravityParam> >;
-// template class PlainRunner<System<GravityTimeInfModel,GravityTimeInfParam,
-// 				  GravityTimeInfModel,GravityTimeInfParam>,
-// 			   RankAgent<ToyFeatures2<GravityTimeInfModel,
-// 						  GravityTimeInfParam>,
-// 				     GravityTimeInfModel,GravityTimeInfParam> >;
-
 template class PlainRunner<System<GravityTimeInfExpCavesModel,
 				  GravityTimeInfExpCavesModel>,
 			   RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
@@ -90,6 +74,9 @@ template class PlainRunner<System<CaveModel,
 				     CaveModel> >;
 
 
+template class PlainRunner<System<GravityModel,
+				  GravityModel>,
+			   NoTrt<GravityModel> >;
 
 
 
@@ -103,6 +90,7 @@ PlainRunner<S,A>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
+    njm::timer.start("init");
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
       
@@ -111,12 +99,17 @@ PlainRunner<S,A>
     }
     
     system.revert();
+    njm::timer.stop("init");
+
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
+
+      njm::timer.start("status");
       system.updateStatus();
-      
+      njm::timer.stop("status");
+
       system.nextPoint();
     }
     value += system.value();
@@ -178,7 +171,7 @@ VanillaRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -296,7 +289,7 @@ VanillaRunnerNS<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -390,7 +383,7 @@ FitOnlyRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   double value=0;
   int r,t;
@@ -609,7 +602,7 @@ OptimRunner<S,A,Optim>
       const int numReps, const int numPoints,
       const Starts & starts){
 
-  resetRandomSeed();
+  njm::resetRandomSeed();
   
   int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
@@ -1026,7 +1019,7 @@ TimerRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  resetRandomSeed();
+  njm::resetRandomSeed();
 
   std::chrono::milliseconds fitTime,trtTime,simTime,diff;
   fitTime=std::chrono::milliseconds::zero();
