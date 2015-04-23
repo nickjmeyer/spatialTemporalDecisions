@@ -55,8 +55,9 @@ void njm::resetRandomSeed(const int seed){
 
 
 void RandParr::initialize(){
-  int numThreads=omp_get_max_threads();
+  // int numThreads=omp_get_max_threads();
   // int numThreads=64;
+  int numThreads = 1;
   int i,j;
   numRunif01=numRand;
   numRnorm01=numRand;
