@@ -75,8 +75,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   
   for(i = 0; i < numChunks; i++){
     // calculate ranks
-    infRanks = f.infFeat * (tp.weights + jitter);
-    notRanks = f.notFeat * (tp.weights + jitter);
+    infRanks = f.infFeat * tp.weights;
+    notRanks = f.notFeat * tp.weights;
 
     // get jitter
     noTrtScore.clear();

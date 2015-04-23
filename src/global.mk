@@ -48,12 +48,12 @@ CPPFLAGS += -DNJM_USE_MKL
 else ifeq ("${HOST}","laber-lnx2")
 
 CC = g++-4.9
-CPPFLAGS+= -DRANDOM_SEED__=6
+# CPPFLAGS+= -DRANDOM_SEED__=6
 
 else ifeq ("${HOST}","laber-lnx3")
 
 CC = g++-4.9
-CPPFLAGS += -DRANDOM_SEED__=7
+# CPPFLAGS += -DRANDOM_SEED__=7
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
@@ -61,7 +61,7 @@ else ifeq "${HOST}" "laber-lnx4.stat.ncsu.edu"
 
 CC = /usr/local/gcc-4.9.2/bin/g++
 CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
-CPPFLAGS += -DRANDOM_SEED__=8
+# CPPFLAGS += -DRANDOM_SEED__=8
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
@@ -69,7 +69,7 @@ else ifeq "${HOST}" "opal3.stat.ncsu.edu"
 
 CC = /usr/local/gcc-4.9.2/bin/g++
 CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
-CPPFLAGS += -DRANDOM_SEED__=9
+# CPPFLAGS += -DRANDOM_SEED__=9
 
 endif
 

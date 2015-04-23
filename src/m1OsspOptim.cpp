@@ -2,9 +2,11 @@
 
 
 M1OsspOptimTunePar::M1OsspOptimTunePar(){
-  N = 1000;
+  // N = 1000;
+  N = 100;
   B = 100;
   mcReps = 10;
+  
   // N = 10;
   // B = 5;
   // mcReps = 2;
@@ -26,6 +28,12 @@ template class M1OsspOptim<System<GravityTimeInfExpCavesModel,
 			   OsspAgent<GravityTimeInfExpCavesModel>,
 			   ToyFeatures2<GravityTimeInfExpCavesModel>,
 			   GravityTimeInfExpCavesModel>;
+
+template class M1OsspOptim<System<GravityTimeInfExpCavesModel,
+				  RadiusModel>,
+			   OsspAgent<RadiusModel>,
+			   ToyFeatures2<RadiusModel>,
+			   RadiusModel>;
 
 
 template <class S, class A, class F, class M>
