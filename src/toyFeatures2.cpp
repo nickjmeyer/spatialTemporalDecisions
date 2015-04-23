@@ -39,20 +39,14 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   // pre compute stuff
 
   // load estimated probabilities of infection
-  njm::timer.start("modelLoad");
   m.load(sD,tD,fD,dD);
-  njm::timer.stop("modelLoad");
 
   // extract subgraph connectiviy for not infected
-  njm::timer.start("subGraph");
   int i;
   subGraphNotInfec.resize(sD.numNotInfec);
   for(i=0; i<sD.numNotInfec; i++)
     subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
-  njm::timer.stop("subGraph");
 
-
-  njm::timer.start("neighbors");
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
   notNeigh.resize(sD.numNotInfec);
@@ -87,7 +81,6 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
       }
     }
   }
-  njm::timer.stop("neighbors");
 }
 
 
@@ -98,7 +91,6 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
 				  M & m){
-  njm::timer.start("features");
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -197,7 +189,6 @@ void ToyFeatures2<M>::getFeatures(const SimData & sD,
     throw 1;
   }
 #endif
-  njm::timer.stop("features");    
 }
 
 
@@ -208,7 +199,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
 				     M & m){
-  njm::timer.start("update");
   int i,j,node0,now,pre,num;
   std::pair<int,int> neighOf;
 
@@ -258,7 +248,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
       m.mP.setRow(i);
     }
   }
-  njm::timer.stop("update");
   getFeatures(sD,tD,fD,dD,m);
 }
 

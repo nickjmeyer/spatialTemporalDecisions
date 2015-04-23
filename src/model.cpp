@@ -63,7 +63,6 @@ void GravityModel::update(const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD){
-  std::cout << "here\n";
   int i,j,k,node0,numNewInfec=sD.newInfec.size();
   double prob;
   std::vector<double> newInfProbs;
