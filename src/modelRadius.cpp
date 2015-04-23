@@ -1,145 +1,109 @@
 #include "modelRadius.hpp"
 
 
-void RadiusModel::load(const SimData & sD,
-		       const TrtData & tD,
-		       const FixedData & fD,
-		       const DynamicData & dD){
-  mP.infProbsBase.zeros(sD.numInfected,sD.numNotInfec);
-  mP.infProbsSep.zeros(sD.numInfected,sD.numNotInfec);
+static std::vector<ParamBase *> genPars(){
+  std::vector<ParamBase *> pars;
+  pars.push_back(new ParamIntercept);
+  pars.push_back(new ParamRadius);
+  pars.push_back(new ParamTrt);
+  return pars;
+}
 
-  arma::mat::iterator itBase;
-  itBase = mP.infProbsBase.begin();
-  
-  int i,j,notNode;
-  for(i=0; i<sD.numNotInfec; i++){
-    notNode = sD.notInfec.at(i);
-    for(j=0; j<sD.numInfected; j++,itBase++)
-      (*itBase)=oneOnOne(notNode,sD.infected.at(j),sD,tD,fD,dD);
+ModelRadius::ModelRadius(const FixedData & fD)
+  : ModelBase(genPars(),fD){
+}
+
+
+ModelRadius::ModelRadius(const ModelRadius & m){
+  int i, numPars = m.pars.size();
+  pars.clear();
+  for(i = 0; i < numPars; ++i)
+    pars.push_back(m.pars.at(i)->clone());
+
+  set = m.set;
+  probs = m.probs;
+  expitInfProbs = m.expitInfProbs;
+  expitRevProbs = m.expitRevProbs;
+  quick = m.quick;
+  ready = m.ready;
+  numInfected = m.numInfected;
+  numNotInfec = m.numNotInfec;
+  fitType = m.fitType;
+  mcmc = m.mcmc;
+}
+
+
+ModelRadius & ModelRadius::operator=(const ModelRadius & m){
+  if(this != & m){
+    this->ModelRadius::~ModelRadius();
+    new (this) ModelRadius(m);
   }
+  return *this;
+}
+
+
+
+void ModelRadius::read(){
+  std::vector<double> pars,add;
+  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/intcp.txt"));
+  pars.insert(pars.end(),add.begin(),add.end());
   
-  mP.setAll();
+  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/radius.txt"));
+  pars.insert(pars.end(),add.begin(),add.end());
   
-  mP.infProbs = arma::conv_to<std::vector<double> >
-    ::from(1-arma::prod(mP.infProbsSep,0));
-}
+  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/trtAct.txt"));
+  pars.insert(pars.end(),add.begin(),add.end());
+  
+  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/trtPre.txt"));
+  pars.insert(pars.end(),add.begin(),add.end());
 
-
-
-void RadiusModel::infProbs(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD){
-  mP.infProbs.clear();
-  int i,j,node0;
-  double prob;
-  for(i=0; i<sD.numNotInfec; i++){
-    node0 = sD.notInfec.at(i);
-    prob=1.0;
-    for(j=0; j<sD.numInfected; j++)
-      prob *= 1/(1+std::exp(oneOnOne(node0,sD.infected.at(j),
-				     sD,tD,fD,dD)));
-    mP.infProbs.push_back(1-prob);
-  }
+  putPar(pars.begin());
 }
 
 
 
 
-void RadiusModel::update(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD){
-  int i,j,k,node0,numNewInfec=sD.newInfec.size();
-  double prob;
-  std::vector<double> newInfProbs;
-  for(i=0,j=0; i < sD.numNotInfec; ){ // purposely don't increment i or j here
-    node0 = sD.notInfec.at(i);
-    if(j == numNewInfec || node0 < sD.newInfec.at(j)){
-      prob = 1 - mP.infProbs.at(i+j);
-      for(k=0; k<numNewInfec; k++)
-	prob*= 1/(1+std::exp(oneOnOne(node0,sD.newInfec.at(k),
-				      sD,tD,fD,dD)));
-      newInfProbs.push_back(1.0 - prob);
-      i++;
-    }
-    else{
-      j++;
-    }
-  }
-
-  mP.infProbs = newInfProbs;
-}
-
-
-
-double RadiusModel::oneOnOne(const int notNode,
-			     const int infNode,
-			     const SimData & sD,
-			     const TrtData & tD,
-			     const FixedData & fD,
-			     const DynamicData & dD) const {
-  double base = mP.intcp;
-
-  if(fD.logDist.at(notNode*fD.numNodes + infNode) > mP.radius)
-    base -= 500.0;
-
-  if(tD.p.at(notNode))
-    base -= mP.trtPre;
-  if(tD.a.at(infNode))
-    base -= mP.trtAct;
-
-  return base;
-}
-
-
-
-void RadiusModel::fit(const SimData & sD, const TrtData & tD,
+void ModelRadius::fit(const SimData & sD, const TrtData & tD,
 		      const FixedData & fD, const DynamicData & dD,
 		      const int & useInit){
   if(useInit){
-    fit(sD,tD,fD,dD,mP.getPar());
+    fit(sD,tD,fD,dD,getPar());
   }
   else{
-    RadiusParam mPInit;
-    std::vector<double> par;
-    par.push_back(-3.0);
-    par.push_back(0.0);
-    par.push_back(0.0);
-    par.push_back(0.0);
+    std::vector<double> all;
+    all.push_back(-3.0);
+    all.push_back(0.0);
+    all.push_back(0.0);
+    all.push_back(0.0);
   
-    mPInit.putPar(par);
-    fit(sD,tD,fD,dD,mPInit.getPar());
+    fit(sD,tD,fD,dD,all);
   }
 }
 
-void RadiusModel::fit(const SimData & sD, const TrtData & tD,
+void ModelRadius::fit(const SimData & sD, const TrtData & tD,
 		      const FixedData & fD, const DynamicData & dD,
-		      const std::vector<double> & mPV){
+		      std::vector<double> all){
   if(fitType == MLE){
     size_t iter=0;
     int status;
 
     gsl_vector *x,*ss;
-    RadiusParam mPInit;
-    mPInit.putPar(mPV);
-    std::vector<double> par = mPV;
-    int i,dim=par.size();
+    int i,dim=all.size();
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    RadiusModelFitData dat(*this,mPInit,sD,fD,history);
+    ModelRadiusFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
-      gsl_vector_set(x,i,par.at(i));
+      gsl_vector_set(x,i,all.at(i));
     ss=gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
       gsl_vector_set(ss,i,1.0);
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&RadiusModelFitObjFn;
+    minex_func.f=&modelRadiusFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -161,26 +125,36 @@ void RadiusModel::fit(const SimData & sD, const TrtData & tD,
     }while(status==GSL_CONTINUE && iter < 1000);
 
     for(i=0; i<dim; i++)
-      par.at(i) = gsl_vector_get(s->x,i);
-    mP.putPar(par);
+      all.at(i) = gsl_vector_get(s->x,i);
 
-    // if(sD.time <= fD.trtStart)
-    //   mP.trtPre = mP.trtAct = 4.0;
+    if(sD.time <= fD.trtStart){
+      std::vector<double>::iterator it;
+      it = all.end();
+      --it;
+      *it = fD.priorTrtMean;
+      --it;
+      *it = fD.priorTrtMean;
+    }
+
+    putPar(all.begin());
+    
 
     gsl_multimin_fminimizer_free(s);
     gsl_vector_free(x);
     gsl_vector_free(ss);
 
-    load(sD,tD,fD,dD);
+    setFill(sD,tD,fD,dD);
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,mPV);
+    mcmc.sample(5000,1000,all);
 
     mcmc.samples.setMean();
-    mP.putPar(mcmc.samples.getPar());
 
-    load(sD,tD,fD,dD);
+    all = mcmc.samples.getPar();
+    putPar(all.begin());
+
+    setFill(sD,tD,fD,dD);
   }
   else{
     std::cout << "Not a valid Estimation" << std::endl;
@@ -189,27 +163,36 @@ void RadiusModel::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-RadiusModelFitData
-::RadiusModelFitData(const RadiusModel & m,
-		     const RadiusParam & mP,
-		     const SimData & sD,
+ModelRadiusFitData
+::ModelRadiusFitData(const ModelRadius & m,
+		     const std::vector<double> & all,
 		     const FixedData & fD,
 		     const std::vector<std::vector<int> > & history){
   this->m = m;
-  this->mP = mP;
+  this->m.putPar(all.begin());
   this->fD = fD;
   this->history = history;
 }
 
-double RadiusModelFitObjFn (const gsl_vector * x, void * params){
-  RadiusModelFitData * dat = static_cast<RadiusModelFitData*> (params);
+double modelRadiusFitObjFn (const gsl_vector * x, void * params){
+  ModelRadiusFitData * dat = static_cast<ModelRadiusFitData*> (params);
   double llike=0,prob,base;
-  int i,j,t,time=dat->history.size(),dim=dat->mP.getPar().size();
+  int i,j,t,time=dat->history.size(),dim=dat->m.getPar().size();
   std::vector<double> par;
 
   for(i=0; i<dim; i++)
     par.push_back(gsl_vector_get(x,i));
-  dat->mP.putPar(par);
+  dat->m.putPar(par.begin());
+
+  std::vector<double>::const_iterator it = par.begin();
+  double intcp = *it;
+  ++it;
+  double radius = *it;
+  ++it;
+  double trtAct = *it;
+  ++it;
+  double trtPre = *it;
+
   
   for(t=1; t<time; t++){
     for(i=0; i<dat->fD.numNodes; i++){
@@ -217,14 +200,14 @@ double RadiusModelFitObjFn (const gsl_vector * x, void * params){
 	prob=1.0;
 	for(j=0; j<dat->fD.numNodes; j++){
 	  if(dat->history.at(t-1).at(j) >= 2){
-	    base=dat->mP.intcp;
-	    if(dat->fD.logDist.at(i*dat->fD.numNodes+j) > dat->mP.radius)
+	    base=intcp;
+	    if(dat->fD.logDist.at(i*dat->fD.numNodes+j) > radius)
 	      base-=500.0;
 
 	    if(dat->history.at(t-1).at(i) == 1)
-	      base-=dat->mP.trtPre;
+	      base-=trtPre;
 	    if(dat->history.at(t-1).at(j) == 3)
-	      base-=dat->mP.trtAct;
+	      base-=trtAct;
 	    
 	    prob*=1.0/(1.0+std::exp(base));
 	  }

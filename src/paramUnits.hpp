@@ -32,6 +32,7 @@
 #include "paramGravity.hpp"
 #include "paramTime.hpp"
 #include "paramTimeExpCaves.hpp"
+#include "paramRadius.hpp"
 #include "paramTrt.hpp"
 
 

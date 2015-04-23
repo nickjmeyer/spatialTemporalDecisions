@@ -9,6 +9,10 @@ template class System<ModelTime,
 template class System<ModelTimeExpCaves,
 		      ModelTimeExpCaves>;
 
+template class System<ModelRadius,
+		      ModelRadius>;
+
+
 
 template <class MG,
 	  class ME>

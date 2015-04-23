@@ -38,9 +38,28 @@ template class PlainRunner<System<ModelGravity,
 				     ModelGravity> >;
 
 
+template class PlainRunner<System<ModelTimeExpCaves,
+				  ModelTimeExpCaves>,
+			   RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+				     ModelTimeExpCaves> >;
+
+
+template class PlainRunner<System<ModelTime,
+				  ModelTime>,
+			   RankAgent<ToyFeatures2<ModelTime>,
+				     ModelTime> >;
+
+
+template class PlainRunner<System<ModelRadius,
+				  ModelRadius>,
+			   RankAgent<ToyFeatures2<ModelRadius>,
+				     ModelRadius> >;
+
+
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
 			   NoTrt<ModelGravity> >;
+
 
 
 

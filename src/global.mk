@@ -21,14 +21,17 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	paramGravity.o \
 	paramTime.o \
 	paramTimeExpCaves.o \
+	paramRadius.o \
 	paramTrt.o \
 	model.o \
 	modelGravity.o \
 	modelTime.o \
 	modelTimeExpCaves.o \
+	modelRadius.o \
 	mcmc.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfExpCaves.o \
+	mcmcRadius.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

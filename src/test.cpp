@@ -1,27 +1,11 @@
 #include "test.hpp"
 #include <omp.h>
 
-void fn0(const SimData & sD){
-  std::cout << njm::toString(sD.notInfec," ","\n");
-}
-
-void fn1(const TrtData & tD){
-  std::cout << njm::toString(tD.a," ","\n");
-}
-
-void fn2(const FixedData & fD){
-  std::cout << njm::toString(fD.numCovar,"\n");
-}
-
-void fn3(const DynamicData & dD){
-  std::cout << njm::toString("blah","\n");
-}
-
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelGravity MG;
+  typedef ModelRadius MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   typedef ToyFeatures2<ME> F;
@@ -40,7 +24,7 @@ int main(int argc, char ** argv){
   std::vector<double> par = s.modelGen_r.getPar();
   s.modelEst_r.putPar(par.begin());
 
-  int numReps = 100;
+  int numReps = 1000;
   Starts starts("startingLocations.txt");
 
   s.reset(starts[0]);

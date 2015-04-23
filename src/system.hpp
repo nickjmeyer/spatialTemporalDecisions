@@ -11,6 +11,7 @@
 #include "modelGravity.hpp"
 #include "modelTime.hpp"
 #include "modelTimeExpCaves.hpp"
+#include "modelRadius.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

@@ -8,65 +8,49 @@
 #include "data.hpp"
 #include "settings.hpp"
 #include "model.hpp"
-#include "modelParam.hpp"
-#include "modelParamRadius.hpp"
+#include "paramIntercept.hpp"
+#include "paramRadius.hpp"
+#include "paramTrt.hpp"
 #include "mcmcRadius.hpp"
 
 
-class RadiusModel : public BaseModel {
+class ModelRadius : public ModelBase {
+ protected:
  public:
-  virtual void load(const SimData & sD,
-		    const TrtData & tD,
-		    const FixedData & fD,
-		    const DynamicData & dD);
+  ModelRadius(){ };
+  ModelRadius(const FixedData & fD);
+  ModelRadius(const ModelRadius & m);
 
-  virtual void infProbs(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD);
+  virtual void read();
   
-  virtual void update(const SimData & sD,
-		      const TrtData & tD,
-		      const FixedData & fD,
-		      const DynamicData & dD);
-
-  virtual double oneOnOne(const int notNode, const int infNode,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD) const;
+  virtual ModelRadius & operator=(const ModelRadius & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   const int & useInit);
-
+  
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
-		   const std::vector<double> & mPV);
-
-  virtual BaseParam * getPar(){return & mP;}  
-
-  RadiusParam mP;
+		   std::vector<double> pars);
   
   RadiusMcmc mcmc;
 };
 
 
-class RadiusModelFitData {
+class ModelRadiusFitData {
  public:
-  RadiusModelFitData(const RadiusModel & m, const RadiusParam & mP,
-		     const SimData & sD,
+  ModelRadiusFitData(const ModelRadius & m,
+		     const std::vector<double> & all,
 		     const FixedData & fD,
 		     const std::vector<std::vector<int> > & history);
-
-  RadiusModel m;
-  RadiusParam mP;
+  
+  ModelRadius m;
   FixedData fD;
   std::vector< std::vector<int> > history;
 };
 
 
-double RadiusModelFitObjFn (const gsl_vector * x, void * params);
+double modelRadiusFitObjFn (const gsl_vector * x, void * params);
 
 
 #endif

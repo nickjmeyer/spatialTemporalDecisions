@@ -38,7 +38,7 @@ void ParamTimeExpCaves::setFill(std::vector<double> & probs,
   
   time = sD.timeInf;
   for(i = 0; i < numNodes; ++i){
-    xiTime.at(i) = xi * std::exp(iPropCaves.at(i)*double(time.at(i)-1));
+    xiTime.at(i) = xi * (std::exp(iPropCaves.at(i)*double(time.at(i)-1)) - 1.0);
   }
   
   beg = xiTime.begin();
@@ -72,8 +72,8 @@ void ParamTimeExpCaves::modFill(std::vector<double> & probs,
     lapse = sD.timeInf.at(i) - time.at(i);
     if(lapse != 0){
       change.push_back(1);
-      val0 = std::exp(iPropCaves.at(i)*double(time.at(i)-1));
-      val1 = std::exp(iPropCaves.at(i)*double(sD.timeInf.at(i)-1));
+      val0 = std::exp(iPropCaves.at(i)*double(time.at(i)-1)) - 1.0;
+      val1 = std::exp(iPropCaves.at(i)*double(sD.timeInf.at(i)-1)) - 1.0;
       diff.push_back(xi * (val1 - val0));
     }
     else{

@@ -10,6 +10,9 @@ template class RankAgent<ToyFeatures2<ModelTime>,
 template class RankAgent<ToyFeatures2<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
+template class RankAgent<ToyFeatures2<ModelRadius>,
+			 ModelRadius>;
+
 
 
 template <class F, class M>

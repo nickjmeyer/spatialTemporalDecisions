@@ -3,6 +3,12 @@
 
 template class NoTrt<ModelGravity>;
 
+template class NoTrt<ModelTimeExpCaves>;
+
+template class NoTrt<ModelTime>;
+
+template class NoTrt<ModelRadius>;
+
 template<class M>
 std::string NoTrt<M>::name = "noTrt";
 

@@ -19,6 +19,7 @@ template class ToyFeatures2<ModelTime>;
 
 template class ToyFeatures2<ModelTimeExpCaves>;
 
+template class ToyFeatures2<ModelRadius>;
 
 
 
