@@ -27,6 +27,7 @@
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
+#include "osspAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
 #include "toyFeatures2Multi.hpp"
@@ -34,8 +35,8 @@
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SgdOptim.hpp"
+#include "m1OsspOptim.hpp"
 #include "m2QOptim.hpp"
-#include "m1SimpleOptim.hpp"
 #include "pardisoSymWrap.hpp"
 
 

@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS = -std=c++11 -fopenmp -Wall -Werror -Wno-error=comment
+CPPFLAGS = -std=c++11 -Wall -Werror -Wno-error=comment -fopenmp
 INCLUDE = -I/usr/include/superlu/
 LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
 HOST = $(shell hostname)
@@ -9,8 +9,9 @@ PROF = $(DEBUG) -pg
 OBJECTS = $(BINARY).o 
 OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgent.o \
+	rankAgent.o osspAgent.o \
 	m1SpOptim.o \
+	m1OsspOptim.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
@@ -47,12 +48,12 @@ CPPFLAGS += -DNJM_USE_MKL
 else ifeq ("${HOST}","laber-lnx2")
 
 CC = g++-4.9
-CPPFLAGS+= -DRANDOM_SEED__=6
+# CPPFLAGS+= -DRANDOM_SEED__=6
 
 else ifeq ("${HOST}","laber-lnx3")
 
 CC = g++-4.9
-CPPFLAGS += -DRANDOM_SEED__=7
+# CPPFLAGS += -DRANDOM_SEED__=7
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
@@ -60,7 +61,7 @@ else ifeq "${HOST}" "laber-lnx4.stat.ncsu.edu"
 
 CC = /usr/local/gcc-4.9.2/bin/g++
 CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
-CPPFLAGS += -DRANDOM_SEED__=8
+# CPPFLAGS += -DRANDOM_SEED__=8
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
@@ -68,7 +69,7 @@ else ifeq "${HOST}" "opal3.stat.ncsu.edu"
 
 CC = /usr/local/gcc-4.9.2/bin/g++
 CPPFLAGS += -Wl,-rpath=/usr/lib64/mpich/lib/
-CPPFLAGS += -DRANDOM_SEED__=9
+# CPPFLAGS += -DRANDOM_SEED__=9
 
 endif
 

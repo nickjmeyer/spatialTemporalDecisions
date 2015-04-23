@@ -55,26 +55,28 @@ void Timer::print(){
   }
 
 
-  printf("%s%s","\n#-----------------------------------TIMER",
-	 "------------------------------------\n");
-  printf("%18s  %12s %18s %18s\n","ID","Percent","Total","Total/Thread");
+  if(totalOrd.size() > 0){
+    printf("%s%s","\n#-----------------------------------TIMER",
+	   "------------------------------------\n");
+    printf("%18s  %12s %18s %18s\n","ID","Percent","Total","Total/Thread");
 
-  I = totalOrd.size();
-  pair<milliseconds,string> top;
-  double percTotal,totalMins,perThreadMins;
-  for(i = 0; i < I; ++i){
-    top = totalOrd.top();
-    totalOrd.pop();
+    I = totalOrd.size();
+    pair<milliseconds,string> top;
+    double percTotal,totalMins,perThreadMins;
+    for(i = 0; i < I; ++i){
+      top = totalOrd.top();
+      totalOrd.pop();
 
-    percTotal = (double(top.first.count()) / double(totalTime.count()))*100.0;
-    totalMins = double(top.first.count()) * double(1.66666666667e-5);
-    perThreadMins = totalMins / double(counts.at(top.second));
+      percTotal = (double(top.first.count()) / double(totalTime.count()))*100.0;
+      totalMins = double(top.first.count()) * double(1.66666666667e-5);
+      perThreadMins = totalMins / double(counts.at(top.second));
     
-    printf("%18.18s: % 12.8f % 18.8f % 18.8f   mins\n",
-	   top.second.c_str(), percTotal, totalMins, perThreadMins);
+      printf("%18.18s: % 12.8f % 18.8f % 18.8f   mins\n",
+	     top.second.c_str(), percTotal, totalMins, perThreadMins);
+    }
+    printf("%s%s","------------------------------------TIMER",
+	   "-----------------------------------#\n");
   }
-  printf("%s%s","------------------------------------TIMER",
-	 "-----------------------------------#\n");
   
 #endif
 }

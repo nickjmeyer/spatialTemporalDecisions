@@ -14,8 +14,10 @@
 #include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
+#include "osspAgent.hpp"
 #include "optim.hpp"
 #include "m1SpOptim.hpp"
+#include "m1OsspOptim.hpp"
 #include "m2QOptim.hpp"
 
 
