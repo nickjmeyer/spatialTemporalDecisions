@@ -210,12 +210,8 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
 				     M & m){
-<<<<<<< HEAD
-  int i,j,node0,now,pre,num;
-=======
   njm::timer.start("update");
   int i,j,num;
->>>>>>> models
   std::pair<int,int> neighOf;
 
   m.modFill(sD,tD,fD,dD);
@@ -233,25 +229,8 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
     }
   }
 
-<<<<<<< HEAD
-  // update infected probabilities
-  for(i = 0; i < sD.numInfected; i++){
-    node0 = sD.infected.at(i);
-    now = tD.a.at(node0);
-    pre = tDPre.a.at(node0);
-    
-    if(now != pre && now == 1){ // adding trt
-      m.mP.infProbsBase.row(i) -= m.mP.trtAct;
-      m.mP.setRow(i);
-    }
-    else if(now != pre && now == 0){ // removing trt
-      m.mP.infProbsBase.row(i) += m.mP.trtAct;
-      m.mP.setRow(i);
-    }
-  }
-=======
   njm::timer.stop("update");
->>>>>>> models
+  
   getFeatures(sD,tD,fD,dD,m);
 }
 

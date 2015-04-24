@@ -270,54 +270,10 @@ template class FitOnlyRunner<System<ModelTimeExpCaves,
 			     RankAgent<ToyFeatures2<ModelTime>,
 				       ModelTime> >;
 
-<<<<<<< HEAD
 template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelGravity>,
 			     RankAgent<ToyFeatures2<ModelGravity>,
 				       ModelGravity> >;
-=======
-template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    RadiusModel>,
-			     MyopicAgent<RadiusModel> >;
-
-template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    CaveModel>,
-			     MyopicAgent<CaveModel> >;
-
-
-template class FitOnlyRunner<System<GravityModel,
-				    GravityModel>,
-			     RankAgent<ToyFeatures2<GravityModel>,
-				       GravityModel> >;
-
-template class FitOnlyRunner<System<GravityTimeInfModel,
-				    GravityTimeInfModel>,
-			     RankAgent<ToyFeatures2<GravityTimeInfModel>,
-				       GravityTimeInfModel> >;
-
-template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityTimeInfModel>,
-			     RankAgent<ToyFeatures2<GravityTimeInfModel>,
-				       GravityTimeInfModel> >;
-
-template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    GravityModel>,
-			     RankAgent<ToyFeatures2<GravityModel>,
-				       GravityModel> >;
-
-template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-				    RadiusModel>,
-			     RankAgent<ToyFeatures2<RadiusModel>,
-				       RadiusModel> >;
-
-
-
-template class
-FitOnlyRunner<System<GravityTimeInfExpCavesModel,
-		     GravityTimeInfExpCavesModel>,
-	      RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-			GravityTimeInfExpCavesModel> >;
->>>>>>> 5a0f8fe8fc9638aef516690cf880c165cd3e199b
 
 template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelRadius>,

@@ -5,7 +5,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   typedef ModelTimeExpCaves MG;
-  typedef ModelRadius ME;
+  typedef ModelTime ME;
   typedef System<MG,ME> S;
   typedef ToyFeatures2<ME> F;
   typedef RankAgent<F,ME> RA;
@@ -17,13 +17,13 @@ int main(int argc, char ** argv){
   // PR pr;
   FR fr;
 
-  s.modelGen_r.setType(MCMC);
-  s.modelEst_r.setType(MCMC);
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
   // std::vector<double> par = s.modelGen_r.getPar();
   // s.modelEst_r.putPar(par.begin());
 
-  int numReps = 3;
+  int numReps = 20;
   Starts starts("startingLocations.txt");
 
   omp_set_num_threads(1);
