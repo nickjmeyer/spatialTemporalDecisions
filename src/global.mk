@@ -15,19 +15,23 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
-	toyFeatures2Multi.o \
-	model.o modelParam.o \
-	modelGravityTimeInf.o modelParamGravityTimeInf.o \
-	modelGravityTimeInfExp.o modelParamGravityTimeInfExp.o \
-	modelGravityTimeInfExpCaves.o modelParamGravityTimeInfExpCaves.o \
-	modelRange.o modelParamRange.o \
-	modelRadius.o modelParamRadius.o \
-	modelCave.o modelParamCave.o \
-	modelMulti.o \
-	mcmc.o mcmcRange.o mcmcCave.o mcmcRadius.o \
+	param.o \
+	paramIntercept.o \
+	paramBeta.o \
+	paramGravity.o \
+	paramTime.o \
+	paramTimeExpCaves.o \
+	paramRadius.o \
+	paramTrt.o \
+	model.o \
+	modelGravity.o \
+	modelTime.o \
+	modelTimeExpCaves.o \
+	modelRadius.o \
+	mcmc.o \
 	mcmcGravityTimeInf.o \
-	mcmcGravityTimeInfExp.o \
 	mcmcGravityTimeInfExpCaves.o \
+	mcmcRadius.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

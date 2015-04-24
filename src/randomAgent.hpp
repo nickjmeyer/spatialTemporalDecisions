@@ -7,6 +7,7 @@
 #include <limits>
 #include "data.hpp"
 #include "model.hpp"
+#include "modelGravity.hpp"
 #include "agent.hpp"
 
 

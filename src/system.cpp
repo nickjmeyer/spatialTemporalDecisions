@@ -1,51 +1,26 @@
 #include "system.hpp"
 
-template class System<GravityTimeInfExpCavesModel,
-		      GravityTimeInfExpCavesModel>;
+template class System<ModelGravity,
+		      ModelGravity>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      GravityTimeInfExpModel>;
+template class System<ModelTime,
+		      ModelTime>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      GravityTimeInfModel>;
+template class System<ModelTimeExpCaves,
+		      ModelTimeExpCaves>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      GravityModel>;
+template class System<ModelTimeExpCaves,
+		      ModelTime>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      RangeModel>;
+template class System<ModelTimeExpCaves,
+		      ModelGravity>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      RadiusModel>;
+template class System<ModelTimeExpCaves,
+		      ModelRadius>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      CaveModel>;
+template class System<ModelRadius,
+		      ModelRadius>;
 
-template class System<GravityTimeInfExpCavesModel,
-		      MultiModel>;
-
-
-
-template class System<GravityTimeInfExpModel,
-		      GravityTimeInfExpModel>;
-
-template class System<GravityTimeInfModel,
-		      GravityTimeInfModel>;
-
-template class System<GravityModel,
-		      GravityModel>;
-
-template class System<RangeModel,
-		      RangeModel>;
-
-template class System<RadiusModel,
-		      RadiusModel>;
-
-template class System<CaveModel,
-		      CaveModel>;
-
-template class System<MultiModel,
-		      MultiModel>;
 
 
 template <class MG,
@@ -220,7 +195,7 @@ void System<MG,
   // nothing to do for this....DynamicData isn't used
 
   // load probs
-  modelGen_r.load(sD_r,tD_r,fD,dD_r);
+  modelGen_r.setFill(sD_r,tD_r,fD,dD_r);
 
   // revert
   revert();
@@ -284,10 +259,15 @@ void System<MG,
 
   preCompData();
 
+  
+  modelGen_r = MG(fD);
+  modelGen_r.read();
+  
+  modelEst_r = ME(fD);
+  
   modelGen_r.setType(INVALID);
   modelEst_r.setType(INVALID);
 
-  modelGen_r.getPar()->load();
 }
 
 
@@ -380,32 +360,32 @@ template <class MG,
 void System<MG,
 	    ME>::nextPoint(){
   njm::timer.start("modelInfProbs");
+  modelGen.modFill(sD,tD,fD,dD);
   modelGen.infProbs(sD,tD,fD,dD);
   njm::timer.stop("modelInfProbs");
 
   int tot = 0;
-  for(int i  = 0; i < fD.numNodes; ++i)
+  for(int i = 0; i < fD.numNodes; ++i)
     if(tD.a.at(i) == 1)
       tot += i;
   std::cout << "a: " << tot
-  	    << std::endl;
+	    << std::endl;
 
   tot = 0;
-  for(int i  = 0; i < fD.numNodes; ++i)
+  for(int i = 0; i < fD.numNodes; ++i)
     if(tD.p.at(i) == 1)
       tot += i;
-  
   std::cout << "p: " << tot
-  	    << std::endl;
-  
-  std::vector<double> infProbs = modelGen.getPar()->getInfProbs();
-  std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
-  					       infProbs.end(),
-  					       0.0)
-  	    << std::endl;
+	    << std::endl;
 
+  std::vector<double> infProbs = modelGen.infProbs();
+  std::cout << "infProbs: " << std::accumulate(infProbs.begin(),
+					       infProbs.end(),
+					       0.0)
+	    << std::endl;
+					       
   njm::timer.start("next");
-  nextPoint(modelGen.getPar()->getInfProbs());
+  nextPoint(modelGen.infProbs());
   njm::timer.stop("next");
 }
 

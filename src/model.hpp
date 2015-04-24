@@ -7,52 +7,75 @@
 #include <gsl/gsl_multimin.h>
 #include "data.hpp"
 #include "settings.hpp"
-#include "modelParam.hpp"
-#include "modelParamCave.hpp"
-#include "modelParamRadius.hpp"
-#include "modelParamRange.hpp"
-#include "modelParamGravityTimeInf.hpp"
-#include "modelParamGravityTimeInfSq.hpp"
-#include "modelParamGravityTimeInfSqrt.hpp"
-#include "modelParamGravityTimeInfLog.hpp"
-#include "modelParamGravityTimeInfExp.hpp"
-#include "modelParamGravityTimeInfExpCaves.hpp"
-#include "modelParamGravityTimeInfExpLCaves.hpp"
-#include "modelParamGravityTimeInfExpRCaves.hpp"
-#include "mcmc.hpp"
+#include "param.hpp"
 
 enum Estimation {INVALID = -1, MLE = 0, MCMC = 1};
 
-class BaseModel {
- public:
-  virtual ~BaseModel() {}
+class ModelBase {
+ protected:
+  int set;
+  std::vector<ParamBase *> pars;
+  std::vector<double> probs;
+  std::vector<double> expitInfProbs;
+  std::vector<double> expitRevProbs;
+  std::vector<double> quick;
+  int ready;
+  int numInfected,numNotInfec;
 
-  virtual void load(const SimData & sD,
-		    const TrtData & tD,
-		    const FixedData & fD,
-		    const DynamicData & dD) = 0;
+ public:
+  ModelBase(){ };
+  ModelBase(const std::vector<ParamBase *> & newPars,
+	    const FixedData & fD);
+  virtual ~ModelBase();
+
+  virtual void read() = 0;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
-			const DynamicData & dD) = 0;
-  
-  virtual void update(const SimData & sD,
-		      const TrtData & tD,
-		      const FixedData & fD,
-		      const DynamicData & dD) = 0;
+			const DynamicData & dD);
 
+  virtual std::vector<double> infProbs();
+  
+  virtual void revProbs(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+
+  virtual std::vector<double> revProbs();
+  
+  virtual void setFill(const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD);
+
+  virtual void modFill(const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD);
+
+  virtual void setQuick(const SimData & sD,
+			const TrtData & tD,
+			const FixedData & fD,
+			const DynamicData & dD);
+
+  virtual std::vector<double> & getQuick();
+  
   virtual double oneOnOne(const int notNode, const int infNode,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD) const = 0;
+			  const int numNodes) const;
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   const int & useInit) = 0;
 
-  virtual BaseParam * getPar() = 0;
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD,
+		   std::vector<double> pars) = 0;
+  
+  virtual std::vector<double> getPar() const;
+  
+  virtual std::vector<double>::const_iterator
+  putPar(std::vector<double>::const_iterator it);
 
   virtual void setType(const Estimation & est);
   virtual Estimation getType() const;
@@ -60,66 +83,6 @@ class BaseModel {
 
   Estimation fitType;
 };
-
-
-
-class GravityModel : public BaseModel {
- public:
-
-  virtual void load(const SimData & sD,
-		    const TrtData & tD,
-		    const FixedData & fD,
-		    const DynamicData & dD);
-
-  virtual void infProbs(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD);
-  
-  virtual void update(const SimData & sD,
-		      const TrtData & tD,
-		      const FixedData & fD,
-		      const DynamicData & dD);
-
-  virtual double oneOnOne(const int notNode, const int infNode,
-			  const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD) const ;
-
-  virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD,
-		   const int & useInit);
-  
-  virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD,
-		   const std::vector<double> & mPV);
-  
-  virtual BaseParam * getPar(){return & mP;}
-
-  GravityParam mP;
-
-  GravityMcmc mcmc;
-  
-  double tuneTrt(const FixedData & fD);
-};
-
-
-class GravityModelFitData {
- public:
-  GravityModelFitData(const GravityModel & m, const GravityParam & mP,
-		      const SimData & sD,
-		      const FixedData & fD,
-		      const std::vector<std::vector<int> > & history);
-
-  GravityModel m;
-  GravityParam mP;
-  FixedData fD;
-  std::vector< std::vector<int> > history;
-};
-
-
-double gravityModelFitObjFn (const gsl_vector * x, void * params);
 
 
 

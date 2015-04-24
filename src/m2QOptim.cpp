@@ -23,42 +23,13 @@ void M2QOptimTunePar::putPar(const std::vector<double> & par){
 
 
 
-template class M2QOptim<System<GravityModel,
-			       GravityModel>,
-			RankAgent<ToyFeatures2<GravityModel>,
-				  GravityModel>,
-			FeaturesInt<ToyFeatures2<GravityModel>,
-				    GravityModel>,
-			GravityModel>;
-
-
-template class
-M2QOptim<System<GravityTimeInfExpCavesModel,
-		GravityTimeInfExpCavesModel>,
-	 RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-		   GravityTimeInfExpCavesModel>,
-	 FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
-		     GravityTimeInfExpCavesModel>,
-	 GravityTimeInfExpCavesModel>;
-
-template class
-M2QOptim<System<GravityTimeInfExpCavesModel,
-		RadiusModel>,
-	 RankAgent<ToyFeatures2<RadiusModel>,
-		   RadiusModel>,
-	 FeaturesInt<ToyFeatures2<RadiusModel>,
-		     RadiusModel>,
-	 RadiusModel>;
-
-template class
-M2QOptim<System<GravityTimeInfExpCavesModel,
-		MultiModel>,
-	 RankAgent<ToyFeatures2Multi<MultiModel>,
-		   MultiModel>,
-	 FeaturesInt<ToyFeatures2Multi<MultiModel>,
-		     MultiModel>,
-	 MultiModel>;
-
+template class M2QOptim<System<ModelGravity,
+			       ModelGravity>,
+			RankAgent<ToyFeatures2<ModelGravity>,
+				  ModelGravity>,
+			FeaturesInt<ToyFeatures2<ModelGravity>,
+				    ModelGravity>,
+			ModelGravity>;
 
 
 template <class S, class A, class F,
@@ -189,25 +160,13 @@ optim(const S & system,
 }
 
 
-template class M2QEval<System<GravityModel,
-			      GravityModel>,
-		       RankAgent<ToyFeatures2<GravityModel>,
-				 GravityModel>,
-		       FeaturesInt<ToyFeatures2<GravityModel>,
-				   GravityModel>,
-		       GravityModel>;
-
-
-
-template class M2QEval<System<GravityTimeInfExpCavesModel,
-			      GravityTimeInfExpCavesModel>,
-		       RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-				 GravityTimeInfExpCavesModel>,
-		       FeaturesInt<ToyFeatures2<GravityTimeInfExpCavesModel>,
-				   GravityTimeInfExpCavesModel>,
-		       GravityTimeInfExpCavesModel>;
-
-
+template class M2QEval<System<ModelGravity,
+			      ModelGravity>,
+		       RankAgent<ToyFeatures2<ModelGravity>,
+				 ModelGravity>,
+		       FeaturesInt<ToyFeatures2<ModelGravity>,
+				   ModelGravity>,
+		       ModelGravity>;
 
 
 template <class S, class A, class F, class M>

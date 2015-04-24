@@ -1,19 +1,7 @@
 #include "myopicAgent.hpp"
 
 
-template class MyopicAgent<GravityTimeInfExpCavesModel>;
-
-template class MyopicAgent<GravityTimeInfExpModel>;
-
-template class MyopicAgent<GravityTimeInfModel>;
-
-template class MyopicAgent<GravityModel>;
-
-template class MyopicAgent<RangeModel>;
-
-template class MyopicAgent<RadiusModel>;
-
-template class MyopicAgent<CaveModel>;
+template class MyopicAgent<ModelGravity>;
 
 
 template <class M>
@@ -30,9 +18,9 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
 
   int i,j,node0,total,count;
 
-  m.load(sD,tD,fD,dD);
+  m.modFill(sD,tD,fD,dD);
   
-  notFeat = 1 - arma::prod(m.mP.infProbsSep,0).t();
+  notFeat = arma::conv_to<arma::colvec>::from(m.infProbs());
 
   infFeat.zeros(sD.numInfected);
   for(i=0; i<sD.numInfected; i++){

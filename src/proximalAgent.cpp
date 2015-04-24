@@ -1,15 +1,8 @@
 #include "proximalAgent.hpp"
 
 
-template class ProximalAgent<GravityModel>;
-template class ProximalAgent<GravityTimeInfModel>;
-template class ProximalAgent<GravityTimeInfExpCavesModel>;
+template class ProximalAgent<ModelGravity>;
 
-template class ProximalAgent<RangeModel>;
-
-template class ProximalAgent<RadiusModel>;
-
-template class ProximalAgent<CaveModel>;
 
 template<class M>
 std::string ProximalAgent<M>::name = "proximal";

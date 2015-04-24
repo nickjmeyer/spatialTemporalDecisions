@@ -1,30 +1,17 @@
 #include "rankAgent.hpp"
 
 
-template class RankAgent<ToyFeatures2<GravityTimeInfExpCavesModel>,
-			 GravityTimeInfExpCavesModel>;
+template class RankAgent<ToyFeatures2<ModelGravity>,
+			 ModelGravity>;
 
-template class RankAgent<ToyFeatures2<GravityTimeInfExpModel>,
-			 GravityTimeInfExpModel>;
+template class RankAgent<ToyFeatures2<ModelTime>,
+			 ModelTime>;
 
-template class RankAgent<ToyFeatures2<GravityTimeInfModel>,
-			 GravityTimeInfModel>;
+template class RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
 
-template class RankAgent<ToyFeatures2<GravityModel>,
-			 GravityModel>;
-
-template class RankAgent<ToyFeatures2<RangeModel>,
-			 RangeModel>;
-
-template class RankAgent<ToyFeatures2<RadiusModel>,
-			 RadiusModel>;
-
-template class RankAgent<ToyFeatures2<CaveModel>,
-			 CaveModel>;
-
-
-template class RankAgent<ToyFeatures2Multi<MultiModel>,
-			 MultiModel>;
+template class RankAgent<ToyFeatures2<ModelRadius>,
+			 ModelRadius>;
 
 
 
@@ -67,7 +54,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   arma::mat featStddev;
   jitter.zeros(f.numFeatures);
   
-  int i,j,node0,addPre,addAct;
+  int i=0,j=0,node0=0,addPre=0,addAct=0;
   int cI = 0,cN = 0;
   
   int numChunks = std::log((double)fD.numNodes) + 1.0;

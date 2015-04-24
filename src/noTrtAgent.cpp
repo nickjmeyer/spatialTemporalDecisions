@@ -1,15 +1,13 @@
 #include "noTrtAgent.hpp"
 
 
-template class NoTrt<GravityModel>;
-template class NoTrt<GravityTimeInfModel>;
-template class NoTrt<GravityTimeInfExpCavesModel>;
+template class NoTrt<ModelGravity>;
 
-template class NoTrt<RangeModel>;
+template class NoTrt<ModelTimeExpCaves>;
 
-template class NoTrt<RadiusModel>;
+template class NoTrt<ModelTime>;
 
-template class NoTrt<CaveModel>;
+template class NoTrt<ModelRadius>;
 
 template<class M>
 std::string NoTrt<M>::name = "noTrt";
