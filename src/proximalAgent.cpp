@@ -1,7 +1,9 @@
 #include "proximalAgent.hpp"
 
 
-template class ProximalAgent<ModelGravity>;
+template class ProximalAgent<ModelTimeExpCaves>;
+
+template class ProximalAgent<ModelRadius>;
 
 
 template<class M>

@@ -1,210 +1,132 @@
 #include "rand.hpp"
 
-// set random seed
-#ifdef RANDOM_SEED__
-unsigned njm::randomSeed = RANDOM_SEED__;
-#else
-unsigned njm::randomSeed = 8;
-#endif
-
-boost::uniform_real<> unif01(0.0,1.0);
-boost::normal_distribution<> norm01(0.0, 1.0);
-boost::variate_generator<boost::mt19937,
-			 boost::uniform_real<>
-			 > genUnif01(boost::mt19937(njm::randomSeed),
-				     unif01);
-boost::variate_generator<boost::mt19937,
-			 boost::normal_distribution<> 
-			 > genNorm01(boost::mt19937(njm::randomSeed),
-				     norm01);
-
-RandParr randParr(1000000);
+RandParr randParr(omp_get_max_threads(),1000000);
 
 
-
-RandParr::RandParr(int numRand_){
-  numRand=numRand_;
+RandParr::RandParr(const int numSource, const int numRand){
+  this->numSource = numSource;
+  this->numRand = numRand;
+  
+  
+  vgRunif01.clear();
+  vgRnorm01.clear();
+  seeds.resize(numSource);
+  
+  int i;
+  for(i = 0; i < numSource; ++i){
+    vgRunif01.push_back(VGRunif01(boost::mt19937(i),
+				  boost::uniform_real<>(0.0,1.0)));
+    vgRnorm01.push_back(VGRnorm01(boost::mt19937(i),
+				  boost::normal_distribution<>(0.0,1.0)));
+    setSeed(i,i);
+  }
+  
+  runif01Iter.resize(numSource);
+  runif01End.resize(numSource);
+  runif01Vals = std::vector<std::vector<double>
+			    >(numSource,std::vector<double>(numRand,0));
+  rnorm01Iter.resize(numSource);
+  rnorm01End.resize(numSource);
+  rnorm01Vals = std::vector<std::vector<double>
+			    >(numSource,std::vector<double>(numRand,0));
+  
   reset();
 }
 
 
+void RandParr::setSeed(const int source, const int seed){
+  seeds.at(source) = seed;
+}
+
+
 void RandParr::reset(){
-  reset(njm::randomSeed);
+  int i;
+  for(i = 0; i < numSource; ++i)
+    reset(i);
 }
 
 
-void RandParr::reset(const int seed){
-  genUnif01.engine().seed(seed);
-  genUnif01.distribution().reset();
+void RandParr::reset(const int source){
+  vgRunif01.at(source).engine().seed(seeds.at(source));
+  vgRunif01.at(source).distribution().reset();
   
-  genNorm01.engine().seed(seed);
-  genNorm01.distribution().reset();
+  vgRnorm01.at(source).engine().seed(seeds.at(source));
+  vgRnorm01.at(source).distribution().reset();
   
-  initialize();
+  fillRunif01(source);
+  fillRnorm01(source);
 }
 
 
-void njm::resetRandomSeed(){
+void RandParr::fillRunif01(const int source){
+  std::vector<double>::iterator it,beg,end;
+  
+  beg = runif01Vals.at(source).begin();
+  end = runif01Vals.at(source).end();
+
+  runif01Iter.at(source) = beg;
+  runif01End.at(source) = end;
+  for(it = beg; it != end; ++it)
+    *it = vgRunif01.at(source)(); // gen runif01 values
+}
+
+
+void RandParr::fillRnorm01(const int source){
+  std::vector<double>::iterator it,beg,end;
+  
+  beg = rnorm01Vals.at(source).begin();
+  end = rnorm01Vals.at(source).end();
+
+  rnorm01Iter.at(source) = beg;
+  rnorm01End.at(source) = end;
+  for(it = beg; it != end; ++it)
+    *it = vgRnorm01.at(source)(); // gen rnorm01 values
+}
+
+
+double RandParr::genRunif01(const int source){
+  if(runif01Iter.at(source) == runif01End.at(source))
+    fillRunif01(source);
+  return *runif01Iter.at(source)++;
+}
+
+
+double RandParr::genRnorm01(const int source){
+  if(rnorm01Iter.at(source) == rnorm01End.at(source))
+    fillRnorm01(source);
+  return *rnorm01Iter.at(source)++;
+}
+
+
+void njm::resetSeed(){
+  randParr.reset(omp_get_thread_num());
+}
+
+
+void njm::resetSeed(const int seed){
+  int source = omp_get_thread_num();
+  randParr.setSeed(source,seed);
+  randParr.reset(source);
+}
+
+
+void njm::resetSeedAll(){
   randParr.reset();
 }
 
 
-void njm::resetRandomSeed(const int seed){
-  randParr.reset(seed);
-}
-
-
-void RandParr::initialize(){
-  // int numThreads=omp_get_max_threads();
-  // int numThreads=64;
-  int numThreads = 1;
-  int i,j;
-  numRunif01=numRand;
-  numRnorm01=numRand;
-  std::vector<double> threadRunif01(numRand), threadRunif01_fixed(numRand);
-  std::vector<double> threadRnorm01(numRand), threadRnorm01_fixed(numRand);
-
-  // allocate containers sizes
-  runif01Vals.resize(numThreads);
-  runif01Vals_fixed.resize(numThreads);
-  rnorm01Vals.resize(numThreads);
-  rnorm01Vals_fixed.resize(numThreads);
-  
-  // sample values for each thread
-  for(i=0; i<numThreads; i++){
-    for(j=0; j<numRand; j++){
-      threadRunif01.at(j)=genUnif01();
-      threadRunif01_fixed.at(j)=genUnif01();
-      threadRnorm01.at(j)=genNorm01();
-      threadRnorm01_fixed.at(j)=genNorm01();
-    }
-    // load the samples into the thread slots
-    runif01Vals.at(i) = threadRunif01;
-    runif01Vals_fixed.at(i) = threadRunif01_fixed;
-
-    rnorm01Vals.at(i) = threadRnorm01;
-    rnorm01Vals_fixed.at(i) = threadRnorm01_fixed;
-  }
-
-  // store iterators
-  runif01Iter.clear();
-  runif01End.clear();
-  rnorm01Iter.clear();
-  rnorm01End.clear();
-  isfixed.clear();
-  for(i=0; i<numThreads; i++){
-    runif01Iter.push_back(runif01Vals.at(i).begin());
-    runif01End.push_back(runif01Vals.at(i).end());
-    
-    rnorm01Iter.push_back(rnorm01Vals.at(i).begin());
-    rnorm01End.push_back(rnorm01Vals.at(i).end());
-
-    isfixed.push_back(false);
-  }
-
-  runif01Iter_hold.resize(numThreads);
-  runif01End_hold.resize(numThreads);
-  rnorm01Iter_hold.resize(numThreads);
-  rnorm01End_hold.resize(numThreads);
-}
-
-
-void RandParr::fixSeed(const int fix){
-  int thread=omp_get_thread_num();
-  isfixed.at(thread)=fix;
-  if(fix){
-    runif01Iter_hold.at(thread) = runif01Iter.at(thread);
-    rnorm01Iter_hold.at(thread) = rnorm01Iter.at(thread);
-
-    runif01End_hold.at(thread) = runif01End.at(thread);
-    rnorm01End_hold.at(thread) = rnorm01End.at(thread);
-    
-    runif01Iter.at(thread) = runif01Vals_fixed.at(thread).begin();
-    rnorm01Iter.at(thread) = rnorm01Vals_fixed.at(thread).begin();
-
-    runif01End.at(thread) = runif01Vals_fixed.at(thread).end();
-    rnorm01End.at(thread) = rnorm01Vals_fixed.at(thread).end();
-  }
-  else{
-    runif01Iter.at(thread) = runif01Iter_hold.at(thread);
-    rnorm01Iter.at(thread) = rnorm01Iter_hold.at(thread);
-
-    runif01End.at(thread) = runif01End_hold.at(thread);
-    rnorm01End.at(thread) = rnorm01End_hold.at(thread);
-  }
-}
-
-
-void njm::fixThreadSeed(const int fix){
-  randParr.fixSeed(fix);
-}
-
-
-
-double RandParr::getRunif01(){
-  int thread=omp_get_thread_num();
-  double r=*(runif01Iter.at(thread)++);
-
-  // if there are no more samples, refill
-  if(runif01Iter.at(thread) == runif01End.at(thread)
-     && !isfixed.at(thread)){
-#pragma omp critical
-    {
-      int i;
-      for(i=0; i<numRunif01; i++)
-	runif01Vals.at(thread).at(i)=genUnif01();
-      runif01Iter.at(thread)=runif01Vals.at(thread).begin();
-    }
-  }
-  else if(runif01Iter.at(thread) == runif01End.at(thread)
-	  && isfixed.at(thread)){
-#pragma omp critical
-    {
-      runif01Iter.at(thread) = runif01Vals_fixed.at(thread).begin();
-    }
-  }
-  return r;
-}
-
-
-double RandParr::getRnorm01(){
-  int thread=omp_get_thread_num();
-  double r=*(rnorm01Iter.at(thread)++);
-
-  // if there are no more samples, refill
-  if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
-     && !isfixed.at(thread)){
-#pragma omp critical
-    {
-      int i;
-      for(i=0; i<numRnorm01; i++)
-	rnorm01Vals.at(thread).at(i)=genNorm01();
-      rnorm01Iter.at(thread)=rnorm01Vals.at(thread).begin();
-    }
-  }
-  else if(rnorm01Iter.at(thread) == rnorm01End.at(thread)
-	  && isfixed.at(thread)){
-#pragma omp critical
-    {
-      rnorm01Iter.at(thread) = rnorm01Vals_fixed.at(thread).begin();
-    }
-  }
-  return r;
-}
-
-
 double njm::runif01(){
-  return(randParr.getRunif01());
+  return(randParr.genRunif01(omp_get_thread_num()));
 }
 
 
 double njm::runif(double a, double b){
-  return runif01()*(b-a)+a;
+  return njm::runif01()*(b-a)+a;
 }
 
 
 int njm::runifInterv(int min, int max){
-  double r=runif01();
+  double r=njm::runif01();
   r*=(double)(max-min);
   r+=(double)min;
   return (int)floor(r);
@@ -218,12 +140,12 @@ int njm::rber(double p){
 
 
 double njm::rnorm01(){
-  return(randParr.getRnorm01());
+  return(randParr.genRnorm01(omp_get_thread_num()));
 }
 
 
 double njm::rgamma(double const alpha, double const beta){
-  return beta*boost::math::gamma_p_inv(alpha,runif01());
+  return beta*boost::math::gamma_p_inv(alpha,njm::runif01());
 }
 
 

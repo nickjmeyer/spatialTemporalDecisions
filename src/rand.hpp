@@ -9,44 +9,11 @@
 #include <omp.h>
 #include <vector>
 
-class RandParr{
- public:
-
-  RandParr(int numRand_);
-  void reset();
-  void reset(const int seed);
-  void fixSeed(const int fix);
-  double getRunif01();
-  double getRnorm01();
-
-
-  int numRand;
-
- private:
-
-  void initialize();
-
-  int numRunif01;
-  std::vector< std::vector<double>::iterator > runif01Iter, runif01Iter_hold;
-  std::vector< std::vector<double>::iterator > runif01End, runif01End_hold;
-  std::vector< std::vector<double> > runif01Vals, runif01Vals_fixed;
-  
-  int numRnorm01;
-  std::vector< std::vector<double>::iterator > rnorm01Iter, rnorm01Iter_hold;
-  std::vector< std::vector<double>::iterator > rnorm01End, rnorm01End_hold;
-  std::vector< std::vector<double> > rnorm01Vals, rnorm01Vals_fixed;
-
-  std::vector< bool > isfixed;
-};
-
-
 namespace njm{
-  extern unsigned randomSeed;
+  void resetSeed();
+  void resetSeed(const int seed);
+  void resetSeedAll();
   
-  void resetRandomSeed();
-  void resetRandomSeed(const int seed);
-  
-  void fixThreadSeed(const int fix);
 
   double runif01();
   double runif(double a, double b);
@@ -71,5 +38,57 @@ namespace njm{
   double qnormal(double prob);
   double pnormal(double quan);
 };
+
+
+typedef boost::variate_generator<boost::mt19937,
+				 boost::uniform_real<> > VGRunif01;
+
+typedef boost::variate_generator<boost::mt19937,
+				 boost::normal_distribution<> > VGRnorm01;
+
+class RandParr{
+ public:
+
+  RandParr(const int numSource, const int numRand);
+
+ protected:
+
+  void fillRunif01(const int source);
+  void fillRnorm01(const int source);
+  
+  void reset();
+  void reset(const int source);
+  
+  void setSeed(const int source, const int seed);
+  
+  double genRunif01(const int source);
+  double genRnorm01(const int source);
+
+
+  int numSource;
+  int numRand;
+
+  std::vector<int> seeds;
+  std::vector<VGRunif01> vgRunif01;
+  std::vector<VGRnorm01> vgRnorm01;
+
+  std::vector< std::vector<double>::iterator > runif01Iter;
+  std::vector< std::vector<double>::iterator > runif01End;
+  std::vector< std::vector<double> > runif01Vals;
+  
+  std::vector< std::vector<double>::iterator > rnorm01Iter;
+  std::vector< std::vector<double>::iterator > rnorm01End;
+  std::vector< std::vector<double> > rnorm01Vals;
+
+
+  friend void njm::resetSeed();
+  friend void njm::resetSeed(const int seed);
+  friend void njm::resetSeedAll();
+
+  friend double njm::runif01();
+  friend double njm::rnorm01();
+};
+
+
 
 #endif

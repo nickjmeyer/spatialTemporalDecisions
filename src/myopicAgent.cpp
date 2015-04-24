@@ -1,7 +1,9 @@
 #include "myopicAgent.hpp"
 
 
-template class MyopicAgent<ModelGravity>;
+template class MyopicAgent<ModelTimeExpCaves>;
+
+template class MyopicAgent<ModelRadius>;
 
 
 template <class M>

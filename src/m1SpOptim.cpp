@@ -31,11 +31,17 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SpOptim<System<ModelGravity,
-				ModelGravity>,
-			 RankAgent<ToyFeatures2<ModelGravity>,
-				   ModelGravity>,
-			 ModelGravity>;
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelTimeExpCaves>,
+			 RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+				   ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelRadius>,
+			 RankAgent<ToyFeatures2<ModelRadius>,
+				   ModelRadius>,
+			 ModelRadius>;
 
 
 template <class S, class A, class M>

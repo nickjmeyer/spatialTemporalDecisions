@@ -132,12 +132,21 @@ PlainRunner<S,A>
 }
 
 
-template class VanillaRunner<System<ModelGravity,
-				    ModelGravity>,
-			     NoTrt<ModelGravity> >;
-template class VanillaRunner<System<ModelGravity,
-				    ModelGravity>,
-			     ProximalAgent<ModelGravity> >;
+template class VanillaRunner<System<ModelTimeExpCaves,
+				    ModelTimeExpCaves>,
+			     NoTrt<ModelTimeExpCaves> >;
+
+template class VanillaRunner<System<ModelTimeExpCaves,
+				    ModelTimeExpCaves>,
+			     ProximalAgent<ModelTimeExpCaves> >;
+
+template class VanillaRunner<System<ModelTimeExpCaves,
+				    ModelRadius>,
+			     NoTrt<ModelRadius> >;
+
+template class VanillaRunner<System<ModelTimeExpCaves,
+				    ModelRadius>,
+			     ProximalAgent<ModelRadius> >;
 
 
 
@@ -148,8 +157,6 @@ VanillaRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  njm::resetRandomSeed();
-  
   double value=0;
   int r,t;
 
@@ -159,6 +166,7 @@ VanillaRunner<S,A>
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
+    njm::resetSeed(r);
     system.reset(starts[r]);
     
 #pragma omp critical
@@ -210,8 +218,6 @@ VanillaRunnerNS<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  njm::resetRandomSeed();
-  
   double value=0;
   int r,t;
 
@@ -220,6 +226,7 @@ VanillaRunnerNS<S,A>
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
+    njm::resetSeed(r);
     system.reset(starts[r]);
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
@@ -246,39 +253,14 @@ VanillaRunnerNS<S,A>
 
 
 
-template class FitOnlyRunner<System<ModelGravity,
-				    ModelGravity>,
-			     MyopicAgent<ModelGravity> >;
-
-template class FitOnlyRunner<System<ModelGravity,
-				    ModelGravity>,
-			     RankAgent<ToyFeatures2<ModelGravity>,
-				       ModelGravity> >;
-
-template class FitOnlyRunner<System<ModelTime,
-				    ModelTime>,
-			     RankAgent<ToyFeatures2<ModelTime>,
-				       ModelTime> >;
-
 template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelTimeExpCaves>,
-			     RankAgent<ToyFeatures2<ModelTimeExpCaves>,
-				       ModelTimeExpCaves> >;
-
-template class FitOnlyRunner<System<ModelTimeExpCaves,
-				    ModelTime>,
-			     RankAgent<ToyFeatures2<ModelTime>,
-				       ModelTime> >;
-
-template class FitOnlyRunner<System<ModelTimeExpCaves,
-				    ModelGravity>,
-			     RankAgent<ToyFeatures2<ModelGravity>,
-				       ModelGravity> >;
+			     MyopicAgent<ModelTimeExpCaves> >;
 
 template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelRadius>,
-			     RankAgent<ToyFeatures2<ModelRadius>,
-				       ModelRadius> >;
+			     MyopicAgent<ModelRadius> >;
+
 
 
 template <class S, class A>
@@ -288,8 +270,6 @@ FitOnlyRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  njm::resetRandomSeed();
-  
   double value=0;
   int r,t;
 
@@ -299,6 +279,7 @@ FitOnlyRunner<S,A>
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
+    njm::resetSeed(r);
     system.reset(starts[r]);
     
 #pragma omp critical
@@ -345,15 +326,24 @@ FitOnlyRunner<S,A>
 
 
 template class
-OptimRunner<System<ModelGravity,
-		   ModelGravity>,
-	    RankAgent<ToyFeatures2<ModelGravity>,
-		      ModelGravity>,
-	    M1SpOptim<System<ModelGravity,
-			     ModelGravity>,
-		      RankAgent<ToyFeatures2<ModelGravity>,
-				ModelGravity>,
-		      ModelGravity> >;
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelTimeExpCaves>,
+	    OsspAgent<ModelTimeExpCaves>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelTimeExpCaves>,
+			OsspAgent<ModelTimeExpCaves>,
+			ToyFeatures2<ModelTimeExpCaves>,
+			ModelTimeExpCaves> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelRadius>,
+	    OsspAgent<ModelRadius>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelRadius>,
+			OsspAgent<ModelRadius>,
+			ToyFeatures2<ModelRadius>,
+			ModelRadius> >;
 
 
 
@@ -365,9 +355,6 @@ OptimRunner<S,A,Optim>
       Optim optim,
       const int numReps, const int numPoints,
       const Starts & starts){
-
-  njm::resetRandomSeed();
-  
   int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
   double hours;
@@ -387,6 +374,7 @@ OptimRunner<S,A,Optim>
   firstprivate(system,agent,optim,weights)	\
   private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
+    njm::resetSeed(r);
     // record time for each replication
     tickR=std::time(NULL);
 
@@ -492,19 +480,6 @@ OptimRunner<S,A,Optim>
 
 
 
-template class
-OptimRunnerNS<System<ModelGravity,
-		     ModelGravity>,
-	      RankAgent<ToyFeatures2<ModelGravity>,
-			ModelGravity>,
-	      M1SpOptim<System<ModelGravity,
-			       ModelGravity>,
-			RankAgent<ToyFeatures2<ModelGravity>,
-				  ModelGravity>,
-			ModelGravity> >;
-
-
-
 template <class S, class A, class Optim>
 double
 OptimRunnerNS<S,A,Optim>
@@ -565,15 +540,27 @@ OptimRunnerNS<S,A,Optim>
 
 
 template class
-TuneRunner<System<ModelGravity,
-		  ModelGravity>,
-	   RankAgent<ToyFeatures2<ModelGravity>,
-		     ModelGravity>,
-	   M1SpOptim<System<ModelGravity,
-			    ModelGravity>,
-		     RankAgent<ToyFeatures2<ModelGravity>,
-			       ModelGravity>,
-		     ModelGravity> >;
+TuneRunner<System<ModelTimeExpCaves,
+		  ModelTimeExpCaves>,
+	   RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+		     ModelTimeExpCaves>,
+	   M1SpOptim<System<ModelTimeExpCaves,
+			    ModelTimeExpCaves>,
+		     RankAgent<ToyFeatures2<ModelTimeExpCaves>,
+			       ModelTimeExpCaves>,
+		     ModelTimeExpCaves> >;
+
+
+template class
+TuneRunner<System<ModelRadius,
+		  ModelRadius>,
+	   RankAgent<ToyFeatures2<ModelRadius>,
+		     ModelRadius>,
+	   M1SpOptim<System<ModelRadius,
+			    ModelRadius>,
+		     RankAgent<ToyFeatures2<ModelRadius>,
+			       ModelRadius>,
+		     ModelRadius> >;
 
 
 
@@ -708,8 +695,6 @@ TimerRunner<S,A>
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  njm::resetRandomSeed();
-
   std::chrono::milliseconds fitTime,trtTime,simTime,diff;
   fitTime=std::chrono::milliseconds::zero();
   trtTime=std::chrono::milliseconds::zero();
@@ -727,6 +712,7 @@ TimerRunner<S,A>
   int r,t;
 
   for(r=0; r<numReps; r++){
+    njm::resetSeed(r);
     system.reset(starts[r]);
 
     for(t=system.sD.time; t<numPoints; t++){
