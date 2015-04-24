@@ -90,9 +90,6 @@ void M1OsspOptim<S,A,F,M>
   std::set<std::pair<std::vector<int>,std::vector<int> > >::iterator it,end;
   end = apSet.end();
 
-  // std::cout << "value: " << s.value() << std::endl;
-  // std::cout << "apSet: " << J << std::endl;
-
 
   // initialize runner and original state
   PlainRunner<System<M,M>,RankAgent<F,M> > runner;
