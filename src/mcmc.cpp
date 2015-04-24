@@ -162,7 +162,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
 
   int i,j;
   // set containers for current and candidate samples
-  std::vector<double>::const_iterator it = par.begin(),it1;
+  std::vector<double>::const_iterator it = par.begin();
   intcp_cur=intcp_can= *it++;
   
   beta_cur.clear();

@@ -119,7 +119,7 @@ void RadiusMcmc::sample(int const numSamples, int const numBurn,
 
   int i,j;
   // set containers for current and candidate samples
-  std::vector<double>::const_iterator it;
+  std::vector<double>::const_iterator it = par.begin();
   intcp_cur=intcp_can= *it++;
   radius_cur=radius_can= *it++;
   trtPre_cur=trtPre_can= *it++;

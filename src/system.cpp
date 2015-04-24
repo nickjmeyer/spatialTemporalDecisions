@@ -9,6 +9,15 @@ template class System<ModelTime,
 template class System<ModelTimeExpCaves,
 		      ModelTimeExpCaves>;
 
+template class System<ModelTimeExpCaves,
+		      ModelTime>;
+
+template class System<ModelTimeExpCaves,
+		      ModelGravity>;
+
+template class System<ModelTimeExpCaves,
+		      ModelRadius>;
+
 template class System<ModelRadius,
 		      ModelRadius>;
 
@@ -254,7 +263,7 @@ void System<MG,
   modelGen_r = MG(fD);
   modelGen_r.read();
   
-  modelEst_r = MG(fD);
+  modelEst_r = ME(fD);
   
   modelGen_r.setType(INVALID);
   modelEst_r.setType(INVALID);
