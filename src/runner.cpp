@@ -362,10 +362,27 @@ template class FitOnlyRunner<System<GravityModel,
 				    GravityModel>,
 			     RankAgent<ToyFeatures2<GravityModel>,
 				       GravityModel> >;
+
 template class FitOnlyRunner<System<GravityTimeInfModel,
 				    GravityTimeInfModel>,
 			     RankAgent<ToyFeatures2<GravityTimeInfModel>,
 				       GravityTimeInfModel> >;
+
+template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+				    GravityTimeInfModel>,
+			     RankAgent<ToyFeatures2<GravityTimeInfModel>,
+				       GravityTimeInfModel> >;
+
+template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+				    GravityModel>,
+			     RankAgent<ToyFeatures2<GravityModel>,
+				       GravityModel> >;
+
+template class FitOnlyRunner<System<GravityTimeInfExpCavesModel,
+				    RadiusModel>,
+			     RankAgent<ToyFeatures2<RadiusModel>,
+				       RadiusModel> >;
+
 
 
 template class
