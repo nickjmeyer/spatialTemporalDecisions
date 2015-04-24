@@ -35,7 +35,7 @@ int main(int argc, char ** argv){
   // njm::message(pr.run(s,ra,numReps,s.fD.finalT));
   njm::message(fr.run(s,ra,numReps,s.fD.finalT,starts));
   njm::timer.stop("everything");
-  
+
   njm::sett.clean();
   return 0;
 }
