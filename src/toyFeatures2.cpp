@@ -32,10 +32,8 @@ void ToyFeatures2<M>::preCompData(const SimData & sD,
   // pre compute stuff
 
   // load estimated probabilities of infection
-  njm::timer.start("modelLoad");
   m.modFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
-  njm::timer.stop("modelLoad");
 
   // extract subgraph connectiviy for not infected
   int i;
@@ -203,7 +201,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
 				     M & m){
-  njm::timer.start("update");
   int i,j,num;
   std::pair<int,int> neighOf;
 
@@ -222,8 +219,6 @@ void ToyFeatures2<M>::updateFeatures(const SimData & sD,
     }
   }
 
-  njm::timer.stop("update");
-  
   getFeatures(sD,tD,fD,dD,m);
 }
 

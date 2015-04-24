@@ -72,7 +72,6 @@ PlainRunner<S,A>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    njm::timer.start("init");
     if(system.modelGen.fitType == MCMC){
       system.modelGen.mcmc.samples.setRand();
 
@@ -82,16 +81,13 @@ PlainRunner<S,A>
     }
     
     system.revert();
-    njm::timer.stop("init");
 
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
 
-      njm::timer.start("status");
       system.updateStatus();
-      njm::timer.stop("status");
 
       system.nextPoint();
     }
