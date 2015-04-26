@@ -285,6 +285,18 @@ template class VanillaRunnerNS<System<ModelTimeExpCaves,
 			       RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 					 ModelTimeExpCaves> >;
 
+template class VanillaRunnerNS<System<ModelGravity,
+				      ModelGravity>,
+			       RankAgent<WnsFeatures0<ModelGravity>,
+					 ModelGravity> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCaves,
+				      ModelTimeExpCaves>,
+			       RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+					 ModelTimeExpCaves> >;
+
+
+
 
 
 template<class S, class A>
