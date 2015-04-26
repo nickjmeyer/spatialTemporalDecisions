@@ -71,13 +71,20 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 
 template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelTimeExpCaves>,
-			 RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+			 RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 				   ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
+template class M1SpOptim<System<ModelRadius,
+				ModelRadius>,
+			 RankAgent<WnsFeatures1<ModelRadius>,
+				   ModelRadius>,
+			 ModelRadius>;
+
+
 template class M1SpOptim<System<ModelGravity,
 				ModelGravity>,
-			 RankAgent<WnsFeatures0<ModelGravity>,
+			 RankAgent<WnsFeatures1<ModelGravity>,
 				   ModelGravity>,
 			 ModelGravity>;
 

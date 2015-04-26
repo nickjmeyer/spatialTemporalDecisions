@@ -87,15 +87,19 @@ template class PlainRunner<System<ModelGravity,
 
 template class PlainRunner<System<ModelTimeExpCaves,
 				  ModelTimeExpCaves>,
-			   RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+			   RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 				     ModelTimeExpCaves> >;
 
 
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
-			   RankAgent<WnsFeatures0<ModelGravity>,
+			   RankAgent<WnsFeatures1<ModelGravity>,
 				     ModelGravity> >;
 
+template class PlainRunner<System<ModelRadius,
+				  ModelRadius>,
+			   RankAgent<WnsFeatures1<ModelRadius>,
+				     ModelRadius> >;
 
 
 
@@ -287,12 +291,12 @@ template class VanillaRunnerNS<System<ModelTimeExpCaves,
 
 template class VanillaRunnerNS<System<ModelGravity,
 				      ModelGravity>,
-			       RankAgent<WnsFeatures0<ModelGravity>,
+			       RankAgent<WnsFeatures1<ModelGravity>,
 					 ModelGravity> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCaves,
 				      ModelTimeExpCaves>,
-			       RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+			       RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 					 ModelTimeExpCaves> >;
 
 
@@ -471,6 +475,26 @@ OptimRunner<System<ModelTimeExpCaves,
 			       ModelRadius>,
 			OsspAgent<ModelRadius>,
 			ToyFeatures4<ModelRadius>,
+			ModelRadius> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelTimeExpCaves>,
+	    OsspAgent<ModelTimeExpCaves>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelTimeExpCaves>,
+			OsspAgent<ModelTimeExpCaves>,
+			WnsFeatures1<ModelTimeExpCaves>,
+			ModelTimeExpCaves> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelRadius>,
+	    OsspAgent<ModelRadius>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelRadius>,
+			OsspAgent<ModelRadius>,
+			WnsFeatures1<ModelRadius>,
 			ModelRadius> >;
 
 
@@ -742,23 +766,35 @@ TuneRunner<System<ModelRadius,
 template class
 TuneRunner<System<ModelTimeExpCaves,
 		  ModelTimeExpCaves>,
-	   RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+	   RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 		     ModelTimeExpCaves>,
 	   M1SpOptim<System<ModelTimeExpCaves,
 			    ModelTimeExpCaves>,
-		     RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+		     RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 			       ModelTimeExpCaves>,
 		     ModelTimeExpCaves> >;
 
 
 template class
+TuneRunner<System<ModelRadius,
+		  ModelRadius>,
+	   RankAgent<WnsFeatures1<ModelRadius>,
+		     ModelRadius>,
+	   M1SpOptim<System<ModelRadius,
+			    ModelRadius>,
+		     RankAgent<WnsFeatures1<ModelRadius>,
+			       ModelRadius>,
+		     ModelRadius> >;
+
+
+template class
 TuneRunner<System<ModelGravity,
 		  ModelGravity>,
-	   RankAgent<WnsFeatures0<ModelGravity>,
+	   RankAgent<WnsFeatures1<ModelGravity>,
 		     ModelGravity>,
 	   M1SpOptim<System<ModelGravity,
 			    ModelGravity>,
-		     RankAgent<WnsFeatures0<ModelGravity>,
+		     RankAgent<WnsFeatures1<ModelGravity>,
 			       ModelGravity>,
 		     ModelGravity> >;
 

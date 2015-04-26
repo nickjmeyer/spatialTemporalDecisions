@@ -31,10 +31,13 @@ template class RankAgent<ToyFeatures3<ModelRadius>,
 template class RankAgent<ToyFeatures4<ModelRadius>,
 			 ModelRadius>;
 
-template class RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+template class RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
-template class RankAgent<WnsFeatures0<ModelGravity>,
+template class RankAgent<WnsFeatures1<ModelRadius>,
+			 ModelRadius>;
+
+template class RankAgent<WnsFeatures1<ModelGravity>,
 			 ModelGravity>;
 
 

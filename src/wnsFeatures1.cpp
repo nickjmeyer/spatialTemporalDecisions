@@ -181,8 +181,8 @@ void WnsFeatures1<M>::getFeatures(const SimData & sD,
     // density estimates for not infected
     totalDist=0;
     for(j = 0,itD1 = itD3; j < sD.numInfected; j++, itD1++)
-      totalDist += fD.expDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.invDistSD;
+      totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
     notFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
@@ -190,8 +190,8 @@ void WnsFeatures1<M>::getFeatures(const SimData & sD,
     // density estimates for infected
     totalDist=0;
     for(j = 0,itD1 = itD2; j < sD.numNotInfec; j++, itD1++)
-      totalDist += fD.expDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.invDistSD;
+      totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
     infFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
