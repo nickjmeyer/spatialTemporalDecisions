@@ -94,7 +94,7 @@ int main(int argc, char ** argv){
     typedef ProximalAgent<EM> PA;
     typedef MyopicAgent<EM> MA;
 
-    typedef WnsFeatures0<EM> F;
+    typedef WnsFeatures1<EM> F;
     typedef RankAgent<F,EM> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
@@ -150,7 +150,7 @@ int main(int argc, char ** argv){
     typedef ProximalAgent<EM> PA;
     typedef MyopicAgent<EM> MA;
 
-    typedef WnsFeatures0<EM> F;
+    typedef WnsFeatures1<EM> F;
     typedef RankAgent<F,EM> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
