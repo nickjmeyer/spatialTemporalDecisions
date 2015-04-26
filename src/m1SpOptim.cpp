@@ -44,6 +44,12 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 			 ModelTimeExpCaves>;
 
 template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelTimeExpCaves>,
+			 RankAgent<ToyFeatures4<ModelTimeExpCaves>,
+				   ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
+template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelRadius>,
 			 RankAgent<ToyFeatures2<ModelRadius>,
 				   ModelRadius>,
@@ -52,6 +58,12 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelRadius>,
 			 RankAgent<ToyFeatures3<ModelRadius>,
+				   ModelRadius>,
+			 ModelRadius>;
+
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelRadius>,
+			 RankAgent<ToyFeatures4<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 

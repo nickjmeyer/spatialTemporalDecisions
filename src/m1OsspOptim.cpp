@@ -36,6 +36,12 @@ template class M1OsspOptim<System<ModelTimeExpCaves,
 			   ModelTimeExpCaves>;
 
 template class M1OsspOptim<System<ModelTimeExpCaves,
+				  ModelTimeExpCaves>,
+			   OsspAgent<ModelTimeExpCaves>,
+			   ToyFeatures4<ModelTimeExpCaves>,
+			   ModelTimeExpCaves>;
+
+template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
 			   ToyFeatures2<ModelRadius>,
@@ -45,6 +51,12 @@ template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
 			   ToyFeatures3<ModelRadius>,
+			   ModelRadius>;
+
+template class M1OsspOptim<System<ModelTimeExpCaves,
+				  ModelRadius>,
+			   OsspAgent<ModelRadius>,
+			   ToyFeatures4<ModelRadius>,
 			   ModelRadius>;
 
 

@@ -16,6 +16,7 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
 	toyFeatures3.o \
+	toyFeatures4.o \
 	wnsFeatures0.o \
 	wnsFeatures1.o \
 	param.o \

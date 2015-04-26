@@ -18,6 +18,7 @@
 #include "features.hpp"
 #include "toyFeatures2.hpp"
 #include "toyFeatures3.hpp"
+#include "toyFeatures4.hpp"
 #include "featuresInt.hpp"
 #include "runner.hpp"
 #include "settings.hpp"

@@ -14,7 +14,7 @@ int main(int argc, char ** argv){
   typedef ProximalAgent<ME> PA;
   typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures3<ME> F;
+  typedef ToyFeatures4<ME> F;
   typedef OsspAgent<ME> OA;
 
   typedef M1OsspOptim<S,OA,F,ME> OSSPO;
