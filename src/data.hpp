@@ -4,11 +4,12 @@
 
 #include <vector>
 #include <string>
+#include <tuple>
 #include "settings.hpp"
 
 
 struct SimData {
-  int time;
+  int time; // should also be the length of history
 
   int numInfected;
   int numNotInfec;
@@ -21,6 +22,30 @@ struct SimData {
   
   std::vector<int> status;
   std::vector<std::vector<int> > history;
+
+  
+  bool operator == (const SimData & rhs) const{
+    if(time != rhs.time)
+      return false;
+    else if(numInfected != rhs.numInfected)
+      return false;
+    else if(numNotInfec != rhs.numNotInfec)
+      return false;
+    else if(infected != rhs.infected)
+      return false;
+    else if(notInfec != rhs.notInfec)
+      return false;
+    else if(newInfec != rhs.newInfec)
+      return false;
+    else if(timeInf != rhs.timeInf)
+      return false;
+    else if(status != rhs.status)
+      return false;
+    else if(history != rhs.history)
+      return false;
+    else
+      return true;
+  };
 };
 
 
@@ -30,6 +55,20 @@ struct TrtData {
 
   std::vector<int> aPast;
   std::vector<int> pPast;
+
+
+  bool operator == (const TrtData & rhs) const {
+    if(a != rhs.a)
+      return false;
+    else if(p != rhs.p)
+      return false;
+    else if(aPast != rhs.aPast)
+      return false;
+    else if(pPast != rhs.pPast)
+      return false;
+    else
+      return true;
+  };
 };
 
 
@@ -90,7 +129,17 @@ struct FixedData {
 
 
 struct DynamicData {
+
+  bool operator == (const DynamicData & rhs) const {
+    return true;
+  };
 };
+
+
+typedef std::tuple<SimData,TrtData,DynamicData> DataBundle;
+std::vector<DataBundle>
+historyToData(const std::vector<std::vector<int> > & hist);
+
 
 
 #endif

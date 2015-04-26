@@ -4,60 +4,61 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  // typedef ModelTimeExpCaves MG;
-  // typedef ModelTime ME;
-  // typedef System<MG,ME> S;
-  // typedef ToyFeatures2<ME> F;
-  // typedef RankAgent<F,ME> RA;
-  // // typedef PlainRunner<S,RA> PR;
-  // typedef FitOnlyRunner<S,RA> FR;
+  typedef ModelTimeExpCaves MG;
+  typedef MG ME;
+  typedef System<MG,ME> S;
+  typedef ProximalAgent<ME> PA;
 
-  // S s;
-  // RA ra;
-  // // PR pr;
-  // FR fr;
+  S s;
+  PA pa;
 
-  // s.modelGen_r.setType(MLE);
-  // s.modelEst_r.setType(MLE);
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
-  // // std::vector<double> par = s.modelGen_r.getPar();
-  // // s.modelEst_r.putPar(par.begin());
+  s.modelEst_r = s.modelGen_r;
+  s.revert();
 
-  // int numReps = 20;
-  // Starts starts("startingLocations.txt");
+  Starts starts("startingLocations.txt");
+  s.reset(starts[0]);
+  s.revert();
 
-  // omp_set_num_threads(1);
-
-  // s.reset(starts[0]);
-  // s.revert();
-
-  // njm::timer.start("everything");
-  // // njm::message(pr.run(s,ra,numReps,s.fD.finalT));
-  // njm::message(fr.run(s,ra,numReps,s.fD.finalT,starts));
-  // njm::timer.stop("everything");
+  std::vector<DataBundle> info;
 
   int i;
-#pragma omp parallel for num_threads(4)
-  for(i = 0; i < 4; ++i){
-#pragma omp critical
-    {
-      std::cout << i << ": "
-		<< njm::runif01() << " "
-		<< njm::runif01() << " "
-		<< njm::runif01() << " "
-		<< njm::rnorm01() << " "
-		<< njm::rnorm01() << " "
-		<< njm::rnorm01() << std::endl;
-      njm::resetSeed(omp_get_thread_num());
-      std::cout << i << ": "
-		<< njm::runif01() << " "
-		<< njm::runif01() << " "
-		<< njm::runif01() << " "
-		<< njm::rnorm01() << " "
-		<< njm::rnorm01() << " "
-		<< njm::rnorm01() << std::endl;
+  for(i = 0; i < s.fD.finalT; ++i){
+    if(i >= s.fD.trtStart)
+      pa.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelEst);
+    s.updateStatus();
+
+    info.push_back(DataBundle(s.sD,s.tD,s.dD));
+
+    s.nextPoint();
+  }
+
+  info.push_back(DataBundle(s.sD,s.tD,s.dD));
+
+  std::vector<DataBundle> recov;
+
+  std::vector<std::vector<int> > hist;
+  hist = s.sD.history;
+  hist.push_back(s.sD.status);
+  
+  recov = historyToData(hist);
+
+  int equal = 1;
+  for(i = 0; i < int(recov.size()) && equal == 1; ++i){
+    std::cout << i << std::endl;
+    if(equal == 1){
+      equal = (std::get<0>(recov[i]) == std::get<0>(info[i]));
+    }
+    if(equal == 1){
+      equal = (std::get<1>(recov[i]) == std::get<1>(info[i]));
+    }
+    if(equal == 1){
+      equal = (std::get<2>(recov[i]) == std::get<2>(info[i]));
     }
   }
+  std::cout << "equal: " << equal << std::endl;
 
   njm::sett.clean();
   return 0;

@@ -7,7 +7,12 @@ DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg 
 OBJECTS = $(BINARY).o 
-OBJECTS += rand.o system.o utilities.o agent.o starts.o \
+OBJECTS += utilities.o \
+	rand.o \
+	system.o \
+	starts.o \
+	agent.o \
+	data.o \
 	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
 	rankAgent.o osspAgent.o \
 	m1SpOptim.o \

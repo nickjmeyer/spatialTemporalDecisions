@@ -415,9 +415,6 @@ void System<MG,
 	    ME>
 ::nextPoint(const std::vector<double> & infProbs){
   int i;
-  for(i=0; i<sD.numInfected; i++)
-    sD.timeInf.at(sD.infected.at(i))++;
-  
   int node,numNewInf=0;
   sD.newInfec.clear();
   for(i=0; i<sD.numNotInfec; i++){
@@ -434,17 +431,23 @@ void System<MG,
   sD.numInfected+=numNewInf;
   sD.numNotInfec-=numNewInf;
 
+  // update time infected
+  for(i=0; i<sD.numInfected; i++)
+    ++sD.timeInf.at(sD.infected.at(i));
+
+  // remove nodes that became infected
   sD.notInfec.erase(sD.notInfec.begin() + sD.numNotInfec, sD.notInfec.end());
 
+  // update history
   sD.history.push_back(sD.status);
-  updateStatus();
-  
   // wipe treatment vectors
   tD.pPast = tD.p;
   tD.aPast = tD.a;
   std::fill(tD.p.begin(),tD.p.end(),0);
   std::fill(tD.a.begin(),tD.a.end(),0);
 
+  updateStatus();
+  
   sD.time++; // turn the calendar
 }
 
@@ -489,6 +492,3 @@ double System<MG,
 	      ME>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
-
-
-
