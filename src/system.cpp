@@ -83,6 +83,8 @@ System<MG,
 
 
   // current treatments
+  tD_r.a.resize(fD.numNodes);
+  tD_r.p.resize(fD.numNodes);
   for(j = 0; j < fD.numNodes; j++){
     tD_r.a.at(j) = tD_r.p.at(j) = 0;
     if(sD_r.status.at(j) == 1)
@@ -92,6 +94,8 @@ System<MG,
   }
 
   // past treatments
+  tD_r.aPast.resize(fD.numNodes);
+  tD_r.pPast.resize(fD.numNodes);
   if(numPoints > 1)
     for(j = 0; j < fD.numNodes; j++){
       tD_r.aPast.at(j) = tD_r.pPast.at(j) = 0;
@@ -141,6 +145,9 @@ System<MG,
   
   // current time
   sD_r.time = numPoints - 1;
+
+  // load probs
+  modelGen_r.setFill(sD_r,tD_r,fD,dD_r);
 
   revert();
 }
@@ -240,8 +247,8 @@ void System<MG,
   fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
   njm::fromFile(fD.network,njm::sett.srcExt("network.txt"));
   
-  njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsLong.txt"));
-  njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsLat.txt"));
+  njm::fromFile(fD.centroidsLong,njm::sett.srcExt("centroidsLong.txt"));
+  njm::fromFile(fD.centroidsLat,njm::sett.srcExt("centroidsLat.txt"));
   njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsMdsLong.txt"));
   njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsMdsLat.txt"));
   
@@ -343,6 +350,30 @@ void System<MG,
     }
   }
 
+  // distSD
+  tot = 0;
+  for(i = 0; i < fD.numNodes; ++i){
+    for(j = (i+1); j < fD.numNodes; ++j){
+      d = fD.dist.at(i*fD.numNodes + j);
+      mn += d;
+      mnSq += d*d;
+      ++tot;
+    }
+  }
+  mn /= (double)(tot);
+  mnSq /= (double)(tot);
+  fD.distSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
+
+  // expDistSD
+  fD.expDistSD.clear();
+  fD.expDistSD.reserve(fD.numNodes*fD.numNodes);
+  for(i=0; i<fD.numNodes; i++){
+    for(j=0; j<fD.numNodes; j++){
+      d=fD.dist.at(i*fD.numNodes+j);
+      fD.expDistSD.push_back(std::exp(-d*d/(2*fD.distSD*fD.distSD)));
+    }
+  }
+
   // logDist
   fD.logDist.clear();
   fD.logDist.reserve(fD.numNodes*fD.numNodes);
@@ -351,6 +382,18 @@ void System<MG,
       d=fD.dist.at(i*fD.numNodes+j);
       fD.logDist.push_back(std::log(2.0+d));
     }
+  }
+
+
+  // half plane data depth
+  fD.hpdd.clear();
+  fD.hpdd.reserve(fD.numNodes);
+  for(i = 0; i < fD.numNodes; ++i){
+    fD.hpdd.push_back(halfPlaneDepth(fD.centroidsLong.at(i),
+				     fD.centroidsLat.at(i),
+				     fD.numNodes,
+				     fD.centroidsLong,
+				     fD.centroidsLat));
   }
 }
 

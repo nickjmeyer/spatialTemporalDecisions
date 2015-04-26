@@ -15,6 +15,9 @@ OBJECTS += rand.o system.o utilities.o agent.o starts.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures2.o \
+	toyFeatures3.o \
+	wnsFeatures0.o \
+	wnsFeatures1.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \

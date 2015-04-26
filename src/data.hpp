@@ -79,8 +79,13 @@ struct FixedData {
   
   double invDistSD;
   std::vector<double> expInvDistSD; // e^{[1/(1+dist)]/[sd(1+dist)]}
-  std::vector<double> logDist; // log(2+dist)
+
+  double distSD;
+  std::vector<double> expDistSD; // e^{-dist^2/(2*sd(dist)^2)}
   
+  std::vector<double> logDist; // log(2+dist)
+
+  std::vector<double> hpdd;
 };
 
 

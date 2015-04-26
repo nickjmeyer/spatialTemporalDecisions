@@ -93,12 +93,12 @@ void OsspAgent<M>::applyTrt(const SimData & sD,
 		      x /= total;
 		    });
   
-      double cur = probs.at(0);
+      double cur = 0.0;
       double num = njm::runif01();
       i = 0;
       I = probs.size();
       while(cur < num && i < I)
-	cur += probs.at(++i);
+	cur += probs.at(i++);
       if(i >= I)
 	i = I-1;
       ind = mInd.at(i);

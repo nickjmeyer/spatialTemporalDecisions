@@ -10,8 +10,21 @@ template class RankAgent<ToyFeatures2<ModelTime>,
 template class RankAgent<ToyFeatures2<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
+template class RankAgent<ToyFeatures3<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
 template class RankAgent<ToyFeatures2<ModelRadius>,
 			 ModelRadius>;
+
+template class RankAgent<ToyFeatures3<ModelRadius>,
+			 ModelRadius>;
+
+template class RankAgent<WnsFeatures0<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
+template class RankAgent<WnsFeatures0<ModelGravity>,
+			 ModelGravity>;
+
 
 
 
@@ -60,6 +73,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   int numChunks = std::log((double)fD.numNodes) + 1.0;
 
   numChunks = std::min(std::max(numPre,numAct),numChunks);
+
   
   for(i = 0; i < numChunks; i++){
 
@@ -130,7 +144,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
 	(int)(i*numAct/std::min(numChunks,numAct));
 
-
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=selInfected.top().second;
@@ -149,7 +162,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     if((i+1) < numChunks){
       f.updateFeatures(sD,tD,fD,dD,m);
     }
-    
+
   }
 
 #ifndef NJM_NO_DEBUG

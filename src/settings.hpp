@@ -9,6 +9,7 @@
 #include <ctime>
 #include <unistd.h>
 #include "utilities.hpp"
+#include "dataDepth.hpp"
 
 class Settings {
  public:

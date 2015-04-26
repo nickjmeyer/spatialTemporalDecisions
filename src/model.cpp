@@ -116,8 +116,9 @@ void ModelBase::setFill(const SimData & sD,
 			const DynamicData & dD){
   int i,numPars = pars.size();
   probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
-  for(i = 0; i < numPars; ++i)
+  for(i = 0; i < numPars; ++i){
     pars[i]->setFill(probs,sD,tD,fD,dD);
+  }
   set = 1;
   ready = 0;
 }
@@ -129,8 +130,9 @@ void ModelBase::modFill(const SimData & sD,
 			const DynamicData & dD){
   if(set == 1){
     int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i)
+    for(i = 0; i < numPars; ++i){
       pars[i]->modFill(probs,sD,tD,fD,dD);
+    }
   }
   else if(set == 0){
     setFill(sD,tD,fD,dD);
