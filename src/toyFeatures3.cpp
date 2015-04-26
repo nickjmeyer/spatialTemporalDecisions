@@ -183,16 +183,16 @@ void ToyFeatures3<M>::getFeatures(const SimData & sD,
 
   tDPre = tD;
 
-  std::colvec notMx = arma::max(notFeat,0);
-  std::colvec notMn = arma::min(notFeat,0);
-  std::colvec infMx = arma::max(infFeat,0);
-  std::colvec infMn = arma::min(infFeat,0);
+  arma::colvec notMx = arma::max(notFeat,0);
+  arma::colvec notMn = arma::min(notFeat,0);
+  arma::colvec infMx = arma::max(infFeat,0);
+  arma::colvec infMn = arma::min(infFeat,0);
 
   for(i = 0; i < numFeatures; ++i){
-    if(notMx(i) - notMn(i) > 1e-15){
+    if((notMx(i) - notMn(i)) > 1e-15){
       notFeat.col(i) = (notFeat.col(i) - notMn(i))/(notMx(i) - notMn(i));
     }
-    if(infMx(i) - infMn(i) > 1e-15){
+    if((infMx(i) - infMn(i)) > 1e-15){
       infFeat.col(i) = (infFeat.col(i) - infMn(i))/(infMx(i) - infMn(i));
     }
   }
