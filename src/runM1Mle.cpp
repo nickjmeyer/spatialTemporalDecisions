@@ -46,15 +46,15 @@ int main(int argc, char ** argv){
   
 
     
-  // njm::message("  No treatment: "
-  // 	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
-  // 			       ""));
-  // njm::message("      Proximal: "
-  // 	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
-  // 			       ""));
-  // njm::message("        Myopic: "
-  // 	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
-  // 			       ""));
+  njm::message("  No treatment: "
+  	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
+  			       ""));
+  njm::message("      Proximal: "
+  	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
+  			       ""));
+  njm::message("        Myopic: "
+  	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
+  			       ""));
   njm::message("Priority Score: "
   	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
   			       ""));
