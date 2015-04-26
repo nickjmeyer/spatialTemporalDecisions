@@ -71,25 +71,31 @@ void ModelGravity::save() const {
   std::vector<double> par;
   par = pars.at(0)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/intcp.txt"));
+	      njm::sett.srcExt("./GravityParam/intcp.txt"),
+	      std::ios_base::out);
 
   par = pars.at(1)->getPar();
   njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityParam/beta.txt"));
+	      njm::sett.srcExt("./GravityParam/beta.txt"),
+	      std::ios_base::out);
 
   par = pars.at(2)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/alpha.txt"));
+	      njm::sett.srcExt("./GravityParam/alpha.txt")
+	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/power.txt"));
+	      njm::sett.srcExt("./GravityParam/power.txt"),
+	      std::ios_base::out);
 
   par = pars.at(3)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtAct.txt"));
+	      njm::sett.srcExt("./GravityParam/trtAct.txt"),
+	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtPre.txt"));
+	      njm::sett.srcExt("./GravityParam/trtPre.txt"),
+	      std::ios_base::out);
 }
 
 

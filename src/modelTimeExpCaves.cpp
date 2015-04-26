@@ -83,29 +83,36 @@ void ModelTimeExpCaves::save() const {
   std::vector<double> par;
   par = pars.at(0)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/intcp.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/intcp.txt"),
+	      std::ios_base::out);
 
   par = pars.at(1)->getPar();
   njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/beta.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/beta.txt"),
+	      std::ios_base::out);
 
   par = pars.at(2)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/alpha.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/alpha.txt"),
+	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/power.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/power.txt"),
+	      std::ios_base::out);
 
   par = pars.at(3)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/xi.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/xi.txt"),
+	      std::ios_base::out);
   
   par = pars.at(4)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtAct.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtAct.txt"),
+	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtPre.txt"));
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtPre.txt"),
+	      std::ios_base::out);
 }
 
 
