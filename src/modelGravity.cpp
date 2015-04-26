@@ -81,7 +81,7 @@ void ModelGravity::save() const {
 
   par = pars.at(2)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/alpha.txt")
+	      njm::sett.srcExt("./GravityParam/alpha.txt"),
 	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
