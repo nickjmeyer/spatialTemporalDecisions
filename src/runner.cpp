@@ -174,6 +174,14 @@ template class VanillaRunner<System<ModelTimeExpCaves,
 				    ModelTimeExpCaves>,
 			     ProximalAgent<ModelTimeExpCaves> >;
 
+template class VanillaRunner<System<ModelGravity,
+				    ModelGravity>,
+			     NoTrt<ModelGravity> >;
+
+template class VanillaRunner<System<ModelGravity,
+				    ModelGravity>,
+			     ProximalAgent<ModelGravity> >;
+
 template class VanillaRunner<System<ModelTimeExpCaves,
 				    ModelRadius>,
 			     NoTrt<ModelRadius> >;
@@ -242,6 +250,40 @@ VanillaRunner<S,A>
 }
 
 
+
+template class VanillaRunnerNS<System<ModelTimeExpCaves,
+				      ModelTimeExpCaves>,
+			       NoTrt<ModelTimeExpCaves> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCaves,
+				      ModelTimeExpCaves>,
+			       ProximalAgent<ModelTimeExpCaves> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCaves,
+				      ModelTimeExpCaves>,
+			       MyopicAgent<ModelTimeExpCaves> >;
+
+template class VanillaRunnerNS<System<ModelGravity,
+				      ModelGravity>,
+			       NoTrt<ModelGravity> >;
+
+template class VanillaRunnerNS<System<ModelGravity,
+				      ModelGravity>,
+			       ProximalAgent<ModelGravity> >;
+
+template class VanillaRunnerNS<System<ModelGravity,
+				      ModelGravity>,
+			       MyopicAgent<ModelGravity> >;
+
+template class VanillaRunnerNS<System<ModelGravity,
+				      ModelGravity>,
+			       RankAgent<ToyFeatures4<ModelGravity>,
+					 ModelGravity> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCaves,
+				      ModelTimeExpCaves>,
+			       RankAgent<ToyFeatures4<ModelTimeExpCaves>,
+					 ModelTimeExpCaves> >;
 
 
 

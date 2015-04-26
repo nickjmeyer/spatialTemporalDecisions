@@ -1,5 +1,72 @@
 #include "tuneGen.hpp"
 
+template <class M>
+double getAlpha(const M & m,
+		const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  return par.at(1 + fD.numCovar);
+}
+
+template <class M>
+void putAlpha(const double & alpha,
+	      M & m,
+	      const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  par.at(1 + fD.numCovar) = alpha;
+  m.putPar(par.begin());
+}
+
+template <class M>
+double getPower(const M & m,
+		const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  return par.at(1 + fD.numCovar + 1);
+}
+
+template <class M>
+void putPower(const double & power,
+	      M & m,
+	      const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  par.at(1 + fD.numCovar + 1) = power;
+  m.putPar(par.begin());
+}
+
+template <class M>
+double getActTrt(const M & m,
+		 const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  return par.at(par.size() - 2);
+}
+
+template <class M>
+void putActTrt(const double & trt,
+	       M & m,
+	       const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  par.at(par.size() - 2) = trt;
+  m.putPar(par.begin());
+}
+
+
+template <class M>
+double getPreTrt(const M & m,
+		 const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  return par.at(par.size() - 1);
+}
+
+template <class M>
+void putPreTrt(const double & trt,
+	       M & m,
+	       const FixedData & fD){
+  std::vector<double> par = m.getPar();
+  par.at(par.size() - 1) = trt;
+  m.putPar(par.begin());
+}
+
+
+
 double getDPow(const double & power, const double & alpha,
 	       const std::vector<double> & caves){
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
@@ -31,14 +98,15 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   std::vector<double> scaleD;
   njm::fromFile(scaleD, njm::sett.srcExt("rawD.txt"));
   double pastScale = 1.0;
-  double currScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
+  double currScale = getDPow(getPower(s.modelGen_r,s.fD),
+			     getAlpha(s.modelGen_r,s.fD),
 			     s.fD.caves);
 
   rescaleD(pastScale,currScale,scaleD);
   s.fD.dist = scaleD;
 
-  std::vector<double> par = s.paramGen_r.getPar();
-  double power = s.paramGen_r.power;
+  std::vector<double> par = s.modelGen_r.getPar();
+  double power = getPower(s.modelGen_r,s.fD);
   double val = rn.run(s,nt,numReps,numYears,starts);
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
@@ -64,20 +132,19 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
       std::for_each(par.begin(),par.end(),
 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
       
-      s.revert();
-      
       above = 0;
     }
 
-    s.paramGen_r.putPar(par);
-    s.paramGen_r.power = power;
-    s.paramEst_r.putPar(par);
-    s.paramEst_r.power = power;
+    s.modelGen_r.putPar(par.begin());
+    putPower(power,s.modelGen_r,s.fD);
+    s.modelEst_r.putPar(par.begin());
+    putPower(power,s.modelEst_r,s.fD);
 
     s.revert();
 
     pastScale = currScale;
-    currScale = getDPow(s.paramGen_r.power,s.paramGen_r.alpha,
+    currScale = getDPow(getPower(s.modelGen_r,s.fD),
+			getAlpha(s.modelGen_r,s.fD),
 			s.fD.caves);
     rescaleD(pastScale,currScale,scaleD);
     s.fD.dist = scaleD;
@@ -94,10 +161,12 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
 template <class S, class PA, class RP>
 double TuneGenPA(S & s,const int numReps, const Starts & starts){
-  double trtSize = s.modelGen.tuneTrt(s.fD,s.paramGen);
+  double trtSize = s.modelGen.tuneTrt(s.fD);
 
-  s.paramGen_r.trtPre = s.paramGen_r.trtAct = trtSize;
-  s.paramEst_r.trtPre = s.paramEst_r.trtAct = trtSize;
+  putActTrt(trtSize,s.modelGen_r,s.fD);
+  putPreTrt(trtSize,s.modelGen_r,s.fD);
+  putActTrt(trtSize,s.modelEst_r,s.fD);
+  putPreTrt(trtSize,s.modelEst_r,s.fD);
 
   PA pa;
   RP rp;
@@ -110,18 +179,16 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef GravityModel GM;
-    typedef GravityParam GP;
+    typedef ModelGravity GM;
     typedef GM EM;
-    typedef GP EP;
 
-    typedef System<GM,GP,EM,EP> S;
-    typedef NoTrt<EM,EP> NT;
-    typedef ProximalAgent<EM,EP> PA;
-    typedef MyopicAgent<EM,EP> MA;
+    typedef System<GM,EM> S;
+    typedef NoTrt<EM> NT;
+    typedef ProximalAgent<EM> PA;
+    typedef MyopicAgent<EM> MA;
 
-    typedef ToyFeatures2<EM,EP> F;
-    typedef RankAgent<F,EM,EP> RA;
+    typedef ToyFeatures4<EM> F;
+    typedef RankAgent<F,EM> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
     typedef VanillaRunnerNS<S,PA> RP;
@@ -129,10 +196,10 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,RA> RR;
 
     S s;
-    s.paramEst_r = s.paramGen_r;
+    s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    resetRandomSeed();
+    njm::resetSeed();
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
 
@@ -155,17 +222,7 @@ int main(int argc, char ** argv){
 
     double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
 
-    njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
-		 "\n" +
-		 " alpha: " + njm::toString(s.paramGen_r.alpha,"") +
-		 "\n" +
-		 " power: " + njm::toString(s.paramGen_r.power,"") +
-		 "\n" +
-		 "trtPre: " + njm::toString(s.paramGen_r.trtPre,"") +
-		 "\n" +
-		 "trtAct: " + njm::toString(s.paramGen_r.trtAct,"") +
-		 "\n\n" +
-		 " valNT: " + njm::toString(valNT,"") +
+    njm::message(" valNT: " + njm::toString(valNT,"") +
 		 "\n" +
 		 " valPA: " + njm::toString(valPA,"") +
 		 "\n" +
@@ -173,23 +230,21 @@ int main(int argc, char ** argv){
 		 "\n" +
 		 " valRA: " + njm::toString(valRA,""));
 
-    s.paramGen_r.save();
+    s.modelGen_r.save();
   }
 
   
   {
-    typedef GravityTimeInfExpCavesModel GM;
-    typedef GravityTimeInfExpCavesParam GP;
+    typedef ModelTimeExpCaves GM;
     typedef GM EM;
-    typedef GP EP;
 
-    typedef System<GM,GP,EM,EP> S;
-    typedef NoTrt<EM,EP> NT;
-    typedef ProximalAgent<EM,EP> PA;
-    typedef MyopicAgent<EM,EP> MA;
+    typedef System<GM,EM> S;
+    typedef NoTrt<EM> NT;
+    typedef ProximalAgent<EM> PA;
+    typedef MyopicAgent<EM> MA;
 
-    typedef ToyFeatures2<EM,EP> F;
-    typedef RankAgent<F,EM,EP> RA;
+    typedef ToyFeatures4<EM> F;
+    typedef RankAgent<F,EM> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
     typedef VanillaRunnerNS<S,PA> RP;
@@ -197,10 +252,10 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,RA> RR;
 
     S s;
-    s.paramEst_r = s.paramGen_r;
+    s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    resetRandomSeed();
+    njm::resetSeed();
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
     
@@ -223,19 +278,7 @@ int main(int argc, char ** argv){
 
     double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
 
-    njm::message(" intcp: " + njm::toString(s.paramGen_r.intcp,"") +
-		 "\n" +
-		 " alpha: " + njm::toString(s.paramGen_r.alpha,"") +
-		 "\n" +
-		 " power: " + njm::toString(s.paramGen_r.power,"") +
-		 "\n" +
-		 "    xi: " + njm::toString(s.paramGen_r.xi,"") +
-		 "\n" +
-		 "trtPre: " + njm::toString(s.paramGen_r.trtPre,"") +
-		 "\n" +
-		 "trtAct: " + njm::toString(s.paramGen_r.trtAct,"") +
-		 "\n\n" +
-		 " valNT: " + njm::toString(valNT,"") +
+    njm::message(" valNT: " + njm::toString(valNT,"") +
 		 "\n" +
 		 " valPA: " + njm::toString(valPA,"") +
 		 "\n" +
@@ -244,10 +287,12 @@ int main(int argc, char ** argv){
 		 " valRA: " + njm::toString(valRA,""));
 
 
-    s.paramGen_r.save();
+    s.modelGen_r.save();
 
+    std::vector<double> par = s.modelGen_r.getPar();
 
-    double priorMeanTrt = (s.paramGen_r.trtPre + s.paramGen_r.trtAct)/2.0;
+    double priorMeanTrt = (getPreTrt(s.modelGen_r,s.fD)
+			   + getPreTrt(s.modelGen_r,s.fD))/2.0;
     priorMeanTrt *= 4.0;
 
     // write new distance matrix to file

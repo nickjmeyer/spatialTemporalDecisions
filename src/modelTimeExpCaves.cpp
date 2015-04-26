@@ -79,6 +79,37 @@ void ModelTimeExpCaves::read(){
 }
 
 
+void ModelTimeExpCaves::save() const {
+  std::vector<double> par;
+  par = pars.at(0)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/intcp.txt"));
+
+  par = pars.at(1)->getPar();
+  njm::toFile(njm::toString(par,"\n",""),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/beta.txt"));
+
+  par = pars.at(2)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/alpha.txt"));
+  
+  njm::toFile(njm::toString(par.at(1),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/power.txt"));
+
+  par = pars.at(3)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/xi.txt"));
+  
+  par = pars.at(4)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtAct.txt"));
+  
+  njm::toFile(njm::toString(par.at(1),"\n"),
+	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtPre.txt"));
+}
+
+
+
 double
 ModelTimeExpCaves::tuneTrt(const FixedData & fD){
   int i,j;

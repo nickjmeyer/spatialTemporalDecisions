@@ -30,6 +30,12 @@ class ModelBase {
 
   virtual void read() = 0;
 
+  virtual void save() const {
+    std::cout << "Error: ModelBase::save(): model is not setup to save"
+	      << std::endl;
+    throw(1);
+  }
+
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,

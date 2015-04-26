@@ -1,29 +1,30 @@
 #include "fitModel.hpp"
 
 
-template<class M, class P>
+template<class M>
 void fitModel(const int numSamples, const int numBurn,
 	      const int verbose, const std::string msg){
-  typedef System<M,P,M,P> S;
+  typedef System<M,M> S;
   
   S s("obsData.txt");
   
-  s.paramEst_r = s.paramGen_r;
-  s.reset();
+  s.modelEst_r = s.modelGen_r;
+  s.revert();
 
   s.modelGen.fitType = MLE;
-  s.modelGen.fit(s.sD,s.tD,s.fD,s.dD,s.paramGen);
+  s.modelGen.fit(s.sD,s.tD,s.fD,s.dD,0);
 
-  std::vector<double> mlePar = s.paramGen.getPar();
+  std::vector<double> mlePar = s.modelGen.getPar();
 
   s.modelGen.mcmc.load(s.sD.history,s.sD.status,s.fD);
-  s.modelGen.mcmc.sample(20000,10000);
+  s.modelGen.mcmc.sample(numSamples,numBurn);
   s.modelGen.mcmc.samples.setMean();
-  s.paramGen.putPar(s.modelGen.mcmc.samples.getPar());
+  std::vector<double> par = s.modelGen.mcmc.samples.getPar();
+  s.modelGen.putPar(par.begin());
 
   // s.paramGen.save();
 
-  std::vector<double> mcmcPar = s.paramGen.getPar();
+  std::vector<double> mcmcPar = s.modelGen.getPar();
 
 #pragma omp critical
   {
@@ -47,41 +48,37 @@ int main(int argc, char ** argv){
     {
       std::string msg = "Gravity Model: no time infected";
     
-      typedef GravityModel M;
-      typedef GravityParam P;
+      typedef ModelGravity M;
 
-      fitModel<M,P>(numSamples,numBurn,1,msg);
+      fitModel<M>(numSamples,numBurn,1,msg);
     }
 
-#pragma omp section
-    {
-      std::string msg = "Gravity Model: linear time infected";
+// #pragma omp section
+//     {
+//       std::string msg = "Gravity Model: linear time infected";
     
-      typedef GravityTimeInfModel M;
-      typedef GravityTimeInfParam P;
+//       typedef ModelGravity M;
 
-      fitModel<M,P>(numSamples,numBurn,1,msg);
-    }
+//       fitModel<M>(numSamples,numBurn,1,msg);
+//     }
 
-#pragma omp section
-    {
-      std::string msg = "Gravity Model: exp time infected";
+// #pragma omp section
+//     {
+//       std::string msg = "Gravity Model: exp time infected";
     
-      typedef GravityTimeInfExpModel M;
-      typedef GravityTimeInfExpParam P;
+//       typedef ModelTime M;
 
-      fitModel<M,P>(numSamples,numBurn,1,msg);
-    }
+//       fitModel<M>(numSamples,numBurn,1,msg);
+//     }
     
-#pragma omp section
-    {
-      std::string msg = "Gravity Model: exp caves time infected";
+// #pragma omp section
+//     {
+//       std::string msg = "Gravity Model: exp caves time infected";
     
-      typedef GravityTimeInfExpCavesModel M;
-      typedef GravityTimeInfExpCavesParam P;
+//       typedef ModelTimeExpCaves M;
 
-      fitModel<M,P>(numSamples,numBurn,1,msg);
-    }
+//       fitModel<M>(numSamples,numBurn,1,msg);
+//     }
     
   }
 

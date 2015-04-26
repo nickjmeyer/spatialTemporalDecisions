@@ -23,6 +23,8 @@ class ModelGravity : public ModelBase {
   ModelGravity(const ModelGravity & m);
 
   virtual void read();
+
+  virtual void save() const;
   
   virtual ModelGravity & operator=(const ModelGravity & m);
 

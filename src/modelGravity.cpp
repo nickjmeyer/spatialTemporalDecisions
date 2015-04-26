@@ -67,6 +67,32 @@ void ModelGravity::read(){
 }
 
 
+void ModelGravity::save() const {
+  std::vector<double> par;
+  par = pars.at(0)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityParam/intcp.txt"));
+
+  par = pars.at(1)->getPar();
+  njm::toFile(njm::toString(par,"\n",""),
+	      njm::sett.srcExt("./GravityParam/beta.txt"));
+
+  par = pars.at(2)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityParam/alpha.txt"));
+  
+  njm::toFile(njm::toString(par.at(1),"\n"),
+	      njm::sett.srcExt("./GravityParam/power.txt"));
+
+  par = pars.at(3)->getPar();
+  njm::toFile(njm::toString(par.at(0),"\n"),
+	      njm::sett.srcExt("./GravityParam/trtAct.txt"));
+  
+  njm::toFile(njm::toString(par.at(1),"\n"),
+	      njm::sett.srcExt("./GravityParam/trtPre.txt"));
+}
+
+
 double ModelGravity::tuneTrt(const FixedData & fD){
   int i,j;
   double avgCaves = 0.0;

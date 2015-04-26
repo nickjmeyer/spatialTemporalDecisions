@@ -4,6 +4,12 @@
 template class RankAgent<ToyFeatures2<ModelGravity>,
 			 ModelGravity>;
 
+template class RankAgent<ToyFeatures3<ModelGravity>,
+			 ModelGravity>;
+
+template class RankAgent<ToyFeatures4<ModelGravity>,
+			 ModelGravity>;
+
 template class RankAgent<ToyFeatures2<ModelTime>,
 			 ModelTime>;
 

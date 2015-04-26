@@ -26,6 +26,8 @@ class ModelTimeExpCaves : public ModelBase {
 
   virtual void read();
 
+  virtual void save() const;
+
   virtual ModelTimeExpCaves & operator=(const ModelTimeExpCaves & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
