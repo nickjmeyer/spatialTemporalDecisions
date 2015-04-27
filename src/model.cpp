@@ -10,13 +10,18 @@ ModelBase::ModelBase(const std::vector<ParamBase *> & newPars,
 		[&fD](ParamBase * p){
 		  p->init(fD);
 		});
+  numPars = 0;
+  std::for_each(pars.begin(),pars.end(),
+		[this](ParamBase * p){
+		  numPars += p->size();
+		});
 }
 
 
 ModelBase::~ModelBase(){
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    delete pars[i];
+    delete pars.at(i);
   }
 }
 
@@ -252,15 +257,7 @@ void ModelBase::setFisher(const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD){
-  int i,parsSize = pars.size(),totPar = 0;
-  std::vector<int> parsLen;
-  for(i = 0; i < parsSize; ++i){
-    parsLen.push_back(totPar);
-    totPar += pars[i]->size();
-  }
-  parsLen.push_back(totPar);
-
-  fisher.resize(totPar*totPar);
+  fisher.resize(numPars * numPars);
   std::fill(fisher.begin(),fisher.end(),0);
   
   
@@ -269,7 +266,8 @@ void ModelBase::setFisher(const SimData & sD,
   hist.push_back(sD.status);
   std::vector<DataBundle> db = historyToData(hist);
 
-  int t,iN,nN,pi,pj;
+  int t,iN,nN;
+  unsigned int pi,pj;
   for(t = 0; t < sD.time; ++t){
     SimData sDi= std::get<0>(db[t]);
     TrtData tDi= std::get<1>(db[t]);
@@ -279,55 +277,127 @@ void ModelBase::setFisher(const SimData & sD,
     setQuick(sDi,tDi,fD,dDi);
     infProbs(sDi,tDi,fD,dDi);
 
-    for(nN = 0; nN < sD.numNotInfec; ++nN){
-      std::vector<double> dbl(totPar*totPar,0);
-      std::vector<double> sqr(totPar,0);
+    for(nN = 0; nN < sDi.numNotInfec; ++nN){
+      std::vector<double> dbl(numPars*numPars,0);
+      std::vector<double> sqr(numPars,0);
       
-      for(iN = 0; iN < sD.numInfected; ++iN){
-	int ind = nN*sD.numInfected + iN;
-	std::vector<double> p = partial(sD.notInfec[nN],
-					sD.infected[iN],
+      for(iN = 0; iN < sDi.numInfected; ++iN){
+	int ind = nN*sDi.numInfected + iN;
+	std::vector<double> p = partial(sDi.notInfec[nN],
+					sDi.infected[iN],
 					sDi,tDi,fD,dDi);
-	std::vector<double> p2 = partial2(sD.notInfec[nN],
-					  sD.infected[iN],
+	std::vector<double> p2 = partial2(sDi.notInfec[nN],
+					  sDi.infected[iN],
 					  sDi,tDi,fD,dDi);
-
-	for(pi = 0; pi < totPar; ++pi){
-	  sqr[pi] += quick[ind]*p[pi];
+	
+	double quickInd = std::max(1e-10,quick[ind]);
+	for(pi = 0; pi < numPars; ++pi){
+	  sqr[pi] += quickInd*p[pi];
 	  
-	  int piInd = pi*totPar;
-	  for(pj = pi; pj < totPar; ++pj){
-	    dbl[piInd + pj] += quick[ind]*p2[piInd + pj];
-	    dbl[piInd + pj] += quick[ind]*p[pj]*p[pi];
-
-	    dbl[pj*totPar + pi] += quick[ind]*p2[pj*totPar + pi];
-	    dbl[pj*totPar + pi] += quick[ind]*p[pi]*p[pj];
+	  int piInd = pi*numPars;
+	  for(pj = pi; pj < numPars; ++pj){
+	    dbl[piInd + pj] += quickInd*p2[piInd + pj];
+	    dbl[piInd + pj] += quickInd*p[pj]*p[pi];
+	    if(pj != pi){
+	      dbl[pj*numPars + pi] += quickInd*p2[pj*numPars + pi];
+	      dbl[pj*numPars + pi] += quickInd*p[pi]*p[pj];
+	    }
 	  }
 	}
       }
 
-      int next = (hist[t+1][sD.notInfec[nN]] < 2 ? 0 : 1);
+      int next = (hist[t+1][sDi.notInfec[nN]] < 2 ? 0 : 1);
 
-      for(pi = 0; pi < totPar; ++pi){
-	for(pj = pi; pj < totPar; ++pj){
-	  double prob = expitInfProbs[nN];
-	  
-	  fisher[pi*totPar + pj] +=
-	    (double(next)/prob - 1.0)*dbl[pi*totPar + pj];
-	  
-	  fisher[pj*totPar + pi] +=
-	    (double(next)/prob - 1.0)*dbl[pj*totPar + pi];
+      for(pi = 0; pi < numPars; ++pi){
+	for(pj = pi; pj < numPars; ++pj){
+	  double prob = std::max(1e-10,expitInfProbs[nN]);
+
+	  fisher[pi*numPars + pj] +=
+	    (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
+
+	  if(pj != pi){
+	    fisher[pj*numPars + pi] +=
+	      (double(next)/prob - 1.0)*dbl[pj*numPars + pi];
+	  }
 	  
 
 	  if(next == 1){
-	    fisher[pi*totPar + pj] -=
+	    fisher[pi*numPars + pj] -=
 	      (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
-	    
-	    fisher[pj*totPar + pi] -=
-	      (1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+
+	    if(pj != pi){
+	      fisher[pj*numPars + pi] -=
+		(1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+	    }
 	  }
 	}
       }
     }
+  }
+
+  Eigen::Map<Eigen::MatrixXd> I(fisher.data(),numPars,numPars);
+  if(sD.time <= fD.trtStart){
+    I.row(numPars-2).setZero();
+    I.row(numPars-1).setZero();
+    I.col(numPars-2).setZero();
+    I.col(numPars-1).setZero();
+
+    I(numPars-2,numPars-2) = -100.0;
+    I(numPars-1,numPars-1) = -100.0;
+  }
+  Eigen::LDLT<Eigen::MatrixXd> ldlt(-I);
+
+  if(ldlt.info() != Eigen::Success){
+    static int badCnt = 0;
+    std::cout << "Error: ModelBase::getFisher(): eigen solver failed"
+	      << std::endl;
+    njm::toFile(fisher,njm::sett.datExt("badFisher" +
+					njm::toString(badCnt++,"",0,0)));
+    throw(1);
+  }
+  else{
+    Eigen::Transpositions<Eigen::Dynamic,Eigen::Dynamic> P;
+    P = ldlt.transpositionsP();
+    Eigen::MatrixXd L = ldlt.matrixL();
+    L.transposeInPlace();    
+    Eigen::VectorXd D = ldlt.vectorD();
+    varHit = P.transpose() *
+      L.inverse() *
+      D.cwiseInverse().cwiseAbs().cwiseSqrt().asDiagonal();
+    std::vector<double> all = getPar();
+    meanHit = Eigen::Map<Eigen::VectorXd>(all.data(),numPars);
+  }
+}
+
+
+bool ModelBase::sample(){
+  if(fitType == MLES){
+    std::vector<double> rand;
+    unsigned int i;
+    for(i = 0; i < numPars; ++i){
+      rand.push_back(njm::rnorm01());
+    }
+    Eigen::Map<Eigen::VectorXd> randE(rand.data(),rand.size());
+    Eigen::VectorXd sampleE = meanHit + varHit * randE;
+    std::vector<double> sample(sampleE.data(),sampleE.data() + sampleE.size());
+    putPar(sample.begin());
+
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+
+void ModelBase::revert(){
+  if(fitType == MLES){
+    std::vector<double> sample(meanHit.data(),meanHit.data() + meanHit.size());
+    putPar(sample.begin());
+  }
+  else{
+    std::cout << "ModelBase::revert(): not implemented for fytType of "
+	      << fitType << std::endl;
+    throw(1);
   }
 }

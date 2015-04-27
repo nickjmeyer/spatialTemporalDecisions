@@ -22,43 +22,24 @@ int main(int argc, char ** argv){
   s.reset(starts[0]);
   s.revert();
 
-  std::vector<DataBundle> info;
-
   int i;
-  for(i = 0; i < s.fD.finalT; ++i){
+  for(i = 0; i < 2; ++i){
     if(i >= s.fD.trtStart)
       pa.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelEst);
     s.updateStatus();
 
-    info.push_back(DataBundle(s.sD,s.tD,s.dD));
-
     s.nextPoint();
   }
 
-  info.push_back(DataBundle(s.sD,s.tD,s.dD));
-
-  std::vector<DataBundle> recov;
-
-  std::vector<std::vector<int> > hist;
-  hist = s.sD.history;
-  hist.push_back(s.sD.status);
-  
-  recov = historyToData(hist);
-
-  int equal = 1;
-  for(i = 0; i < int(recov.size()) && equal == 1; ++i){
-    std::cout << i << std::endl;
-    if(equal == 1){
-      equal = (std::get<0>(recov[i]) == std::get<0>(info[i]));
-    }
-    if(equal == 1){
-      equal = (std::get<1>(recov[i]) == std::get<1>(info[i]));
-    }
-    if(equal == 1){
-      equal = (std::get<2>(recov[i]) == std::get<2>(info[i]));
-    }
+  s.modelGen.setType(MLES);
+  s.modelGen.setFisher(s.sD,s.tD,s.fD,s.dD);
+  for(i = 0; i < 20; ++i){
+    s.modelGen.sample();
+    std::cout << njm::toString(s.modelGen.getPar()," ","\n");
   }
-  std::cout << "equal: " << equal << std::endl;
+
+
+  std::cout << std::sqrt(-0.0) << std::endl;
 
   njm::sett.clean();
   return 0;

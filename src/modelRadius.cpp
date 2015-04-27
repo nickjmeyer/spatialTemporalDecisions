@@ -15,11 +15,12 @@ ModelRadius::ModelRadius(const FixedData & fD)
 
 
 ModelRadius::ModelRadius(const ModelRadius & m){
-  int i, numPars = m.pars.size();
+  int i, parsSize = m.pars.size();
   pars.clear();
-  for(i = 0; i < numPars; ++i)
+  for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  numPars = m.numPars;
   set = m.set;
   probs = m.probs;
   expitInfProbs = m.expitInfProbs;

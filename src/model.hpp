@@ -9,10 +9,11 @@
 #include "settings.hpp"
 #include "param.hpp"
 
-enum Estimation {INVALID = -1, MLE = 0, MCMC = 1};
+enum Estimation {INVALID = -1, MLE = 0, MLES = 1, MCMC = 2};
 
 class ModelBase {
  protected:
+  unsigned int numPars;
   int set;
   std::vector<ParamBase *> pars;
   std::vector<double> probs;
@@ -20,6 +21,8 @@ class ModelBase {
   std::vector<double> expitRevProbs;
   std::vector<double> quick;
   std::vector<double> fisher;
+  Eigen::VectorXd meanHit;
+  Eigen::MatrixXd varHit;
   int ready;
   int numInfected,numNotInfec;
 
@@ -89,6 +92,12 @@ class ModelBase {
 			 const TrtData & tD,
 			 const FixedData & fD,
 			 const DynamicData & dD);
+
+  virtual bool sample();
+  
+  virtual void revert();
+
+  virtual std::vector<double> getFisher() {return fisher;};
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,

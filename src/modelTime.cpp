@@ -18,11 +18,12 @@ ModelTime::ModelTime(const FixedData & fD)
 
 
 ModelTime::ModelTime(const ModelTime & m){
-  int i, numPars = m.pars.size();
+  int i, parsSize = m.pars.size();
   pars.clear();
-  for(i = 0; i < numPars; ++i)
+  for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  numPars = m.numPars;
   set = m.set;
   probs = m.probs;
   expitInfProbs = m.expitInfProbs;
@@ -124,7 +125,7 @@ void ModelTime::fit(const SimData & sD, const TrtData & tD,
 		    const FixedData & fD, const DynamicData & dD,
 		    std::vector<double> all){
 
-  if(fitType == MLE){
+  if(fitType == MLE || fitType == MLES){
   
     size_t iter=0;
     int status;
@@ -183,8 +184,11 @@ void ModelTime::fit(const SimData & sD, const TrtData & tD,
     gsl_vector_free(x);
     gsl_vector_free(ss);
 
-    setFill(sD,tD,fD,dD);
+    if(fitType == MLES)
+      setFisher(sD,tD,fD,dD);
     
+    setFill(sD,tD,fD,dD);
+
   }
   else if(fitType == MCMC){
     mcmc.load(sD.history,sD.status,fD);

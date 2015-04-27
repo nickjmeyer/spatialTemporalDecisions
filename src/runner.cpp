@@ -114,11 +114,8 @@ PlainRunner<S,A>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    if(system.modelGen.fitType == MCMC){
-      system.modelGen.mcmc.samples.setRand();
-
-      std::vector<double> newPar = system.modelGen.mcmc.samples.getPar();
-      system.modelGen_r.putPar(newPar.begin());
+    if(system.modelGen_r.sample()){
+      std::vector<double> newPar = system.modelGen_r.getPar();
       system.modelEst_r.putPar(newPar.begin());
     }
     
@@ -814,15 +811,13 @@ TuneRunner<S,A,Optim>
   double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
-    if(system.modelGen.fitType == MCMC){
-      system.modelGen.mcmc.samples.setRand();
-
-      std::vector<double> newPar = system.modelGen.mcmc.samples.getPar();
-      system.modelGen_r.putPar(newPar.begin());
+    if(system.modelGen_r.sample()){
+      std::vector<double> newPar = system.modelGen_r.getPar();
+      system.modelEst_r.putPar(newPar.begin());
     }
-    system.revert();
-    agent.tp.weights.ones();
 
+    system.revert();
+    agent.reset();
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
