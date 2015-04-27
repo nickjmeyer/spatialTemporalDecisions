@@ -36,7 +36,7 @@ class ParamBase {
   virtual void init(const FixedData & fD);
   
   
-  // retreive pars
+  // retrieve pars
   std::vector<double> getPar() const;
   
   // change pars
@@ -60,6 +60,25 @@ class ParamBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD) = 0;
+
+  virtual unsigned int size() const;
+  
+  virtual std::vector<double> partial(const int notNode,
+				      const int infNode,
+				      const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD) = 0;
+
+  // second derivatives are often zero, so this is not an abstract
+  // function as it will rarely need to be altered
+  virtual std::vector<double> partial2(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD);
+  
 };
 
 

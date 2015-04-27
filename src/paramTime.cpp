@@ -86,3 +86,15 @@ void ParamTime::modFill(std::vector<double> & probs,
 
   time = sD.timeInf;
 }
+
+
+std::vector<double> ParamTime::partial(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD){
+  // use the information in the arguments since this will be called
+  // for all past history information
+  return std::vector<double>(1,double(sD.timeInf[infNode] - 1));
+}

@@ -50,3 +50,17 @@ void ParamBeta::modFill(std::vector<double> & probs,
 			const DynamicData & dD){
 }
 
+
+std::vector<double> ParamBeta::partial(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD){
+  std::vector<double> p;
+  int i,ind = notNode*parsSize;
+  for(i = 0; i < int(parsSize); ++i){
+    p.push_back(covar.at(ind + i));
+  }
+  return p;
+}

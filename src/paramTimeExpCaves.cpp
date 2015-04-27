@@ -96,3 +96,17 @@ void ParamTimeExpCaves::modFill(std::vector<double> & probs,
 
   time = sD.timeInf;
 }
+
+
+std::vector<double> ParamTimeExpCaves::partial(const int notNode,
+					       const int infNode,
+					       const SimData & sD,
+					       const TrtData & tD,
+					       const FixedData & fD,
+					       const DynamicData & dD){
+  // use the information in the arguments since this will be called
+  // for all past history information
+  double val = std::exp(iPropCaves[infNode]*
+			(double(sD.timeInf[infNode]-1))) - 1.0;
+  return std::vector<double>(1,val);
+}

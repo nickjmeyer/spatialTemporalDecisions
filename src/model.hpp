@@ -19,6 +19,7 @@ class ModelBase {
   std::vector<double> expitInfProbs;
   std::vector<double> expitRevProbs;
   std::vector<double> quick;
+  std::vector<double> fisher;
   int ready;
   int numInfected,numNotInfec;
 
@@ -69,6 +70,25 @@ class ModelBase {
   
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const int numNodes) const;
+
+  virtual std::vector<double> partial(const int notNode,
+				      const int infNode,
+				      const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD);
+
+  virtual std::vector<double> partial2(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD);
+
+  virtual void setFisher(const SimData & sD,
+			 const TrtData & tD,
+			 const FixedData & fD,
+			 const DynamicData & dD);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,

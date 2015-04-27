@@ -40,4 +40,17 @@ ParamBase::putPar(std::vector<double>::const_iterator newParIt){
 }
 
 
+unsigned int ParamBase::size() const {
+  return parsSize;
+}
 
+
+std::vector<double> ParamBase::partial2(const int notNode,
+					const int infNode,
+					const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD){
+  return std::vector<double>(parsSize*parsSize,0);
+}
+  

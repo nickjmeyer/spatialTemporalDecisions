@@ -191,3 +191,143 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
   }
   return it;
 }
+
+
+std::vector<double> ModelBase::partial(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD){
+  std::vector<double> p,pi;
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i){
+    pi = pars[i]->partial(notNode,infNode,sD,tD,fD,dD);
+    p.insert(p.end(),pi.begin(),pi.end());
+  }
+  return p;
+}
+
+
+std::vector<double> ModelBase::partial2(const int notNode,
+					const int infNode,
+					const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD){
+  std::vector<double> p,pi;
+  std::vector<int> parsLen;
+  int i,numPars = pars.size(),totLen = 0;
+  for(i = 0; i < numPars; ++i){
+    parsLen.push_back(totLen);
+    totLen += pars[i]->size();
+  }
+  parsLen.push_back(totLen);
+
+
+  p.resize(totLen*totLen);
+  std::fill(p.begin(),p.end(),0);
+
+  int j,k,n,N,D;
+  for(i = 0; i < numPars; ++i){
+    pi = pars[i]->partial2(notNode,infNode,sD,tD,fD,dD);
+
+    n = parsLen[i];
+    N = parsLen[i+1];
+    D = N - n;
+    for(j = n; j < N; ++j){
+      for(k = j; k < N; ++k){
+	p[j*totLen + k] = pi[(j-n)*D + (k-n)];
+	p[k*totLen + j] = pi[(k-n)*D + (j-n)];
+      }
+    }
+    
+  }
+  
+  return p;
+}
+
+
+void ModelBase::setFisher(const SimData & sD,
+			  const TrtData & tD,
+			  const FixedData & fD,
+			  const DynamicData & dD){
+  int i,parsSize = pars.size(),totPar = 0;
+  std::vector<int> parsLen;
+  for(i = 0; i < parsSize; ++i){
+    parsLen.push_back(totPar);
+    totPar += pars[i]->size();
+  }
+  parsLen.push_back(totPar);
+
+  fisher.resize(totPar*totPar);
+  std::fill(fisher.begin(),fisher.end(),0);
+  
+  
+  
+  std::vector<std::vector<int> > hist = sD.history;
+  hist.push_back(sD.status);
+  std::vector<DataBundle> db = historyToData(hist);
+
+  int t,iN,nN,pi,pj;
+  for(t = 0; t < sD.time; ++t){
+    SimData sDi= std::get<0>(db[t]);
+    TrtData tDi= std::get<1>(db[t]);
+    DynamicData dDi = std::get<2>(db[t]);
+
+    setFill(sDi,tDi,fD,dDi);
+    setQuick(sDi,tDi,fD,dDi);
+    infProbs(sDi,tDi,fD,dDi);
+
+    for(nN = 0; nN < sD.numNotInfec; ++nN){
+      std::vector<double> dbl(totPar*totPar,0);
+      std::vector<double> sqr(totPar,0);
+      
+      for(iN = 0; iN < sD.numInfected; ++iN){
+	int ind = nN*sD.numInfected + iN;
+	std::vector<double> p = partial(sD.notInfec[nN],
+					sD.infected[iN],
+					sDi,tDi,fD,dDi);
+	std::vector<double> p2 = partial2(sD.notInfec[nN],
+					  sD.infected[iN],
+					  sDi,tDi,fD,dDi);
+
+	for(pi = 0; pi < totPar; ++pi){
+	  sqr[pi] += quick[ind]*p[pi];
+	  
+	  int piInd = pi*totPar;
+	  for(pj = pi; pj < totPar; ++pj){
+	    dbl[piInd + pj] += quick[ind]*p2[piInd + pj];
+	    dbl[piInd + pj] += quick[ind]*p[pj]*p[pi];
+
+	    dbl[pj*totPar + pi] += quick[ind]*p2[pj*totPar + pi];
+	    dbl[pj*totPar + pi] += quick[ind]*p[pi]*p[pj];
+	  }
+	}
+      }
+
+      int next = (hist[t+1][sD.notInfec[nN]] < 2 ? 0 : 1);
+
+      for(pi = 0; pi < totPar; ++pi){
+	for(pj = pi; pj < totPar; ++pj){
+	  double prob = expitInfProbs[nN];
+	  
+	  fisher[pi*totPar + pj] +=
+	    (double(next)/prob - 1.0)*dbl[pi*totPar + pj];
+	  
+	  fisher[pj*totPar + pi] +=
+	    (double(next)/prob - 1.0)*dbl[pj*totPar + pi];
+	  
+
+	  if(next == 1){
+	    fisher[pi*totPar + pj] -=
+	      (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+	    
+	    fisher[pj*totPar + pi] -=
+	      (1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+	  }
+	}
+      }
+    }
+  }
+}

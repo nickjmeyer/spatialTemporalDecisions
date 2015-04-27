@@ -54,3 +54,14 @@ void ParamRadius::modFill(std::vector<double> & probs,
 			  const DynamicData & dD){
 }
 
+
+std::vector<double> ParamRadius::partial(const int notNode,
+					 const int infNode,
+					 const SimData & sD,
+					 const TrtData & tD,
+					 const FixedData & fD,
+					 const DynamicData & dD){
+  std::cout << "Error: ParamRadius::partial(): not yet implemented"
+	    << std::endl;
+  throw(1);
+}

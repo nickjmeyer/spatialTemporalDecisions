@@ -61,3 +61,44 @@ void ParamGravity::modFill(std::vector<double> & probs,
 			   const DynamicData & dD){
 }
 
+
+std::vector<double> ParamGravity::partial(const int notNode,
+					  const int infNode,
+					  const SimData & sD,
+					  const TrtData & tD,
+					  const FixedData & fD,
+					  const DynamicData & dD){
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  std::vector<double> p;
+  int ind = notNode*numNodes + infNode;
+  // the negative is because the term is subtracted in the model
+  p.push_back(-dist[ind]/std::pow(cc[ind],power));
+  // remember that this term is subtracted in the model
+  // so the negatives cancel
+  p.push_back(alpha*dist[ind]*std::log(cc[ind])/std::pow(cc[ind],power));
+  return p;
+}
+
+
+std::vector<double> ParamGravity::partial2(const int notNode,
+					   const int infNode,
+					   const SimData & sD,
+					   const TrtData & tD,
+					   const FixedData & fD,
+					   const DynamicData & dD){
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  std::vector<double> p;
+  int ind = notNode*numNodes + infNode;
+
+  p.push_back(0);
+  // remember that this term is subtracted in the model
+  // so the negatives cancel
+  double val = dist[ind]*std::log(cc[ind])/std::pow(cc[ind],power);
+  p.push_back(val);
+  p.push_back(val);
+
+  p.push_back(- alpha * val * std::log(cc[ind]));
+  return p;
+}

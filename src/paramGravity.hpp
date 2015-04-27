@@ -34,6 +34,20 @@ class ParamGravity : public ParamBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD);
+  
+  virtual std::vector<double> partial(const int notNode,
+				      const int infNode,
+				      const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD);
+
+  virtual std::vector<double> partial2(const int notNode,
+				       const int infNode,
+				       const SimData & sD,
+				       const TrtData & tD,
+				       const FixedData & fD,
+				       const DynamicData & dD);
 };
 
 

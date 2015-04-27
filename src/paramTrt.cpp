@@ -93,3 +93,15 @@ void ParamTrt::modFill(std::vector<double> & probs,
   p = tD.p;
 }
 
+
+std::vector<double> ParamTrt::partial(const int notNode,
+				      const int infNode,
+				      const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD){
+  std::vector<double> p;
+  p.push_back(tD.a.at(infNode));
+  p.push_back(tD.p.at(notNode));
+  return p;
+}

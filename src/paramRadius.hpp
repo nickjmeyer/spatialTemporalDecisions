@@ -9,7 +9,7 @@ class ParamRadius : public ParamBase {
   std::vector<int> beyond;
   int numNodes;
 
-    virtual unsigned int initParsSize(const FixedData & fD);
+  virtual unsigned int initParsSize(const FixedData & fD);
 
   virtual void initInternal(const FixedData & fD);
   
@@ -32,6 +32,14 @@ class ParamRadius : public ParamBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD);
+
+  virtual std::vector<double> partial(const int notNode,
+				      const int infNode,
+				      const SimData & sD,
+				      const TrtData & tD,
+				      const FixedData & fD,
+				      const DynamicData & dD);
+
 };
 
 

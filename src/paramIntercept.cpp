@@ -39,3 +39,12 @@ void ParamIntercept::modFill(std::vector<double> & probs,
   // do nothing
 }
 							   
+
+std::vector<double> ParamIntercept::partial(const int notNode,
+					    const int infNode,
+					    const SimData & sD,
+					    const TrtData & tD,
+					    const FixedData & fD,
+					    const DynamicData & dD){
+  return std::vector<double>(parsSize,1);
+}
