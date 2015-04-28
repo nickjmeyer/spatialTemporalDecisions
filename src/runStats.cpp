@@ -16,6 +16,7 @@ void RunStats::update(const double & add){
     smean_ = add;
     svar_ = 0.0;
     ssd_ = 0.0;
+    seMean_ = 0.0;
   }
   else{
     ++n;
@@ -23,6 +24,7 @@ void RunStats::update(const double & add){
       + (add - smean_)*(add - smean_)/double(n);
     smean_ = smean_ + (add - smean_)/double(n);
     ssd_ = std::sqrt(svar_);
+    seMean_ = ssd_/std::sqrt(double(n));
   }
 }
 
@@ -47,4 +49,9 @@ double RunStats::svar() const {
 
 double RunStats::ssd() const {
   return ssd_;
+}
+
+
+double RunStats::seMean() const {
+  return seMean_;
 }

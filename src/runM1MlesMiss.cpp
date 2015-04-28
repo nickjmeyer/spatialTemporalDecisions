@@ -49,17 +49,17 @@ int main(int argc, char ** argv){
   rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   njm::message("        Myopic: "
   	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
   njm::message("Policy Search: "
   	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
   njm::message("One Step Polish: "
   	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
   return 0;
 }

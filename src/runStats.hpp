@@ -13,6 +13,7 @@ class RunStats {
   double smean_; // sample mean
   double svar_; // sample variance
   double ssd_; // sample standard deviation
+  double seMean_; // standard error of mean
 
   void update(const double & add);
   void update(const std::vector<double> & add);
@@ -34,6 +35,8 @@ class RunStats {
   double svar() const;
 
   double ssd() const;
+
+  double seMean() const;
 };
 
 

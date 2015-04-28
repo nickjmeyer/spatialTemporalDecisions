@@ -661,8 +661,7 @@ OptimRunner<S,A,Optim>
       njm::toFile("Completed " + njm::toString(done,"",6,0) +
 		  " out of " + njm::toString(numReps,"",6,0) +
 		  " in " + njm::toString(hours,"",8,4) + " hours" +
-		  " with value " + njm::toString(rs.smean()/((double)done)
-						 ,"",6,4) +
+		  " with value " + njm::toString(rs.smean(),"",6,4) +
 		  "\n",
 		  njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
 				   ".txt"));
