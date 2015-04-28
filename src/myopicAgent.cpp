@@ -6,6 +6,8 @@ template class MyopicAgent<ModelTimeExpCaves>;
 
 template class MyopicAgent<ModelRadius>;
 
+template class MyopicAgent<ModelDist>;
+
 
 template <class M>
 std::string MyopicAgent<M>::name = "myopic";

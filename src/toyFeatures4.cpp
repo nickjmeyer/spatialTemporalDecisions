@@ -21,6 +21,8 @@ template class ToyFeatures4<ModelTimeExpCaves>;
 
 template class ToyFeatures4<ModelRadius>;
 
+template class ToyFeatures4<ModelDist>;
+
 
 
 template <class M>

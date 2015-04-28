@@ -6,6 +6,8 @@ template class OsspAgent<ModelTimeExpCaves>;
 
 template class OsspAgent<ModelRadius>;
 
+template class OsspAgent<ModelDist>;
+
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
   eps = 0.8;

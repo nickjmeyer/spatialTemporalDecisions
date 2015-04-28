@@ -342,9 +342,12 @@ void ModelBase::setFisher(const SimData & sD,
     I.col(numPars-2).setZero();
     I.col(numPars-1).setZero();
 
-    I(numPars-2,numPars-2) = -100.0;
-    I(numPars-1,numPars-1) = -100.0;
+    I(numPars-2,numPars-2) = -2.0;
+    I(numPars-1,numPars-1) = -2.0;
   }
+  // std::cout << "I: " << std::endl
+  // 	    << I << std::endl
+  // 	    << std::endl;
   Eigen::LDLT<Eigen::MatrixXd> ldlt(-I);
 
   if(ldlt.info() != Eigen::Success){
@@ -359,8 +362,14 @@ void ModelBase::setFisher(const SimData & sD,
     Eigen::Transpositions<Eigen::Dynamic,Eigen::Dynamic> P;
     P = ldlt.transpositionsP();
     Eigen::MatrixXd L = ldlt.matrixL();
+    // std::cout << "L: " << std::endl
+    // 	      << L << std::endl
+    // 	      << std::endl;
     L.transposeInPlace();    
     Eigen::VectorXd D = ldlt.vectorD();
+    // std::cout << "D: " << std::endl
+    // 	      << D << std::endl
+    // 	      << std::endl;
     varHit = P.transpose() *
       L.inverse() *
       D.cwiseInverse().cwiseAbs().cwiseSqrt().asDiagonal();

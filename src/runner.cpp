@@ -80,6 +80,12 @@ template class PlainRunner<System<ModelRadius,
 				     ModelRadius> >;
 
 
+template class PlainRunner<System<ModelDist,
+				  ModelDist>,
+			   RankAgent<ToyFeatures4<ModelDist>,
+				     ModelDist> >;
+
+
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
 			   NoTrt<ModelGravity> >;
@@ -96,10 +102,17 @@ template class PlainRunner<System<ModelGravity,
 			   RankAgent<WnsFeatures1<ModelGravity>,
 				     ModelGravity> >;
 
+
 template class PlainRunner<System<ModelRadius,
 				  ModelRadius>,
 			   RankAgent<WnsFeatures1<ModelRadius>,
 				     ModelRadius> >;
+
+
+template class PlainRunner<System<ModelDist,
+				  ModelDist>,
+			   RankAgent<WnsFeatures1<ModelDist>,
+				     ModelDist> >;
 
 
 
@@ -350,6 +363,10 @@ template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelRadius>,
 			     MyopicAgent<ModelRadius> >;
 
+template class FitOnlyRunner<System<ModelTimeExpCaves,
+				    ModelDist>,
+			     MyopicAgent<ModelDist> >;
+
 
 
 template <class S, class A>
@@ -474,6 +491,17 @@ OptimRunner<System<ModelTimeExpCaves,
 			ToyFeatures4<ModelRadius>,
 			ModelRadius> >;
 
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    OsspAgent<ModelDist>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelDist>,
+			OsspAgent<ModelDist>,
+			ToyFeatures4<ModelDist>,
+			ModelDist> >;
+
 template class
 OptimRunner<System<ModelTimeExpCaves,
 		   ModelTimeExpCaves>,
@@ -493,6 +521,16 @@ OptimRunner<System<ModelTimeExpCaves,
 			OsspAgent<ModelRadius>,
 			WnsFeatures1<ModelRadius>,
 			ModelRadius> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    OsspAgent<ModelDist>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelDist>,
+			OsspAgent<ModelDist>,
+			WnsFeatures1<ModelDist>,
+			ModelDist> >;
 
 
 
@@ -761,6 +799,18 @@ TuneRunner<System<ModelRadius,
 
 
 template class
+TuneRunner<System<ModelDist,
+		  ModelDist>,
+	   RankAgent<ToyFeatures4<ModelDist>,
+		     ModelDist>,
+	   M1SpOptim<System<ModelDist,
+			    ModelDist>,
+		     RankAgent<ToyFeatures4<ModelDist>,
+			       ModelDist>,
+		     ModelDist> >;
+
+
+template class
 TuneRunner<System<ModelTimeExpCaves,
 		  ModelTimeExpCaves>,
 	   RankAgent<WnsFeatures1<ModelTimeExpCaves>,
@@ -782,6 +832,18 @@ TuneRunner<System<ModelRadius,
 		     RankAgent<WnsFeatures1<ModelRadius>,
 			       ModelRadius>,
 		     ModelRadius> >;
+
+
+template class
+TuneRunner<System<ModelDist,
+		  ModelDist>,
+	   RankAgent<WnsFeatures1<ModelDist>,
+		     ModelDist>,
+	   M1SpOptim<System<ModelDist,
+			    ModelDist>,
+		     RankAgent<WnsFeatures1<ModelDist>,
+			       ModelDist>,
+		     ModelDist> >;
 
 
 template class

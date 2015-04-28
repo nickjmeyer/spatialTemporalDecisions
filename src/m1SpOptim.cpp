@@ -67,6 +67,12 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 				   ModelRadius>,
 			 ModelRadius>;
 
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelDist>,
+			 RankAgent<ToyFeatures4<ModelDist>,
+				   ModelDist>,
+			 ModelDist>;
+
 
 
 template class M1SpOptim<System<ModelTimeExpCaves,
@@ -80,6 +86,12 @@ template class M1SpOptim<System<ModelRadius,
 			 RankAgent<WnsFeatures1<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
+
+template class M1SpOptim<System<ModelDist,
+				ModelDist>,
+			 RankAgent<WnsFeatures1<ModelDist>,
+				   ModelDist>,
+			 ModelDist>;
 
 
 template class M1SpOptim<System<ModelGravity,

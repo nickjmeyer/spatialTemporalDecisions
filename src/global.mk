@@ -30,12 +30,14 @@ OBJECTS += utilities.o \
 	paramGravity.o \
 	paramTime.o \
 	paramTimeExpCaves.o \
+	paramDist.o \
 	paramRadius.o \
 	paramTrt.o \
 	model.o \
 	modelGravity.o \
 	modelTime.o \
 	modelTimeExpCaves.o \
+	modelDist.o \
 	modelRadius.o \
 	mcmc.o \
 	mcmcGravityTimeInf.o \

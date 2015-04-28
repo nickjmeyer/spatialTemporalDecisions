@@ -101,7 +101,7 @@ std::vector<double> ParamTrt::partial(const int notNode,
 				      const FixedData & fD,
 				      const DynamicData & dD){
   std::vector<double> p;
-  p.push_back(tD.a.at(infNode));
-  p.push_back(tD.p.at(notNode));
+  p.push_back(-tD.a.at(infNode));
+  p.push_back(-tD.p.at(notNode));
   return p;
 }

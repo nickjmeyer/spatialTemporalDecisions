@@ -21,6 +21,12 @@ template class System<ModelTimeExpCaves,
 template class System<ModelRadius,
 		      ModelRadius>;
 
+template class System<ModelTimeExpCaves,
+		      ModelDist>;
+
+template class System<ModelDist,
+		      ModelDist>;
+
 
 
 template <class MG,

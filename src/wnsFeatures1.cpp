@@ -22,6 +22,8 @@ template class WnsFeatures1<ModelTimeExpCaves>;
 
 template class WnsFeatures1<ModelRadius>;
 
+template class WnsFeatures1<ModelDist>;
+
 
 
 template <class M>

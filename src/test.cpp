@@ -39,8 +39,6 @@ int main(int argc, char ** argv){
   }
 
 
-  std::cout << std::sqrt(-0.0) << std::endl;
-
   njm::sett.clean();
   return 0;
 }
