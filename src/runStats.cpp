@@ -12,14 +12,16 @@ RunStats::RunStats(const std::vector<double> & init){
 
 void RunStats::update(const double & add){
   if(n == 0){
+    ++n;
     smean_ = add;
     svar_ = 0.0;
     ssd_ = 0.0;
   }
   else{
     ++n;
-    svar_ = svar_*double((n-2)/(n-1)) + (add - smean_)*(add - smean_)/double(n);
-    smean_ = smean_ + (add - smean_)/n;
+    svar_ = svar_*double(n-2)/double(n-1)
+      + (add - smean_)*(add - smean_)/double(n);
+    smean_ = smean_ + (add - smean_)/double(n);
     ssd_ = std::sqrt(svar_);
   }
 }
