@@ -1,16 +1,18 @@
 #ifndef RUN_STATS_HPP__
 #define RUN_STATS_HPP__
 
-
+#include <vector>
+#include <cmath>
+#include <algorithm>
 
 class RunStats {
  protected:
   std::vector<double> vals;
   unsigned int n;
 
-  double smean; // sample mean
-  double svar; // sample variance
-  double ssd; // sample standard deviation
+  double smean_; // sample mean
+  double svar_; // sample variance
+  double ssd_; // sample standard deviation
 
   void update(const double & add);
   void update(const std::vector<double> & add);
@@ -20,30 +22,19 @@ class RunStats {
   RunStats(const std::vector<double> & init);
 
   void operator () (const std::vector<double> & add){
-    std::for_each(add.begin(),add.end(),
-		  [this](const double & x){
-		    update(x);
-		  });
+    update(add);
   };
 				       
   void operator () (const double & add){
     update(add);
   };
 
-  double mean() const {
-    return mean;
-  };
+  double smean() const;
 
-  double var() const {
-    return var;
-  };
+  double svar() const;
 
-  double sd() const {
-    return std::sqrt(var);
-  };
-
-  
-}
+  double ssd() const;
+};
 
 
 

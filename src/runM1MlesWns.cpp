@@ -15,13 +15,16 @@ int main(int argc, char ** argv){
   typedef MyopicAgent<ME> MA;
   
   typedef WnsFeatures1<ME> F;
+  typedef RankAgent<F,ME> RA;
   typedef OsspAgent<ME> OA;
 
+  typedef M1SpOptim<S,RA,ME> SPO;
   typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef VanillaRunner<S,NT> R_NT;
   typedef VanillaRunner<S,PA> R_PA;
   typedef FitOnlyRunner<S,MA> R_MA;
+  typedef OptimRunner<S,RA,SPO> R_RA;
   typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
@@ -31,32 +34,49 @@ int main(int argc, char ** argv){
 
   int numReps = 96;
   Starts starts("startingLocations.txt");
-  
+
   NT nt;
   PA pa;
   MA ma;
+  RA ra;
   OA oa;
 
+  SPO spo;
   OSSPO osspo;
 
   R_NT r_nt;
   R_PA r_pa;
   R_MA r_ma;
+  R_RA r_ra;
   R_OA r_oa;
-  
 
+
+  RunStats rs;
+
+  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
   njm::message("  No treatment: "
-	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
-			       ""));
+  	       + njm::toString(rs.smean(),"")
+	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+  
+  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
   njm::message("      Proximal: "
-	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
-			       ""));
+  	       + njm::toString(rs.smean(),"")
+	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+  
+  rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   njm::message("        Myopic: "
-	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
-			       ""));
-  njm::message("Priority Score: "
-	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
-			       ""));
+  	       + njm::toString(rs.smean(),"")
+	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+  
+  rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
+  njm::message("Policy Search: "
+  	       + njm::toString(rs.smean(),"")
+	       + "  (" + njm::toString(rs.ssd(),"") + ")");
+  
+  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  njm::message("One Step Polish: "
+  	       + njm::toString(rs.smean(),"")
+	       + "  (" + njm::toString(rs.ssd(),"") + ")");
 
   return 0;
 }

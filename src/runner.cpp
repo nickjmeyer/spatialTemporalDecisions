@@ -4,13 +4,14 @@
 
 
 template <class S, class A>
-double
+RunStats
 TrainRunner<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints){
-  double value=0;
+  // double value=0;
   int r,t;
+  RunStats rs;
   for(r=0; r<numReps; r++){
     system.model.assignRand(system.paramGen_r,system.paramEst_r);
     system.revert();
@@ -22,9 +23,10 @@ TrainRunner<S,A>
       
       system.nextPoint();
     }
-    value += system.value();
+    rs(system.value());
+    // value += system.value();
   }
-  return value/((double)numReps);
+  return rs;
 }
 						
 
@@ -119,12 +121,13 @@ template class PlainRunner<System<ModelDist,
 
 
 template <class S, class A>
-double
+RunStats
 PlainRunner<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints){
-  double value=0;
+  RunStats rs;
+  // double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
     if(system.modelGen_r.sample()){
@@ -145,41 +148,14 @@ PlainRunner<S,A>
 
       system.nextPoint();
     }
-    value += system.value();
+    
+    rs(system.value());
+    // value += system.value();
   }
 
-  return value/((double)numReps);
+  return rs;
 }
 
-
-
-template <class S, class A>
-std::pair<double,double>
-PlainRunner<S,A>
-::runEx(S system,
-	A agent,
-	const int numReps, const int numPoints){
-  double value=0,valueSq=0;
-  int r,t;
-  for(r=0; r<numReps; r++){
-    system.revert();
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart)
-	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst);
-      system.updateStatus();
-      
-      system.nextPoint();
-    }
-    value += system.value();
-    valueSq += system.value()*system.value();
-  }
-  value/=(double)numReps;
-  valueSq/=(double)numReps;
-
-  double var = (numReps/(numReps-1))*(valueSq - value*value);
-  return std::pair<double,double>(value,var);
-}
 
 
 template class VanillaRunner<System<ModelTimeExpCaves,
@@ -209,18 +185,19 @@ template class VanillaRunner<System<ModelTimeExpCaves,
 
 
 template<class S, class A>
-double
+RunStats
 VanillaRunner<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  double value=0;
+  // double value=0;
   int r,t;
 
+  RunStats rs;
   std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value,valueAll,starts)					\
+  shared(valueAll,starts,rs)					\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -249,7 +226,8 @@ VanillaRunner<S,A>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
     
     system.sD.history.push_back(system.sD.status);    
@@ -262,7 +240,7 @@ VanillaRunner<S,A>
   njm::toFile(njm::toString(valueAll,"\n",""),
 	      njm::sett.datExt(agent.name+
 			       "_values_",".txt"));
-  return value/((double)numReps);
+  return rs;
 }
 
 
@@ -316,17 +294,18 @@ template class VanillaRunnerNS<System<ModelTimeExpCaves,
 
 
 template<class S, class A>
-double
+RunStats
 VanillaRunnerNS<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  double value=0;
+  // double value=0;
   int r,t;
 
+  RunStats rs;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value,starts)						\
+  shared(starts,rs)						\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -345,11 +324,12 @@ VanillaRunnerNS<S,A>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
 
   }
-  return value/((double)numReps);
+  return rs;
 }
 
 
@@ -372,18 +352,19 @@ template class FitOnlyRunner<System<ModelTimeExpCaves,
 
 
 template <class S, class A>
-double
+RunStats
 FitOnlyRunner<S,A>
 ::run(S system,
       A agent,
       const int numReps, const int numPoints,
       const Starts & starts){
-  double value=0;
+  // double value=0;
   int r,t;
 
+  RunStats rs;
   std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(value,valueAll,starts)					\
+  shared(valueAll,starts,rs)					\
   firstprivate(system,agent)					\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -416,7 +397,8 @@ FitOnlyRunner<S,A>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
 
     system.sD.history.push_back(system.sD.status);
@@ -429,29 +411,78 @@ FitOnlyRunner<S,A>
   njm::toFile(njm::toString(valueAll,"\n",""),
 	      njm::sett.datExt(agent.name+
 			       "_values_",".txt"));
-  return value/((double)numReps);
+  return rs;
 }
 
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
 		   ModelTimeExpCaves>,
-	    OsspAgent<ModelTimeExpCaves>,
-	    M1OsspOptim<System<ModelTimeExpCaves,
-			       ModelTimeExpCaves>,
-			OsspAgent<ModelTimeExpCaves>,
-			ToyFeatures2<ModelTimeExpCaves>,
-			ModelTimeExpCaves> >;
+	    RankAgent<ToyFeatures4<ModelTimeExpCaves>,
+		      ModelTimeExpCaves>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelTimeExpCaves>,
+		      RankAgent<ToyFeatures4<ModelTimeExpCaves>,
+				ModelTimeExpCaves>,
+		      ModelTimeExpCaves> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelRadius>,
+	    RankAgent<ToyFeatures4<ModelRadius>,
+		      ModelRadius>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelRadius>,
+		      RankAgent<ToyFeatures4<ModelRadius>,
+				ModelRadius>,
+		      ModelRadius> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    RankAgent<ToyFeatures4<ModelDist>,
+		      ModelDist>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelDist>,
+		      RankAgent<ToyFeatures4<ModelDist>,
+				ModelDist>,
+		      ModelDist> >;
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
 		   ModelTimeExpCaves>,
-	    OsspAgent<ModelTimeExpCaves>,
-	    M1OsspOptim<System<ModelTimeExpCaves,
-			       ModelTimeExpCaves>,
-			OsspAgent<ModelTimeExpCaves>,
-			ToyFeatures3<ModelTimeExpCaves>,
-			ModelTimeExpCaves> >;
+	    RankAgent<WnsFeatures1<ModelTimeExpCaves>,
+		      ModelTimeExpCaves>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelTimeExpCaves>,
+		      RankAgent<WnsFeatures1<ModelTimeExpCaves>,
+				ModelTimeExpCaves>,
+		      ModelTimeExpCaves> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelRadius>,
+	    RankAgent<WnsFeatures1<ModelRadius>,
+		      ModelRadius>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelRadius>,
+		      RankAgent<WnsFeatures1<ModelRadius>,
+				ModelRadius>,
+		      ModelRadius> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    RankAgent<WnsFeatures1<ModelDist>,
+		      ModelDist>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelDist>,
+		      RankAgent<WnsFeatures1<ModelDist>,
+				ModelDist>,
+		      ModelDist> >;
+
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
@@ -463,25 +494,6 @@ OptimRunner<System<ModelTimeExpCaves,
 			ToyFeatures4<ModelTimeExpCaves>,
 			ModelTimeExpCaves> >;
 
-template class
-OptimRunner<System<ModelTimeExpCaves,
-		   ModelRadius>,
-	    OsspAgent<ModelRadius>,
-	    M1OsspOptim<System<ModelTimeExpCaves,
-			       ModelRadius>,
-			OsspAgent<ModelRadius>,
-			ToyFeatures2<ModelRadius>,
-			ModelRadius> >;
-
-template class
-OptimRunner<System<ModelTimeExpCaves,
-		   ModelRadius>,
-	    OsspAgent<ModelRadius>,
-	    M1OsspOptim<System<ModelTimeExpCaves,
-			       ModelRadius>,
-			OsspAgent<ModelRadius>,
-			ToyFeatures3<ModelRadius>,
-			ModelRadius> >;
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
@@ -537,7 +549,7 @@ OptimRunner<System<ModelTimeExpCaves,
 
 
 template <class S, class A, class Optim>
-double
+RunStats
 OptimRunner<S,A,Optim>
 ::run(S system,
       A agent,
@@ -547,8 +559,9 @@ OptimRunner<S,A,Optim>
   int tick,tickR,tock,tockR,done=0;
   tick = std::time(NULL);
   double hours;
-  
-  double value=0;
+
+  RunStats rs;
+  // double value=0;
   int r,t;
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
@@ -559,7 +572,7 @@ OptimRunner<S,A,Optim>
   int threads = omp_get_max_threads();
   
 #pragma omp parallel for num_threads(threads)	\
-  shared(value,valueAll,tock,tick,starts)	\
+  shared(valueAll,tock,tick,starts,rs)		\
   firstprivate(system,agent,optim,weights)	\
   private(r,t,tockR,tickR)
   for(r=0; r<numReps; r++){
@@ -605,7 +618,8 @@ OptimRunner<S,A,Optim>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
 
     // store time for iteration
@@ -647,7 +661,8 @@ OptimRunner<S,A,Optim>
       njm::toFile("Completed " + njm::toString(done,"",6,0) +
 		  " out of " + njm::toString(numReps,"",6,0) +
 		  " in " + njm::toString(hours,"",8,4) + " hours" +
-		  " with value " + njm::toString(value/((double)done),"",6,4) +
+		  " with value " + njm::toString(rs.smean()/((double)done)
+						 ,"",6,4) +
 		  "\n",
 		  njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
 				   ".txt"));
@@ -664,13 +679,13 @@ OptimRunner<S,A,Optim>
 			       "_times_",".txt"));
 
 
-  return value/((double)numReps);
+  return rs;
 }
 
 
 
 template <class S, class A, class Optim>
-double
+RunStats
 OptimRunnerNS<S,A,Optim>
 ::run(S system,
       A agent,
@@ -678,13 +693,14 @@ OptimRunnerNS<S,A,Optim>
       const int numReps, const int numPoints,
       const Starts & starts){
 
-  double value=0;
+  RunStats rs;
+  // double value=0;
   int r,t;
   
   int threads = omp_get_max_threads();
   
 #pragma omp parallel for num_threads(threads)	\
-  shared(value,starts)				\
+  shared(starts,rs)				\
   firstprivate(system,agent,optim)		\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -713,12 +729,13 @@ OptimRunnerNS<S,A,Optim>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
 
   }
 
-  return value/((double)numReps);
+  return rs;
 }
 
 
@@ -731,30 +748,6 @@ OptimRunnerNS<S,A,Optim>
 template class
 TuneRunner<System<ModelTimeExpCaves,
 		  ModelTimeExpCaves>,
-	   RankAgent<ToyFeatures2<ModelTimeExpCaves>,
-		     ModelTimeExpCaves>,
-	   M1SpOptim<System<ModelTimeExpCaves,
-			    ModelTimeExpCaves>,
-		     RankAgent<ToyFeatures2<ModelTimeExpCaves>,
-			       ModelTimeExpCaves>,
-		     ModelTimeExpCaves> >;
-
-
-template class
-TuneRunner<System<ModelTimeExpCaves,
-		  ModelTimeExpCaves>,
-	   RankAgent<ToyFeatures3<ModelTimeExpCaves>,
-		     ModelTimeExpCaves>,
-	   M1SpOptim<System<ModelTimeExpCaves,
-			    ModelTimeExpCaves>,
-		     RankAgent<ToyFeatures3<ModelTimeExpCaves>,
-			       ModelTimeExpCaves>,
-		     ModelTimeExpCaves> >;
-
-
-template class
-TuneRunner<System<ModelTimeExpCaves,
-		  ModelTimeExpCaves>,
 	   RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 		     ModelTimeExpCaves>,
 	   M1SpOptim<System<ModelTimeExpCaves,
@@ -762,30 +755,6 @@ TuneRunner<System<ModelTimeExpCaves,
 		     RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 			       ModelTimeExpCaves>,
 		     ModelTimeExpCaves> >;
-
-
-template class
-TuneRunner<System<ModelRadius,
-		  ModelRadius>,
-	   RankAgent<ToyFeatures2<ModelRadius>,
-		     ModelRadius>,
-	   M1SpOptim<System<ModelRadius,
-			    ModelRadius>,
-		     RankAgent<ToyFeatures2<ModelRadius>,
-			       ModelRadius>,
-		     ModelRadius> >;
-
-
-template class
-TuneRunner<System<ModelRadius,
-		  ModelRadius>,
-	   RankAgent<ToyFeatures3<ModelRadius>,
-		     ModelRadius>,
-	   M1SpOptim<System<ModelRadius,
-			    ModelRadius>,
-		     RankAgent<ToyFeatures3<ModelRadius>,
-			       ModelRadius>,
-		     ModelRadius> >;
 
 
 template class
@@ -865,14 +834,15 @@ TuneRunner<System<ModelGravity,
 
 
 template <class S, class A, class Optim>
-double
+RunStats
 TuneRunner<S,A,Optim>
 ::run(S system,
       A agent,
       Optim optim,
       const int numReps, const int numPoints){
 
-  double value=0;
+  RunStats rs;
+  // double value=0;
   int r,t;
   for(r=0; r<numReps; r++){
     if(system.modelGen_r.sample()){
@@ -903,10 +873,11 @@ TuneRunner<S,A,Optim>
     }
     // end rep r
 
-    value += system.value();
+    rs(system.value());
+    // value += system.value();
   }
 
-  return value/((double)numReps);
+  return rs;
 }
 
 
@@ -915,19 +886,21 @@ TuneRunner<S,A,Optim>
 
 
 template <class S, class A, class Optim>
-double
+RunStats
 TestRunner<S,A,Optim>
 ::run(S system,
       A agent,
       Optim optim,
       const int numReps, const int numPoints){
-  double value=0;
+
+  RunStats rs;
+  // double value=0;
   int r,t;
   std::vector<std::vector<double> > valueAll(numReps);
   std::vector<std::vector<double> > weights;
   int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
 #pragma omp parallel for num_threads(threads)	\
-  shared(value,valueAll)			\
+  shared(valueAll,rs)				\
   firstprivate(system,agent,optim,weights)	\
   private(r,t)
   for(r=0; r<numReps; r++){
@@ -960,7 +933,8 @@ TestRunner<S,A,Optim>
 
 #pragma omp critical
     {
-      value += system.value();
+      rs(system.value());
+      // value += system.value();
     }
     
     system.sD.history.push_back(system.sD.status);
@@ -978,133 +952,5 @@ TestRunner<S,A,Optim>
   njm::toFile(njm::toString(valueAll,"\n",""),
 	      njm::sett.datExt(agent.name+"_"+optim.name+
 			       "_values_",".txt"));
-  return value/((double)numReps);
-}
-
-
-
-
-
-template <class S, class A>
-double
-TimerRunner<S,A>
-::run(S system,
-      A agent,
-      const int numReps, const int numPoints,
-      const Starts & starts){
-  std::chrono::milliseconds fitTime,trtTime,simTime,diff;
-  fitTime=std::chrono::milliseconds::zero();
-  trtTime=std::chrono::milliseconds::zero();
-  simTime=std::chrono::milliseconds::zero();
-
-  int i,pointsToTime=numPoints - system.fD.trtStart;
-  std::vector<std::chrono::milliseconds> trtVec(pointsToTime),
-    simVec(pointsToTime);
-  for(i=0; i<pointsToTime; i++){
-    trtVec.at(i) = std::chrono::milliseconds::zero();
-    simVec.at(i) = std::chrono::milliseconds::zero();
-  }
-  
-  std::chrono::time_point< std::chrono::high_resolution_clock > tick,tock;
-  int r,t;
-
-  for(r=0; r<numReps; r++){
-    njm::resetSeed(r);
-    system.reset(starts[r]);
-
-    for(t=system.sD.time; t<numPoints; t++){
-      // fit
-      tick=std::chrono::high_resolution_clock::now();
-      if(t>=system.fD.trtStart &&
-	 (((t-system.fD.trtStart) % system.fD.period) ==0))
-	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    system.paramEst);
-      tock=std::chrono::high_resolution_clock::now();
-      
-      diff=std::chrono::milliseconds::zero();
-      diff += std::chrono::duration_cast< std::chrono::milliseconds >
-	(tock.time_since_epoch());
-      diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-	(tick.time_since_epoch());
-      fitTime += diff;
-	  
-
-      // trt
-      tick=std::chrono::high_resolution_clock::now();
-      if(t>=system.fD.trtStart)
-	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-		       system.modelEst,system.paramEst);
-      tock=std::chrono::high_resolution_clock::now();
-
-      diff=std::chrono::milliseconds::zero();
-      diff += std::chrono::duration_cast< std::chrono::milliseconds >
-	(tock.time_since_epoch());
-      diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-	(tick.time_since_epoch());
-      trtTime += diff;
-
-      for(i=t-system.fD.trtStart; i>=0 && i<pointsToTime; i++)
-	trtVec.at(i) += diff;
-
-      // sim
-      tick=std::chrono::high_resolution_clock::now();
-      system.updateStatus();
-      
-      system.nextPoint();
-      tock=std::chrono::high_resolution_clock::now();
-
-      diff=std::chrono::milliseconds::zero();
-      diff += std::chrono::duration_cast< std::chrono::milliseconds >
-	(tock.time_since_epoch());
-      diff -= std::chrono::duration_cast< std::chrono::milliseconds >
-	(tick.time_since_epoch());
-      simTime += diff;
-
-      for(i=t-system.fD.trtStart; i>=0 && i<pointsToTime; i++)
-	simVec.at(i) += diff;
-    }
-
-  }
-
-  double fitTotal,trtTotal,simTotal;
-  fitTotal = (1.6666667e-5 * ((double)fitTime.count()))/((double)numReps);
-  trtTotal = (1.6666667e-5 * ((double)trtTime.count()))/((double)numReps);
-  simTotal = (1.6666667e-5 * ((double)simTime.count()))/((double)numReps);
-
-  double total = fitTotal+trtTotal+simTotal;
-  double hours = 1.6666667e-2 * ((double)total);
-  
-  std::string times=njm::toString("fit",": ",5,0) +
-    njm::toString(fitTotal,"minutes\n",12,6) +
-    njm::toString("trt",": ",5,0) +
-    njm::toString(trtTotal,"minutes\n",12,6) +
-    njm::toString("sim",": ",5,0) +
-    njm::toString(simTotal,"minutes\n",12,6) +
-    "\n" +
-    njm::toString("tot",": ",5,0) +
-    njm::toString(hours,"hours",12,6);
-
-  times += "\n\n";
-  times += njm::toString("t","",5,0);
-  times += njm::toString("trt","",12,0);
-  times += njm::toString("sim","",12,0);
-  times += "\n";
-  
-  for(i=0; i<pointsToTime; i++){
-    times += njm::toString(i + system.fD.trtStart,"",5,0);
-    
-    total = (1.6666667e-5 * ((double)trtVec.at(i).count()))/((double)numReps);
-    times += njm::toString(total,"",12,6);
-
-    total = (1.6666667e-5 * ((double)simVec.at(i).count()))/((double)numReps);
-    times += njm::toString(total,"",12,6);
-
-    times += njm::toString("minutes","",12,0);
-    
-    times += "\n";
-  }
-
-  njm::message(times);
-
-  return (hours);
+  return rs;
 }

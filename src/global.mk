@@ -9,6 +9,7 @@ PROF = $(DEBUG) -pg
 OBJECTS = $(BINARY).o 
 OBJECTS += utilities.o \
 	rand.o \
+	runStats.o \
 	system.o \
 	starts.o \
 	agent.o \

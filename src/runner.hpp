@@ -4,6 +4,7 @@
 
 #include <omp.h>
 #include <chrono>
+#include "runStats.hpp"
 #include "starts.hpp"
 #include "system.hpp"
 #include "model.hpp"
@@ -32,9 +33,9 @@ class BaseRunner {
 template <class S, class A>
 class TrainRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints);
+  virtual RunStats run(S system,
+		       A agent,
+		       const int numReps, const int numPoints);
 };
 
 
@@ -43,13 +44,9 @@ class TrainRunner : BaseRunner<S,A> {
 template <class S, class A>
 class PlainRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints);
-
-  std::pair<double,double> runEx(S system,
-				 A agent,
-				 const int numReps, const int numPoints);
+  virtual RunStats run(S system,
+		       A agent,
+		       const int numReps, const int numPoints);
 };
 
 
@@ -57,20 +54,20 @@ class PlainRunner : BaseRunner<S,A> {
 template <class S, class A>
 class VanillaRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
+  virtual RunStats run(S system,
+		       A agent,
+		       const int numReps, const int numPoints,
+		       const Starts & starts);
 };
 
 
 template <class S, class A>
 class VanillaRunnerNS : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
+  virtual RunStats run(S system,
+		       A agent,
+		       const int numReps, const int numPoints,
+		       const Starts & starts);
 };
 
 
@@ -78,10 +75,10 @@ class VanillaRunnerNS : BaseRunner<S,A> {
 template <class S, class A>
 class FitOnlyRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
+  virtual RunStats run(S system,
+		       A agent,
+		       const int numReps, const int numPoints,
+		       const Starts & starts);
 };
 
 
@@ -89,11 +86,11 @@ class FitOnlyRunner : BaseRunner<S,A> {
 template <class S, class A, class Optim>
 class OptimRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     Optim optim,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
+  virtual RunStats run(S system,
+		       A agent,
+		       Optim optim,
+		       const int numReps, const int numPoints,
+		       const Starts & starts);
 };
 
 
@@ -101,11 +98,11 @@ class OptimRunner : BaseRunner<S,A> {
 template <class S, class A, class Optim>
 class OptimRunnerNS : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     Optim optim,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
+  virtual RunStats run(S system,
+		       A agent,
+		       Optim optim,
+		       const int numReps, const int numPoints,
+		       const Starts & starts);
 };
 
 
@@ -113,10 +110,10 @@ class OptimRunnerNS : BaseRunner<S,A> {
 template <class S, class A, class Optim>
 class TuneRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     Optim optim,
-		     const int numReps, const int numPoints);
+  virtual RunStats run(S system,
+		       A agent,
+		       Optim optim,
+		       const int numReps, const int numPoints);
 };
 
 
@@ -124,21 +121,12 @@ class TuneRunner : BaseRunner<S,A> {
 template <class S, class A, class Optim>
 class TestRunner : BaseRunner<S,A> {
  public:
-  virtual double run(S system,
-		     A agent,
-		     Optim optim,
-		     const int numReps, const int numPoints);
+  virtual RunStats run(S system,
+		       A agent,
+		       Optim optim,
+		       const int numReps, const int numPoints);
 };
 
-
-template <class S, class A>
-class TimerRunner : BaseRunner<S,A> {
- public:
-  virtual double run(S system,
-		     A agent,
-		     const int numReps, const int numPoints,
-		     const Starts & starts);
-};
 
 
 #endif

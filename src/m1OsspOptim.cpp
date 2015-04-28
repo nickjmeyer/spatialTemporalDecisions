@@ -26,32 +26,8 @@ void M1OsspOptimTunePar::putPar(const std::vector<double> & par){
 template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelTimeExpCaves>,
 			   OsspAgent<ModelTimeExpCaves>,
-			   ToyFeatures2<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
-
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
-			   ToyFeatures3<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
-
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
 			   ToyFeatures4<ModelTimeExpCaves>,
 			   ModelTimeExpCaves>;
-
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelRadius>,
-			   OsspAgent<ModelRadius>,
-			   ToyFeatures2<ModelRadius>,
-			   ModelRadius>;
-
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelRadius>,
-			   OsspAgent<ModelRadius>,
-			   ToyFeatures3<ModelRadius>,
-			   ModelRadius>;
 
 template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelRadius>,
@@ -105,7 +81,6 @@ void M1OsspOptim<S,A,F,M>
 		system.modelEst,system.modelEst);
 
   M1SpOptim<System<M,M>,RankAgent<F,M>,M> spo;
-  spo.tp.tune = 0;
   RankAgent<F,M> ra;
   
   spo.optim(s,ra);
@@ -172,7 +147,7 @@ void M1OsspOptim<S,A,F,M>
       // this also is our estimate of Q
       // if we include past rewards it doesn't effect
       // the ranking of current rewards
-      qvalue += - runner.run(s,ra,tp.mcReps,s.fD.finalT);
+      qvalue += - runner.run(s,ra,tp.mcReps,s.fD.finalT).smean();
     }
     qvalue /= double(tp.B);
 

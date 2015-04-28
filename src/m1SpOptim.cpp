@@ -15,7 +15,7 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
   A = 30;
   B = 1;
 
-  tune = 1;
+  tune = 0;
 }
 
 std::vector<double> M1SpOptimTunePar::getPar() const{
@@ -33,33 +33,9 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 
 template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelTimeExpCaves>,
-			 RankAgent<ToyFeatures2<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
-
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
-			 RankAgent<ToyFeatures3<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
-
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
 			 RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 				   ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
-
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelRadius>,
-			 RankAgent<ToyFeatures2<ModelRadius>,
-				   ModelRadius>,
-			 ModelRadius>;
-
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelRadius>,
-			 RankAgent<ToyFeatures3<ModelRadius>,
-				   ModelRadius>,
-			 ModelRadius>;
 
 template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelRadius>,
@@ -81,18 +57,29 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 				   ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelRadius>,
+			 RankAgent<WnsFeatures1<ModelRadius>,
+				   ModelRadius>,
+			 ModelRadius>;
+
 template class M1SpOptim<System<ModelRadius,
 				ModelRadius>,
 			 RankAgent<WnsFeatures1<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
-template class M1SpOptim<System<ModelDist,
+template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelDist>,
 			 RankAgent<WnsFeatures1<ModelDist>,
 				   ModelDist>,
 			 ModelDist>;
 
+template class M1SpOptim<System<ModelDist,
+				ModelDist>,
+			 RankAgent<WnsFeatures1<ModelDist>,
+				   ModelDist>,
+			 ModelDist>;
 
 template class M1SpOptim<System<ModelGravity,
 				ModelGravity>,
@@ -153,10 +140,10 @@ void M1SpOptim<S,A,M>
 
     
     agent.tp.putPar(parPH);
-    valP = runner.run(s,agent,tp.mcReps,s.fD.finalT);
+    valP = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
 
     agent.tp.putPar(parMH);
-    valM = runner.run(s,agent,tp.mcReps,s.fD.finalT);
+    valM = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
 
     
     for(i=0; i<numPar; i++)
@@ -226,7 +213,7 @@ void M1SpOptim<S,A,M>
     o.tp.A=abVals.at(i).first;
     o.tp.B=abVals.at(i).second;
 
-    val = r.run(s,agent,o,50,s.fD.finalT);
+    val = r.run(s,agent,o,50,s.fD.finalT).smean();
     if(val < minVal){
       bestA = o.tp.A;
       bestB = o.tp.B;
