@@ -91,7 +91,10 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
 
+
+
   arma::mat weightMat(m.getQuick().data(),sD.numInfected,sD.numNotInfec,false);
+
   
   // start feature construction
 
@@ -99,7 +102,6 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
   int i,j,featNum=0;
   std::vector<int>::const_iterator itD0,itD1,beg;
 
-  
   // feature 0
   // probability of infection or infecting
   infFeat.col(featNum) = 1 - arma::prod(weightMat,1);
@@ -108,8 +110,7 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
 
   featNum++;
 
-  
-  
+
   // feature 1
   // joint probability of infection between not infected and not infected
   // weighted average of joint probabilities
@@ -145,7 +146,7 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
   
   featNum++;
 
-  
+
   // feature 2
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
@@ -154,7 +155,6 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
 
     
   featNum++;
-
 
   // feature 3
   // density estimate
@@ -183,12 +183,13 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
 
   featNum++;
 
+
   tDPre = tD;
 
-  arma::colvec notMx = arma::max(notFeat,0);
-  arma::colvec notMn = arma::min(notFeat,0);
-  arma::colvec infMx = arma::max(infFeat,0);
-  arma::colvec infMn = arma::min(infFeat,0);
+  arma::colvec notMx = arma::max(notFeat,0).t();
+  arma::colvec notMn = arma::min(notFeat,0).t();
+  arma::colvec infMx = arma::max(infFeat,0).t();
+  arma::colvec infMn = arma::min(infFeat,0).t();
 
   for(i = 0; i < numFeatures; ++i){
     if((notMx(i) - notMn(i)) > 1e-15){
@@ -198,7 +199,6 @@ void ToyFeatures4<M>::getFeatures(const SimData & sD,
       infFeat.col(i) = (infFeat.col(i) - infMn(i))/(infMx(i) - infMn(i));
     }
   }
-
 
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){

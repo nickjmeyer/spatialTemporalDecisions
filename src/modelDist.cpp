@@ -26,6 +26,9 @@ ModelDist::ModelDist(const ModelDist & m){
   expitInfProbs = m.expitInfProbs;
   expitRevProbs = m.expitRevProbs;
   quick = m.quick;
+  fisher = m.fisher;
+  meanHit = m.meanHit;
+  varHit = m.varHit;
   ready = m.ready;
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;

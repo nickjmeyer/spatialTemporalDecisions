@@ -130,6 +130,8 @@ PlainRunner<S,A>
     if(system.modelGen_r.sample()){
       std::vector<double> newPar = system.modelGen_r.getPar();
       system.modelEst_r.putPar(newPar.begin());
+      system.modelGen_r.setFill(system.sD,system.tD,system.fD,system.dD);
+      system.modelEst_r.setFill(system.sD,system.tD,system.fD,system.dD);
     }
     
     system.revert();

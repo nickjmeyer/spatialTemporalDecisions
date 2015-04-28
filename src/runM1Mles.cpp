@@ -43,18 +43,19 @@ int main(int argc, char ** argv){
   R_PA r_pa;
   R_MA r_ma;
   R_OA r_oa;
-  
+
+  omp_set_num_threads(1);
 
     
-  njm::message("  No treatment: "
-  	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
-  			       ""));
-  njm::message("      Proximal: "
-  	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
-  			       ""));
-  njm::message("        Myopic: "
-  	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
-  			       ""));
+  // njm::message("  No treatment: "
+  // 	       + njm::toString(r_nt.run(s,nt,numReps,s.fD.finalT,starts),
+  // 			       ""));
+  // njm::message("      Proximal: "
+  // 	       + njm::toString(r_pa.run(s,pa,numReps,s.fD.finalT,starts),
+  // 			       ""));
+  // njm::message("        Myopic: "
+  // 	       + njm::toString(r_ma.run(s,ma,numReps,s.fD.finalT,starts),
+  // 			       ""));
   njm::message("Priority Score: "
   	       + njm::toString(r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts),
   			       ""));

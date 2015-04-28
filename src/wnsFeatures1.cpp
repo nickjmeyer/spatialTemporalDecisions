@@ -202,6 +202,21 @@ void WnsFeatures1<M>::getFeatures(const SimData & sD,
   tDPre = tD;
 
 
+  arma::colvec notMx = arma::max(notFeat,0).t();
+  arma::colvec notMn = arma::min(notFeat,0).t();
+  arma::colvec infMx = arma::max(infFeat,0).t();
+  arma::colvec infMn = arma::min(infFeat,0).t();
+
+  for(i = 0; i < numFeatures; ++i){
+    if((notMx(i) - notMn(i)) > 1e-15){
+      notFeat.col(i) = (notFeat.col(i) - notMn(i))/(notMx(i) - notMn(i));
+    }
+    if((infMx(i) - infMn(i)) > 1e-15){
+      infFeat.col(i) = (infFeat.col(i) - infMn(i))/(infMx(i) - infMn(i));
+    }
+  }
+  
+
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
     std::cout << "Error: in getFeatures: featNum != numFeatures"
