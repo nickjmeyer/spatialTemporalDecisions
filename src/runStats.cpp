@@ -1,12 +1,17 @@
 #include "runStats.hpp"
 
-
-RunStats::RunStats(const std::vector<double> & init){
+RunStats::RunStats(){
   n = 0U;
   vals.clear();
   smean_ = 0.0;
   svar_ = 0.0;
   ssd_ = 0.0;
+  seMean_ = 0.0;
+}
+
+RunStats::RunStats(const std::vector<double> & init)
+  : RunStats() {
+  update(init);
 }
 
 

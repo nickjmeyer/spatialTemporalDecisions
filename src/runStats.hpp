@@ -19,7 +19,7 @@ class RunStats {
   void update(const std::vector<double> & add);
 
  public:
-  RunStats() : RunStats(std::vector<double>()) { };
+  RunStats();
   RunStats(const std::vector<double> & init);
 
   void operator () (const std::vector<double> & add){
