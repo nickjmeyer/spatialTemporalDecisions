@@ -33,6 +33,8 @@ template <class MG,
 	  class ME>
 System<MG,
        ME>::System(){
+  specialInit = 0;
+  
   initialize();
 }
 
@@ -41,11 +43,13 @@ template <class MG,
 	  class ME>
 System<MG,
        ME>::System(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			const MG & modelGen,
+		   const TrtData & tD,
+		   const FixedData & fD,
+		   const DynamicData & dD,
+		   const MG & modelGen,
 		   const ME & modelEst){
+  specialInit = 1;
+    
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
@@ -60,6 +64,8 @@ template <class MG,
 	  class ME>
 System<MG,
        ME>::System(const std::string file){
+  specialInit = 1;
+  
   initialize();
 
   std::vector<int> historyFile;
@@ -163,53 +169,56 @@ template <class MG,
 	  class ME>
 void System<MG,
 	    ME>::reset(const std::vector<int> & ind){
-  // reset SimData
-  sD_r.time = 0;
-  sD_r.numInfected = ind.size();
-  sD_r.numNotInfec = fD.numNodes - sD_r.numInfected;
+  if(!specialInit){
+    // reset SimData
+    sD_r.time = 0;
+    sD_r.numInfected = ind.size();
+    sD_r.numNotInfec = fD.numNodes - sD_r.numInfected;
 
-  sD_r.infected = ind;
-  int i,j;
-  sD_r.notInfec.clear();
-  for(i = 0,j = 0; i < fD.numNodes; ++i){
-    if(j < sD_r.numInfected && i == sD_r.infected.at(j))
-      ++j;
-    else
-      sD_r.notInfec.push_back(i);
+    sD_r.infected = ind;
+    int i,j;
+    sD_r.notInfec.clear();
+    for(i = 0,j = 0; i < fD.numNodes; ++i){
+      if(j < sD_r.numInfected && i == sD_r.infected.at(j))
+	++j;
+      else
+	sD_r.notInfec.push_back(i);
+    }
+
+    sD_r.newInfec = sD_r.infected;
+    sD_r.timeInf.resize(fD.numNodes);
+    std::fill(sD_r.timeInf.begin(),sD_r.timeInf.end(),0);
+    for(i = 0; i < sD_r.numInfected; ++i)
+      sD_r.timeInf.at(sD_r.infected.at(i)) = 1;
+
+    sD_r.status.resize(fD.numNodes);
+    std::fill(sD_r.status.begin(),sD_r.status.end(),0);
+    for(i = 0; i < sD_r.numInfected; ++i)
+      sD_r.status.at(sD_r.infected.at(i)) = 2;
+
+    sD_r.history.clear();
+
+
+    // reset TrtData
+    tD_r.a.resize(fD.numNodes);
+    tD_r.p.resize(fD.numNodes);
+    tD_r.aPast.resize(fD.numNodes);
+    tD_r.pPast.resize(fD.numNodes);
+
+    std::fill(tD_r.a.begin(),tD_r.a.end(),0);
+    std::fill(tD_r.p.begin(),tD_r.p.end(),0);
+    std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
+    std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
+
+
+    // reset DynamicData
+    // nothing to do for this....DynamicData isn't used
+
+    // load probs
+    modelGen_r.setFill(sD_r,tD_r,fD,dD_r);
+    
   }
-
-  sD_r.newInfec = sD_r.infected;
-  sD_r.timeInf.resize(fD.numNodes);
-  std::fill(sD_r.timeInf.begin(),sD_r.timeInf.end(),0);
-  for(i = 0; i < sD_r.numInfected; ++i)
-    sD_r.timeInf.at(sD_r.infected.at(i)) = 1;
-
-  sD_r.status.resize(fD.numNodes);
-  std::fill(sD_r.status.begin(),sD_r.status.end(),0);
-  for(i = 0; i < sD_r.numInfected; ++i)
-    sD_r.status.at(sD_r.infected.at(i)) = 2;
-
-  sD_r.history.clear();
-
-
-  // reset TrtData
-  tD_r.a.resize(fD.numNodes);
-  tD_r.p.resize(fD.numNodes);
-  tD_r.aPast.resize(fD.numNodes);
-  tD_r.pPast.resize(fD.numNodes);
-
-  std::fill(tD_r.a.begin(),tD_r.a.end(),0);
-  std::fill(tD_r.p.begin(),tD_r.p.end(),0);
-  std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
-  std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
-
-
-  // reset DynamicData
-  // nothing to do for this....DynamicData isn't used
-
-  // load probs
-  modelGen_r.setFill(sD_r,tD_r,fD,dD_r);
-
+  
   // revert
   revert();
 }

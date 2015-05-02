@@ -26,6 +26,8 @@ class System {
 	 const FixedData & fD, const DynamicData & dD,
 	 const MG & modelGen, const ME & modelEst);
   System(const std::string file);
+
+  int specialInit;
   
   SimData sD;
   TrtData tD;
@@ -44,7 +46,7 @@ class System {
 
 
   virtual void reset(const std::vector<int> & ind);
-
+  
   virtual void revert();
 
   virtual void checkPoint();

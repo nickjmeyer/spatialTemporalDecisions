@@ -24,7 +24,8 @@ int main(int argc, char ** argv){
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
-  S s;
+  // S s;
+  S s("obsData.txt");
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
@@ -45,21 +46,31 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
-  rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
-  njm::message("         Myopic: "
-  	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
-  njm::message("  Policy Search: "
-  	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  std::vector<double> times = {15,25};
+  std::vector<double>::const_iterator it,beg,end;
+  beg = times.begin();
+  end = times.end();
+    
+  for(it = beg; it != end; ++it){
+    s.fD.finalT = s.sD.time + *it;
 
+    ma.name = "myopic_obs" + njm::toString(*it,"",0,0);
+    rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
+    njm::message("         Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    ra.name = "rank_obs" + njm::toString(*it,"",0,0);
+    rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
+    njm::message("  Policy Search: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+    
+    // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+    // njm::message("One Step Polish: "
+    // 	       + njm::toString(rs.smean(),"")
+    // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  }
   return 0;
 }
 
