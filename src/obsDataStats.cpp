@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
   typedef ModelTimeExpCaves MG;
   typedef MG ME;
   typedef System<MG,ME> S;
-  typedef WnsFeatures0<ME> F;
+  typedef WnsFeatures1<ME> F;
   typedef RankAgent<F,ME> RA;
   typedef M1SpOptim<S,RA,ME> SPO;
 
@@ -58,7 +58,8 @@ int main(int argc, char ** argv){
   std::cout << "done" << std::endl;
 
   // save to file
-  njm::toFile(njm::toString(ps,"\n",""),njm::sett.srcExt("obsDataPs.txt"));
+  njm::toFile(njm::toString(ps,"\n",""),njm::sett.srcExt("obsDataPs.txt"),
+	      std::ios_base::out);
 
   
 
