@@ -13,13 +13,13 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   // typedef ModelTimeExpCaves MG;
-  typedef ModelTime MG;
+  typedef ModelDistKern MG;
   // typedef ModelGravity MG;
   typedef MG ME;
   typedef System<MG,ME> S;
   // typedef NoTrt<MG> NT;
   // typedef PlainRunner<S,NT> PR;
-  typedef ToyFeatures2<MG> F;
+  typedef ToyFeatures4<MG> F;
   typedef RankAgent<F,ME> RA;
   // typedef PlainRunner<S,RA> PR;
   typedef FitOnlyRunner<S,RA> FR;
