@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCaves MG;
   
-  typedef ModelDist ME;
+  typedef ModelCovar ME;
 
   typedef System<MG,ME> S;
 

@@ -31,6 +31,9 @@ template class RankAgent<ToyFeatures5<ModelDist>,
 template class RankAgent<ToyFeatures5<ModelDistKern>,
 			 ModelDistKern>;
 
+template class RankAgent<ToyFeatures5<ModelCovar>,
+			 ModelCovar>;
+
 template class RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 

@@ -82,6 +82,13 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 
 
 template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelCovar>,
+			 RankAgent<ToyFeatures5<ModelCovar>,
+				   ModelCovar>,
+			 ModelCovar>;
+
+
+template class M1SpOptim<System<ModelTimeExpCaves,
 				ModelTimeExpCaves>,
 			 RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 				   ModelTimeExpCaves>,

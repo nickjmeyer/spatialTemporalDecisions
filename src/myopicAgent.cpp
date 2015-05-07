@@ -8,6 +8,8 @@ template class MyopicAgent<ModelRadius>;
 
 template class MyopicAgent<ModelDist>;
 
+template class MyopicAgent<ModelCovar>;
+
 template class MyopicAgent<ModelDistKern>;
 
 

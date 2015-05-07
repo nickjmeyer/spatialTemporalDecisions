@@ -25,6 +25,9 @@ template class System<ModelTimeExpCaves,
 		      ModelDist>;
 
 template class System<ModelTimeExpCaves,
+		      ModelCovar>;
+
+template class System<ModelTimeExpCaves,
 		      ModelDistKern>;
 
 template class System<ModelDist,
@@ -32,6 +35,9 @@ template class System<ModelDist,
 
 template class System<ModelDistKern,
 		      ModelDistKern>;
+
+template class System<ModelCovar,
+		      ModelCovar>;
 
 
 

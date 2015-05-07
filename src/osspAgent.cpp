@@ -8,6 +8,8 @@ template class OsspAgent<ModelRadius>;
 
 template class OsspAgent<ModelDist>;
 
+template class OsspAgent<ModelCovar>;
+
 
 OsspAgentTuneParam::OsspAgentTuneParam(){
   eps = 0.8;

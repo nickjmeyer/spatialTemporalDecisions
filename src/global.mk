@@ -43,6 +43,7 @@ OBJECTS += utilities.o \
 	modelDist.o \
 	modelDistKern.o \
 	modelRadius.o \
+	modelCovar.o \
 	mcmc.o \
 	mcmcGravityTimeInf.o \
 	mcmcGravityTimeInfExpCaves.o \

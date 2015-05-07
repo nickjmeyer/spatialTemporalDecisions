@@ -61,6 +61,13 @@ template class M1OsspOptim<System<ModelTimeExpCaves,
 			   ModelDist>;
 
 
+template class M1OsspOptim<System<ModelTimeExpCaves,
+				  ModelCovar>,
+			   OsspAgent<ModelCovar>,
+			   ToyFeatures5<ModelCovar>,
+			   ModelCovar>;
+
+
 
 template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelTimeExpCaves>,

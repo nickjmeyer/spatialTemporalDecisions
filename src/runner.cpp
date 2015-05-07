@@ -71,6 +71,12 @@ template class PlainRunner<System<ModelDist,
 				     ModelDist> >;
 
 
+template class PlainRunner<System<ModelCovar,
+				  ModelCovar>,
+			   RankAgent<ToyFeatures5<ModelCovar>,
+				     ModelCovar> >;
+
+
 template class PlainRunner<System<ModelDistKern,
 				  ModelDistKern>,
 			   RankAgent<ToyFeatures4<ModelDistKern>,
@@ -362,6 +368,10 @@ template class FitOnlyRunner<System<ModelTimeExpCaves,
 			     MyopicAgent<ModelDist> >;
 
 template class FitOnlyRunner<System<ModelTimeExpCaves,
+				    ModelCovar>,
+			     MyopicAgent<ModelCovar> >;
+
+template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelDistKern>,
 			     MyopicAgent<ModelDistKern> >;
 
@@ -517,6 +527,17 @@ OptimRunner<System<ModelTimeExpCaves,
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
+		   ModelCovar>,
+	    RankAgent<ToyFeatures5<ModelCovar>,
+		      ModelCovar>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelCovar>,
+		      RankAgent<ToyFeatures5<ModelCovar>,
+				ModelCovar>,
+		      ModelCovar> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
 		   ModelDistKern>,
 	    RankAgent<ToyFeatures5<ModelDistKern>,
 		      ModelDistKern>,
@@ -640,6 +661,17 @@ OptimRunner<System<ModelTimeExpCaves,
 			OsspAgent<ModelDist>,
 			ToyFeatures5<ModelDist>,
 			ModelDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelCovar>,
+	    OsspAgent<ModelCovar>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelCovar>,
+			OsspAgent<ModelCovar>,
+			ToyFeatures5<ModelCovar>,
+			ModelCovar> >;
 
 
 
@@ -953,6 +985,19 @@ TuneRunner<System<ModelDist,
 		     RankAgent<ToyFeatures5<ModelDist>,
 			       ModelDist>,
 		     ModelDist> >;
+
+
+template class
+TuneRunner<System<ModelCovar,
+		  ModelCovar>,
+	   RankAgent<ToyFeatures5<ModelCovar>,
+		     ModelCovar>,
+	   M1SpOptim<System<ModelCovar,
+			    ModelCovar>,
+		     RankAgent<ToyFeatures5<ModelCovar>,
+			       ModelCovar>,
+		     ModelCovar> >;
+
 
 
 template class

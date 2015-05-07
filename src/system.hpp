@@ -14,6 +14,7 @@
 #include "modelRadius.hpp"
 #include "modelDist.hpp"
 #include "modelDistKern.hpp"
+#include "modelCovar.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

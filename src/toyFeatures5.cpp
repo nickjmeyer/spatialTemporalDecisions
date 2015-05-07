@@ -25,6 +25,8 @@ template class ToyFeatures5<ModelDist>;
 
 template class ToyFeatures5<ModelDistKern>;
 
+template class ToyFeatures5<ModelCovar>;
+
 
 
 template <class M>
