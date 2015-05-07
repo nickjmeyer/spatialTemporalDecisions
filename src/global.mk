@@ -1,7 +1,7 @@
 CC=g++
 CPPFLAGS = -std=c++11 -Wall -Werror -Wno-error=comment -fopenmp
 INCLUDE = -I/usr/include/superlu/
-LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas -lsuperlu
+LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
