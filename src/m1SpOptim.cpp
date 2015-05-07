@@ -49,6 +49,11 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 				   ModelDist>,
 			 ModelDist>;
 
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelDistKern>,
+			 RankAgent<ToyFeatures4<ModelDistKern>,
+				   ModelDistKern>,
+			 ModelDistKern>;
 
 
 template class M1SpOptim<System<ModelTimeExpCaves,
@@ -75,11 +80,18 @@ template class M1SpOptim<System<ModelTimeExpCaves,
 				   ModelDist>,
 			 ModelDist>;
 
+template class M1SpOptim<System<ModelTimeExpCaves,
+				ModelDistKern>,
+			 RankAgent<WnsFeatures1<ModelDistKern>,
+				   ModelDistKern>,
+			 ModelDistKern>;
+
 template class M1SpOptim<System<ModelDist,
 				ModelDist>,
 			 RankAgent<WnsFeatures1<ModelDist>,
 				   ModelDist>,
 			 ModelDist>;
+
 
 template class M1SpOptim<System<ModelGravity,
 				ModelGravity>,

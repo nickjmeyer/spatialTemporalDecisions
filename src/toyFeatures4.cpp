@@ -23,6 +23,8 @@ template class ToyFeatures4<ModelRadius>;
 
 template class ToyFeatures4<ModelDist>;
 
+template class ToyFeatures4<ModelDistKern>;
+
 
 
 template <class M>

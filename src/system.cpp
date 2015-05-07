@@ -24,8 +24,14 @@ template class System<ModelRadius,
 template class System<ModelTimeExpCaves,
 		      ModelDist>;
 
+template class System<ModelTimeExpCaves,
+		      ModelDistKern>;
+
 template class System<ModelDist,
 		      ModelDist>;
+
+template class System<ModelDistKern,
+		      ModelDistKern>;
 
 
 

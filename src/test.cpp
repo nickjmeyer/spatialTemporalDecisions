@@ -6,12 +6,12 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCaves MG;
   
-  typedef MG ME;
+  typedef ModelDistKern ME;
 
   typedef System<MG,ME> S;
 
-  typedef NoTrt<ME> NT;
-  // typedef ProximalAgent<ME> PA;
+  // typedef NoTrt<ME> NT;
+  typedef ProximalAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
   // typedef ToyFeatures4<ME> F;
@@ -21,7 +21,7 @@ int main(int argc, char ** argv){
   // typedef M1SpOptim<S,RA,ME> SPO;
   // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
-  typedef VanillaRunner<S,NT> R_NT;
+  // typedef VanillaRunner<S,NT> R_NT;
   // typedef VanillaRunner<S,PA> R_PA;
   // typedef FitOnlyRunner<S,MA> R_MA;
   // typedef OptimRunner<S,RA,SPO> R_RA;
@@ -32,12 +32,12 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
-  int numReps = 96;
-  Starts starts(numReps,s.fD.numNodes);
+  // int numReps = 96;
+  Starts starts("startingLocations.txt");
   s.reset(starts[0]);
 
-  NT nt;
-  // PA pa;
+  // NT nt;
+  PA pa;
   // MA ma;
   // RA ra;
   // OA oa;
@@ -45,7 +45,7 @@ int main(int argc, char ** argv){
   // SPO spo;
   // OSSPO osspo;
 
-  R_NT r_nt;
+  // R_NT r_nt;
   // R_PA r_pa;
   // R_MA r_ma;
   // R_RA r_ra;
@@ -54,10 +54,29 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message("   No treatment: "
-  	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  int i;
+  for(i = 0; i < (s.fD.trtStart+4); ++i){
+    if(i >= s.fD.trtStart){
+      s.modelEst.fit(s.sD,s.tD,s.fD,s.dD,1);
+
+      pa.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelEst);
+    }
+
+    s.updateStatus();
+    
+    s.nextPoint();
+  }
+
+  for(i = 0; i < 20; ++i){
+    s.modelEst.sample();
+    std::cout << njm::toString(s.modelEst.getPar()," ","\n");
+  }
+      
+
+  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  // njm::message("   No treatment: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   // rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
   // njm::message("       Proximal: "

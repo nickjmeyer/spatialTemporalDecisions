@@ -9,13 +9,9 @@ static std::vector<ParamBase *> genPars(){
   return pars;
 }
 
-ModelDistKern::ModelDistKern()
-  : ModelBase(genPars()) {
-}
 
 ModelDistKern::ModelDistKern(const FixedData & fD)
-  : ModelBase(genPars()){
-  init(fD);
+  : ModelBase(genPars(),fD){
 }
 
 

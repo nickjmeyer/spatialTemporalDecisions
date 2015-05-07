@@ -88,6 +88,12 @@ template class PlainRunner<System<ModelDist,
 				     ModelDist> >;
 
 
+template class PlainRunner<System<ModelDistKern,
+				  ModelDistKern>,
+			   RankAgent<ToyFeatures4<ModelDistKern>,
+				     ModelDistKern> >;
+
+
 template class PlainRunner<System<ModelGravity,
 				  ModelGravity>,
 			   NoTrt<ModelGravity> >;
@@ -115,6 +121,12 @@ template class PlainRunner<System<ModelDist,
 				  ModelDist>,
 			   RankAgent<WnsFeatures1<ModelDist>,
 				     ModelDist> >;
+
+
+template class PlainRunner<System<ModelDistKern,
+				  ModelDistKern>,
+			   RankAgent<WnsFeatures1<ModelDistKern>,
+				     ModelDistKern> >;
 
 
 
@@ -349,6 +361,10 @@ template class FitOnlyRunner<System<ModelTimeExpCaves,
 				    ModelDist>,
 			     MyopicAgent<ModelDist> >;
 
+template class FitOnlyRunner<System<ModelTimeExpCaves,
+				    ModelDistKern>,
+			     MyopicAgent<ModelDistKern> >;
+
 
 
 template <class S, class A>
@@ -452,6 +468,17 @@ OptimRunner<System<ModelTimeExpCaves,
 
 template class
 OptimRunner<System<ModelTimeExpCaves,
+		   ModelDistKern>,
+	    RankAgent<ToyFeatures4<ModelDistKern>,
+		      ModelDistKern>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelDistKern>,
+		      RankAgent<ToyFeatures4<ModelDistKern>,
+				ModelDistKern>,
+		      ModelDistKern> >;
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
 		   ModelTimeExpCaves>,
 	    RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 		      ModelTimeExpCaves>,
@@ -482,6 +509,18 @@ OptimRunner<System<ModelTimeExpCaves,
 		      RankAgent<WnsFeatures1<ModelDist>,
 				ModelDist>,
 		      ModelDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDistKern>,
+	    RankAgent<WnsFeatures1<ModelDistKern>,
+		      ModelDistKern>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelDistKern>,
+		      RankAgent<WnsFeatures1<ModelDistKern>,
+				ModelDistKern>,
+		      ModelDistKern> >;
 
 
 template class
@@ -781,6 +820,18 @@ TuneRunner<System<ModelDist,
 
 
 template class
+TuneRunner<System<ModelDistKern,
+		  ModelDistKern>,
+	   RankAgent<ToyFeatures4<ModelDistKern>,
+		     ModelDistKern>,
+	   M1SpOptim<System<ModelDistKern,
+			    ModelDistKern>,
+		     RankAgent<ToyFeatures4<ModelDistKern>,
+			       ModelDistKern>,
+		     ModelDistKern> >;
+
+
+template class
 TuneRunner<System<ModelTimeExpCaves,
 		  ModelTimeExpCaves>,
 	   RankAgent<WnsFeatures1<ModelTimeExpCaves>,
@@ -814,6 +865,20 @@ TuneRunner<System<ModelDist,
 		     RankAgent<WnsFeatures1<ModelDist>,
 			       ModelDist>,
 		     ModelDist> >;
+
+
+
+
+template class
+TuneRunner<System<ModelDistKern,
+		  ModelDistKern>,
+	   RankAgent<WnsFeatures1<ModelDistKern>,
+		     ModelDistKern>,
+	   M1SpOptim<System<ModelDistKern,
+			    ModelDistKern>,
+		     RankAgent<WnsFeatures1<ModelDistKern>,
+			       ModelDistKern>,
+		     ModelDistKern> >;
 
 
 template class

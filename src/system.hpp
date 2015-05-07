@@ -13,6 +13,7 @@
 #include "modelTimeExpCaves.hpp"
 #include "modelRadius.hpp"
 #include "modelDist.hpp"
+#include "modelDistKern.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

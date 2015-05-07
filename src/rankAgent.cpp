@@ -34,6 +34,9 @@ template class RankAgent<ToyFeatures4<ModelRadius>,
 template class RankAgent<ToyFeatures4<ModelDist>,
 			 ModelDist>;
 
+template class RankAgent<ToyFeatures4<ModelDistKern>,
+			 ModelDistKern>;
+
 template class RankAgent<WnsFeatures1<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
 
@@ -42,6 +45,9 @@ template class RankAgent<WnsFeatures1<ModelRadius>,
 
 template class RankAgent<WnsFeatures1<ModelDist>,
 			 ModelDist>;
+
+template class RankAgent<WnsFeatures1<ModelDistKern>,
+			 ModelDistKern>;
 
 template class RankAgent<WnsFeatures1<ModelGravity>,
 			 ModelGravity>;

@@ -16,7 +16,7 @@
 class ModelDistKern : public ModelBase {
  protected:
  public:
-  ModelDistKern();
+  ModelDistKern() { };
   ModelDistKern(const FixedData & fD);
   ModelDistKern(const ModelDistKern & m);
 

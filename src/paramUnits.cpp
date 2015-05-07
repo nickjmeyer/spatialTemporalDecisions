@@ -508,6 +508,86 @@ int main(int argc, char ** argv){
   delete pB;
   
 
+  pB = new ParamDistKern();
+  pB->init(s.fD);
+  std::cout << "Testing ParamDistKern" << std::endl;
+
+  pars = {0,0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1,1};
+  beg = pars.begin();
+  beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  double d;
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
+    }
+  }
+
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("setFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("modFill2",diff < 1e-10);
+
+  
+  delete pB;
+
+  
   njm::sett.clean();
   return 0;
 }

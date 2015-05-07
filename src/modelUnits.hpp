@@ -30,5 +30,6 @@
 #include "modelGravity.hpp"
 #include "modelTime.hpp"
 #include "modelTimeExpCaves.hpp"
+#include "modelDistKern.hpp"
 
 #endif

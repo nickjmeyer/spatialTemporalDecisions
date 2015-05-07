@@ -24,6 +24,9 @@ template class WnsFeatures1<ModelRadius>;
 
 template class WnsFeatures1<ModelDist>;
 
+template class WnsFeatures1<ModelDistKern>;
+
+
 
 
 template <class M>

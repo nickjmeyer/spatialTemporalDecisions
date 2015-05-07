@@ -8,6 +8,8 @@ template class MyopicAgent<ModelRadius>;
 
 template class MyopicAgent<ModelDist>;
 
+template class MyopicAgent<ModelDistKern>;
+
 
 template <class M>
 std::string MyopicAgent<M>::name = "myopic";

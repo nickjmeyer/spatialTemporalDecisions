@@ -6,6 +6,8 @@ template class ProximalAgent<ModelTimeExpCaves>;
 
 template class ProximalAgent<ModelRadius>;
 
+template class ProximalAgent<ModelDistKern>;
+
 
 template<class M>
 std::string ProximalAgent<M>::name = "proximal";
