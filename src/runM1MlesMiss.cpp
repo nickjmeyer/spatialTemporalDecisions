@@ -7,22 +7,22 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCaves MG;
   
-  typedef ModelDistKern ME;
+  typedef ModelDist ME;
 
   typedef System<MG,ME> S;
 
   typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures4<ME> F;
+  typedef ToyFeatures5<ME> F;
   typedef RankAgent<F,ME> RA;
-  // typedef OsspAgent<ME> OA;
+  typedef OsspAgent<ME> OA;
 
   typedef M1SpOptim<S,RA,ME> SPO;
-  // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
+  typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef FitOnlyRunner<S,MA> R_MA;
   typedef OptimRunner<S,RA,SPO> R_RA;
-  // typedef OptimRunner<S,OA,OSSPO> R_OA;
+  typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
   S s;
@@ -34,14 +34,14 @@ int main(int argc, char ** argv){
 
   MA ma;
   RA ra;
-  // OA oa;
+  OA oa;
 
   SPO spo;
-  // OSSPO osspo;
+  OSSPO osspo;
 
   R_MA r_ma;
   R_RA r_ra;
-  // R_OA r_oa;
+  R_OA r_oa;
 
 
   RunStats rs;
@@ -56,10 +56,10 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  njm::message("One Step Polish: "
+  	       + njm::toString(rs.smean(),"")
+  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
   return 0;
 }

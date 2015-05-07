@@ -1,32 +1,11 @@
 #include "rankAgent.hpp"
 
 
-template class RankAgent<ToyFeatures2<ModelGravity>,
-			 ModelGravity>;
-
-template class RankAgent<ToyFeatures3<ModelGravity>,
-			 ModelGravity>;
-
 template class RankAgent<ToyFeatures4<ModelGravity>,
 			 ModelGravity>;
 
-template class RankAgent<ToyFeatures2<ModelTime>,
-			 ModelTime>;
-
-template class RankAgent<ToyFeatures2<ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
-
-template class RankAgent<ToyFeatures3<ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
-
 template class RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 			 ModelTimeExpCaves>;
-
-template class RankAgent<ToyFeatures2<ModelRadius>,
-			 ModelRadius>;
-
-template class RankAgent<ToyFeatures3<ModelRadius>,
-			 ModelRadius>;
 
 template class RankAgent<ToyFeatures4<ModelRadius>,
 			 ModelRadius>;
@@ -35,6 +14,21 @@ template class RankAgent<ToyFeatures4<ModelDist>,
 			 ModelDist>;
 
 template class RankAgent<ToyFeatures4<ModelDistKern>,
+			 ModelDistKern>;
+
+template class RankAgent<ToyFeatures5<ModelGravity>,
+			 ModelGravity>;
+
+template class RankAgent<ToyFeatures5<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
+template class RankAgent<ToyFeatures5<ModelRadius>,
+			 ModelRadius>;
+
+template class RankAgent<ToyFeatures5<ModelDist>,
+			 ModelDist>;
+
+template class RankAgent<ToyFeatures5<ModelDistKern>,
 			 ModelDistKern>;
 
 template class RankAgent<WnsFeatures1<ModelTimeExpCaves>,

@@ -23,14 +23,6 @@ void M2QOptimTunePar::putPar(const std::vector<double> & par){
 
 
 
-template class M2QOptim<System<ModelGravity,
-			       ModelGravity>,
-			RankAgent<ToyFeatures2<ModelGravity>,
-				  ModelGravity>,
-			FeaturesInt<ToyFeatures2<ModelGravity>,
-				    ModelGravity>,
-			ModelGravity>;
-
 
 template <class S, class A, class F,
 	  class M>
@@ -159,14 +151,6 @@ optim(const S & system,
   agent.tp.putPar(par); // assign optimized par to the agent
 }
 
-
-template class M2QEval<System<ModelGravity,
-			      ModelGravity>,
-		       RankAgent<ToyFeatures2<ModelGravity>,
-				 ModelGravity>,
-		       FeaturesInt<ToyFeatures2<ModelGravity>,
-				   ModelGravity>,
-		       ModelGravity>;
 
 
 template <class S, class A, class F, class M>
