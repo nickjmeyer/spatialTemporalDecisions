@@ -20,6 +20,7 @@ OBJECTS += utilities.o \
 	m1OsspOptim.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
+	toyFeatures0.o \
 	toyFeatures2.o \
 	toyFeatures3.o \
 	toyFeatures4.o \

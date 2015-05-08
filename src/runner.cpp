@@ -32,6 +32,16 @@ TrainRunner<S,A>
 
 
 
+template class PlainRunner<System<ModelTimeExpCaves,
+				  ModelTimeExpCaves>,
+			   RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+				     ModelTimeExpCaves> >;
+
+
+template class PlainRunner<System<ModelDist,
+				  ModelDist>,
+			   RankAgent<ToyFeatures0<ModelDist>,
+				     ModelDist> >;
 
 
 template class PlainRunner<System<ModelTimeExpCaves,
@@ -444,6 +454,30 @@ FitOnlyRunner<S,A>
 template class
 OptimRunner<System<ModelTimeExpCaves,
 		   ModelTimeExpCaves>,
+	    RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+		      ModelTimeExpCaves>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelTimeExpCaves>,
+		      RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+				ModelTimeExpCaves>,
+		      ModelTimeExpCaves> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    RankAgent<ToyFeatures0<ModelDist>,
+		      ModelDist>,
+	    M1SpOptim<System<ModelTimeExpCaves,
+			     ModelDist>,
+		      RankAgent<ToyFeatures0<ModelDist>,
+				ModelDist>,
+		      ModelDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelTimeExpCaves>,
 	    RankAgent<ToyFeatures4<ModelTimeExpCaves>,
 		      ModelTimeExpCaves>,
 	    M1SpOptim<System<ModelTimeExpCaves,
@@ -596,6 +630,28 @@ OptimRunner<System<ModelTimeExpCaves,
 		      RankAgent<WnsFeatures1<ModelDistKern>,
 				ModelDistKern>,
 		      ModelDistKern> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelTimeExpCaves>,
+	    OsspAgent<ModelTimeExpCaves>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelTimeExpCaves>,
+			OsspAgent<ModelTimeExpCaves>,
+			ToyFeatures0<ModelTimeExpCaves>,
+			ModelTimeExpCaves> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCaves,
+		   ModelDist>,
+	    OsspAgent<ModelDist>,
+	    M1OsspOptim<System<ModelTimeExpCaves,
+			       ModelDist>,
+			OsspAgent<ModelDist>,
+			ToyFeatures0<ModelDist>,
+			ModelDist> >;
 
 
 template class
@@ -901,6 +957,30 @@ OptimRunnerNS<S,A,Optim>
 
 
 
+
+
+template class
+TuneRunner<System<ModelTimeExpCaves,
+		  ModelTimeExpCaves>,
+	   RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+		     ModelTimeExpCaves>,
+	   M1SpOptim<System<ModelTimeExpCaves,
+			    ModelTimeExpCaves>,
+		     RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+			       ModelTimeExpCaves>,
+		     ModelTimeExpCaves> >;
+
+
+template class
+TuneRunner<System<ModelDist,
+		  ModelDist>,
+	   RankAgent<ToyFeatures0<ModelDist>,
+		     ModelDist>,
+	   M1SpOptim<System<ModelDist,
+			    ModelDist>,
+		     RankAgent<ToyFeatures0<ModelDist>,
+			       ModelDist>,
+		     ModelDist> >;
 
 
 template class
