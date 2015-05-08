@@ -22,19 +22,19 @@ template class System<ModelRadius,
 		      ModelRadius>;
 
 template class System<ModelTimeExpCaves,
-		      ModelDist>;
+		      ModelGDist>;
 
 template class System<ModelTimeExpCaves,
 		      ModelCovar>;
 
 template class System<ModelTimeExpCaves,
-		      ModelDistKern>;
+		      ModelGDistKern>;
 
-template class System<ModelDist,
-		      ModelDist>;
+template class System<ModelGDist,
+		      ModelGDist>;
 
-template class System<ModelDistKern,
-		      ModelDistKern>;
+template class System<ModelGDistKern,
+		      ModelGDistKern>;
 
 template class System<ModelCovar,
 		      ModelCovar>;
@@ -268,7 +268,8 @@ void System<MG,
 	    ME>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
-  njm::fromFile(fD.dist,njm::sett.srcExt("d.txt"));
+  njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
+  njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
   njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
   fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
@@ -352,12 +353,12 @@ void System<MG,
     if(fD.subGraphKmax < fD.subGraphK.at(i))
       fD.subGraphKmax = fD.subGraphK.at(i);
   
-  // invDistSD
+  // invGDistSD
   double mn=0,mnSq=0,d;
   tot=0;
   for(i=0; i<fD.numNodes; i++){
     for(j=(i+1); j<fD.numNodes; j++){
-      d=1.0/(1.0+fD.dist.at(i*fD.numNodes + j));
+      d=1.0/(1.0+fD.gDist.at(i*fD.numNodes + j));
       mn+=d;
       mnSq+=d*d;
       tot++;
@@ -365,23 +366,23 @@ void System<MG,
   }
   mn/=(double)(tot);
   mnSq/=(double)(tot);
-  fD.invDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
+  fD.invGDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
   
-  // expInvDistSD
-  fD.expInvDistSD.clear();
-  fD.expInvDistSD.reserve(fD.numNodes*fD.numNodes);
+  // expInvGDistSD
+  fD.expInvGDistSD.clear();
+  fD.expInvGDistSD.reserve(fD.numNodes*fD.numNodes);
   for(i=0; i<fD.numNodes; i++){
     for(j=0; j<fD.numNodes; j++){
-      d=fD.dist.at(i*fD.numNodes+j);
-      fD.expInvDistSD.push_back(std::exp((1.0/(1.0+d))/fD.invDistSD));
+      d=fD.gDist.at(i*fD.numNodes+j);
+      fD.expInvGDistSD.push_back(std::exp((1.0/(1.0+d))/fD.invGDistSD));
     }
   }
 
-  // distSD
+  // gDistSD
   tot = 0;
   for(i = 0; i < fD.numNodes; ++i){
     for(j = (i+1); j < fD.numNodes; ++j){
-      d = fD.dist.at(i*fD.numNodes + j);
+      d = fD.gDist.at(i*fD.numNodes + j);
       mn += d;
       mnSq += d*d;
       ++tot;
@@ -389,25 +390,25 @@ void System<MG,
   }
   mn /= (double)(tot);
   mnSq /= (double)(tot);
-  fD.distSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
+  fD.gDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
 
-  // expDistSD
-  fD.expDistSD.clear();
-  fD.expDistSD.reserve(fD.numNodes*fD.numNodes);
+  // expGDistSD
+  fD.expGDistSD.clear();
+  fD.expGDistSD.reserve(fD.numNodes*fD.numNodes);
   for(i=0; i<fD.numNodes; i++){
     for(j=0; j<fD.numNodes; j++){
-      d=fD.dist.at(i*fD.numNodes+j);
-      fD.expDistSD.push_back(std::exp(-d*d/(2*fD.distSD*fD.distSD)));
+      d=fD.gDist.at(i*fD.numNodes+j);
+      fD.expGDistSD.push_back(std::exp(-d*d/(2*fD.gDistSD*fD.gDistSD)));
     }
   }
 
-  // logDist
-  fD.logDist.clear();
-  fD.logDist.reserve(fD.numNodes*fD.numNodes);
+  // logGDist
+  fD.logGDist.clear();
+  fD.logGDist.reserve(fD.numNodes*fD.numNodes);
   for(i=0; i<fD.numNodes; i++){
     for(j=0; j<fD.numNodes; j++){
-      d=fD.dist.at(i*fD.numNodes+j);
-      fD.logDist.push_back(std::log(2.0+d));
+      d=fD.gDist.at(i*fD.numNodes+j);
+      fD.logGDist.push_back(std::log(2.0+d));
     }
   }
 

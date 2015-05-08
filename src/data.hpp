@@ -85,7 +85,8 @@ struct FixedData {
 
   double priorTrtMean;
   
-  std::vector<double> dist;
+  std::vector<double> eDist; // euclidean distance
+  std::vector<double> gDist; // geodesic distance
 
   std::vector<double> caves;
 
@@ -116,13 +117,13 @@ struct FixedData {
   int subGraphKval;
   double subGraphKmax;
   
-  double invDistSD;
-  std::vector<double> expInvDistSD; // e^{[1/(1+dist)]/[sd(1+dist)]}
+  double invGDistSD;
+  std::vector<double> expInvGDistSD; // e^{[1/(1+gDist)]/[sd(1+gDist)]}
 
-  double distSD;
-  std::vector<double> expDistSD; // e^{-dist^2/(2*sd(dist)^2)}
+  double gDistSD;
+  std::vector<double> expGDistSD; // e^{-gDist^2/(2*sd(gDist)^2)}
   
-  std::vector<double> logDist; // log(2+dist)
+  std::vector<double> logGDist; // log(2+gDist)
 
   std::vector<double> hpdd;
 };
