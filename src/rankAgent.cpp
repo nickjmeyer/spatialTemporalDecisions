@@ -1,6 +1,12 @@
 #include "rankAgent.hpp"
 
 
+template class RankAgent<ToyFeatures0<ModelTimeExpCaves>,
+			 ModelTimeExpCaves>;
+
+template class RankAgent<ToyFeatures0<ModelDist>,
+			 ModelDist>;
+
 template class RankAgent<ToyFeatures4<ModelGravity>,
 			 ModelGravity>;
 

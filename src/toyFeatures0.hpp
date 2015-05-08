@@ -11,8 +11,6 @@ class ToyFeatures0TuneParam : public TuneParam {
  public:
   virtual std::vector<double> getPar() const ;
   virtual void putPar(const std::vector<double> & par);
-
-  int valReps;
 };
 
 template<class M>
@@ -29,27 +27,37 @@ class ToyFeatures0 : public BaseFeatures<M> {
 			   const FixedData & fD,
 			   const DynamicData & dD,
 			   M & m);
-
+			   
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
 			      M & m);
   
-  std::vector<double> subgraph;
+  // neighbors of not infected
+  std::vector<std::vector<std::pair<int,double> > > notNeigh;
+  std::vector<int> notNeighNum;
+
+  // not infected are neighbors of
+  std::vector<std::vector<std::pair<int,int> > > notNeighOf; 
+  std::vector<int> notNeighOfNum;
+
+  // sub graph of not infec
+  arma::colvec subGraphNotInfec;
 
   TrtData tDPre;
 
   arma::mat infFeat;
   arma::mat notFeat;
 
-  static int numFeatures;
+  const static int numFeatures = 1;
 
   ToyFeatures0TuneParam tp;
 
   std::string name;
 
 };
+
 
 
 #endif

@@ -26,6 +26,18 @@ void M1OsspOptimTunePar::putPar(const std::vector<double> & par){
 template class M1OsspOptim<System<ModelTimeExpCaves,
 				  ModelTimeExpCaves>,
 			   OsspAgent<ModelTimeExpCaves>,
+			   ToyFeatures0<ModelTimeExpCaves>,
+			   ModelTimeExpCaves>;
+
+template class M1OsspOptim<System<ModelTimeExpCaves,
+				  ModelDist>,
+			   OsspAgent<ModelDist>,
+			   ToyFeatures0<ModelDist>,
+			   ModelDist>;
+
+template class M1OsspOptim<System<ModelTimeExpCaves,
+				  ModelTimeExpCaves>,
+			   OsspAgent<ModelTimeExpCaves>,
 			   ToyFeatures4<ModelTimeExpCaves>,
 			   ModelTimeExpCaves>;
 

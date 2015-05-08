@@ -12,6 +12,7 @@
 #include "dataDepth.hpp"
 #include "tuneParam.hpp"
 #include "features.hpp"
+#include "toyFeatures0.hpp"
 #include "toyFeatures4.hpp"
 #include "toyFeatures5.hpp"
 #include "wnsFeatures0.hpp"

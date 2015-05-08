@@ -7,13 +7,13 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCaves MG;
   
-  typedef ModelCovar ME;
+  typedef ModelDist ME;
 
   typedef System<MG,ME> S;
 
   typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures5<ME> F;
+  typedef ToyFeatures0<ME> F;
   typedef RankAgent<F,ME> RA;
   typedef OsspAgent<ME> OA;
 
