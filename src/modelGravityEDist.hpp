@@ -1,5 +1,5 @@
-#ifndef MODEL_GRAVITY_HPP__
-#define MODEL_GRAVITY_HPP__
+#ifndef MODEL_GRAVITY_E_DIST_HPP__
+#define MODEL_GRAVITY_E_DIST_HPP__
 
 
 #include <armadillo>
@@ -10,23 +10,23 @@
 #include "model.hpp"
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
-#include "paramGravity.hpp"
+#include "paramGravityEDist.hpp"
 #include "paramTrt.hpp"
 #include "mcmc.hpp"
 
 
-class ModelGravity : public ModelBase {
+class ModelGravityEDist : public ModelBase {
  protected:
  public:
-  ModelGravity(){ };
-  ModelGravity(const FixedData & fD);
-  ModelGravity(const ModelGravity & m);
+  ModelGravityEDist(){ };
+  ModelGravityEDist(const FixedData & fD);
+  ModelGravityEDist(const ModelGravityEDist & m);
 
   virtual void read();
 
   virtual void save() const;
   
-  virtual ModelGravity & operator=(const ModelGravity & m);
+  virtual ModelGravityEDist & operator=(const ModelGravityEDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -35,27 +35,23 @@ class ModelGravity : public ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> pars);
-
-  double tuneTrt(const FixedData & fD);
-  
-  GravityMcmc mcmc;
 };
 
 
-class ModelGravityFitData {
+class ModelGravityEDistFitData {
  public:
-  ModelGravityFitData(const ModelGravity & m,
-		      const std::vector<double> & all,
-		      const FixedData & fD,
-		      const std::vector<std::vector<int> > & history);
+  ModelGravityEDistFitData(const ModelGravityEDist & m,
+			   const std::vector<double> & all,
+			   const FixedData & fD,
+			   const std::vector<std::vector<int> > & history);
 
-  ModelGravity m;
+  ModelGravityEDist m;
   FixedData fD;
   std::vector< std::vector<int> > history;
 };
 
 
-double modelGravityFitObjFn (const gsl_vector * x, void * params);
+double modelGravityEDistFitObjFn (const gsl_vector * x, void * params);
 
 
 

@@ -30,7 +30,8 @@ OBJECTS += utilities.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \
-	paramGravity.o \
+	paramGravityGDist.o \
+	paramGravityEDist.o \
 	paramTime.o \
 	paramTimeExpCaves.o \
 	paramDist.o \
@@ -38,17 +39,13 @@ OBJECTS += utilities.o \
 	paramRadius.o \
 	paramTrt.o \
 	model.o \
-	modelGravity.o \
+	modelGravityGDist.o \
 	modelTime.o \
 	modelTimeExpCaves.o \
 	modelDist.o \
 	modelDistKern.o \
 	modelRadius.o \
 	modelCovar.o \
-	mcmc.o \
-	mcmcGravityTimeInf.o \
-	mcmcGravityTimeInfExpCaves.o \
-	mcmcRadius.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

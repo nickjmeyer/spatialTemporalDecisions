@@ -1,5 +1,5 @@
-#ifndef MODEL_TIME_EXP_CAVES_HPP__
-#define MODEL_TIME_EXP_CAVES_HPP__
+#ifndef MODEL_TIME_EXP_CAVES_E_DIST_HPP__
+#define MODEL_TIME_EXP_CAVES_E_DIST_HPP__
 
 
 #include <armadillo>
@@ -11,24 +11,22 @@
 #include "model.hpp"
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
-#include "paramGravity.hpp"
+#include "paramGravityEDist.hpp"
 #include "paramTimeExpCaves.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGravityTimeInfExpCaves.hpp"
 
-
-class ModelTimeExpCaves : public ModelBase {
+class ModelTimeExpCavesEDist : public ModelBase {
  protected:
  public:
-  ModelTimeExpCaves(){ };
-  ModelTimeExpCaves(const FixedData & fD);
-  ModelTimeExpCaves(const ModelTimeExpCaves & m);
+  ModelTimeExpCavesEDist(){ };
+  ModelTimeExpCavesEDist(const FixedData & fD);
+  ModelTimeExpCavesEDist(const ModelTimeExpCavesEDist & m);
 
   virtual void read();
 
   virtual void save() const;
 
-  virtual ModelTimeExpCaves & operator=(const ModelTimeExpCaves & m);
+  virtual ModelTimeExpCavesEDist & operator=(const ModelTimeExpCavesEDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -37,22 +35,18 @@ class ModelTimeExpCaves : public ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> all);
-
-  double tuneTrt(const FixedData & fD);
-  
-  GravityTimeInfExpCavesMcmc mcmc;
 };
 
 
-class ModelTimeExpCavesFitData {
+class ModelTimeExpCavesEDistFitData {
  public:
-  ModelTimeExpCavesFitData(const ModelTimeExpCaves & m,
+  ModelTimeExpCavesEDistFitData(const ModelTimeExpCavesEDist & m,
 			   const std::vector<double> & all,
 			   const FixedData & fD,
 			   const
 			   std::vector<std::vector<int> > & history);
 
-  ModelTimeExpCaves m;
+  ModelTimeExpCavesEDist m;
   FixedData fD;
   std::vector<std::vector<int> > history;
   std::vector<std::vector<int> > timeInf;
@@ -60,7 +54,7 @@ class ModelTimeExpCavesFitData {
 
 
 double
-modelTimeExpCavesFitObjFn (const gsl_vector * x, void * params);
+modelTimeExpCavesEDistFitObjFn (const gsl_vector * x, void * params);
 
 
 

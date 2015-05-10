@@ -1,10 +1,10 @@
-#ifndef PARAM_GRAVITY_HPP__
-#define PARAM_GRAVITY_HPP__
+#ifndef PARAM_GRAVITY_G_DIST_HPP__
+#define PARAM_GRAVITY_G_DIST_HPP__
 
 
 #include "param.hpp"
 
-class ParamGravity : public ParamBase {
+class ParamGravityGDist : public ParamBase {
  protected:
   std::vector<double> grav;
   std::vector<double> dist;
@@ -20,8 +20,8 @@ class ParamGravity : public ParamBase {
   virtual void updateAfter();
 
  public:
-  ParamGravity() { };
-  virtual ParamBase * clone() const {return new ParamGravity(*this);};
+  ParamGravityGDist() { };
+  virtual ParamBase * clone() const {return new ParamGravityGDist(*this);};
 
   virtual void setFill(std::vector<double> & probs,
 		       const SimData & sD,

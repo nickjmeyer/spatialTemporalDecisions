@@ -9,7 +9,6 @@
 #include "settings.hpp"
 #include "model.hpp"
 #include "modelParamGravityTimeInf.hpp"
-#include "mcmcGravityTimeInf.hpp"
 
 
 class GravityTimeInfModel : public BaseModel {
@@ -46,9 +45,6 @@ class GravityTimeInfModel : public BaseModel {
   virtual BaseParam * getPar(){return & mP;}  
   
   GravityTimeInfParam mP;
-  
-  GravityTimeInfMcmc mcmc;
-
 
   double tuneTrt(const FixedData & fD);
 };

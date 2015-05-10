@@ -32,7 +32,12 @@ class ModelBase {
 	    const FixedData & fD);
   virtual ~ModelBase();
 
-  virtual void read() = 0;
+  virtual void read() {
+    std::cout << "Error: ModelBase::read(): model is not setup to save"
+	      << std::endl;
+    throw(1);
+  }
+
 
   virtual void save() const {
     std::cout << "Error: ModelBase::save(): model is not setup to save"

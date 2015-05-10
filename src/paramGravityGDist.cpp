@@ -1,17 +1,17 @@
-#include "paramGravity.hpp"
+#include "paramGravityGDist.hpp"
 
 
 
-unsigned int ParamGravity::initParsSize(const FixedData & fD){
+unsigned int ParamGravityGDist::initParsSize(const FixedData & fD){
   return 2U;
 }
 
 
-void ParamGravity::initInternal(const FixedData & fD){
+void ParamGravityGDist::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);
   
-  dist = fD.dist;
+  dist = fD.gDist;
   
   cc.clear();
   cc.reserve(numNodes*numNodes);
@@ -24,11 +24,11 @@ void ParamGravity::initInternal(const FixedData & fD){
 }
 
 
-void ParamGravity::updateBefore(){
+void ParamGravityGDist::updateBefore(){
 }
 
 
-void ParamGravity::updateAfter(){
+void ParamGravityGDist::updateAfter(){
   double alpha = pars.at(0);
   double power = pars.at(1);
   int i,I = numNodes * numNodes;
@@ -38,11 +38,11 @@ void ParamGravity::updateAfter(){
 }
 
 
-void ParamGravity::setFill(std::vector<double> & probs,
-			   const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD){
+void ParamGravityGDist::setFill(std::vector<double> & probs,
+				const SimData & sD,
+				const TrtData & tD,
+				const FixedData & fD,
+				const DynamicData & dD){
   int i,I = numNodes*numNodes;
   std::vector<double>::iterator it0;
   std::vector<double>::const_iterator it1;
@@ -54,20 +54,20 @@ void ParamGravity::setFill(std::vector<double> & probs,
 }
 
 
-void ParamGravity::modFill(std::vector<double> & probs,
-			   const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD){
+void ParamGravityGDist::modFill(std::vector<double> & probs,
+				const SimData & sD,
+				const TrtData & tD,
+				const FixedData & fD,
+				const DynamicData & dD){
 }
 
 
-std::vector<double> ParamGravity::partial(const int notNode,
-					  const int infNode,
-					  const SimData & sD,
-					  const TrtData & tD,
-					  const FixedData & fD,
-					  const DynamicData & dD){
+std::vector<double> ParamGravityGDist::partial(const int notNode,
+					       const int infNode,
+					       const SimData & sD,
+					       const TrtData & tD,
+					       const FixedData & fD,
+					       const DynamicData & dD){
   double alpha = pars.at(0);
   double power = pars.at(1);
   std::vector<double> p;
@@ -81,12 +81,12 @@ std::vector<double> ParamGravity::partial(const int notNode,
 }
 
 
-std::vector<double> ParamGravity::partial2(const int notNode,
-					   const int infNode,
-					   const SimData & sD,
-					   const TrtData & tD,
-					   const FixedData & fD,
-					   const DynamicData & dD){
+std::vector<double> ParamGravityGDist::partial2(const int notNode,
+						const int infNode,
+						const SimData & sD,
+						const TrtData & tD,
+						const FixedData & fD,
+						const DynamicData & dD){
   double alpha = pars.at(0);
   double power = pars.at(1);
   std::vector<double> p;

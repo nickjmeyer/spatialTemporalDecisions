@@ -10,8 +10,6 @@
 #include "model.hpp"
 #include "modelParam.hpp"
 #include "modelParamRange.hpp"
-#include "mcmcRange.hpp"
-
 
 class RangeModel : public BaseModel {
  public:
@@ -47,8 +45,6 @@ class RangeModel : public BaseModel {
   virtual BaseParam * getPar(){return & mP;}  
 
   RangeParam mP;
-  
-  RangeMcmc mcmc;
 };
 
 

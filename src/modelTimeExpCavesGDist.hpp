@@ -1,5 +1,5 @@
-#ifndef MODEL_TIME_HPP__
-#define MODEL_TIME_HPP__
+#ifndef MODEL_TIME_EXP_CAVES_G_DIST_HPP__
+#define MODEL_TIME_EXP_CAVES_G_DIST_HPP__
 
 
 #include <armadillo>
@@ -11,22 +11,22 @@
 #include "model.hpp"
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
-#include "paramGravity.hpp"
-#include "paramTime.hpp"
+#include "paramGravityGDist.hpp"
+#include "paramTimeExpCaves.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGravityTimeInf.hpp"
 
-
-class ModelTime : public ModelBase {
+class ModelTimeExpCavesGDist : public ModelBase {
  protected:
  public:
-  ModelTime(){ };
-  ModelTime(const FixedData & fD);
-  ModelTime(const ModelTime & m);
+  ModelTimeExpCavesGDist(){ };
+  ModelTimeExpCavesGDist(const FixedData & fD);
+  ModelTimeExpCavesGDist(const ModelTimeExpCavesGDist & m);
 
   virtual void read();
 
-  virtual ModelTime & operator=(const ModelTime & m);
+  virtual void save() const;
+
+  virtual ModelTimeExpCavesGDist & operator=(const ModelTimeExpCavesGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -37,20 +37,18 @@ class ModelTime : public ModelBase {
 		   std::vector<double> all);
 
   double tuneTrt(const FixedData & fD);
-  
-  GravityTimeInfMcmc mcmc;
 };
 
 
-class ModelTimeFitData {
+class ModelTimeExpCavesGDistFitData {
  public:
-  ModelTimeFitData(const ModelTime & m,
+  ModelTimeExpCavesGDistFitData(const ModelTimeExpCavesGDist & m,
 			   const std::vector<double> & all,
 			   const FixedData & fD,
 			   const
 			   std::vector<std::vector<int> > & history);
 
-  ModelTime m;
+  ModelTimeExpCavesGDist m;
   FixedData fD;
   std::vector<std::vector<int> > history;
   std::vector<std::vector<int> > timeInf;
@@ -58,7 +56,7 @@ class ModelTimeFitData {
 
 
 double
-modelTimeFitObjFn (const gsl_vector * x, void * params);
+modelTimeExpCavesGDistFitObjFn (const gsl_vector * x, void * params);
 
 
 

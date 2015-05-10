@@ -1,20 +1,20 @@
-#include "modelGravity.hpp"
+#include "modelGravityEDist.hpp"
 
 static std::vector<ParamBase *> genPars(){
   std::vector<ParamBase *> pars;
   pars.push_back(new ParamIntercept);
   pars.push_back(new ParamBeta);
-  pars.push_back(new ParamGravity);
+  pars.push_back(new ParamGravityEDist);
   pars.push_back(new ParamTrt);
   return pars;
 }
 
-ModelGravity::ModelGravity(const FixedData & fD)
+ModelGravityEDist::ModelGravityEDist(const FixedData & fD)
   : ModelBase(genPars(),fD){
 }
 
 
-ModelGravity::ModelGravity(const ModelGravity & m){
+ModelGravityEDist::ModelGravityEDist(const ModelGravityEDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();
   for(i = 0; i < parsSize; ++i)
@@ -37,99 +37,17 @@ ModelGravity::ModelGravity(const ModelGravity & m){
 }
 
 
-ModelGravity & ModelGravity::operator=(const ModelGravity & m){
+ModelGravityEDist & ModelGravityEDist::operator=(const ModelGravityEDist & m){
   if(this != & m){
-    this->ModelGravity::~ModelGravity();
-    new (this) ModelGravity(m);
+    this->ModelGravityEDist::~ModelGravityEDist();
+    new (this) ModelGravityEDist(m);
   }
   return *this;
 }
 
 
 
-void ModelGravity::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/power.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
-
-void ModelGravity::save() const {
-  std::vector<double> par;
-  par = pars.at(0)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/intcp.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(1)->getPar();
-  njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityParam/beta.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(2)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/alpha.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/power.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(3)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtAct.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtPre.txt"),
-	      std::ios_base::out);
-}
-
-
-double ModelGravity::tuneTrt(const FixedData & fD){
-  int i,j;
-  double avgCaves = 0.0;
-  for(i = 0; i < fD.numNodes; i++)
-    avgCaves += fD.caves.at(i);
-  avgCaves /= double(fD.numNodes);
-
-  double minDist = std::numeric_limits<double>::max();
-  for(i = 0; i < fD.numNodes; i++)
-    for(j = (i+1); j < fD.numNodes; j++)
-      if(minDist > fD.dist.at(i*fD.numNodes + j))
-	minDist = fD.dist.at(i*fD.numNodes + j);
-
-  std::vector<double> vals;
-  vals = pars.at(0)->getPar();
-  double base = vals.at(0);
-  vals = pars.at(2)->getPar();
-  double alpha = vals.at(0);
-  double power = vals.at(1);
-  base -= alpha * minDist/std::pow(avgCaves*avgCaves,power);
-
-  return -(std::log(0.005) - base)/2.0;
-}
-
-
-
-void ModelGravity::fit(const SimData & sD, const TrtData & tD,
+void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
 		       const int & useInit){
   if(useInit){
@@ -145,7 +63,7 @@ void ModelGravity::fit(const SimData & sD, const TrtData & tD,
   }
 }
 
-void ModelGravity::fit(const SimData & sD, const TrtData & tD,
+void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
 		       std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
@@ -157,7 +75,7 @@ void ModelGravity::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    ModelGravityFitData dat(*this,all,fD,history);
+    ModelGravityEDistFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -167,7 +85,7 @@ void ModelGravity::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&modelGravityFitObjFn;
+    minex_func.f=&modelGravityEDistFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -235,8 +153,8 @@ void ModelGravity::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-ModelGravityFitData
-::ModelGravityFitData(const ModelGravity & m,
+ModelGravityEDistFitData
+::ModelGravityEDistFitData(const ModelGravityEDist & m,
 		      const std::vector<double> & all,
 		      const FixedData & fD,
 		      const std::vector<std::vector<int> > & history){
@@ -246,8 +164,9 @@ ModelGravityFitData
   this->history = history;
 }
 
-double modelGravityFitObjFn (const gsl_vector * x, void * params){
-  ModelGravityFitData * dat = static_cast<ModelGravityFitData*> (params);
+double modelGravityEDistFitObjFn (const gsl_vector * x, void * params){
+  ModelGravityEDistFitData * dat =
+    static_cast<ModelGravityEDistFitData*> (params);
   double llike=0,prob,base,caveTerm;
   int i,j,k,t,time=dat->history.size(),dim=dat->m.getPar().size();
   std::vector<double> par;
@@ -279,7 +198,7 @@ double modelGravityFitObjFn (const gsl_vector * x, void * params){
 	    base=intcp;
 	    for(k=0; k<dat->fD.numCovar; k++)
 	      base+=beta.at(k)*dat->fD.covar.at(i*dat->fD.numCovar+k);
-	    caveTerm=dat->fD.dist.at(i*dat->fD.numNodes+j);
+	    caveTerm=dat->fD.eDist.at(i*dat->fD.numNodes+j);
 	    caveTerm/=std::pow(dat->fD.caves.at(i)*dat->fD.caves.at(j),
 			       power);
 	    base-=alpha*caveTerm;
