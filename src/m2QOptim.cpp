@@ -198,7 +198,7 @@ preCompData(const SimData & sD, const FixedData & fD){
     std::priority_queue<std::pair<double,int> > pq;
     for(j=0; j<fD.numNodes; j++)
       if(i!=j)
-	pq.push(std::pair<double,int>(-fD.dist.at(i*fD.numNodes+j),j));
+	pq.push(std::pair<double,int>(-fD.gDist.at(i*fD.numNodes+j),j));
     for(j=0; j<tp.numNeigh; j++){
       neighbors.at(i).push_back(pq.top().second);
       pq.pop();

@@ -14,17 +14,17 @@ void WnsFeatures1TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class WnsFeatures1<ModelGravity>;
+template class WnsFeatures1<ModelGravityGDist>;
 
-template class WnsFeatures1<ModelTime>;
+template class WnsFeatures1<ModelTimeGDist>;
 
-template class WnsFeatures1<ModelTimeExpCaves>;
+template class WnsFeatures1<ModelTimeExpCavesGDist>;
 
 template class WnsFeatures1<ModelRadius>;
 
-template class WnsFeatures1<ModelDist>;
+template class WnsFeatures1<ModelGDist>;
 
-template class WnsFeatures1<ModelDistKern>;
+template class WnsFeatures1<ModelGDistKern>;
 
 
 
@@ -70,8 +70,8 @@ void WnsFeatures1<M>::preCompData(const SimData & sD,
     // sort by distance
     std::priority_queue<std::pair<double,int> > pqd;
     for(j = 0, itD1 = beg; j < sD.numNotInfec; ++j,++itD1){
-      pqd.push(std::pair<double,int>(-fD.dist.at((*itD0)*fD.numNodes
-						 + (*itD1)),
+      pqd.push(std::pair<double,int>(-fD.gDist.at((*itD0)*fD.numNodes
+						  + (*itD1)),
 				     j));
     }
 
@@ -186,8 +186,8 @@ void WnsFeatures1<M>::getFeatures(const SimData & sD,
     // density estimates for not infected
     totalDist=0;
     for(j = 0,itD1 = itD3; j < sD.numInfected; j++, itD1++)
-      totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
+      totalDist += fD.expInvGDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.numNodes*fD.invGDistSD;
     notFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
@@ -195,8 +195,8 @@ void WnsFeatures1<M>::getFeatures(const SimData & sD,
     // density estimates for infected
     totalDist=0;
     for(j = 0,itD1 = itD2; j < sD.numNotInfec; j++, itD1++)
-      totalDist += fD.expInvDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.numNodes*fD.invDistSD;
+      totalDist += fD.expInvGDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.numNodes*fD.invGDistSD;
     infFeat(i,featNum) = std::log(1.0+totalDist);
   }
 

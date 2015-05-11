@@ -31,82 +31,88 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
-			 RankAgent<ToyFeatures0<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelTimeExpCavesGDist>,
+			 RankAgent<ToyFeatures0<ModelTimeExpCavesGDist>,
+				   ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDist>,
-			 RankAgent<ToyFeatures0<ModelDist>,
-				   ModelDist>,
-			 ModelDist>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelTimeExpCavesEDist>,
+			 RankAgent<ToyFeatures0<ModelTimeExpCavesEDist>,
+				   ModelTimeExpCavesEDist>,
+			 ModelTimeExpCavesEDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
-			 RankAgent<ToyFeatures4<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDist>,
+			 RankAgent<ToyFeatures0<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelTimeExpCavesGDist>,
+			 RankAgent<ToyFeatures4<ModelTimeExpCavesGDist>,
+				   ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
+
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelRadius>,
 			 RankAgent<ToyFeatures4<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDist>,
-			 RankAgent<ToyFeatures4<ModelDist>,
-				   ModelDist>,
-			 ModelDist>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDist>,
+			 RankAgent<ToyFeatures4<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDistKern>,
-			 RankAgent<ToyFeatures4<ModelDistKern>,
-				   ModelDistKern>,
-			 ModelDistKern>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDistKern>,
+			 RankAgent<ToyFeatures4<ModelGDistKern>,
+				   ModelGDistKern>,
+			 ModelGDistKern>;
 
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
-			 RankAgent<ToyFeatures5<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelTimeExpCavesGDist>,
+			 RankAgent<ToyFeatures5<ModelTimeExpCavesGDist>,
+				   ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelRadius>,
 			 RankAgent<ToyFeatures5<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDist>,
-			 RankAgent<ToyFeatures5<ModelDist>,
-				   ModelDist>,
-			 ModelDist>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDist>,
+			 RankAgent<ToyFeatures5<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDistKern>,
-			 RankAgent<ToyFeatures5<ModelDistKern>,
-				   ModelDistKern>,
-			 ModelDistKern>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDistKern>,
+			 RankAgent<ToyFeatures5<ModelGDistKern>,
+				   ModelGDistKern>,
+			 ModelGDistKern>;
 
 
-template class M1SpOptim<System<ModelTimeExpCaves,
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelCovar>,
 			 RankAgent<ToyFeatures5<ModelCovar>,
 				   ModelCovar>,
 			 ModelCovar>;
 
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelTimeExpCaves>,
-			 RankAgent<WnsFeatures1<ModelTimeExpCaves>,
-				   ModelTimeExpCaves>,
-			 ModelTimeExpCaves>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelTimeExpCavesGDist>,
+			 RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+				   ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelRadius>,
 			 RankAgent<WnsFeatures1<ModelRadius>,
 				   ModelRadius>,
@@ -118,30 +124,36 @@ template class M1SpOptim<System<ModelRadius,
 				   ModelRadius>,
 			 ModelRadius>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDist>,
-			 RankAgent<WnsFeatures1<ModelDist>,
-				   ModelDist>,
-			 ModelDist>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDist>,
+			 RankAgent<WnsFeatures1<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
-template class M1SpOptim<System<ModelTimeExpCaves,
-				ModelDistKern>,
-			 RankAgent<WnsFeatures1<ModelDistKern>,
-				   ModelDistKern>,
-			 ModelDistKern>;
+template class M1SpOptim<System<ModelTimeExpCavesGDist,
+				ModelGDistKern>,
+			 RankAgent<WnsFeatures1<ModelGDistKern>,
+				   ModelGDistKern>,
+			 ModelGDistKern>;
 
-template class M1SpOptim<System<ModelDist,
-				ModelDist>,
-			 RankAgent<WnsFeatures1<ModelDist>,
-				   ModelDist>,
-			 ModelDist>;
+template class M1SpOptim<System<ModelGDist,
+				ModelGDist>,
+			 RankAgent<WnsFeatures1<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
 
-template class M1SpOptim<System<ModelGravity,
-				ModelGravity>,
-			 RankAgent<WnsFeatures1<ModelGravity>,
-				   ModelGravity>,
-			 ModelGravity>;
+template class M1SpOptim<System<ModelGravityGDist,
+				ModelGravityGDist>,
+			 RankAgent<WnsFeatures1<ModelGravityGDist>,
+				   ModelGravityGDist>,
+			 ModelGravityGDist>;
+
+template class M1SpOptim<System<ModelGravityEDist,
+				ModelGravityEDist>,
+			 RankAgent<WnsFeatures1<ModelGravityEDist>,
+				   ModelGravityEDist>,
+			 ModelGravityEDist>;
 
 
 

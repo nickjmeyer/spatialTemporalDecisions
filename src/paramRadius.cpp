@@ -9,7 +9,7 @@ unsigned int ParamRadius::initParsSize(const FixedData & fD){
 
 void ParamRadius::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
-  logDist = fD.logDist;
+  logDist = fD.logGDist;
   beyond = std::vector<int> (fD.numNodes*fD.numNodes,0);
 }
 

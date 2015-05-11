@@ -1,5 +1,5 @@
-#ifndef MODEL_DIST_HPP__
-#define MODEL_DIST_HPP__
+#ifndef MODEL_G_DIST_HPP__
+#define MODEL_G_DIST_HPP__
 
 
 #include <armadillo>
@@ -9,20 +9,20 @@
 #include "settings.hpp"
 #include "model.hpp"
 #include "paramIntercept.hpp"
-#include "paramDist.hpp"
+#include "paramGDist.hpp"
 #include "paramTrt.hpp"
 
 
-class ModelDist : public ModelBase {
+class ModelGDist : public ModelBase {
  protected:
  public:
-  ModelDist(){ };
-  ModelDist(const FixedData & fD);
-  ModelDist(const ModelDist & m);
+  ModelGDist(){ };
+  ModelGDist(const FixedData & fD);
+  ModelGDist(const ModelGDist & m);
 
   virtual void read();
   
-  virtual ModelDist & operator=(const ModelDist & m);
+  virtual ModelGDist & operator=(const ModelGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -34,20 +34,20 @@ class ModelDist : public ModelBase {
 };
 
 
-class ModelDistFitData {
+class ModelGDistFitData {
  public:
-  ModelDistFitData(const ModelDist & m,
-		   const std::vector<double> & all,
-		   const FixedData & fD,
-		   const std::vector<std::vector<int> > & history);
+  ModelGDistFitData(const ModelGDist & m,
+		    const std::vector<double> & all,
+		    const FixedData & fD,
+		    const std::vector<std::vector<int> > & history);
   
-  ModelDist m;
+  ModelGDist m;
   FixedData fD;
   std::vector< std::vector<int> > history;
 };
 
 
-double modelDistFitObjFn (const gsl_vector * x, void * params);
+double modelGDistFitObjFn (const gsl_vector * x, void * params);
 
 
 #endif

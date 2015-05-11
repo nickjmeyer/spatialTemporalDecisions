@@ -1,7 +1,7 @@
 #include "featuresInt.hpp"
 
-template class FeaturesInt<ToyFeatures2<ModelGravity>,
-			   ModelGravity>;
+template class FeaturesInt<ToyFeatures2<ModelGravityGDist>,
+			   ModelGravityGDist>;
 
 
 template <class F, class M>

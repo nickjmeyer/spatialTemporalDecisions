@@ -1,11 +1,11 @@
 #include "noTrtAgent.hpp"
 
 
-template class NoTrt<ModelGravity>;
+template class NoTrt<ModelGravityGDist>;
 
-template class NoTrt<ModelTimeExpCaves>;
+template class NoTrt<ModelTimeExpCavesGDist>;
 
-template class NoTrt<ModelTime>;
+template class NoTrt<ModelTimeGDist>;
 
 template class NoTrt<ModelRadius>;
 

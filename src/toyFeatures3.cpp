@@ -13,11 +13,11 @@ void ToyFeatures3TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class ToyFeatures3<ModelGravity>;
+template class ToyFeatures3<ModelGravityGDist>;
 
-template class ToyFeatures3<ModelTime>;
+template class ToyFeatures3<ModelTimeGDist>;
 
-template class ToyFeatures3<ModelTimeExpCaves>;
+template class ToyFeatures3<ModelTimeExpCavesGDist>;
 
 template class ToyFeatures3<ModelRadius>;
 
@@ -165,8 +165,8 @@ void ToyFeatures3<M>::getFeatures(const SimData & sD,
     // density estimates for not infected
     totalDist=0;
     for(j = 0,itD1 = itD3; j < sD.numInfected; j++, itD1++)
-      totalDist += fD.expDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.distSD;
+      totalDist += fD.expGDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.gDistSD;
     notFeat(i,featNum) = std::log(1.0+totalDist);
   }
 
@@ -174,8 +174,8 @@ void ToyFeatures3<M>::getFeatures(const SimData & sD,
     // density estimates for infected
     totalDist=0;
     for(j = 0,itD1 = itD2; j < sD.numNotInfec; j++, itD1++)
-      totalDist += fD.expDistSD.at((*itD0)*fD.numNodes + *itD1);
-    totalDist /= fD.numNodes*fD.distSD;
+      totalDist += fD.expGDistSD.at((*itD0)*fD.numNodes + *itD1);
+    totalDist /= fD.numNodes*fD.gDistSD;
     infFeat(i,featNum) = std::log(1.0+totalDist);
   }
 

@@ -22,9 +22,9 @@ class ModelTimeExpCavesEDist : public ModelBase {
   ModelTimeExpCavesEDist(const FixedData & fD);
   ModelTimeExpCavesEDist(const ModelTimeExpCavesEDist & m);
 
-  virtual void read();
+  // virtual void read();
 
-  virtual void save() const;
+  // virtual void save() const;
 
   virtual ModelTimeExpCavesEDist & operator=(const ModelTimeExpCavesEDist & m);
 

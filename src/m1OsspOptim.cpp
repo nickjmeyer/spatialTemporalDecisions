@@ -23,57 +23,57 @@ void M1OsspOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
-			   ToyFeatures0<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesGDist>,
+			   OsspAgent<ModelTimeExpCavesGDist>,
+			   ToyFeatures0<ModelTimeExpCavesGDist>,
+			   ModelTimeExpCavesGDist>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelDist>,
-			   OsspAgent<ModelDist>,
-			   ToyFeatures0<ModelDist>,
-			   ModelDist>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelGDist>,
+			   OsspAgent<ModelGDist>,
+			   ToyFeatures0<ModelGDist>,
+			   ModelGDist>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
-			   ToyFeatures4<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesGDist>,
+			   OsspAgent<ModelTimeExpCavesGDist>,
+			   ToyFeatures4<ModelTimeExpCavesGDist>,
+			   ModelTimeExpCavesGDist>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
 			   ToyFeatures4<ModelRadius>,
 			   ModelRadius>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelDist>,
-			   OsspAgent<ModelDist>,
-			   ToyFeatures4<ModelDist>,
-			   ModelDist>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelGDist>,
+			   OsspAgent<ModelGDist>,
+			   ToyFeatures4<ModelGDist>,
+			   ModelGDist>;
 
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
-			   ToyFeatures5<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesGDist>,
+			   OsspAgent<ModelTimeExpCavesGDist>,
+			   ToyFeatures5<ModelTimeExpCavesGDist>,
+			   ModelTimeExpCavesGDist>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
 			   ToyFeatures5<ModelRadius>,
 			   ModelRadius>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelDist>,
-			   OsspAgent<ModelDist>,
-			   ToyFeatures5<ModelDist>,
-			   ModelDist>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelGDist>,
+			   OsspAgent<ModelGDist>,
+			   ToyFeatures5<ModelGDist>,
+			   ModelGDist>;
 
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelCovar>,
 			   OsspAgent<ModelCovar>,
 			   ToyFeatures5<ModelCovar>,
@@ -81,23 +81,23 @@ template class M1OsspOptim<System<ModelTimeExpCaves,
 
 
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelTimeExpCaves>,
-			   OsspAgent<ModelTimeExpCaves>,
-			   WnsFeatures1<ModelTimeExpCaves>,
-			   ModelTimeExpCaves>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesGDist>,
+			   OsspAgent<ModelTimeExpCavesGDist>,
+			   WnsFeatures1<ModelTimeExpCavesGDist>,
+			   ModelTimeExpCavesGDist>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
 			   WnsFeatures1<ModelRadius>,
 			   ModelRadius>;
 
-template class M1OsspOptim<System<ModelTimeExpCaves,
-				  ModelDist>,
-			   OsspAgent<ModelDist>,
-			   WnsFeatures1<ModelDist>,
-			   ModelDist>;
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelGDist>,
+			   OsspAgent<ModelGDist>,
+			   WnsFeatures1<ModelGDist>,
+			   ModelGDist>;
 
 
 

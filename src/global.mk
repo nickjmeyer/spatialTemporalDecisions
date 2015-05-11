@@ -14,8 +14,12 @@ OBJECTS += utilities.o \
 	starts.o \
 	agent.o \
 	data.o \
-	noTrtAgent.o myopicAgent.o proximalAgent.o randomAgent.o \
-	rankAgent.o osspAgent.o \
+	noTrtAgent.o \
+	randomAgent.o \
+	myopicAgent.o \
+	proximalGDistAgent.o \
+	rankAgent.o \
+	osspAgent.o \
 	m1SpOptim.o \
 	m1OsspOptim.o \
 	m2QOptim.o \
@@ -34,16 +38,18 @@ OBJECTS += utilities.o \
 	paramGravityEDist.o \
 	paramTime.o \
 	paramTimeExpCaves.o \
-	paramDist.o \
-	paramDistKern.o \
+	paramGDist.o \
+	paramGDistKern.o \
 	paramRadius.o \
 	paramTrt.o \
 	model.o \
 	modelGravityGDist.o \
-	modelTime.o \
-	modelTimeExpCaves.o \
-	modelDist.o \
-	modelDistKern.o \
+	modelGravityEDist.o \
+	modelTimeGDist.o \
+	modelTimeExpCavesGDist.o \
+	modelTimeExpCavesEDist.o \
+	modelGDist.o \
+	modelGDistKern.o \
 	modelRadius.o \
 	modelCovar.o \
 	pardisoSymWrap.o \

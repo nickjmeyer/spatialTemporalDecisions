@@ -1,24 +1,24 @@
-#include "paramDistKern.hpp"
+#include "paramGDistKern.hpp"
 
 
 
-unsigned int ParamDistKern::initParsSize(const FixedData & fD){
+unsigned int ParamGDistKern::initParsSize(const FixedData & fD){
   return 2U;
 }
 
 
-void ParamDistKern::initInternal(const FixedData & fD){
+void ParamGDistKern::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
-  dist = fD.dist;
+  dist = fD.gDist;
   distKern = std::vector<double> (fD.numNodes*fD.numNodes,0.0);
 }
 
 
-void ParamDistKern::updateBefore(){
+void ParamGDistKern::updateBefore(){
 }
 
 
-void ParamDistKern::updateAfter(){
+void ParamGDistKern::updateAfter(){
   double alpha = pars.at(0);
   double sigma = pars.at(1);
   int i,I = numNodes * numNodes;
@@ -28,11 +28,11 @@ void ParamDistKern::updateAfter(){
 }
 
 
-void ParamDistKern::setFill(std::vector<double> & probs,
-			    const SimData & sD,
-			    const TrtData & tD,
-			    const FixedData & fD,
-			    const DynamicData & dD){
+void ParamGDistKern::setFill(std::vector<double> & probs,
+			     const SimData & sD,
+			     const TrtData & tD,
+			     const FixedData & fD,
+			     const DynamicData & dD){
   int i,I = numNodes*numNodes;
   std::vector<double>::iterator it0;
   std::vector<double>::const_iterator it1;
@@ -44,20 +44,20 @@ void ParamDistKern::setFill(std::vector<double> & probs,
 }
 
 
-void ParamDistKern::modFill(std::vector<double> & probs,
-			    const SimData & sD,
-			    const TrtData & tD,
-			    const FixedData & fD,
-			    const DynamicData & dD){
+void ParamGDistKern::modFill(std::vector<double> & probs,
+			     const SimData & sD,
+			     const TrtData & tD,
+			     const FixedData & fD,
+			     const DynamicData & dD){
 }
 
 
-std::vector<double> ParamDistKern::partial(const int notNode,
-					   const int infNode,
-					   const SimData & sD,
-					   const TrtData & tD,
-					   const FixedData & fD,
-					   const DynamicData & dD){
+std::vector<double> ParamGDistKern::partial(const int notNode,
+					    const int infNode,
+					    const SimData & sD,
+					    const TrtData & tD,
+					    const FixedData & fD,
+					    const DynamicData & dD){
   double alpha = pars.at(0);
   double sigma = pars.at(1);
   
@@ -72,12 +72,12 @@ std::vector<double> ParamDistKern::partial(const int notNode,
 
 
 
-std::vector<double> ParamDistKern::partial2(const int notNode,
-					    const int infNode,
-					    const SimData & sD,
-					    const TrtData & tD,
-					    const FixedData & fD,
-					    const DynamicData & dD){
+std::vector<double> ParamGDistKern::partial2(const int notNode,
+					     const int infNode,
+					     const SimData & sD,
+					     const TrtData & tD,
+					     const FixedData & fD,
+					     const DynamicData & dD){
   double alpha = pars.at(0);
   double sigma = pars.at(1);
   

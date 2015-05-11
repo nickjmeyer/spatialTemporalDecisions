@@ -1,21 +1,21 @@
-#include "modelDistKern.hpp"
+#include "modelGDistKern.hpp"
 
 
 static std::vector<ParamBase *> genPars(){
   std::vector<ParamBase *> pars;
   pars.push_back(new ParamIntercept);
-  pars.push_back(new ParamDistKern);
+  pars.push_back(new ParamGDistKern);
   pars.push_back(new ParamTrt);
   return pars;
 }
 
 
-ModelDistKern::ModelDistKern(const FixedData & fD)
+ModelGDistKern::ModelGDistKern(const FixedData & fD)
   : ModelBase(genPars(),fD){
 }
 
 
-ModelDistKern::ModelDistKern(const ModelDistKern & m){
+ModelGDistKern::ModelGDistKern(const ModelGDistKern & m){
   int i, parsSize = m.pars.size();
   pars.clear();
   for(i = 0; i < parsSize; ++i)
@@ -37,17 +37,17 @@ ModelDistKern::ModelDistKern(const ModelDistKern & m){
 }
 
 
-ModelDistKern & ModelDistKern::operator=(const ModelDistKern & m){
+ModelGDistKern & ModelGDistKern::operator=(const ModelGDistKern & m){
   if(this != & m){
-    this->ModelDistKern::~ModelDistKern();
-    new (this) ModelDistKern(m);
+    this->ModelGDistKern::~ModelGDistKern();
+    new (this) ModelGDistKern(m);
   }
   return *this;
 }
 
 
 
-void ModelDistKern::read(){
+void ModelGDistKern::read(){
   std::vector<double> pars,add;
   njm::fromFile(add,njm::sett.srcExt("./DistKernParam/intcp.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
@@ -70,9 +70,9 @@ void ModelDistKern::read(){
 
 
 
-void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
-			const FixedData & fD, const DynamicData & dD,
-			const int & useInit){
+void ModelGDistKern::fit(const SimData & sD, const TrtData & tD,
+			 const FixedData & fD, const DynamicData & dD,
+			 const int & useInit){
   if(useInit){
     fit(sD,tD,fD,dD,getPar());
   }
@@ -88,9 +88,9 @@ void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
   }
 }
 
-void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
-			const FixedData & fD, const DynamicData & dD,
-			std::vector<double> all){
+void ModelGDistKern::fit(const SimData & sD, const TrtData & tD,
+			 const FixedData & fD, const DynamicData & dD,
+			 std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
     size_t iter=0;
     int status;
@@ -100,7 +100,7 @@ void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    ModelDistKernFitData dat(*this,all,fD,history);
+    ModelGDistKernFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -111,7 +111,7 @@ void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&modelDistKernFitObjFn;
+    minex_func.f=&modelGDistKernFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -157,7 +157,7 @@ void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
     setFill(sD,tD,fD,dD);
   }
   else if(fitType == MCMC){
-    std::cout << "Error: ModelDistKern::fit(): MCMC not setup"
+    std::cout << "Error: ModelGDistKern::fit(): MCMC not setup"
 	      << std::endl;
     throw(1);
   }
@@ -168,19 +168,19 @@ void ModelDistKern::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-ModelDistKernFitData
-::ModelDistKernFitData(const ModelDistKern & m,
-		       const std::vector<double> & all,
-		       const FixedData & fD,
-		       const std::vector<std::vector<int> > & history){
+ModelGDistKernFitData
+::ModelGDistKernFitData(const ModelGDistKern & m,
+			const std::vector<double> & all,
+			const FixedData & fD,
+			const std::vector<std::vector<int> > & history){
   this->m = m;
   this->m.putPar(all.begin());
   this->fD = fD;
   this->history = history;
 }
 
-double modelDistKernFitObjFn (const gsl_vector * x, void * params){
-  ModelDistKernFitData * dat = static_cast<ModelDistKernFitData*> (params);
+double modelGDistKernFitObjFn (const gsl_vector * x, void * params){
+  ModelGDistKernFitData * dat = static_cast<ModelGDistKernFitData*> (params);
   double llike=0,prob,base;
   int i,j,t,time=dat->history.size(),dim=dat->m.getPar().size();
   std::vector<double> par;
@@ -209,7 +209,7 @@ double modelDistKernFitObjFn (const gsl_vector * x, void * params){
 	  if(dat->history.at(t-1).at(j) >= 2){
 	    base=intcp;
 
-	    double d = dat->fD.dist.at(i*dat->fD.numNodes+j);
+	    double d = dat->fD.gDist.at(i*dat->fD.numNodes+j);
 	    base-=alpha*std::exp(-d*d/(2*std::exp(sigma)));
 
 	    if(dat->history.at(t-1).at(i) == 1)

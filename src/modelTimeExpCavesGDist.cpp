@@ -36,7 +36,6 @@ ModelTimeExpCavesGDist::ModelTimeExpCavesGDist(const
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
-  mcmc = m.mcmc;
 }
 
 
@@ -234,16 +233,9 @@ void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
     
   }
   else if(fitType == MCMC){
-    mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,all);
-
-    mcmc.samples.setMean();
-
-    all = mcmc.samples.getPar();
-    
-    putPar(all.begin());
-
-    setFill(sD,tD,fD,dD);
+    std::cout << "Error: ModelTimeExpCavesGDist::fit(): MCMC not setup"
+	      << std::endl;
+    throw(1);
   }
   else{
     std::cout << "Not a valid Estimation" << std::endl;

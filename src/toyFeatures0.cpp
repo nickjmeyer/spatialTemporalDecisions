@@ -13,17 +13,17 @@ void ToyFeatures0TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class ToyFeatures0<ModelGravity>;
+template class ToyFeatures0<ModelGravityGDist>;
 
-template class ToyFeatures0<ModelTime>;
+template class ToyFeatures0<ModelTimeGDist>;
 
-template class ToyFeatures0<ModelTimeExpCaves>;
+template class ToyFeatures0<ModelTimeExpCavesGDist>;
 
 template class ToyFeatures0<ModelRadius>;
 
-template class ToyFeatures0<ModelDist>;
+template class ToyFeatures0<ModelGDist>;
 
-template class ToyFeatures0<ModelDistKern>;
+template class ToyFeatures0<ModelGDistKern>;
 
 template class ToyFeatures0<ModelCovar>;
 

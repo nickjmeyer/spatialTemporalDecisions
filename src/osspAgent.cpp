@@ -1,12 +1,14 @@
 #include "osspAgent.hpp"
 
-template class OsspAgent<ModelGravity>;
+template class OsspAgent<ModelGravityGDist>;
 
-template class OsspAgent<ModelTimeExpCaves>;
+template class OsspAgent<ModelTimeExpCavesGDist>;
+
+template class OsspAgent<ModelTimeExpCavesEDist>;
 
 template class OsspAgent<ModelRadius>;
 
-template class OsspAgent<ModelDist>;
+template class OsspAgent<ModelGDist>;
 
 template class OsspAgent<ModelCovar>;
 

@@ -1,19 +1,19 @@
-#include "proximalAgent.hpp"
+#include "proximalGDistAgent.hpp"
 
-template class ProximalAgent<ModelGravity>;
+template class ProximalGDistAgent<ModelGravityGDist>;
 
-template class ProximalAgent<ModelTimeExpCaves>;
+template class ProximalGDistAgent<ModelTimeExpCavesGDist>;
 
-template class ProximalAgent<ModelRadius>;
+template class ProximalGDistAgent<ModelRadius>;
 
-template class ProximalAgent<ModelDistKern>;
+template class ProximalGDistAgent<ModelGDistKern>;
 
 
 template<class M>
-std::string ProximalAgent<M>::name = "proximal";
+std::string ProximalGDistAgent<M>::name = "proximal";
 
 template <class M>
-void ProximalAgent<M>::applyTrt(const SimData & sD,
+void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
 				TrtData & tD,
 				const FixedData & fD,
 				const DynamicData & dD,
@@ -34,7 +34,7 @@ void ProximalAgent<M>::applyTrt(const SimData & sD,
     minDist=maxDist;
     for(j=0; j<sD.numInfected; j++){
       node1=sD.infected.at(j);
-      curDist=fD.dist.at(node0*fD.numNodes + node1);
+      curDist=fD.gDist.at(node0*fD.numNodes + node1);
       if(minDist > curDist)
 	minDist = curDist;
     }
@@ -49,7 +49,7 @@ void ProximalAgent<M>::applyTrt(const SimData & sD,
     minDist=maxDist;
     for(j=0; j<sD.numNotInfec; j++){
       node1=sD.notInfec.at(j);
-      curDist=fD.dist.at(node0*fD.numNodes + node1);
+      curDist=fD.gDist.at(node0*fD.numNodes + node1);
       if(minDist > curDist)
 	minDist = curDist;
     }

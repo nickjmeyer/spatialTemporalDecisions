@@ -1,7 +1,7 @@
 #include "randomAgent.hpp"
 
 
-template class RandomAgent<ModelGravity>;
+template class RandomAgent<ModelGravityGDist>;
 
 template<class M>
 const std::string RandomAgent<M>::name = "random";

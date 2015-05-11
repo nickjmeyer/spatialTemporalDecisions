@@ -147,15 +147,9 @@ void ModelRadius::fit(const SimData & sD, const TrtData & tD,
     setFill(sD,tD,fD,dD);
   }
   else if(fitType == MCMC){
-    mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,all);
-
-    mcmc.samples.setMean();
-
-    all = mcmc.samples.getPar();
-    putPar(all.begin());
-
-    setFill(sD,tD,fD,dD);
+    std::cout << "Error: ModelRadius::fit(): MCMC not setup"
+	      << std::endl;
+    throw(1);
   }
   else{
     std::cout << "Not a valid Estimation" << std::endl;
@@ -202,7 +196,7 @@ double modelRadiusFitObjFn (const gsl_vector * x, void * params){
 	for(j=0; j<dat->fD.numNodes; j++){
 	  if(dat->history.at(t-1).at(j) >= 2){
 	    base=intcp;
-	    if(dat->fD.logDist.at(i*dat->fD.numNodes+j) > radius)
+	    if(dat->fD.logGDist.at(i*dat->fD.numNodes+j) > radius)
 	      base-=500.0;
 
 	    if(dat->history.at(t-1).at(i) == 1)

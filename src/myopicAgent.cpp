@@ -1,16 +1,16 @@
 #include "myopicAgent.hpp"
 
-template class MyopicAgent<ModelGravity>;
+template class MyopicAgent<ModelGravityGDist>;
 
-template class MyopicAgent<ModelTimeExpCaves>;
+template class MyopicAgent<ModelTimeExpCavesGDist>;
 
 template class MyopicAgent<ModelRadius>;
 
-template class MyopicAgent<ModelDist>;
+template class MyopicAgent<ModelGDist>;
 
 template class MyopicAgent<ModelCovar>;
 
-template class MyopicAgent<ModelDistKern>;
+template class MyopicAgent<ModelGDistKern>;
 
 
 template <class M>

@@ -14,8 +14,6 @@
 #include "starts.hpp"
 #include "system.hpp"
 #include "model.hpp"
-#include "modelGravity.hpp"
-#include "modelDistKern.hpp"
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"

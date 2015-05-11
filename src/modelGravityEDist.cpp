@@ -33,7 +33,6 @@ ModelGravityEDist::ModelGravityEDist(const ModelGravityEDist & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
-  mcmc = m.mcmc;
 }
 
 
@@ -48,8 +47,8 @@ ModelGravityEDist & ModelGravityEDist::operator=(const ModelGravityEDist & m){
 
 
 void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
-		       const FixedData & fD, const DynamicData & dD,
-		       const int & useInit){
+			    const FixedData & fD, const DynamicData & dD,
+			    const int & useInit){
   if(useInit){
     fit(sD,tD,fD,dD,getPar());
   }
@@ -64,8 +63,8 @@ void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
 }
 
 void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
-		       const FixedData & fD, const DynamicData & dD,
-		       std::vector<double> all){
+			    const FixedData & fD, const DynamicData & dD,
+			    std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
     size_t iter=0;
     int status;
@@ -134,15 +133,9 @@ void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
 
   }
   else if(fitType == MCMC){
-    mcmc.load(sD.history,sD.status,fD);
-    mcmc.sample(5000,1000,all);
-
-    mcmc.samples.setMean();
-
-    all = mcmc.samples.getPar();
-    putPar(all.begin());
-
-    setFill(sD,tD,fD,dD);
+    std::cout << "Error: ModelGravityEDist::fit(): MCMC not setup"
+	      << std::endl;
+    throw(1);
   }
   else{
     std::cout << "Not a valid Estimation of "
@@ -155,9 +148,9 @@ void ModelGravityEDist::fit(const SimData & sD, const TrtData & tD,
 
 ModelGravityEDistFitData
 ::ModelGravityEDistFitData(const ModelGravityEDist & m,
-		      const std::vector<double> & all,
-		      const FixedData & fD,
-		      const std::vector<std::vector<int> > & history){
+			   const std::vector<double> & all,
+			   const FixedData & fD,
+			   const std::vector<std::vector<int> > & history){
   this->m = m;
   this->m.putPar(all.begin());
   this->fD = fD;

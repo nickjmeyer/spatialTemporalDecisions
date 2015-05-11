@@ -1,9 +1,9 @@
-#ifndef PARAM_DIST_KERN_HPP__
-#define PARAM_DIST_KERN_HPP__
+#ifndef PARAM_G_DIST_KERN_HPP__
+#define PARAM_G_DIST_KERN_HPP__
 
 #include "param.hpp"
 
-class ParamDistKern : public ParamBase {
+class ParamGDistKern : public ParamBase {
  protected:
   std::vector<double> dist;
   std::vector<double> distKern;
@@ -18,8 +18,8 @@ class ParamDistKern : public ParamBase {
   virtual void updateAfter();
 
  public:
-  ParamDistKern() { };
-  virtual ParamBase * clone() const {return new ParamDistKern(*this);};
+  ParamGDistKern() { };
+  virtual ParamBase * clone() const {return new ParamGDistKern(*this);};
 
   virtual void setFill(std::vector<double> & probs,
 		       const SimData & sD,

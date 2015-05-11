@@ -1,20 +1,20 @@
-#include "modelDist.hpp"
+#include "modelGDist.hpp"
 
 
 static std::vector<ParamBase *> genPars(){
   std::vector<ParamBase *> pars;
   pars.push_back(new ParamIntercept);
-  pars.push_back(new ParamDist);
+  pars.push_back(new ParamGDist);
   pars.push_back(new ParamTrt);
   return pars;
 }
 
-ModelDist::ModelDist(const FixedData & fD)
+ModelGDist::ModelGDist(const FixedData & fD)
   : ModelBase(genPars(),fD){
 }
 
 
-ModelDist::ModelDist(const ModelDist & m){
+ModelGDist::ModelGDist(const ModelGDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();
   for(i = 0; i < parsSize; ++i)
@@ -36,17 +36,17 @@ ModelDist::ModelDist(const ModelDist & m){
 }
 
 
-ModelDist & ModelDist::operator=(const ModelDist & m){
+ModelGDist & ModelGDist::operator=(const ModelGDist & m){
   if(this != & m){
-    this->ModelDist::~ModelDist();
-    new (this) ModelDist(m);
+    this->ModelGDist::~ModelGDist();
+    new (this) ModelGDist(m);
   }
   return *this;
 }
 
 
 
-void ModelDist::read(){
+void ModelGDist::read(){
   std::vector<double> pars,add;
   njm::fromFile(add,njm::sett.srcExt("./DistParam/intcp.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
@@ -66,9 +66,9 @@ void ModelDist::read(){
 
 
 
-void ModelDist::fit(const SimData & sD, const TrtData & tD,
-		      const FixedData & fD, const DynamicData & dD,
-		      const int & useInit){
+void ModelGDist::fit(const SimData & sD, const TrtData & tD,
+		     const FixedData & fD, const DynamicData & dD,
+		     const int & useInit){
   if(useInit){
     fit(sD,tD,fD,dD,getPar());
   }
@@ -83,9 +83,9 @@ void ModelDist::fit(const SimData & sD, const TrtData & tD,
   }
 }
 
-void ModelDist::fit(const SimData & sD, const TrtData & tD,
-		      const FixedData & fD, const DynamicData & dD,
-		      std::vector<double> all){
+void ModelGDist::fit(const SimData & sD, const TrtData & tD,
+		     const FixedData & fD, const DynamicData & dD,
+		     std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
     size_t iter=0;
     int status;
@@ -95,7 +95,7 @@ void ModelDist::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    ModelDistFitData dat(*this,all,fD,history);
+    ModelGDistFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -106,7 +106,7 @@ void ModelDist::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&modelDistFitObjFn;
+    minex_func.f=&modelGDistFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -152,7 +152,7 @@ void ModelDist::fit(const SimData & sD, const TrtData & tD,
     setFill(sD,tD,fD,dD);
   }
   else if(fitType == MCMC){
-    std::cout << "Error: ModelDist::fit(): MCMC not setup"
+    std::cout << "Error: ModelGDist::fit(): MCMC not setup"
 	      << std::endl;
     throw(1);
   }
@@ -163,19 +163,19 @@ void ModelDist::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-ModelDistFitData
-::ModelDistFitData(const ModelDist & m,
-		     const std::vector<double> & all,
-		     const FixedData & fD,
-		     const std::vector<std::vector<int> > & history){
+ModelGDistFitData
+::ModelGDistFitData(const ModelGDist & m,
+		    const std::vector<double> & all,
+		    const FixedData & fD,
+		    const std::vector<std::vector<int> > & history){
   this->m = m;
   this->m.putPar(all.begin());
   this->fD = fD;
   this->history = history;
 }
 
-double modelDistFitObjFn (const gsl_vector * x, void * params){
-  ModelDistFitData * dat = static_cast<ModelDistFitData*> (params);
+double modelGDistFitObjFn (const gsl_vector * x, void * params){
+  ModelGDistFitData * dat = static_cast<ModelGDistFitData*> (params);
   double llike=0,prob,base;
   int i,j,t,time=dat->history.size(),dim=dat->m.getPar().size();
   std::vector<double> par;
@@ -202,7 +202,7 @@ double modelDistFitObjFn (const gsl_vector * x, void * params){
 	  if(dat->history.at(t-1).at(j) >= 2){
 	    base=intcp;
 	    
-	    base-=alpha*dat->fD.dist.at(i*dat->fD.numNodes+j);
+	    base-=alpha*dat->fD.gDist.at(i*dat->fD.numNodes+j);
 
 	    if(dat->history.at(t-1).at(i) == 1)
 	      base-=trtPre;

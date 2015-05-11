@@ -1,33 +1,36 @@
 #include "system.hpp"
 
-template class System<ModelGravity,
-		      ModelGravity>;
+template class System<ModelGravityGDist,
+		      ModelGravityGDist>;
 
-template class System<ModelTime,
-		      ModelTime>;
+template class System<ModelTimeGDist,
+		      ModelTimeGDist>;
 
-template class System<ModelTimeExpCaves,
-		      ModelTimeExpCaves>;
+template class System<ModelTimeExpCavesGDist,
+		      ModelTimeExpCavesGDist>;
 
-template class System<ModelTimeExpCaves,
-		      ModelTime>;
+template class System<ModelTimeExpCavesGDist,
+		      ModelTimeExpCavesEDist>;
 
-template class System<ModelTimeExpCaves,
-		      ModelGravity>;
+template class System<ModelTimeExpCavesGDist,
+		      ModelTimeGDist>;
 
-template class System<ModelTimeExpCaves,
+template class System<ModelTimeExpCavesGDist,
+		      ModelGravityGDist>;
+
+template class System<ModelTimeExpCavesGDist,
 		      ModelRadius>;
 
 template class System<ModelRadius,
 		      ModelRadius>;
 
-template class System<ModelTimeExpCaves,
+template class System<ModelTimeExpCavesGDist,
 		      ModelGDist>;
 
-template class System<ModelTimeExpCaves,
+template class System<ModelTimeExpCavesGDist,
 		      ModelCovar>;
 
-template class System<ModelTimeExpCaves,
+template class System<ModelTimeExpCavesGDist,
 		      ModelGDistKern>;
 
 template class System<ModelGDist,
@@ -268,7 +271,6 @@ void System<MG,
 	    ME>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
-  njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
   njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
   njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
@@ -311,6 +313,20 @@ template <class MG,
 void System<MG,
 	    ME>::preCompData(){
   int i,j,tot;
+
+  // eDist
+  double iLat,iLong,jLat,jLong;
+  fD.eDist.reserve(fD.numNodes);
+  for(i = 0; i < fD.numNodes; ++i){
+    iLat = fD.centroidsLat.at(i);
+    iLong = fD.centroidsLong.at(i);
+    for(j = 0; j < fD.numNodes; ++j){
+      jLat = fD.centroidsLat.at(j);
+      jLong = fD.centroidsLong.at(j);
+      fD.eDist.push_back(std::sqrt((iLat - jLat)*(iLat - jLat)
+				   + (iLong - jLong)*(iLong - jLong)));
+    }
+  }
 
   double maxVal = std::numeric_limits<double>::lowest();
 

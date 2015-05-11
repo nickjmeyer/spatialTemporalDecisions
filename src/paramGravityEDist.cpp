@@ -2,7 +2,7 @@
 
 
 
-void ParamGravityGDist::initInternal(const FixedData & fD){
+void ParamGravityEDist::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);
   

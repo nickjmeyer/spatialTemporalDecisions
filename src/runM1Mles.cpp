@@ -4,17 +4,17 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCaves MG;
+  typedef ModelTimeExpCavesGDist MG;
   
   typedef MG ME;
 
   typedef System<MG,ME> S;
 
   typedef NoTrt<ME> NT;
-  typedef ProximalAgent<ME> PA;
+  typedef ProximalGDistAgent<ME> PA;
   typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures0<ME> F;
+  typedef ToyFeatures4<ME> F;
   typedef RankAgent<F,ME> RA;
   typedef OsspAgent<ME> OA;
 

@@ -12,7 +12,6 @@
 #include "paramBeta.hpp"
 #include "paramGravityEDist.hpp"
 #include "paramTrt.hpp"
-#include "mcmc.hpp"
 
 
 class ModelGravityEDist : public ModelBase {
@@ -22,9 +21,9 @@ class ModelGravityEDist : public ModelBase {
   ModelGravityEDist(const FixedData & fD);
   ModelGravityEDist(const ModelGravityEDist & m);
 
-  virtual void read();
+  // virtual void read();
 
-  virtual void save() const;
+  // virtual void save() const;
   
   virtual ModelGravityEDist & operator=(const ModelGravityEDist & m);
 
