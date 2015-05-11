@@ -11,7 +11,7 @@
 #include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
-#include "proximalAgent.hpp"
+#include "proximalGDistAgent.hpp"
 #include "rankAgent.hpp"
 #include "optim.hpp"
 #include "tuneParam.hpp"
