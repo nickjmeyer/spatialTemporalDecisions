@@ -4,6 +4,8 @@ template class MyopicAgent<ModelGravityGDist>;
 
 template class MyopicAgent<ModelTimeExpCavesGDist>;
 
+template class MyopicAgent<ModelTimeExpCavesEDist>;
+
 template class MyopicAgent<ModelRadius>;
 
 template class MyopicAgent<ModelGDist>;

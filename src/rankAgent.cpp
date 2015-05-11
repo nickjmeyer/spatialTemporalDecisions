@@ -67,6 +67,9 @@ template class RankAgent<WnsFeatures1<ModelGDistKern>,
 template class RankAgent<WnsFeatures1<ModelGravityGDist>,
 			 ModelGravityGDist>;
 
+template class RankAgent<WnsFeatures1<ModelGravityEDist>,
+			 ModelGravityEDist>;
+
 
 
 

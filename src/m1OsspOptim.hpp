@@ -22,6 +22,7 @@ class M1OsspOptimTunePar : public TuneParam{
   void putPar(const std::vector<double> & par);
 
   int N,B,mcReps;
+  double jitterScale;
 };
 
 

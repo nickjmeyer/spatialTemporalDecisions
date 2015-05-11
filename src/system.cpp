@@ -3,6 +3,9 @@
 template class System<ModelGravityGDist,
 		      ModelGravityGDist>;
 
+template class System<ModelGravityEDist,
+		      ModelGravityEDist>;
+
 template class System<ModelTimeGDist,
 		      ModelTimeGDist>;
 
@@ -10,6 +13,9 @@ template class System<ModelTimeExpCavesGDist,
 		      ModelTimeExpCavesGDist>;
 
 template class System<ModelTimeExpCavesGDist,
+		      ModelTimeExpCavesEDist>;
+
+template class System<ModelTimeExpCavesEDist,
 		      ModelTimeExpCavesEDist>;
 
 template class System<ModelTimeExpCavesGDist,

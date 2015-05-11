@@ -6,6 +6,8 @@ M1OsspOptimTunePar::M1OsspOptimTunePar(){
   N = 100;
   B = 100;
   mcReps = 10;
+
+  jitterScale = 4.0;
   
   // N = 10;
   // B = 5;
@@ -59,6 +61,12 @@ template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 			   OsspAgent<ModelTimeExpCavesGDist>,
 			   ToyFeatures5<ModelTimeExpCavesGDist>,
 			   ModelTimeExpCavesGDist>;
+
+template class M1OsspOptim<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesEDist>,
+			   OsspAgent<ModelTimeExpCavesEDist>,
+			   ToyFeatures5<ModelTimeExpCavesEDist>,
+			   ModelTimeExpCavesEDist>;
 
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
@@ -122,6 +130,7 @@ void M1OsspOptim<S,A,F,M>
 
   M1SpOptim<System<M,M>,RankAgent<F,M>,M> spo;
   RankAgent<F,M> ra;
+  ra.tp.jitterScale = tp.jitterScale;
   
   spo.optim(s,ra);
 

@@ -38,6 +38,12 @@ template class PlainRunner<System<ModelTimeExpCavesGDist,
 				     ModelTimeExpCavesGDist> >;
 
 
+template class PlainRunner<System<ModelTimeExpCavesEDist,
+				  ModelTimeExpCavesEDist>,
+			   RankAgent<ToyFeatures0<ModelTimeExpCavesEDist>,
+				     ModelTimeExpCavesEDist> >;
+
+
 template class PlainRunner<System<ModelGDist,
 				  ModelGDist>,
 			   RankAgent<ToyFeatures0<ModelGDist>,
@@ -55,6 +61,18 @@ template class PlainRunner<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesGDist>,
 			   RankAgent<ToyFeatures5<ModelTimeExpCavesGDist>,
 				     ModelTimeExpCavesGDist> >;
+
+
+template class PlainRunner<System<ModelTimeExpCavesGDist,
+				  ModelTimeExpCavesEDist>,
+			   RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+				     ModelTimeExpCavesEDist> >;
+
+
+template class PlainRunner<System<ModelTimeExpCavesEDist,
+				  ModelTimeExpCavesEDist>,
+			   RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+				     ModelTimeExpCavesEDist> >;
 
 
 template class PlainRunner<System<ModelRadius,
@@ -111,10 +129,22 @@ template class PlainRunner<System<ModelTimeExpCavesGDist,
 				     ModelTimeExpCavesGDist> >;
 
 
+template class PlainRunner<System<ModelTimeExpCavesEDist,
+				  ModelTimeExpCavesEDist>,
+			   RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+				     ModelTimeExpCavesEDist> >;
+
+
 template class PlainRunner<System<ModelGravityGDist,
 				  ModelGravityGDist>,
 			   RankAgent<WnsFeatures1<ModelGravityGDist>,
 				     ModelGravityGDist> >;
+
+
+template class PlainRunner<System<ModelGravityEDist,
+				  ModelGravityEDist>,
+			   RankAgent<WnsFeatures1<ModelGravityEDist>,
+				     ModelGravityEDist> >;
 
 
 template class PlainRunner<System<ModelRadius,
@@ -183,6 +213,10 @@ template class VanillaRunner<System<ModelTimeExpCavesGDist,
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesGDist>,
 			     ProximalGDistAgent<ModelTimeExpCavesGDist> >;
+
+template class VanillaRunner<System<ModelTimeExpCavesGDist,
+				    ModelTimeExpCavesEDist>,
+			     ProximalEDistAgent<ModelTimeExpCavesEDist> >;
 
 template class VanillaRunner<System<ModelGravityGDist,
 				    ModelGravityGDist>,
@@ -370,6 +404,10 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 			     MyopicAgent<ModelTimeExpCavesGDist> >;
 
 template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
+				    ModelTimeExpCavesEDist>,
+			     MyopicAgent<ModelTimeExpCavesEDist> >;
+
+template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 				    ModelRadius>,
 			     MyopicAgent<ModelRadius> >;
 
@@ -485,6 +523,18 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 		      RankAgent<ToyFeatures4<ModelTimeExpCavesGDist>,
 				ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDist,
+		   ModelTimeExpCavesEDist>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+		      ModelTimeExpCavesEDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGDist,
+			     ModelTimeExpCavesEDist>,
+		      RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+				ModelTimeExpCavesEDist>,
+		      ModelTimeExpCavesEDist> >;
 
 
 template class
@@ -663,6 +713,17 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 			OsspAgent<ModelTimeExpCavesGDist>,
 			ToyFeatures4<ModelTimeExpCavesGDist>,
 			ModelTimeExpCavesGDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDist,
+		   ModelTimeExpCavesEDist>,
+	    OsspAgent<ModelTimeExpCavesEDist>,
+	    M1OsspOptim<System<ModelTimeExpCavesGDist,
+			       ModelTimeExpCavesEDist>,
+			OsspAgent<ModelTimeExpCavesEDist>,
+			ToyFeatures5<ModelTimeExpCavesEDist>,
+			ModelTimeExpCavesEDist> >;
 
 
 template class
@@ -972,6 +1033,18 @@ TuneRunner<System<ModelTimeExpCavesGDist,
 
 
 template class
+TuneRunner<System<ModelTimeExpCavesEDist,
+		  ModelTimeExpCavesEDist>,
+	   RankAgent<ToyFeatures0<ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist>,
+	   M1SpOptim<System<ModelTimeExpCavesEDist,
+			    ModelTimeExpCavesEDist>,
+		     RankAgent<ToyFeatures0<ModelTimeExpCavesEDist>,
+			       ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist> >;
+
+
+template class
 TuneRunner<System<ModelGDist,
 		  ModelGDist>,
 	   RankAgent<ToyFeatures0<ModelGDist>,
@@ -1044,6 +1117,18 @@ TuneRunner<System<ModelTimeExpCavesGDist,
 
 
 template class
+TuneRunner<System<ModelTimeExpCavesEDist,
+		  ModelTimeExpCavesEDist>,
+	   RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist>,
+	   M1SpOptim<System<ModelTimeExpCavesEDist,
+			    ModelTimeExpCavesEDist>,
+		     RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+			       ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist> >;
+
+
+template class
 TuneRunner<System<ModelRadius,
 		  ModelRadius>,
 	   RankAgent<ToyFeatures5<ModelRadius>,
@@ -1105,6 +1190,19 @@ TuneRunner<System<ModelTimeExpCavesGDist,
 		     ModelTimeExpCavesGDist> >;
 
 
+
+template class
+TuneRunner<System<ModelTimeExpCavesEDist,
+		  ModelTimeExpCavesEDist>,
+	   RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist>,
+	   M1SpOptim<System<ModelTimeExpCavesEDist,
+			    ModelTimeExpCavesEDist>,
+		     RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+			       ModelTimeExpCavesEDist>,
+		     ModelTimeExpCavesEDist> >;
+
+
 template class
 TuneRunner<System<ModelRadius,
 		  ModelRadius>,
@@ -1153,6 +1251,18 @@ TuneRunner<System<ModelGravityGDist,
 		     RankAgent<WnsFeatures1<ModelGravityGDist>,
 			       ModelGravityGDist>,
 		     ModelGravityGDist> >;
+
+
+template class
+TuneRunner<System<ModelGravityEDist,
+		  ModelGravityEDist>,
+	   RankAgent<WnsFeatures1<ModelGravityEDist>,
+		     ModelGravityEDist>,
+	   M1SpOptim<System<ModelGravityEDist,
+			    ModelGravityEDist>,
+		     RankAgent<WnsFeatures1<ModelGravityEDist>,
+			       ModelGravityEDist>,
+		     ModelGravityEDist> >;
 
 
 

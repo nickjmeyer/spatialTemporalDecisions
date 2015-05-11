@@ -18,6 +18,7 @@ OBJECTS += utilities.o \
 	randomAgent.o \
 	myopicAgent.o \
 	proximalGDistAgent.o \
+	proximalEDistAgent.o \
 	rankAgent.o \
 	osspAgent.o \
 	m1SpOptim.o \

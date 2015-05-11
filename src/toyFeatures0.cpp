@@ -19,6 +19,8 @@ template class ToyFeatures0<ModelTimeGDist>;
 
 template class ToyFeatures0<ModelTimeExpCavesGDist>;
 
+template class ToyFeatures0<ModelTimeExpCavesEDist>;
+
 template class ToyFeatures0<ModelRadius>;
 
 template class ToyFeatures0<ModelGDist>;
