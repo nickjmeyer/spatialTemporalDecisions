@@ -11,7 +11,7 @@ void test(const std::string & name, const int cond){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelGravity MG;
+  typedef ModelGravityGDist MG;
   typedef MG ME;
   typedef System<MG,ME> S;
 
@@ -97,9 +97,9 @@ int main(int argc, char ** argv){
   delete pB;
 
 
-  pB = new ParamGravity();
+  pB = new ParamGravityGDist();
   pB->init(s.fD);
-  std::cout << "Testing ParamGravity" << std::endl;
+  std::cout << "Testing ParamGravityGDist" << std::endl;
 
   pars = {0,0};
   test("init",pB->getPar() == pars);
@@ -117,7 +117,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      ans.push_back(-pars.at(0) * s.fD.dist.at(i*s.fD.numNodes + j) /
+      ans.push_back(-pars.at(0) * s.fD.gDist.at(i*s.fD.numNodes + j) /
 		    std::pow(s.fD.caves.at(i)*s.fD.caves.at(j),
 			     pars.at(1)));
     }
@@ -439,7 +439,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      if(s.fD.logDist.at(i*s.fD.numNodes + j) > pars.at(0))
+      if(s.fD.logGDist.at(i*s.fD.numNodes + j) > pars.at(0))
 	ans.push_back(-500.0);
     }
   }
@@ -464,7 +464,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      if(s.fD.logDist.at(i*s.fD.numNodes + j) > pars.at(0))
+      if(s.fD.logGDist.at(i*s.fD.numNodes + j) > pars.at(0))
 	ans.push_back(-500.0);
     }
   }
@@ -488,7 +488,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      if(s.fD.logDist.at(i*s.fD.numNodes + j) > pars.at(0))
+      if(s.fD.logGDist.at(i*s.fD.numNodes + j) > pars.at(0))
 	ans.push_back(-500.0);
     }
   }
@@ -508,9 +508,9 @@ int main(int argc, char ** argv){
   delete pB;
   
 
-  pB = new ParamDistKern();
+  pB = new ParamGDistKern();
   pB->init(s.fD);
-  std::cout << "Testing ParamDistKern" << std::endl;
+  std::cout << "Testing ParamGDistKern" << std::endl;
 
   pars = {0,0};
   test("init",pB->getPar() == pars);
@@ -527,7 +527,7 @@ int main(int argc, char ** argv){
   double d;
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      d = s.fD.gDist.at(i*s.fD.numNodes + j);
       ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
     }
   }
@@ -548,7 +548,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      d = s.fD.gDist.at(i*s.fD.numNodes + j);
       ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
     }
   }
@@ -568,7 +568,7 @@ int main(int argc, char ** argv){
   ans.reserve(s.fD.numNodes*s.fD.numNodes);
   for(i = 0; i < s.fD.numNodes; ++i){
     for(j = 0; j < s.fD.numNodes; ++j){
-      d = s.fD.dist.at(i*s.fD.numNodes + j);
+      d = s.fD.gDist.at(i*s.fD.numNodes + j);
       ans.push_back(-pars.at(0)*std::exp(-d*d/(2*std::exp(pars.at(1)))));
     }
   }
@@ -586,6 +586,167 @@ int main(int argc, char ** argv){
 
   
   delete pB;
+
+
+
+
+  pB = new ParamTrend();
+  pB->init(s.fD);
+  std::cout << "Testing ParamTrend" << std::endl;
+
+  pars = {0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1};
+  beg = pars.begin();
+  beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*double(s.sD.time));
+    }
+  }
+
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("setFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*double(s.sD.time));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  s.sD.time += 3;
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*double(s.sD.time));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("modFill2",diff < 1e-10);
+
+  
+  delete pB;
+  
+
+  
+  pB = new ParamTrendPow();
+  pB->init(s.fD);
+  std::cout << "Testing ParamTrendPow" << std::endl;
+
+  pars = {0,0};
+  test("init",pB->getPar() == pars);
+
+  pars = {-1,-0.5};
+  beg = pars.begin();
+  beg = pB->putPar(beg);
+  test("putPar",pB->getPar() == pars);
+
+  test("putPar return",beg == pars.end());
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*
+		    std::pow(double(s.sD.time),-std::exp(pars.at(1))));
+    }
+  }
+
+  probs = std::vector<double>(s.fD.numNodes*s.fD.numNodes,0.0);
+  pB->setFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("setFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*
+		    std::pow(double(s.sD.time),-std::exp(pars.at(1))));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+    
+  test("modFill",diff < 1e-10);
+
+  ans.clear();
+  ans.reserve(s.fD.numNodes*s.fD.numNodes);
+  s.sD.time += 3;
+  for(i = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j){
+      ans.push_back(pars.at(0)*
+		    std::pow(double(s.sD.time),-std::exp(pars.at(1))));
+    }
+  }
+
+  pB->modFill(probs,s.sD,s.tD,s.fD,s.dD);
+  
+  diff = 0.0;
+  for(i = 0, k = 0; i < s.fD.numNodes; ++i){
+    for(j = 0; j < s.fD.numNodes; ++j, ++k){
+      diff += (probs.at(k) - ans.at(k))*(probs.at(k) - ans.at(k));
+    }
+  }
+
+  test("modFill2",diff < 1e-10);
+
+  
+  delete pB;
+  
 
   
   njm::sett.clean();

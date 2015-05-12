@@ -29,11 +29,14 @@
 #include "param.hpp"
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
-#include "paramGravity.hpp"
+#include "paramGravityGDist.hpp"
 #include "paramTime.hpp"
 #include "paramTimeExpCaves.hpp"
 #include "paramRadius.hpp"
 #include "paramTrt.hpp"
+#include "paramGDistKern.hpp"
+#include "paramTrend.hpp"
+#include "paramTrendPow.hpp"
 
 
 #endif

@@ -37,6 +37,8 @@ OBJECTS += utilities.o \
 	paramBeta.o \
 	paramGravityGDist.o \
 	paramGravityEDist.o \
+	paramTrend.o \
+	paramTrendPow.o \
 	paramTime.o \
 	paramTimeExp.o \
 	paramTimeExpCaves.o \
