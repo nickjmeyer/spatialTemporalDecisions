@@ -28,6 +28,10 @@
 #include "m1OsspOptim.hpp"
 #include "m2QOptim.hpp"
 #include "pardisoSymWrap.hpp"
+#include "mcmcGravity.hpp"
+#include "mcmcGravityTimeInf.hpp"
+#include "mcmcGravityTimeInfExp.hpp"
+#include "mcmcGravityTimeInfExpCaves.hpp"
 
 
 

@@ -11,6 +11,7 @@
 #include "modelGravityGDist.hpp"
 #include "modelGravityEDist.hpp"
 #include "modelTimeGDist.hpp"
+#include "modelTimeExpGDist.hpp"
 #include "modelTimeExpCavesGDist.hpp"
 #include "modelTimeExpCavesEDist.hpp"
 #include "modelRadius.hpp"

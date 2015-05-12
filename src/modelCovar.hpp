@@ -11,7 +11,6 @@
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
 #include "paramTrt.hpp"
-#include "mcmc.hpp"
 
 
 class ModelCovar : public ModelBase {

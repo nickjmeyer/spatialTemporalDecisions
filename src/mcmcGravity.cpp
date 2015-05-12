@@ -1,4 +1,4 @@
-#include "mcmc.hpp"
+#include "mcmcGravity.hpp"
 
 
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
@@ -69,7 +69,7 @@ void GravitySamples::setPar(const int i){
 
 
 std::vector<double> GravitySamples::getPar() const {
-  std::vector<double> par (1,intcpSet);
+  std::vector<double> par {intcpSet};
   par.insert(par.end(),betaSet.begin(),betaSet.end());
   par.push_back(alphaSet);
   par.push_back(powerSet);
@@ -104,7 +104,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
-  d = fD.dist;
+  d = fD.gDist;
   cc.resize(numNodes*numNodes);
   covar = fD.covar;
   timeInf.resize(numNodes*T);
@@ -164,12 +164,12 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
   // set containers for current and candidate samples
   std::vector<double>::const_iterator it = par.begin();
   intcp_cur=intcp_can= *it++;
-  
+
   beta_cur.clear();
   for(i = 0; i < numCovar; ++i)
     beta_cur.push_back(*it++);
   beta_can = beta_cur;
-  
+
   alpha_cur=alpha_can= (*it < 0.00001 ? 0.01 : *it);
   ++it;
   power_cur=power_can= (*it < 0.00001 ? 0.01 : *it);
@@ -219,12 +219,12 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){
     if(display && i%displayOn==0){
-      printf("SLM...%6s: %6d\r","iter",i);
+      printf("McmcGravity...%6s: %6d\r","iter",i);
       fflush(stdout);
     }
 

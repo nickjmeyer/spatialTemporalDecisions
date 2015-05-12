@@ -1,5 +1,5 @@
-#ifndef MODEL_TIME_G_DIST_HPP__
-#define MODEL_TIME_G_DIST_HPP__
+#ifndef MODEL_TIME_EXP_G_DIST_HPP__
+#define MODEL_TIME_EXP_G_DIST_HPP__
 
 
 #include <armadillo>
@@ -12,21 +12,22 @@
 #include "paramIntercept.hpp"
 #include "paramBeta.hpp"
 #include "paramGravityGDist.hpp"
-#include "paramTime.hpp"
+#include "paramTimeExp.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGravityTimeInf.hpp"
+#include "mcmcGravityTimeInfExp.hpp"
 
-
-class ModelTimeGDist : public ModelBase {
+class ModelTimeExpGDist : public ModelBase {
  protected:
  public:
-  ModelTimeGDist(){ };
-  ModelTimeGDist(const FixedData & fD);
-  ModelTimeGDist(const ModelTimeGDist & m);
+  ModelTimeExpGDist(){ };
+  ModelTimeExpGDist(const FixedData & fD);
+  ModelTimeExpGDist(const ModelTimeExpGDist & m);
 
   virtual void read();
 
-  virtual ModelTimeGDist & operator=(const ModelTimeGDist & m);
+  virtual void save() const;
+
+  virtual ModelTimeExpGDist & operator=(const ModelTimeExpGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
@@ -38,19 +39,19 @@ class ModelTimeGDist : public ModelBase {
 
   double tuneTrt(const FixedData & fD);
 
-  GravityTimeInfMcmc mcmc;
+  GravityTimeInfExpMcmc mcmc;
 };
 
 
-class ModelTimeGDistFitData {
+class ModelTimeExpGDistFitData {
  public:
-  ModelTimeGDistFitData(const ModelTimeGDist & m,
-			const std::vector<double> & all,
-			const FixedData & fD,
-			const
-			std::vector<std::vector<int> > & history);
+  ModelTimeExpGDistFitData(const ModelTimeExpGDist & m,
+			   const std::vector<double> & all,
+			   const FixedData & fD,
+			   const
+			   std::vector<std::vector<int> > & history);
 
-  ModelTimeGDist m;
+  ModelTimeExpGDist m;
   FixedData fD;
   std::vector<std::vector<int> > history;
   std::vector<std::vector<int> > timeInf;
@@ -58,7 +59,7 @@ class ModelTimeGDistFitData {
 
 
 double
-modelTimeGDistFitObjFn (const gsl_vector * x, void * params);
+modelTimeExpGDistFitObjFn (const gsl_vector * x, void * params);
 
 
 

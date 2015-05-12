@@ -36,6 +36,7 @@ ModelTimeGDist::ModelTimeGDist(const ModelTimeGDist & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  mcmc = m.mcmc;
 }
 
 

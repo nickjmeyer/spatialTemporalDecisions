@@ -12,6 +12,7 @@
 #include "paramBeta.hpp"
 #include "paramGravityGDist.hpp"
 #include "paramTrt.hpp"
+#include "mcmcGravity.hpp"
 
 
 class ModelGravityGDist : public ModelBase {
@@ -36,6 +37,8 @@ class ModelGravityGDist : public ModelBase {
 		   std::vector<double> pars);
 
   double tuneTrt(const FixedData & fD);
+
+  GravityMcmc mcmc;
 };
 
 

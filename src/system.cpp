@@ -9,6 +9,9 @@ template class System<ModelGravityEDist,
 template class System<ModelTimeGDist,
 		      ModelTimeGDist>;
 
+template class System<ModelTimeExpGDist,
+		      ModelTimeExpGDist>;
+
 template class System<ModelTimeExpCavesGDist,
 		      ModelTimeExpCavesGDist>;
 

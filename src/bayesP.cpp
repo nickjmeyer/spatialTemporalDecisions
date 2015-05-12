@@ -55,7 +55,7 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
 	      << std::endl;
   sDist = 0;
   for(i = 0; i < sD.numInfected; ++i){
-    sDist += fD.dist.at(sD.infected.at(i)*fD.numNodes + start);
+    sDist += fD.gDist.at(sD.infected.at(i)*fD.numNodes + start);
   }
   sDist/=(double)sD.numInfected;
   stats.push_back(sDist);
@@ -89,8 +89,8 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
   // max dist from starting location
   sDist = std::numeric_limits<double>::lowest();
   for(i = 0; i < sD.numInfected; ++i)
-    if(fD.dist.at(sD.infected.at(i)*fD.numNodes + start) > sDist)
-      sDist = fD.dist.at(sD.infected.at(i)*fD.numNodes + start);
+    if(fD.gDist.at(sD.infected.at(i)*fD.numNodes + start) > sDist)
+      sDist = fD.gDist.at(sD.infected.at(i)*fD.numNodes + start);
   stats.push_back(sDist);
 
 
@@ -98,11 +98,11 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
 }
 
 
-template <class M, class P>
+template <class M>
 void runBayesP(const std::string & file, const int obs,
 	       const int numSamples,const int numBurn,
 	       const int numStats){
-  typedef System<M,P,M,P> S;
+  typedef System<M,M> S;
 
   S sObs("obsData.txt");
 
@@ -126,26 +126,30 @@ void runBayesP(const std::string & file, const int obs,
 		njm::sett.datExt("obsStats_",".txt"));
   }
 
-  sObs.modelGen.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen.mcmc.sample(numSamples,numBurn);
+  sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
+  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
 
-  sObs.modelGen.mcmc.samples.setMean();
-  sObs.paramGen.putPar(sObs.modelGen.mcmc.samples.getPar());
-  sObs.paramGen.save();
+  sObs.modelGen_r.mcmc.samples.setMean();
+  std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+  sObs.modelGen_r.putPar(par.begin());
+  // sObs.modelGen_r.save();
 
   std::vector< std::vector<double> > stats;
   
   S s;
-  s.modelGen = sObs.modelGen;
+  Starts starts("startingLocations.txt");
+  s.modelGen_r = sObs.modelGen_r;
+  s.modelEst_r = s.modelGen_r;
   int r,t,R,T;
   R = numStats;
   T = sObs.sD.time;
   for(r = 0; r < R; ++r){
-    s.modelGen.mcmc.samples.setRand();
-    s.paramGen_r.putPar(s.modelGen.mcmc.samples.getPar());
-    s.paramEst_r.putPar(s.paramGen_r.getPar());
+    s.modelGen_r.mcmc.samples.setRand();
+    par = s.modelGen_r.mcmc.samples.getPar();
+    s.modelGen_r.putPar(par.begin());
+    s.modelEst_r.putPar(par.begin());
     
-    s.reset();
+    s.reset(starts[r]);
     
     for(t = 0; t < T; ++t)
       s.nextPoint();
@@ -155,21 +159,20 @@ void runBayesP(const std::string & file, const int obs,
     stats.push_back(getStats(h,s.sD,s.fD));
   }
 
-  njm::toFile(names,njm::sett.datExt(file+"_",".txt"),
+  njm::toFile(names,njm::sett.datExt("sampStats_"+file+"_",".txt"),
   	      std::ios_base::out);
   njm::toFile(njm::toString(stats,"\n",""),
-	      njm::sett.datExt(file+"_",".txt"));
+	      njm::sett.datExt("sampStats_"+file+"_",".txt"));
 
   std::vector<std::vector<double> > parSamp;
   int i;
   for(i = 0; i < (numSamples-numBurn); ++i){
-    s.modelGen.mcmc.samples.setPar(i);
-    parSamp.push_back(s.modelGen.mcmc.samples.getPar());
+    s.modelGen_r.mcmc.samples.setPar(i);
+    njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
+		std::ios_base::app);
   }
 
-  njm::toFile(njm::toString(parSamp,"\n",""),
-	      njm::sett.datExt(file+"_param_",".txt"),
-	      std::ios_base::out);
 }
 
 
@@ -185,67 +188,32 @@ int main(int argc, char ** argv){
   {
 #pragma omp section
     {
-      runBayesP<GravityModel,
-		GravityParam>("sampStats_gravity",1,
-			      numSamples,numBurn,numStats);
+      runBayesP<ModelGravityGDist
+		>("gravity",1,
+		  numSamples,numBurn,numStats);
     }
 
 #pragma omp section
     {
-      runBayesP<GravityTimeInfModel,
-		GravityTimeInfParam>("sampStats_timeInf",0,
-				     numSamples,numBurn,numStats);
-    }
-
-// #pragma omp section
-//     {
-//       runBayesP<GravityTimeInfSqModel,
-// 		GravityTimeInfSqParam>("sampStats_timeInfSq",0,
-// 				       numSamples,numBurn,numStats);
-//     }
-
-// #pragma omp section
-//     {
-//       runBayesP<GravityTimeInfSqrtModel,
-// 		GravityTimeInfSqrtParam>("sampStats_timeInfSqrt",0,
-// 					 numSamples,numBurn,numStats);
-//     }
-
-// #pragma omp section
-//     {
-//       runBayesP<GravityTimeInfLogModel,
-// 		GravityTimeInfLogParam>("sampStats_timeInfLog",0,
-// 					numSamples,numBurn,numStats);
-//     }
-
-#pragma omp section
-    {
-      runBayesP<GravityTimeInfExpModel,
-		GravityTimeInfExpParam>("sampStats_timeInfExp",0,
-					numSamples,numBurn,numStats);
+      runBayesP<ModelTimeGDist
+		>("timeInf",0,
+		  numSamples,numBurn,numStats);
     }
 
 #pragma omp section
     {
-      runBayesP<GravityTimeInfExpCavesModel,
-		GravityTimeInfExpCavesParam>("sampStats_timeInfExpCaves",0,
-					     numSamples,numBurn,numStats);
+      runBayesP<ModelTimeExpGDist
+		>("timeInfExp",0,
+		  numSamples,numBurn,numStats);
     }
 
 #pragma omp section
     {
-      runBayesP<GravityTimeInfExpLCavesModel,
-		GravityTimeInfExpLCavesParam>("sampStats_timeInfExpLCaves",0,
-					      numSamples,numBurn,numStats);
+      runBayesP<ModelTimeExpCavesGDist
+		>("timeInfExpCaves",0,
+		  numSamples,numBurn,numStats);
     }
 
-#pragma omp section
-    {
-      runBayesP<GravityTimeInfExpRCavesModel,
-		GravityTimeInfExpRCavesParam>("sampStats_timeInfExpRCaves",0,
-					      numSamples,numBurn,numStats);
-    }
-  
   }
   
   // njm::sett.clean();

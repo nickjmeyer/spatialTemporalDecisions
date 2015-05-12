@@ -1,23 +1,23 @@
-#include "modelTimeExpCavesGDist.hpp"
+#include "modelTimeExpGDist.hpp"
 
 static std::vector<ParamBase *> genPars(){
   std::vector<ParamBase *> pars;
   pars.push_back(new ParamIntercept);
   pars.push_back(new ParamBeta);
   pars.push_back(new ParamGravityGDist);
-  pars.push_back(new ParamTimeExpCaves);
+  pars.push_back(new ParamTimeExp);
   pars.push_back(new ParamTrt);
   return pars;
 }
 
 
-ModelTimeExpCavesGDist::ModelTimeExpCavesGDist(const FixedData & fD)
+ModelTimeExpGDist::ModelTimeExpGDist(const FixedData & fD)
   : ModelBase(genPars(),fD){
 }
 
 
-ModelTimeExpCavesGDist::ModelTimeExpCavesGDist(const
-					       ModelTimeExpCavesGDist & m){
+ModelTimeExpGDist::ModelTimeExpGDist(const
+					       ModelTimeExpGDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();
   for(i = 0; i < parsSize; ++i)
@@ -40,91 +40,91 @@ ModelTimeExpCavesGDist::ModelTimeExpCavesGDist(const
 }
 
 
-ModelTimeExpCavesGDist &
-ModelTimeExpCavesGDist::operator=(const ModelTimeExpCavesGDist & m){
+ModelTimeExpGDist &
+ModelTimeExpGDist::operator=(const ModelTimeExpGDist & m){
   if(this != & m){
-    this->ModelTimeExpCavesGDist::~ModelTimeExpCavesGDist();
-    new (this) ModelTimeExpCavesGDist(m);
+    this->ModelTimeExpGDist::~ModelTimeExpGDist();
+    new (this) ModelTimeExpGDist(m);
   }
   return *this;
 }
 
 
 
-void ModelTimeExpCavesGDist::read(){
+void ModelTimeExpGDist::read(){
   std::vector<double> pars,add;
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/intcp.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/intcp.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
   
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/beta.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/beta.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
   
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/alpha.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/alpha.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
   
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/power.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/power.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
 
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/xi.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/xi.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
   
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtAct.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/trtAct.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
   
   njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtPre.txt"));
+		njm::sett.srcExt("./GravityTimeInfExpParam/trtPre.txt"));
   pars.insert(pars.end(),add.begin(),add.end());
 
   putPar(pars.begin());
 }
 
 
-void ModelTimeExpCavesGDist::save() const {
+void ModelTimeExpGDist::save() const {
   std::vector<double> par;
   par = pars.at(0)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/intcp.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/intcp.txt"),
 	      std::ios_base::out);
 
   par = pars.at(1)->getPar();
   njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/beta.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/beta.txt"),
 	      std::ios_base::out);
 
   par = pars.at(2)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/alpha.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/alpha.txt"),
 	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/power.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/power.txt"),
 	      std::ios_base::out);
 
   par = pars.at(3)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/xi.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/xi.txt"),
 	      std::ios_base::out);
   
   par = pars.at(4)->getPar();
   njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtAct.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/trtAct.txt"),
 	      std::ios_base::out);
   
   njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpCavesParam/trtPre.txt"),
+	      njm::sett.srcExt("./GravityTimeInfExpParam/trtPre.txt"),
 	      std::ios_base::out);
 }
 
 
 
 double
-ModelTimeExpCavesGDist::tuneTrt(const FixedData & fD){
+ModelTimeExpGDist::tuneTrt(const FixedData & fD){
   int i,j;
   double avgCaves = 0.0;
   for(i = 0; i < fD.numNodes; i++)
@@ -147,7 +147,7 @@ ModelTimeExpCavesGDist::tuneTrt(const FixedData & fD){
 
 
 void
-ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
+ModelTimeExpGDist::fit(const SimData & sD, const TrtData & tD,
 			    const FixedData & fD, const DynamicData & dD,
 			    const int & useInit){
   if(useInit){
@@ -163,7 +163,7 @@ ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
   }
 }
 
-void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
+void ModelTimeExpGDist::fit(const SimData & sD, const TrtData & tD,
 				 const FixedData & fD,
 				 const DynamicData & dD,
 				 std::vector<double> all){
@@ -178,7 +178,7 @@ void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    ModelTimeExpCavesGDistFitData dat(*this,all,fD,history);
+    ModelTimeExpGDistFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -188,7 +188,7 @@ void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&modelTimeExpCavesGDistFitObjFn;
+    minex_func.f=&modelTimeExpGDistFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -234,7 +234,7 @@ void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
     
   }
   else if(fitType == MCMC){
-    std::cout << "Error: ModelTimeExpCavesGDist::fit(): MCMC not setup"
+    std::cout << "Error: ModelTimeExpGDist::fit(): MCMC not setup"
 	      << std::endl;
     throw(1);
   }
@@ -245,8 +245,8 @@ void ModelTimeExpCavesGDist::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-ModelTimeExpCavesGDistFitData
-::ModelTimeExpCavesGDistFitData(const ModelTimeExpCavesGDist & m,
+ModelTimeExpGDistFitData
+::ModelTimeExpGDistFitData(const ModelTimeExpGDist & m,
 				const std::vector<double> & all,
 				const FixedData & fD,
 				const
@@ -269,9 +269,9 @@ ModelTimeExpCavesGDistFitData
 }
 
 double
-modelTimeExpCavesGDistFitObjFn (const gsl_vector * x, void * params){
-  ModelTimeExpCavesGDistFitData * dat =
-    static_cast<ModelTimeExpCavesGDistFitData*> (params);
+modelTimeExpGDistFitObjFn (const gsl_vector * x, void * params){
+  ModelTimeExpGDistFitData * dat =
+    static_cast<ModelTimeExpGDistFitData*> (params);
   double llike=0,prob,base,caveTerm;
   int i,j,k,t,time=dat->history.size(),dim=dat->m.getPar().size();
   
@@ -305,8 +305,7 @@ modelTimeExpCavesGDistFitObjFn (const gsl_vector * x, void * params){
 			       power);
 	    base-=alpha*caveTerm;
 
-	    base+=xi*(std::exp((dat->timeInf.at(t-1).at(j) - 1.0)/
-			       dat->fD.propCaves.at(j))-1.0);
+	    base+=xi*(std::exp(double(dat->timeInf.at(t-1).at(j) - 1.0))-1.0);
 	    
 	    if(dat->history.at(t-1).at(i) == 1)
 	      base-=trtPre;

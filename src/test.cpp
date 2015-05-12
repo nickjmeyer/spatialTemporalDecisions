@@ -6,12 +6,12 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCavesGDist MG;
   
-  typedef ModelGDistKern ME;
+  typedef MG ME;
 
   typedef System<MG,ME> S;
 
   // typedef NoTrt<ME> NT;
-  typedef ProximalGDistAgent<ME> PA;
+  // typedef ProximalGDistAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
   // typedef ToyFeatures4<ME> F;
@@ -28,7 +28,8 @@ int main(int argc, char ** argv){
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
-  S s;
+  S s("obsData.txt");
+  // S s;
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
@@ -37,7 +38,7 @@ int main(int argc, char ** argv){
   s.reset(starts[0]);
 
   // NT nt;
-  PA pa;
+  // PA pa;
   // MA ma;
   // RA ra;
   // OA oa;
@@ -52,26 +53,7 @@ int main(int argc, char ** argv){
   // R_OA r_oa;
 
 
-  RunStats rs;
-
-  int i;
-  for(i = 0; i < (s.fD.trtStart+4); ++i){
-    if(i >= s.fD.trtStart){
-      s.modelEst.fit(s.sD,s.tD,s.fD,s.dD,1);
-
-      pa.applyTrt(s.sD,s.tD,s.fD,s.dD,s.modelEst);
-    }
-
-    s.updateStatus();
-    
-    s.nextPoint();
-  }
-
-  for(i = 0; i < 20; ++i){
-    s.modelEst.sample();
-    std::cout << njm::toString(s.modelEst.getPar()," ","\n");
-  }
-      
+  // RunStats rs;
 
   // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
   // njm::message("   No treatment: "
@@ -97,7 +79,67 @@ int main(int argc, char ** argv){
   // njm::message("One Step Polish: "
   // 	       + njm::toString(rs.smean(),"")
   // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
+  // int i;
+  // for(i = 0; i < 8; ++i){
+  //   s.updateStatus();
+  //   s.nextPoint();
+  // }
+
+  std::cout << "value: " << njm::toString(s.value(),"\n");
+
+  int numSamples = 500, numBurn = 100;
+
+#pragma omp parallel sections
+  {
+#pragma omp section
+    {
+      GravityMcmc mcmc;
+      mcmc.load(s.sD.history,s.sD.status,s.fD);
+      mcmc.sample(numSamples,numBurn);
+
+      mcmc.samples.setMean();
+      std::cout << "Gravity::par: " << std::endl
+		<< njm::toString(mcmc.samples.getPar()," ","")
+		<< std::endl;;
+    }
+    
+#pragma omp section
+    {
+      GravityTimeInfMcmc mcmc;
+      mcmc.load(s.sD.history,s.sD.status,s.fD);
+      mcmc.sample(numSamples,numBurn);
+
+      mcmc.samples.setMean();
+      std::cout << "GravityTimeInf::par: " << std::endl
+		<< njm::toString(mcmc.samples.getPar()," ","")
+		<< std::endl;;
+    }
+    
+#pragma omp section
+    {
+      GravityTimeInfExpMcmc mcmc;
+      mcmc.load(s.sD.history,s.sD.status,s.fD);
+      mcmc.sample(numSamples,numBurn);
+
+      mcmc.samples.setMean();
+      std::cout << "GravityTimeInfExp::par: " << std::endl
+		<< njm::toString(mcmc.samples.getPar()," ","")
+		<< std::endl;
+    }  
+
+#pragma omp section
+    {
+      GravityTimeInfExpCavesMcmc mcmc;
+      mcmc.load(s.sD.history,s.sD.status,s.fD);
+      mcmc.sample(numSamples,numBurn);
+
+      mcmc.samples.setMean();
+      std::cout << "GravityTimeInfExpCaves::par: " << std::endl
+		<< njm::toString(mcmc.samples.getPar()," ","")
+		<< std::endl;;
+    }
+  }
 
   njm::sett.clean();
   return 0;

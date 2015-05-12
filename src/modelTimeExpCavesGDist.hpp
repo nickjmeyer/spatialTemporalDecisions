@@ -14,6 +14,7 @@
 #include "paramGravityGDist.hpp"
 #include "paramTimeExpCaves.hpp"
 #include "paramTrt.hpp"
+#include "mcmcGravityTimeInfExpCaves.hpp"
 
 class ModelTimeExpCavesGDist : public ModelBase {
  protected:
@@ -37,6 +38,8 @@ class ModelTimeExpCavesGDist : public ModelBase {
 		   std::vector<double> all);
 
   double tuneTrt(const FixedData & fD);
+
+  GravityTimeInfExpCavesMcmc mcmc;
 };
 
 
