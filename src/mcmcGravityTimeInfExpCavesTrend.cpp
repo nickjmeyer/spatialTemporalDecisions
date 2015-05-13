@@ -554,7 +554,7 @@ void GravityTimeInfExpCavesTrendMcmc::sample(int const numSamples,
 
   samples.Dbar=-2.0*std::accumulate(samples.ll.begin(),
 				    samples.ll.end(),
-				    0.0)/double(numSamples);
+				    0.0)/double(samples.numSamples);
   samples.pD=samples.Dbar - -2.0*samples.llPt;
   samples.DIC=samples.pD + samples.Dbar;
 

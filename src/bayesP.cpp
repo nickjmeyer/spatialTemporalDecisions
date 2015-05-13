@@ -293,7 +293,7 @@ int main(int argc, char ** argv){
 #pragma omp section
     {
       runBayesP<ModelTimeExpGDistTrendPowCon
-		>("timeInfExpTrendCon",0,
+		>("timeInfExpTrendPowCon",0,
 		  numSamples,numBurn,numStats);
     }
 
