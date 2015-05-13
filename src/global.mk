@@ -39,6 +39,7 @@ OBJECTS += utilities.o \
 	paramGravityEDist.o \
 	paramTrend.o \
 	paramTrendPow.o \
+	paramTrendPowCon.o \
 	paramTime.o \
 	paramTimeExp.o \
 	paramTimeExpCaves.o \
@@ -48,19 +49,43 @@ OBJECTS += utilities.o \
 	paramTrt.o \
 	model.o \
 	modelGravityGDist.o \
+	modelGravityGDistTrend.o \
+	modelGravityGDistTrendPow.o \
+	modelGravityGDistTrendPowCon.o \
 	modelGravityEDist.o \
 	modelTimeGDist.o \
+	modelTimeGDistTrend.o\
+	modelTimeGDistTrendPow.o \
+	modelTimeGDistTrendPowCon.o \
 	modelTimeExpGDist.o \
+	modelTimeExpGDistTrend.o\
+	modelTimeExpGDistTrendPow.o \
+	modelTimeExpGDistTrendPowCon.o \
 	modelTimeExpCavesGDist.o \
+	modelTimeExpCavesGDistTrend.o\
+	modelTimeExpCavesGDistTrendPow.o \
+	modelTimeExpCavesGDistTrendPowCon.o \
 	modelTimeExpCavesEDist.o \
 	modelGDist.o \
 	modelGDistKern.o \
 	modelRadius.o \
 	modelCovar.o \
 	mcmcGravity.o \
+	mcmcGravityTrend.o \
+	mcmcGravityTrendPow.o \
+	mcmcGravityTrendPowCon.o \
 	mcmcGravityTimeInf.o \
+	mcmcGravityTimeInfTrend.o \
+	mcmcGravityTimeInfTrendPow.o \
+	mcmcGravityTimeInfTrendPowCon.o \
 	mcmcGravityTimeInfExp.o \
+	mcmcGravityTimeInfExpTrend.o \
+	mcmcGravityTimeInfExpTrendPow.o \
+	mcmcGravityTimeInfExpTrendPowCon.o \
 	mcmcGravityTimeInfExpCaves.o \
+	mcmcGravityTimeInfExpCavesTrend.o \
+	mcmcGravityTimeInfExpCavesTrendPow.o \
+	mcmcGravityTimeInfExpCavesTrendPowCon.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o
@@ -150,3 +175,4 @@ $(OBJECTS):%.o: %.cpp
 
 clean:
 	rm -f $(BINARY) $(OBJECTS) $(DEPENDS) $(BINARY).tar.bz2
+

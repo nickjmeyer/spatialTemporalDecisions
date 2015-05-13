@@ -22,8 +22,6 @@ class ModelGDistKern : public ModelBase {
 
   virtual ModelBase * clone() const {return new ModelGDistKern(*this);};
 
-  virtual void read();
-  
   virtual ModelGDistKern & operator=(const ModelGDistKern & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

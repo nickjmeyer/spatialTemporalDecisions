@@ -14,6 +14,7 @@ enum Estimation {INVALID = -1, MLE = 0, MLES = 1, MCMC = 2};
 class ModelBase {
  protected:
   unsigned int numPars;
+  std::string name;
   int set;
   std::vector<ParamBase *> pars;
   std::vector<double> probs;
@@ -28,22 +29,14 @@ class ModelBase {
 
  public:
   ModelBase(){ };
-  ModelBase(const std::vector<ParamBase *> & newPars,
+  ModelBase(const std::string & str,
+	    const std::vector<ParamBase *> & newPars,
 	    const FixedData & fD);
   virtual ~ModelBase();
 
-  virtual void read() {
-    std::cout << "Error: ModelBase::read(): model is not setup to save"
-	      << std::endl;
-    throw(1);
-  }
+  virtual void read();
 
-
-  virtual void save() const {
-    std::cout << "Error: ModelBase::save(): model is not setup to save"
-	      << std::endl;
-    throw(1);
-  }
+  virtual void save() const;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,

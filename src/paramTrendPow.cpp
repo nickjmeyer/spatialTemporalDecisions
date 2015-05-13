@@ -6,6 +6,11 @@ unsigned int ParamTrendPow::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamTrendPow::initNames(){
+  return {"trend","trendPow"};
+}
+
+
 void ParamTrendPow::initInternal(const FixedData & fD){
   prevTime = 0;
 }
@@ -26,7 +31,7 @@ void ParamTrendPow::setFill(std::vector<double> & probs,
 			    const DynamicData & dD){
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double val = alpha*std::pow(double(sD.time),-std::exp(power));
+  double val = alpha*std::pow(double(sD.time),power);
   prevTime = (unsigned int)(sD.time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
@@ -42,8 +47,8 @@ void ParamTrendPow::modFill(std::vector<double> & probs,
 			    const DynamicData & dD){
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double val = alpha*(std::pow(double(sD.time),-std::exp(power))
-		      - std::pow(double(prevTime),-std::exp(power)));
+  double val = alpha*(std::pow(double(sD.time),power)
+		      - std::pow(double(prevTime),power));
   prevTime = (unsigned int)(sD.time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){

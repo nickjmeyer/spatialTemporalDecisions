@@ -5,6 +5,10 @@ unsigned int ParamTimeExpCaves::initParsSize(const FixedData & fD){
   return 1U;
 }
 
+std::vector<std::string> ParamTimeExpCaves::initNames(){
+  return {"xi"};
+}
+
 
 void ParamTimeExpCaves::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;

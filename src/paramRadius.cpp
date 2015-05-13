@@ -7,6 +7,11 @@ unsigned int ParamRadius::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamRadius::initNames(){
+  return {"radius"};
+}
+
+
 void ParamRadius::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   logDist = fD.logGDist;

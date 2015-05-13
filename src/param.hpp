@@ -4,7 +4,9 @@
 #include <vector>
 #include <algorithm>
 #include <eigen3/Eigen/Eigen>
+#include <string>
 #include "data.hpp"
+
 
 class ParamBase {
  protected:
@@ -12,9 +14,12 @@ class ParamBase {
   std::vector<double> pars;
   std::vector<double>::iterator beg,end;
   unsigned int parsSize;
+  std::vector<std::string> names;
 
 
   virtual unsigned int initParsSize(const FixedData & fD) = 0;
+
+  virtual std::vector<std::string> initNames() = 0;
   
   // initialize the internal book-keeping data
   virtual void initInternal(const FixedData & fD) = 0;
@@ -25,11 +30,15 @@ class ParamBase {
   virtual void updateAfter() = 0;
 
  public:
-  ParamBase() { };
+  ParamBase();
   ParamBase(const ParamBase & p);
   virtual ~ParamBase() { };
 
   virtual ParamBase * clone() const = 0;
+
+  virtual void save(const std::string & m) const;
+
+  virtual void read(const std::string & m);
 
   // initializes pars = {0,...}, beg = pars.begin(), end = pars.end()
   // calls initInternal, initParsSize

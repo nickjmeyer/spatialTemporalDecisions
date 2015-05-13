@@ -23,10 +23,6 @@ class ModelTimeExpCavesGDist : public ModelBase {
   ModelTimeExpCavesGDist(const FixedData & fD);
   ModelTimeExpCavesGDist(const ModelTimeExpCavesGDist & m);
 
-  virtual void read();
-
-  virtual void save() const;
-
   virtual ModelTimeExpCavesGDist & operator=(const ModelTimeExpCavesGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

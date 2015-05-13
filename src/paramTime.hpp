@@ -11,6 +11,8 @@ class ParamTime : public ParamBase {
   
   virtual unsigned int initParsSize(const FixedData & fD);
 
+  virtual std::vector<std::string> initNames();
+
   virtual void initInternal(const FixedData & fD);
   
   virtual void updateBefore();

@@ -20,10 +20,6 @@ class ModelCovar : public ModelBase {
   ModelCovar(const FixedData & fD);
   ModelCovar(const ModelCovar & m);
 
-  virtual void read();
-
-  virtual void save() const;
-  
   virtual ModelCovar & operator=(const ModelCovar & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

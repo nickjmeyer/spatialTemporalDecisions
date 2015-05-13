@@ -7,6 +7,11 @@ unsigned int ParamGravityGDist::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamGravityGDist::initNames(){
+  return {"alpha","power"};
+}
+
+
 void ParamGravityGDist::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);

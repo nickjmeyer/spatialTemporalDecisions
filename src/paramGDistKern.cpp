@@ -7,6 +7,11 @@ unsigned int ParamGDistKern::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamGDistKern::initNames(){
+  return {"alpha","sigma"};
+}
+
+
 void ParamGDistKern::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   dist = fD.gDist;

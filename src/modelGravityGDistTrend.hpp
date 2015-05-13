@@ -13,7 +13,7 @@
 #include "paramGravityGDist.hpp"
 #include "paramTrend.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGravity.hpp"
+#include "mcmcGravityTrend.hpp"
 
 
 class ModelGravityGDistTrend : public ModelBase {
@@ -23,10 +23,6 @@ class ModelGravityGDistTrend : public ModelBase {
   ModelGravityGDistTrend(const FixedData & fD);
   ModelGravityGDistTrend(const ModelGravityGDistTrend & m);
 
-  virtual void read();
-
-  virtual void save() const;
-  
   virtual ModelGravityGDistTrend & operator=(const ModelGravityGDistTrend & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
@@ -39,7 +35,7 @@ class ModelGravityGDistTrend : public ModelBase {
 
   double tuneTrt(const FixedData & fD);
 
-  GravityMcmc mcmc;
+  GravityTrendMcmc mcmc;
 };
 
 

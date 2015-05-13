@@ -21,10 +21,6 @@ class ModelGravityEDist : public ModelBase {
   ModelGravityEDist(const FixedData & fD);
   ModelGravityEDist(const ModelGravityEDist & m);
 
-  // virtual void read();
-
-  // virtual void save() const;
-  
   virtual ModelGravityEDist & operator=(const ModelGravityEDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

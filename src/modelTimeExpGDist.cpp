@@ -12,7 +12,7 @@ static std::vector<ParamBase *> genPars(){
 
 
 ModelTimeExpGDist::ModelTimeExpGDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("TimeExpGDist",genPars(),fD){
 }
 
 
@@ -23,6 +23,7 @@ ModelTimeExpGDist::ModelTimeExpGDist(const
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -47,78 +48,6 @@ ModelTimeExpGDist::operator=(const ModelTimeExpGDist & m){
     new (this) ModelTimeExpGDist(m);
   }
   return *this;
-}
-
-
-
-void ModelTimeExpGDist::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/power.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/xi.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfExpParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
-
-void ModelTimeExpGDist::save() const {
-  std::vector<double> par;
-  par = pars.at(0)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/intcp.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(1)->getPar();
-  njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/beta.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(2)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/alpha.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/power.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(3)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/xi.txt"),
-	      std::ios_base::out);
-  
-  par = pars.at(4)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/trtAct.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityTimeInfExpParam/trtPre.txt"),
-	      std::ios_base::out);
 }
 
 

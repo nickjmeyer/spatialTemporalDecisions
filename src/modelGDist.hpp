@@ -20,8 +20,6 @@ class ModelGDist : public ModelBase {
   ModelGDist(const FixedData & fD);
   ModelGDist(const ModelGDist & m);
 
-  virtual void read();
-  
   virtual ModelGDist & operator=(const ModelGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

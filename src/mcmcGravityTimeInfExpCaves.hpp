@@ -134,9 +134,9 @@ class GravityTimeInfExpCavesMcmc{
 
 inline
 void GravityTimeInfExpCavesMcmc::updateAlphaW(std::vector<double> & alphaW,
-					      const double & alphaOld,
-					      const double & alphaNew,
-					      const int numNodes){
+						   const double & alphaOld,
+						   const double & alphaNew,
+						   const int numNodes){
   double scale = alphaNew/alphaOld;
   int i,j;
   for(i = 0; i < numNodes; ++i)
@@ -146,12 +146,13 @@ void GravityTimeInfExpCavesMcmc::updateAlphaW(std::vector<double> & alphaW,
 
 
 inline
-void GravityTimeInfExpCavesMcmc::updateAlphaW(std::vector<double> & alphaW,
-					      const std::vector<double> & d,
-					      const std::vector<double> & cc,
-					      const double & alpha,
-					      const double & powerNew,
-					      const int numNodes){
+void GravityTimeInfExpCavesMcmc
+::updateAlphaW(std::vector<double> & alphaW,
+	       const std::vector<double> & d,
+	       const std::vector<double> & cc,
+	       const double & alpha,
+	       const double & powerNew,
+	       const int numNodes){
   int i,j;
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
@@ -162,11 +163,12 @@ void GravityTimeInfExpCavesMcmc::updateAlphaW(std::vector<double> & alphaW,
 // add intercept into covarBeta
 inline
 void
-GravityTimeInfExpCavesMcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					    const std::vector<double> & covar,
-					    const std::vector<double> & beta,
-					    const int numNodes,
-					    const int numCovar){
+GravityTimeInfExpCavesMcmc
+::updateCovarBeta(std::vector<double> & covarBeta,
+		  const std::vector<double> & covar,
+		  const std::vector<double> & beta,
+		  const int numNodes,
+		  const int numCovar){
   int i,j;
   double prod;
   for(i = 0; i < numNodes; ++i){
@@ -181,12 +183,13 @@ GravityTimeInfExpCavesMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 
 inline
 void
-GravityTimeInfExpCavesMcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					    const std::vector<double> & covar,
-					    const double & betaOld,
-					    const double & betaNew,
-					    const int covarInd,
-					    const int numCovar){
+GravityTimeInfExpCavesMcmc
+::updateCovarBeta(std::vector<double> & covarBeta,
+		  const std::vector<double> & covar,
+		  const double & betaOld,
+		  const double & betaNew,
+		  const int covarInd,
+		  const int numCovar){
   int i = 0;
   double diff = betaNew - betaOld;
   std::for_each(covarBeta.begin(),covarBeta.end(),

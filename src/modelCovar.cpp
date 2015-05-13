@@ -9,7 +9,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 ModelCovar::ModelCovar(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("Covar",genPars(),fD){
 }
 
 
@@ -19,6 +19,7 @@ ModelCovar::ModelCovar(const ModelCovar & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -43,47 +44,6 @@ ModelCovar & ModelCovar::operator=(const ModelCovar & m){
   return *this;
 }
 
-
-
-void ModelCovar::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./CovarParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./CovarParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./CovarParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./CovarParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
-
-void ModelCovar::save() const {
-  std::vector<double> par;
-  par = pars.at(0)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./CovarParam/intcp.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(1)->getPar();
-  njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./CovarParam/beta.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(3)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./CovarParam/trtAct.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./CovarParam/trtPre.txt"),
-	      std::ios_base::out);
-}
 
 
 void ModelCovar::fit(const SimData & sD, const TrtData & tD,

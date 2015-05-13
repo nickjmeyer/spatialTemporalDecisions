@@ -37,6 +37,7 @@
 #include "paramGDistKern.hpp"
 #include "paramTrend.hpp"
 #include "paramTrendPow.hpp"
+#include "paramTrendPowCon.hpp"
 
 
 #endif

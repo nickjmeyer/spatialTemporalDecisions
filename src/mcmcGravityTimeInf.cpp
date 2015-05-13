@@ -220,8 +220,8 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   ll_cur=ll_can=ll();
 
   // set the MH tuning parameters
-  acc=att= std::vector<int>(numCovar+6,0);
-  mh=std::vector<double>(numCovar+6,0.5);
+  acc=att= std::vector<int>(par.size(),0);
+  mh=std::vector<double>(par.size(),0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
   
   // mu=std::vector<double>(numCovar+2,0.0);

@@ -10,7 +10,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 ModelGravityEDist::ModelGravityEDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("GravityEDist",genPars(),fD){
 }
 
 
@@ -20,6 +20,7 @@ ModelGravityEDist::ModelGravityEDist(const ModelGravityEDist & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;

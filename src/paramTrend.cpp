@@ -6,6 +6,11 @@ unsigned int ParamTrend::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamTrend::initNames(){
+  return {"trend"};
+}
+
+
 void ParamTrend::initInternal(const FixedData & fD){
   prevTime = 0;
 }

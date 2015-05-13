@@ -23,10 +23,6 @@ class ModelTimeExpGDist : public ModelBase {
   ModelTimeExpGDist(const FixedData & fD);
   ModelTimeExpGDist(const ModelTimeExpGDist & m);
 
-  virtual void read();
-
-  virtual void save() const;
-
   virtual ModelTimeExpGDist & operator=(const ModelTimeExpGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

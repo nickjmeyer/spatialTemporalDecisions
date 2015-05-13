@@ -23,8 +23,6 @@ class ModelTimeEDist : public ModelBase {
   ModelTimeEDist(const FixedData & fD);
   ModelTimeEDist(const ModelTimeEDist & m);
 
-  virtual void read();
-
   virtual ModelTimeEDist & operator=(const ModelTimeEDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

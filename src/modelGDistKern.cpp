@@ -11,7 +11,7 @@ static std::vector<ParamBase *> genPars(){
 
 
 ModelGDistKern::ModelGDistKern(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("GDistKern",genPars(),fD){
 }
 
 
@@ -21,6 +21,7 @@ ModelGDistKern::ModelGDistKern(const ModelGDistKern & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -44,29 +45,6 @@ ModelGDistKern & ModelGDistKern::operator=(const ModelGDistKern & m){
   }
   return *this;
 }
-
-
-
-void ModelGDistKern::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./DistKernParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistKernParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  njm::fromFile(add,njm::sett.srcExt("./DistKernParam/sigma.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistKernParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistKernParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
 
 
 

@@ -24,8 +24,6 @@ class ModelTimeGDist : public ModelBase {
   ModelTimeGDist(const FixedData & fD);
   ModelTimeGDist(const ModelTimeGDist & m);
 
-  virtual void read();
-
   virtual ModelTimeGDist & operator=(const ModelTimeGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

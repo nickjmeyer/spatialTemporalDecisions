@@ -21,8 +21,6 @@ class ModelRadius : public ModelBase {
   ModelRadius(const FixedData & fD);
   ModelRadius(const ModelRadius & m);
 
-  virtual void read();
-  
   virtual ModelRadius & operator=(const ModelRadius & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

@@ -1,25 +1,28 @@
-#include "modelGravityGDist.hpp"
+#include "modelGravityGDistTrend.hpp"
 
 static std::vector<ParamBase *> genPars(){
   std::vector<ParamBase *> pars;
   pars.push_back(new ParamIntercept);
   pars.push_back(new ParamBeta);
   pars.push_back(new ParamGravityGDist);
+  pars.push_back(new ParamTrend);
   pars.push_back(new ParamTrt);
   return pars;
 }
 
-ModelGravityGDist::ModelGravityGDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+ModelGravityGDistTrend::ModelGravityGDistTrend(const FixedData & fD)
+  : ModelBase("GravityGDistTrend",genPars(),fD){
 }
 
 
-ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
+ModelGravityGDistTrend
+::ModelGravityGDistTrend(const ModelGravityGDistTrend & m){
   int i, parsSize = m.pars.size();
   pars.clear();
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -37,73 +40,18 @@ ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
 }
 
 
-ModelGravityGDist & ModelGravityGDist::operator=(const ModelGravityGDist & m){
+ModelGravityGDistTrend & ModelGravityGDistTrend
+::operator=(const ModelGravityGDistTrend & m){
   if(this != & m){
-    this->ModelGravityGDist::~ModelGravityGDist();
-    new (this) ModelGravityGDist(m);
+    this->ModelGravityGDistTrend::~ModelGravityGDistTrend();
+    new (this) ModelGravityGDistTrend(m);
   }
   return *this;
 }
 
 
 
-void ModelGravityGDist::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/power.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
-
-void ModelGravityGDist::save() const {
-  std::vector<double> par;
-  par = pars.at(0)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/intcp.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(1)->getPar();
-  njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityParam/beta.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(2)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/alpha.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/power.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(3)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtAct.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtPre.txt"),
-	      std::ios_base::out);
-}
-
-
-double ModelGravityGDist::tuneTrt(const FixedData & fD){
+double ModelGravityGDistTrend::tuneTrt(const FixedData & fD){
   int i,j;
   double avgCaves = 0.0;
   for(i = 0; i < fD.numNodes; i++)
@@ -129,7 +77,7 @@ double ModelGravityGDist::tuneTrt(const FixedData & fD){
 
 
 
-void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
+void ModelGravityGDistTrend::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
 		       const int & useInit){
   if(useInit){
@@ -145,7 +93,7 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
   }
 }
 
-void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
+void ModelGravityGDistTrend::fit(const SimData & sD, const TrtData & tD,
 		       const FixedData & fD, const DynamicData & dD,
 		       std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
@@ -157,7 +105,7 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
     std::vector< std::vector<int> > history;
     history=sD.history;
     history.push_back(sD.status);
-    ModelGravityGDistFitData dat(*this,all,fD,history);
+    ModelGravityGDistTrendFitData dat(*this,all,fD,history);
 
     x = gsl_vector_alloc(dim);
     for(i=0; i<dim; i++)
@@ -167,7 +115,7 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
 
     gsl_multimin_function minex_func;
     minex_func.n=dim;
-    minex_func.f=&modelGravityGDistFitObjFn;
+    minex_func.f=&modelGravityGDistTrendFitObjFn;
     minex_func.params=&dat;
 
     const gsl_multimin_fminimizer_type *T=
@@ -216,7 +164,7 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
 
   }
   else if(fitType == MCMC){
-    std::cout << "Error: ModelGravityGDist::fit(): MCMC not setup"
+    std::cout << "Error: ModelGravityGDistTrend::fit(): MCMC not setup"
 	      << std::endl;
     throw(1);
   }
@@ -229,8 +177,8 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
 }
 
 
-ModelGravityGDistFitData
-::ModelGravityGDistFitData(const ModelGravityGDist & m,
+ModelGravityGDistTrendFitData
+::ModelGravityGDistTrendFitData(const ModelGravityGDistTrend & m,
 		      const std::vector<double> & all,
 		      const FixedData & fD,
 		      const std::vector<std::vector<int> > & history){
@@ -240,9 +188,9 @@ ModelGravityGDistFitData
   this->history = history;
 }
 
-double modelGravityGDistFitObjFn (const gsl_vector * x, void * params){
-  ModelGravityGDistFitData * dat =
-    static_cast<ModelGravityGDistFitData*> (params);
+double modelGravityGDistTrendFitObjFn (const gsl_vector * x, void * params){
+  ModelGravityGDistTrendFitData * dat =
+    static_cast<ModelGravityGDistTrendFitData*> (params);
   double llike=0,prob,base,caveTerm;
   int i,j,k,t,time=dat->history.size(),dim=dat->m.getPar().size();
   std::vector<double> par;
@@ -261,6 +209,8 @@ double modelGravityGDistFitObjFn (const gsl_vector * x, void * params){
   ++it;
   double power = *it;
   ++it;
+  double trend = *it;
+  ++it;
   double trtAct = *it;
   ++it;
   double trtPre = *it;
@@ -278,6 +228,7 @@ double modelGravityGDistFitObjFn (const gsl_vector * x, void * params){
 	    caveTerm/=std::pow(dat->fD.caves.at(i)*dat->fD.caves.at(j),
 			       power);
 	    base-=alpha*caveTerm;
+	    base+=trend*double(t-1);
 	    if(dat->history.at(t-1).at(i) == 1)
 	      base-=trtPre;
 	    if(dat->history.at(t-1).at(j) == 3)

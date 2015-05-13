@@ -13,7 +13,7 @@ static std::vector<ParamBase *> genPars(){
 
 
 ModelTimeGDist::ModelTimeGDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("TimeGDist",genPars(),fD){
 }
 
 
@@ -23,6 +23,7 @@ ModelTimeGDist::ModelTimeGDist(const ModelTimeGDist & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -46,41 +47,6 @@ ModelTimeGDist & ModelTimeGDist::operator=(const ModelTimeGDist & m){
     new (this) ModelTimeGDist(m);
   }
   return *this;
-}
-
-
-
-void ModelTimeGDist::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/power.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/xi.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,
-		njm::sett.srcExt("./GravityTimeInfParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
 }
 
 

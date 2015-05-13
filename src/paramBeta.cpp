@@ -6,6 +6,15 @@ unsigned int ParamBeta::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamBeta::initNames(){
+  std::vector<std::string> str;
+  unsigned int i;
+  for(i = 0; i < parsSize; ++i)
+    str.push_back("beta"+njm::toString(i,"",0,0));
+  return str;
+}
+
+
 void ParamBeta::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   covar = fD.covar;

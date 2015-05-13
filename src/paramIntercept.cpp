@@ -5,6 +5,10 @@ unsigned int ParamIntercept::initParsSize(const FixedData & fD){
   return 1U; // unsigned int literal
 }
 
+std::vector<std::string> ParamIntercept::initNames(){
+  return {"intcp"};
+}
+
 
 void ParamIntercept::initInternal(const FixedData & fD){
 }

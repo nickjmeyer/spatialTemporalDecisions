@@ -1,8 +1,11 @@
 #include "model.hpp"
 
 
-ModelBase::ModelBase(const std::vector<ParamBase *> & newPars,
+ModelBase::ModelBase(const std::string & str,
+		     const std::vector<ParamBase *> & newPars,
 		     const FixedData & fD){
+  name = str;
+  
   set = 0;
   ready = 0;
   pars = newPars;
@@ -22,6 +25,22 @@ ModelBase::~ModelBase(){
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
     delete pars.at(i);
+  }
+}
+
+
+void ModelBase::read(){
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i){
+    pars[i]->read(name);
+  }
+}
+
+
+void ModelBase::save() const{
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i){
+    pars[i]->save(name);
   }
 }
 

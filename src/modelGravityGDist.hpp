@@ -22,10 +22,6 @@ class ModelGravityGDist : public ModelBase {
   ModelGravityGDist(const FixedData & fD);
   ModelGravityGDist(const ModelGravityGDist & m);
 
-  virtual void read();
-
-  virtual void save() const;
-  
   virtual ModelGravityGDist & operator=(const ModelGravityGDist & m);
 
   virtual void fit(const SimData & sD, const TrtData & tD,

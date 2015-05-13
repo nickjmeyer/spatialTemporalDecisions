@@ -5,6 +5,10 @@ unsigned int ParamTimeExp::initParsSize(const FixedData & fD){
   return 1U;
 }
 
+std::vector<std::string> ParamTimeExp::initNames(){
+  return {"xi"};
+}
+
 
 void ParamTimeExp::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;

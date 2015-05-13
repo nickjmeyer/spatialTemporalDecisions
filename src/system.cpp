@@ -3,17 +3,53 @@
 template class System<ModelGravityGDist,
 		      ModelGravityGDist>;
 
+template class System<ModelGravityGDistTrend,
+		      ModelGravityGDistTrend>;
+
+template class System<ModelGravityGDistTrendPow,
+		      ModelGravityGDistTrendPow>;
+
+template class System<ModelGravityGDistTrendPowCon,
+		      ModelGravityGDistTrendPowCon>;
+
 template class System<ModelGravityEDist,
 		      ModelGravityEDist>;
 
 template class System<ModelTimeGDist,
 		      ModelTimeGDist>;
 
+template class System<ModelTimeGDistTrend,
+		      ModelTimeGDistTrend>;
+
+template class System<ModelTimeGDistTrendPow,
+		      ModelTimeGDistTrendPow>;
+
+template class System<ModelTimeGDistTrendPowCon,
+		      ModelTimeGDistTrendPowCon>;
+
 template class System<ModelTimeExpGDist,
 		      ModelTimeExpGDist>;
 
+template class System<ModelTimeExpGDistTrend,
+		      ModelTimeExpGDistTrend>;
+
+template class System<ModelTimeExpGDistTrendPow,
+		      ModelTimeExpGDistTrendPow>;
+
+template class System<ModelTimeExpGDistTrendPowCon,
+		      ModelTimeExpGDistTrendPowCon>;
+
 template class System<ModelTimeExpCavesGDist,
 		      ModelTimeExpCavesGDist>;
+
+template class System<ModelTimeExpCavesGDistTrend,
+		      ModelTimeExpCavesGDistTrend>;
+
+template class System<ModelTimeExpCavesGDistTrendPow,
+		      ModelTimeExpCavesGDistTrendPow>;
+
+template class System<ModelTimeExpCavesGDistTrendPowCon,
+		      ModelTimeExpCavesGDistTrendPowCon>;
 
 template class System<ModelTimeExpCavesGDist,
 		      ModelTimeExpCavesEDist>;

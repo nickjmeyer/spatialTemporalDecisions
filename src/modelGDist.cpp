@@ -10,7 +10,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 ModelGDist::ModelGDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("GDist",genPars(),fD){
 }
 
 
@@ -20,6 +20,7 @@ ModelGDist::ModelGDist(const ModelGDist & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -43,26 +44,6 @@ ModelGDist & ModelGDist::operator=(const ModelGDist & m){
   }
   return *this;
 }
-
-
-
-void ModelGDist::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./DistParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistParam/dist.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./DistParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
 
 
 

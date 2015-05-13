@@ -7,6 +7,11 @@ unsigned int ParamTrt::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamTrt::initNames(){
+  return {"trtAct","trtPre"};
+}
+
+
 void ParamTrt::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
 

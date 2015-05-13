@@ -6,6 +6,11 @@ unsigned int ParamTime::initParsSize(const FixedData & fD){
 }
 
 
+std::vector<std::string> ParamTime::initNames(){
+  return {"xi"};
+}
+
+
 void ParamTime::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   time = std::vector<int>(numNodes,0);

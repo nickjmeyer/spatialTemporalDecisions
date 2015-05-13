@@ -12,7 +12,7 @@ static std::vector<ParamBase *> genPars(){
 
 
 ModelTimeExpCavesEDist::ModelTimeExpCavesEDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("TimeExpCavesEDist",genPars(),fD){
 }
 
 
@@ -23,6 +23,7 @@ ModelTimeExpCavesEDist::ModelTimeExpCavesEDist(const
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;

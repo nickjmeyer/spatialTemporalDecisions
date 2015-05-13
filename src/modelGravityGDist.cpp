@@ -10,7 +10,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 ModelGravityGDist::ModelGravityGDist(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("GravityGDist",genPars(),fD){
 }
 
 
@@ -20,6 +20,7 @@ ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -45,62 +46,6 @@ ModelGravityGDist & ModelGravityGDist::operator=(const ModelGravityGDist & m){
   return *this;
 }
 
-
-
-void ModelGravityGDist::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/beta.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/alpha.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/power.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./GravityParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
-
-void ModelGravityGDist::save() const {
-  std::vector<double> par;
-  par = pars.at(0)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/intcp.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(1)->getPar();
-  njm::toFile(njm::toString(par,"\n",""),
-	      njm::sett.srcExt("./GravityParam/beta.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(2)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/alpha.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/power.txt"),
-	      std::ios_base::out);
-
-  par = pars.at(3)->getPar();
-  njm::toFile(njm::toString(par.at(0),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtAct.txt"),
-	      std::ios_base::out);
-  
-  njm::toFile(njm::toString(par.at(1),"\n"),
-	      njm::sett.srcExt("./GravityParam/trtPre.txt"),
-	      std::ios_base::out);
-}
 
 
 double ModelGravityGDist::tuneTrt(const FixedData & fD){

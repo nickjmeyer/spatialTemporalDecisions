@@ -132,7 +132,7 @@ void runBayesP(const std::string & file, const int obs,
   sObs.modelGen_r.mcmc.samples.setMean();
   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
   sObs.modelGen_r.putPar(par.begin());
-  // sObs.modelGen_r.save();
+  sObs.modelGen_r.save();
 
   std::vector< std::vector<double> > stats;
   
@@ -164,6 +164,7 @@ void runBayesP(const std::string & file, const int obs,
   njm::toFile(njm::toString(stats,"\n",""),
 	      njm::sett.datExt("sampStats_"+file+"_",".txt"));
 
+  // param estimates
   std::vector<std::vector<double> > parSamp;
   int i;
   for(i = 0; i < (numSamples-numBurn); ++i){
@@ -172,6 +173,31 @@ void runBayesP(const std::string & file, const int obs,
 		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
 		std::ios_base::app);
   }
+
+  // posterior mean
+  s.modelGen_r.mcmc.samples.setMean();
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+	      njm::sett.datExt("sampStats_"+file+"_paramMean_",".txt"));
+
+  // likelihood
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.ll,"\n",""),
+	      njm::sett.datExt("sampStats_"+file+"_ll_",".txt"));
+
+  // likelihood at mean
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.llPt,"\n"),
+	      njm::sett.datExt("sampStats_"+file+"_llPt_",".txt"));
+
+  // pD
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.pD,"\n"),
+	      njm::sett.datExt("sampStats_"+file+"_pD_",".txt"));
+
+  // Dbar
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.Dbar,"\n"),
+	      njm::sett.datExt("sampStats_"+file+"_Dbar_",".txt"));
+
+  // DIC
+  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
+	      njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
 
 }
 
@@ -182,6 +208,7 @@ int main(int argc, char ** argv){
 
   int numSamples = 20000, numBurn = 10000, numStats = 10000;
   // int numSamples = 100, numBurn = 50, numStats = 50;
+  // int numSamples = 10, numBurn = 5, numStats = 5;
 
 #pragma omp parallel sections			\
   shared(numSamples,numBurn,numStats)
@@ -190,6 +217,27 @@ int main(int argc, char ** argv){
     {
       runBayesP<ModelGravityGDist
 		>("gravity",1,
+		  numSamples,numBurn,numStats);
+    }
+    
+#pragma omp section
+    {
+      runBayesP<ModelGravityGDistTrend
+		>("gravityTrend",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelGravityGDistTrendPow
+		>("gravityTrendPow",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelGravityGDistTrendPowCon
+		>("gravityTrendPowCon",0,
 		  numSamples,numBurn,numStats);
     }
 
@@ -202,6 +250,27 @@ int main(int argc, char ** argv){
 
 #pragma omp section
     {
+      runBayesP<ModelTimeGDistTrend
+		>("timeInfTrend",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeGDistTrendPow
+		>("timeInfTrendPow",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeGDistTrendPowCon
+		>("timeInfTrendPowCon",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
       runBayesP<ModelTimeExpGDist
 		>("timeInfExp",0,
 		  numSamples,numBurn,numStats);
@@ -209,8 +278,50 @@ int main(int argc, char ** argv){
 
 #pragma omp section
     {
+      runBayesP<ModelTimeExpGDistTrend
+		>("timeInfExpTrend",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeExpGDistTrendPow
+		>("timeInfExpTrendPow",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeExpGDistTrendPowCon
+		>("timeInfExpTrendCon",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
       runBayesP<ModelTimeExpCavesGDist
 		>("timeInfExpCaves",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeExpCavesGDistTrend
+		>("timeInfExpCavesTrend",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeExpCavesGDistTrendPow
+		>("timeInfExpCavesTrendPow",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelTimeExpCavesGDistTrendPowCon
+		>("timeInfExpCavesTrendPowCon",0,
 		  numSamples,numBurn,numStats);
     }
 

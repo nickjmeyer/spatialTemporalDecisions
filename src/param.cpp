@@ -1,16 +1,18 @@
 #include "param.hpp"
 
+ParamBase::ParamBase(){
+}
+
 ParamBase::ParamBase(const ParamBase & p){
   pars = p.pars;
   beg = pars.begin();
   end = pars.end();
   parsSize = p.parsSize;
+  names = p.names;
 }
 
 
 void ParamBase::init(const FixedData & fD){
-  // scalar parameter
-
   // initialize the size
   parsSize = initParsSize(fD);
 
@@ -19,8 +21,31 @@ void ParamBase::init(const FixedData & fD){
   beg = pars.begin();
   end = pars.end();
 
+  // names
+  names = initNames();
+
   // initialize the internal information
   initInternal(fD);
+}
+
+
+void ParamBase::save(const std::string & m) const {
+  unsigned int i;
+  for(i = 0; i < parsSize; ++i)
+    njm::toFile(pars.at(i),
+		njm::sett.srcExt("./Param"+m+"/"+names.at(i)+".txt"),
+		std::ios_base::out);
+}
+
+
+void ParamBase::read(const std::string & m){
+  unsigned int i;
+  double val;
+  for(i = 0; i < parsSize; ++i){
+    njm::fromFile(val,
+		  njm::sett.srcExt("./Param"+m+"/"+names.at(i)+".txt"));
+    pars.at(i) = val;
+  }
 }
 
 

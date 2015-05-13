@@ -10,7 +10,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 ModelRadius::ModelRadius(const FixedData & fD)
-  : ModelBase(genPars(),fD){
+  : ModelBase("Radius",genPars(),fD){
 }
 
 
@@ -20,6 +20,7 @@ ModelRadius::ModelRadius(const ModelRadius & m){
   for(i = 0; i < parsSize; ++i)
     pars.push_back(m.pars.at(i)->clone());
 
+  name = m.name;
   numPars = m.numPars;
   set = m.set;
   probs = m.probs;
@@ -41,26 +42,6 @@ ModelRadius & ModelRadius::operator=(const ModelRadius & m){
   }
   return *this;
 }
-
-
-
-void ModelRadius::read(){
-  std::vector<double> pars,add;
-  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/intcp.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/radius.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/trtAct.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-  
-  njm::fromFile(add,njm::sett.srcExt("./RadiusParam/trtPre.txt"));
-  pars.insert(pars.end(),add.begin(),add.end());
-
-  putPar(pars.begin());
-}
-
 
 
 

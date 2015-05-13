@@ -227,8 +227,8 @@ void GravityTimeInfExpCavesMcmc::sample(int const numSamples, int const numBurn,
   ll_cur=ll_can=ll();
 
   // set the MH tuning parameters
-  acc=att= std::vector<int>(numCovar+6,0);
-  mh=std::vector<double>(numCovar+6,0.5);
+  acc=att= std::vector<int>(par.size(),0);
+  mh=std::vector<double>(par.size(),0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
   
   // mu=std::vector<double>(numCovar+2,0.0);
@@ -240,7 +240,7 @@ void GravityTimeInfExpCavesMcmc::sample(int const numSamples, int const numBurn,
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){
