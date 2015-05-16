@@ -494,29 +494,29 @@ void System<MG,
   modelGen.modFill(sD,tD,fD,dD);
   modelGen.infProbs(sD,tD,fD,dD);
 
-  std::vector<double> infProbs = modelGen.infProbs();
+  // std::vector<double> infProbs = modelGen.infProbs();
 
-  double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
-  double sq = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
-			      [](const double a, const double b){
-				return a + b*b;
-			      });
+  // double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
+  // double sq = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
+  // 			      [](const double a, const double b){
+  // 				return a + b*b;
+  // 			      });
 
-  double n = sD.numNotInfec;
-  mn*=mn/n;
-  std::cout << " t: " << sD.time << std::endl
-	    << " o: " << value() << std::endl
-	    << "mn: " << mn << std::endl
-	    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+  // double n = sD.numNotInfec;
+  // mn*=mn/n;
+  // std::cout << " t: " << sD.time << std::endl
+  // 	    << " o: " << value() << std::endl
+  // 	    << "mn: " << mn << std::endl
+  // 	    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
 
-  std::vector<double> vals = modelGen.probs;
+  // std::vector<double> vals = modelGen.probs;
 
-  mn = std::accumulate(vals.begin(),vals.end(),0.0);
+  // mn = std::accumulate(vals.begin(),vals.end(),0.0);
 
-  std::cout << "raw probs: " << mn << std::endl;
+  // std::cout << "raw probs: " << mn << std::endl;
   
 
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   
 					       
