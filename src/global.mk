@@ -44,6 +44,7 @@ OBJECTS += utilities.o \
 	paramTimeExp.o \
 	paramTimeExpCaves.o \
 	paramGDist.o \
+	paramGDistPow.o \
 	paramGDistKern.o \
 	paramRadius.o \
 	paramTrt.o \
@@ -67,6 +68,7 @@ OBJECTS += utilities.o \
 	modelTimeExpCavesGDistTrendPowCon.o \
 	modelTimeExpCavesEDist.o \
 	modelGDist.o \
+	modelGDistPow.o \
 	modelGDistKern.o \
 	modelRadius.o \
 	modelCovar.o \

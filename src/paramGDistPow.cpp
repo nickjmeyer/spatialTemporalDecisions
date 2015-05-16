@@ -63,5 +63,25 @@ std::vector<double> ParamGDistPow::partial(const int notNode,
 					   const TrtData & tD,
 					   const FixedData & fD,
 					   const DynamicData & dD){
-  return std::vector<double>(1,-dist[notNode*fD.numNodes + infNode]);
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double d = dist[notNode*fD.numNodes + infNode];
+  double dPow = std::pow(d,power);
+  double dLog = std::log(d);
+  return {d, alpha * dLog * dPow};
+}
+
+
+std::vector<double> ParamGDistPow::partial2(const int notNode,
+					    const int infNode,
+					    const SimData & sD,
+					    const TrtData & tD,
+					    const FixedData & fD,
+					    const DynamicData & dD){
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double d = dist[notNode*fD.numNodes + infNode];
+  double dPow = std::pow(d,power);
+  double dLog = std::log(d);
+  return {0.0 , dLog * dPow, dLog * dPow, alpha * dLog * dLog * dPow};
 }

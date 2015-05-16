@@ -63,5 +63,26 @@ std::vector<double> ParamTrendPowCon::partial(const int notNode,
 					      const TrtData & tD,
 					      const FixedData & fD,
 					      const DynamicData & dD){
-  return std::vector<double>(parsSize,sD.time);
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double ePower = std::exp(power);
+  double tPower = std::pow(sD.time,-ePower);
+  return {tPower, -alpha*ePower*std::log(double(sD.time))*tPower};
+}
+
+
+std::vector<double> ParamTrendPowCon::partial2(const int notNode,
+					       const int infNode,
+					       const SimData & sD,
+					       const TrtData & tD,
+					       const FixedData & fD,
+					       const DynamicData & dD){
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double ePower = std::exp(power);
+  double tPower = std::pow(sD.time,-ePower);
+  double logT = std::log(double(sD.time));
+  return {0.0 , - ePower*logT*tPower,
+      - ePower*logT*tPower,
+      alpha*std::exp(2*power)*tPower*logT*logT - alpha*ePower*tPower*logT};
 }

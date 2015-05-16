@@ -55,7 +55,7 @@ void ParamTrendPow::modFill(std::vector<double> & probs,
 		  x += val;
 		});
 }
-							   
+
 
 std::vector<double> ParamTrendPow::partial(const int notNode,
 					   const int infNode,
@@ -63,5 +63,25 @@ std::vector<double> ParamTrendPow::partial(const int notNode,
 					   const TrtData & tD,
 					   const FixedData & fD,
 					   const DynamicData & dD){
-  return std::vector<double>(parsSize,sD.time);
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double tPower = std::pow(double(sD.time),power);
+  
+  return {tPower,alpha*std::log(double(sD.time))*tPower};
+}
+
+
+
+std::vector<double> ParamTrendPow::partial2(const int notNode,
+					    const int infNode,
+					    const SimData & sD,
+					    const TrtData & tD,
+					    const FixedData & fD,
+					    const DynamicData & dD){
+  double alpha = pars.at(0);
+  double power = pars.at(1);
+  double tPower = std::pow(double(sD.time),power);
+  double logT = std::log(double(sD.time));
+  
+  return {0.0, logT*tPower, logT*tPower, alpha*logT*logT*tPower};
 }

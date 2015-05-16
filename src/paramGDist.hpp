@@ -41,7 +41,6 @@ class ParamGDist : public ParamBase {
 				      const TrtData & tD,
 				      const FixedData & fD,
 				      const DynamicData & dD);
-
 };
 
 
