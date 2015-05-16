@@ -22,6 +22,9 @@ template class RankAgent<ToyFeatures4<ModelTimeGDistTrendPow>,
 template class RankAgent<ToyFeatures5<ModelTimeGDistTrendPow>,
 			 ModelTimeGDistTrendPow>;
 
+template class RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+			 ModelTimeExpCavesGDistTrendPowCon>;
+
 template class RankAgent<ToyFeatures4<ModelTimeExpCavesEDist>,
 			 ModelTimeExpCavesEDist>;
 

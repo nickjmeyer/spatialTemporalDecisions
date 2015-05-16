@@ -69,6 +69,13 @@ template class PlainRunner<System<ModelTimeGDistTrendPow,
 				     ModelTimeGDistTrendPow> >;
 
 
+template class
+PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
+
+
 template class PlainRunner<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesEDist>,
 			   RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
@@ -220,6 +227,10 @@ template class VanillaRunner<System<ModelTimeGDistTrendPow,
 				    ModelTimeGDistTrendPow>,
 			     NoTrt<ModelTimeGDistTrendPow> >;
 
+template class VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+				    ModelTimeExpCavesGDistTrendPowCon>,
+			     NoTrt<ModelTimeExpCavesGDistTrendPowCon> >;
+
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesGDist>,
 			     ProximalGDistAgent<ModelTimeExpCavesGDist> >;
@@ -227,6 +238,11 @@ template class VanillaRunner<System<ModelTimeExpCavesGDist,
 template class VanillaRunner<System<ModelTimeGDistTrendPow,
 				    ModelTimeGDistTrendPow>,
 			     ProximalGDistAgent<ModelTimeGDistTrendPow> >;
+
+template class
+VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		     ModelTimeExpCavesGDistTrendPowCon>,
+	      ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesEDist>,
@@ -323,6 +339,19 @@ template class VanillaRunnerNS<System<ModelTimeGDistTrendPow,
 				      ModelTimeGDistTrendPow>,
 			       MyopicAgent<ModelTimeGDistTrendPow> >;
 
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+				      ModelTimeExpCavesGDistTrendPowCon>,
+			       NoTrt<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+		       ModelTimeExpCavesGDistTrendPowCon>,
+		ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+				      ModelTimeExpCavesGDistTrendPowCon>,
+			       MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,
 			       NoTrt<ModelTimeExpCavesGDist> >;
@@ -356,6 +385,12 @@ template class VanillaRunnerNS<System<ModelTimeGDistTrendPow,
 				      ModelTimeGDistTrendPow>,
 			       RankAgent<ToyFeatures4<ModelTimeGDistTrendPow>,
 					 ModelTimeGDistTrendPow> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+		       ModelTimeExpCavesGDistTrendPowCon>,
+		RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+			  ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
@@ -432,6 +467,10 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 template class FitOnlyRunner<System<ModelTimeGDistTrendPow,
 				    ModelTimeGDistTrendPow>,
 			     MyopicAgent<ModelTimeGDistTrendPow> >;
+
+template class FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+				    ModelTimeExpCavesGDistTrendPowCon>,
+			     MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesEDist>,
@@ -626,6 +665,18 @@ OptimRunner<System<ModelTimeGDistTrendPow,
 		      RankAgent<ToyFeatures5<ModelTimeGDistTrendPow>,
 				ModelTimeGDistTrendPow>,
 		      ModelTimeGDistTrendPow> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesGDistTrendPowCon>,
+		      RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+				ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
 
 
 template class
@@ -1179,6 +1230,18 @@ TuneRunner<System<ModelTimeGDistTrendPow,
 		     RankAgent<ToyFeatures5<ModelTimeGDistTrendPow>,
 			       ModelTimeGDistTrendPow>,
 		     ModelTimeGDistTrendPow> >;
+
+
+template class
+TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		  ModelTimeExpCavesGDistTrendPowCon>,
+	   RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon>,
+	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			    ModelTimeExpCavesGDistTrendPowCon>,
+		     RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+			       ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon> >;
 
 
 template class

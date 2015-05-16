@@ -6,6 +6,8 @@ template class MyopicAgent<ModelTimeExpCavesGDist>;
 
 template class MyopicAgent<ModelTimeGDistTrendPow>;
 
+template class MyopicAgent<ModelTimeExpCavesGDistTrendPowCon>;
+
 template class MyopicAgent<ModelTimeExpCavesEDist>;
 
 template class MyopicAgent<ModelRadius>;

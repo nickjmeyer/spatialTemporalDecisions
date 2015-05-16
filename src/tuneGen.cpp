@@ -236,7 +236,7 @@ int main(int argc, char ** argv){
 
   
   {
-    typedef ModelTimeGDistTrendPow GM;
+    typedef ModelTimeExpCavesGDistTrendPowCon GM;
     typedef GM EM;
 
     typedef System<GM,EM> S;
@@ -244,7 +244,7 @@ int main(int argc, char ** argv){
     typedef ProximalGDistAgent<EM> PA;
     typedef MyopicAgent<EM> MA;
 
-    typedef ToyFeatures4<EM> F;
+    typedef ToyFeatures5<EM> F;
     typedef RankAgent<F,EM> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
