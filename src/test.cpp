@@ -4,14 +4,14 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDist MG;
+  typedef ModelTimeGDistTrendPow MG;
   
   typedef MG ME;
 
   typedef System<MG,ME> S;
 
-  // typedef NoTrt<ME> NT;
-  // typedef ProximalGDistAgent<ME> PA;
+  typedef NoTrt<ME> NT;
+  typedef ProximalGDistAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
   // typedef ToyFeatures4<ME> F;
@@ -21,24 +21,25 @@ int main(int argc, char ** argv){
   // typedef M1SpOptim<S,RA,ME> SPO;
   // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
-  // typedef VanillaRunner<S,NT> R_NT;
-  // typedef VanillaRunner<S,PA> R_PA;
+  typedef VanillaRunner<S,NT> R_NT;
+  typedef VanillaRunner<S,PA> R_PA;
   // typedef FitOnlyRunner<S,MA> R_MA;
   // typedef OptimRunner<S,RA,SPO> R_RA;
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
-  S s("obsData.txt");
-  // S s;
+  // S s("obsData.txt");
+  S s;
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
-  // int numReps = 96;
-  Starts starts("startingLocations.txt");
-  s.reset(starts[0]);
+  int numReps = 1;
+  // Starts starts("startingLocations.txt");
+  Starts starts(10,s.fD.numNodes);
+  // s.reset(starts[0]);
 
-  // NT nt;
-  // PA pa;
+  NT nt;
+  PA pa;
   // MA ma;
   // RA ra;
   // OA oa;
@@ -46,24 +47,26 @@ int main(int argc, char ** argv){
   // SPO spo;
   // OSSPO osspo;
 
-  // R_NT r_nt;
-  // R_PA r_pa;
+  R_NT r_nt;
+  R_PA r_pa;
   // R_MA r_ma;
   // R_RA r_ra;
   // R_OA r_oa;
 
 
-  // RunStats rs;
+  RunStats rs;
 
-  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  // njm::message("   No treatment: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  std::cout << "gen mod: " << njm::toString(s.modelGen_r.getPar()," ","\n");
+
+  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  njm::message("   No treatment: "
+  	       + njm::toString(rs.smean(),"")
+  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  // rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  // njm::message("       Proximal: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
+  njm::message("       Proximal: "
+  	       + njm::toString(rs.smean(),"")
+  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   // rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   // njm::message("         Myopic: "
@@ -86,60 +89,6 @@ int main(int argc, char ** argv){
   //   s.nextPoint();
   // }
 
-  std::cout << "value: " << njm::toString(s.value(),"\n");
-
-  int numSamples = 500, numBurn = 100;
-
-#pragma omp parallel sections
-  {
-#pragma omp section
-    {
-      GravityMcmc mcmc;
-      mcmc.load(s.sD.history,s.sD.status,s.fD);
-      mcmc.sample(numSamples,numBurn);
-
-      mcmc.samples.setMean();
-      std::cout << "Gravity::par: " << std::endl
-		<< njm::toString(mcmc.samples.getPar()," ","")
-		<< std::endl;;
-    }
-    
-#pragma omp section
-    {
-      GravityTimeInfMcmc mcmc;
-      mcmc.load(s.sD.history,s.sD.status,s.fD);
-      mcmc.sample(numSamples,numBurn);
-
-      mcmc.samples.setMean();
-      std::cout << "GravityTimeInf::par: " << std::endl
-		<< njm::toString(mcmc.samples.getPar()," ","")
-		<< std::endl;;
-    }
-    
-#pragma omp section
-    {
-      GravityTimeInfExpMcmc mcmc;
-      mcmc.load(s.sD.history,s.sD.status,s.fD);
-      mcmc.sample(numSamples,numBurn);
-
-      mcmc.samples.setMean();
-      std::cout << "GravityTimeInfExp::par: " << std::endl
-		<< njm::toString(mcmc.samples.getPar()," ","")
-		<< std::endl;
-    }  
-
-#pragma omp section
-    {
-      GravityTimeInfExpCavesMcmc mcmc;
-      mcmc.load(s.sD.history,s.sD.status,s.fD);
-      mcmc.sample(numSamples,numBurn);
-
-      mcmc.samples.setMean();
-      std::cout << "GravityTimeInfExpCaves::par: " << std::endl
-		<< njm::toString(mcmc.samples.getPar()," ","")
-		<< std::endl;;
-    }
-  }
 
   njm::sett.clean();
   return 0;

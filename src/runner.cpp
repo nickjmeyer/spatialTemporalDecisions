@@ -262,10 +262,10 @@ VanillaRunner<S,A>
 
   RunStats rs;
   std::vector<std::vector<double> > valueAll(numReps);
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(valueAll,starts,rs)					\
-  firstprivate(system,agent)					\
-  private(r,t)
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   shared(valueAll,starts,rs)					\
+//   firstprivate(system,agent)					\
+//   private(r,t)
   for(r=0; r<numReps; r++){
     njm::resetSeed(r);
     system.reset(starts[r]);
