@@ -4,7 +4,7 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeGDistTrendPow MG;
+  typedef ModelTimeExpCavesGDistTrendPowCon MG;
   
   typedef MG ME;
 
@@ -30,8 +30,8 @@ int main(int argc, char ** argv){
 
   // S s("obsData.txt");
   S s;
-  s.modelGen_r.setType(MLES);
-  s.modelEst_r.setType(MLES);
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
   int numReps = 1;
   // Starts starts("startingLocations.txt");

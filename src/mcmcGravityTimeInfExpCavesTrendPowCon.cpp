@@ -633,7 +633,8 @@ double GravityTimeInfExpCavesTrendPowConMcmc::ll(){
 	    else
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 
-	    baseProb += trend_can*std::pow(double(i-1),
+	    // i is time + 1
+	    baseProb += trend_can*std::pow(double(i), 
 					   -std::exp(trendPowCon_can));
 
 	    baseProb += xiTimeInfExpCaves_can.at(k*T + i-1);

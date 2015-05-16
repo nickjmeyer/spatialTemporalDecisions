@@ -564,7 +564,8 @@ double GravityTrendPowMcmc::ll(){
 	    else
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 
-	    baseProb += trend_can*std::pow(double(i-1),trendPow_can);
+	    // i is time + 1
+	    baseProb += trend_can*std::pow(double(i),trendPow_can);
 	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;

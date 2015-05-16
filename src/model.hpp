@@ -12,7 +12,8 @@
 enum Estimation {INVALID = -1, MLE = 0, MLES = 1, MCMC = 2};
 
 class ModelBase {
- protected:
+ // protected:
+ public:
   unsigned int numPars;
   std::string name;
   int set;

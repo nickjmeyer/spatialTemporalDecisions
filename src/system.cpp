@@ -507,8 +507,16 @@ void System<MG,
   std::cout << " t: " << sD.time << std::endl
 	    << " o: " << value() << std::endl
 	    << "mn: " << mn << std::endl
-	    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl
-	    << std::endl;
+	    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+
+  std::vector<double> vals = modelGen.probs;
+
+  mn = std::accumulate(vals.begin(),vals.end(),0.0);
+
+  std::cout << "raw probs: " << mn << std::endl;
+  
+
+  std::cout << std::endl;
 
   
 					       
