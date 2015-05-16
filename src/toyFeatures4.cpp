@@ -17,6 +17,8 @@ template class ToyFeatures4<ModelGravityGDist>;
 
 template class ToyFeatures4<ModelTimeGDist>;
 
+template class ToyFeatures4<ModelTimeGDistTrendPow>;
+
 template class ToyFeatures4<ModelTimeExpCavesGDist>;
 
 template class ToyFeatures4<ModelTimeExpCavesEDist>;

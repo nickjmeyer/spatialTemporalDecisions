@@ -69,14 +69,15 @@ void putPreTrt(const double & trt,
 
 double getDPow(const double & power, const double & alpha,
 	       const std::vector<double> & caves){
-  double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
-  meanCaves /= double(caves.size());
+  // double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+  // meanCaves /= double(caves.size());
 
-  double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
-  dPow = std::log(dPow);
-  dPow /= std::log(2.0);
+  // double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
+  // dPow = std::log(dPow);
+  // dPow /= std::log(2.0);
 
-  return(dPow);
+  // return(dPow);
+  return(1.0);
 }
 
 
@@ -96,18 +97,18 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   double tol = 0.01;
 
   std::vector<double> scaleD;
-  njm::fromFile(scaleD, njm::sett.srcExt("rawD.txt"));
+  njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
   double pastScale = 1.0;
   double currScale = getDPow(getPower(s.modelGen_r,s.fD),
 			     getAlpha(s.modelGen_r,s.fD),
 			     s.fD.caves);
 
   rescaleD(pastScale,currScale,scaleD);
-  s.fD.dist = scaleD;
+  s.fD.gDist = scaleD;
 
   std::vector<double> par = s.modelGen_r.getPar();
   double power = getPower(s.modelGen_r,s.fD);
-  double val = rn.run(s,nt,numReps,numYears,starts);
+  double val = rn.run(s,nt,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
@@ -147,10 +148,10 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 			getAlpha(s.modelGen_r,s.fD),
 			s.fD.caves);
     rescaleD(pastScale,currScale,scaleD);
-    s.fD.dist = scaleD;
+    s.fD.gDist = scaleD;
 
 
-    val = rn.run(s,nt,numReps,numYears,starts);
+    val = rn.run(s,nt,numReps,numYears,starts).smean();
     printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
     fflush(stdout);
   }
@@ -171,76 +172,76 @@ double TuneGenPA(S & s,const int numReps, const Starts & starts){
   PA pa;
   RP rp;
 
-  return rp.run(s,pa,numReps,s.fD.finalT,starts);
+  return rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 }
 
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  {
-    typedef ModelGravity GM;
-    typedef GM EM;
+  // {
+  //   typedef ModelGravityGDist GM;
+  //   typedef GM EM;
 
-    typedef System<GM,EM> S;
-    typedef NoTrt<EM> NT;
-    typedef ProximalAgent<EM> PA;
-    typedef MyopicAgent<EM> MA;
+  //   typedef System<GM,EM> S;
+  //   typedef NoTrt<EM> NT;
+  //   typedef ProximalGDistAgent<EM> PA;
+  //   typedef MyopicAgent<EM> MA;
 
-    typedef ToyFeatures4<EM> F;
-    typedef RankAgent<F,EM> RA;
+  //   typedef ToyFeatures4<EM> F;
+  //   typedef RankAgent<F,EM> RA;
 
-    typedef VanillaRunnerNS<S,NT> RN;
-    typedef VanillaRunnerNS<S,PA> RP;
-    typedef VanillaRunnerNS<S,MA> RM;
-    typedef VanillaRunnerNS<S,RA> RR;
+  //   typedef VanillaRunnerNS<S,NT> RN;
+  //   typedef VanillaRunnerNS<S,PA> RP;
+  //   typedef VanillaRunnerNS<S,MA> RM;
+  //   typedef VanillaRunnerNS<S,RA> RR;
 
-    S s;
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
+  //   S s;
+  //   s.modelEst_r = s.modelGen_r;
+  //   s.revert();
 
-    njm::resetSeed();
-    int numReps = 500;
-    Starts starts(numReps,s.fD.numNodes);
+  //   njm::resetSeed();
+  //   int numReps = 500;
+  //   Starts starts(numReps,s.fD.numNodes);
 
-    MA ma;
-    RM rm;
+  //   MA ma;
+  //   RM rm;
 
-    RA ra;
-    RR rr;
-    ra.reset();
+  //   RA ra;
+  //   RR rr;
+  //   ra.reset();
 
-    njm::message("Tuning Intercept");
+  //   njm::message("Tuning Intercept");
 
-    double valNT = TuneGenNT<S,NT,RN>(s,numReps,starts);
+  //   double valNT = TuneGenNT<S,NT,RN>(s,numReps,starts);
 
-    njm::message("Tuning Treatment");
+  //   njm::message("Tuning Treatment");
 
-    double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
+  //   double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
+  //   double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
 
-    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
+  //   double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
 
-    njm::message(" valNT: " + njm::toString(valNT,"") +
-		 "\n" +
-		 " valPA: " + njm::toString(valPA,"") +
-		 "\n" +
-		 " valMA: " + njm::toString(valMA,"") +
-		 "\n" +
-		 " valRA: " + njm::toString(valRA,""));
+  //   njm::message(" valNT: " + njm::toString(valNT,"") +
+  // 		 "\n" +
+  // 		 " valPA: " + njm::toString(valPA,"") +
+  // 		 "\n" +
+  // 		 " valMA: " + njm::toString(valMA,"") +
+  // 		 "\n" +
+  // 		 " valRA: " + njm::toString(valRA,""));
 
-    s.modelGen_r.save();
-  }
+  //   s.modelGen_r.save();
+  // }
 
   
   {
-    typedef ModelTimeExpCaves GM;
+    typedef ModelTimeGDistTrendPow GM;
     typedef GM EM;
 
     typedef System<GM,EM> S;
     typedef NoTrt<EM> NT;
-    typedef ProximalAgent<EM> PA;
+    typedef ProximalGDistAgent<EM> PA;
     typedef MyopicAgent<EM> MA;
 
     typedef ToyFeatures4<EM> F;
@@ -274,9 +275,9 @@ int main(int argc, char ** argv){
 
     double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
+    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
-    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
+    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
     njm::message(" valNT: " + njm::toString(valNT,"") +
 		 "\n" +
@@ -296,7 +297,7 @@ int main(int argc, char ** argv){
     priorMeanTrt *= 4.0;
 
     // write new distance matrix to file
-    njm::toFile(s.fD.dist,njm::sett.srcExt("d.txt"),
+    njm::toFile(s.fD.gDist,njm::sett.srcExt("gDist.txt"),
 		std::ios_base::out,"\n","");
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),

@@ -7,6 +7,8 @@ template class NoTrt<ModelTimeExpCavesGDist>;
 
 template class NoTrt<ModelTimeGDist>;
 
+template class NoTrt<ModelTimeGDistTrendPow>;
+
 template class NoTrt<ModelRadius>;
 
 template<class M>

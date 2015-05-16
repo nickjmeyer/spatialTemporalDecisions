@@ -2,6 +2,8 @@
 
 template class ProximalGDistAgent<ModelGravityGDist>;
 
+template class ProximalGDistAgent<ModelTimeGDistTrendPow>;
+
 template class ProximalGDistAgent<ModelTimeExpCavesGDist>;
 
 template class ProximalGDistAgent<ModelRadius>;

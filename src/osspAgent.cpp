@@ -2,6 +2,8 @@
 
 template class OsspAgent<ModelGravityGDist>;
 
+template class OsspAgent<ModelTimeGDistTrendPow>;
+
 template class OsspAgent<ModelTimeExpCavesGDist>;
 
 template class OsspAgent<ModelTimeExpCavesEDist>;
