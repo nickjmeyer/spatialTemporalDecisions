@@ -364,6 +364,8 @@ int main(int argc, char ** argv){
     typedef System<MG,ME> S;
     typedef NoTrt<ME> NT;
     
+    typedef VanillaRunnerNS<S,NT> RN;
+    
     S s;
     s.modelEst_r = s.modelGen_r;
     s.revert();
