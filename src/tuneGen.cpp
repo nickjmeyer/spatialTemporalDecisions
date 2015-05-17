@@ -1,91 +1,93 @@
 #include "tuneGen.hpp"
 
-template <class M>
-double getAlpha(const M & m,
-		const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(1 + fD.numCovar);
-}
+// template <class M>
+// double getAlpha(const M & m,
+// 		const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   return par.at(1 + fD.numCovar);
+// }
 
-template <class M>
-void putAlpha(const double & alpha,
-	      M & m,
-	      const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(1 + fD.numCovar) = alpha;
-  m.putPar(par.begin());
-}
+// template <class M>
+// void putAlpha(const double & alpha,
+// 	      M & m,
+// 	      const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   par.at(1 + fD.numCovar) = alpha;
+//   m.putPar(par.begin());
+// }
 
-template <class M>
-double getPower(const M & m,
-		const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(1 + fD.numCovar + 1);
-}
+// template <class M>
+// double getPower(const M & m,
+// 		const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   return par.at(1 + fD.numCovar + 1);
+// }
 
-template <class M>
-void putPower(const double & power,
-	      M & m,
-	      const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(1 + fD.numCovar + 1) = power;
-  m.putPar(par.begin());
-}
+// template <class M>
+// void putPower(const double & power,
+// 	      M & m,
+// 	      const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   par.at(1 + fD.numCovar + 1) = power;
+//   m.putPar(par.begin());
+// }
 
-template <class M>
-double getActTrt(const M & m,
-		 const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(par.size() - 2);
-}
+// template <class M>
+// double getActTrt(const M & m,
+// 		 const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   return par.at(par.size() - 2);
+// }
 
-template <class M>
-void putActTrt(const double & trt,
-	       M & m,
-	       const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(par.size() - 2) = trt;
-  m.putPar(par.begin());
-}
-
-
-template <class M>
-double getPreTrt(const M & m,
-		 const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(par.size() - 1);
-}
-
-template <class M>
-void putPreTrt(const double & trt,
-	       M & m,
-	       const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(par.size() - 1) = trt;
-  m.putPar(par.begin());
-}
+// template <class M>
+// void putActTrt(const double & trt,
+// 	       M & m,
+// 	       const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   par.at(par.size() - 2) = trt;
+//   m.putPar(par.begin());
+// }
 
 
+// template <class M>
+// double getPreTrt(const M & m,
+// 		 const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   return par.at(par.size() - 1);
+// }
 
-double getDPow(const double & power, const double & alpha,
-	       const std::vector<double> & caves){
-  // double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
-  // meanCaves /= double(caves.size());
-
-  // double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
-  // dPow = std::log(dPow);
-  // dPow /= std::log(2.0);
-
-  // return(dPow);
-  return(1.0);
-}
+// template <class M>
+// void putPreTrt(const double & trt,
+// 	       M & m,
+// 	       const FixedData & fD){
+//   std::vector<double> par = m.getPar();
+//   par.at(par.size() - 1) = trt;
+//   m.putPar(par.begin());
+// }
 
 
-void rescaleD(const double & pastScale, const double & currScale,
-	      std::vector<double> & d){
-  double scale = currScale/pastScale;
-  std::for_each(d.begin(),d.end(),[&scale](double & x){x=std::pow(x,scale);});
-}
+
+// double getDPow(const double & power, const double & alpha,
+// 	       const std::vector<double> & caves){
+//   // double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+//   // meanCaves /= double(caves.size());
+
+//   // double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
+//   // dPow = std::log(dPow);
+//   // dPow /= std::log(2.0);
+
+//   // return(dPow);
+//   return(1.0);
+// }
+
+
+// void rescaleD(const double & pastScale, const double & currScale,
+// 	      std::vector<double> & d){
+//   double scale = currScale/pastScale;
+//   std::for_each(d.begin(),d.end(),[&scale](double & x){x=std::pow(x,scale);});
+// }
+
+
 
 template <class S, class NT,class RN>
 double TuneGenNT(S & s, const int numReps, const Starts & starts){
@@ -96,20 +98,21 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   int numYears = s.fD.finalT;
   double tol = 0.01;
 
-  std::vector<double> scaleD;
-  njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
-  double pastScale = 1.0;
-  double currScale = getDPow(getPower(s.modelGen_r,s.fD),
-			     getAlpha(s.modelGen_r,s.fD),
-			     s.fD.caves);
+  // std::vector<double> scaleD;
+  // njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
+  // double pastScale = 1.0;
+  // double currScale = getDPow(getPower(s.modelGen_r,s.fD),
+  // 			     getAlpha(s.modelGen_r,s.fD),
+  // 			     s.fD.caves);
 
-  rescaleD(pastScale,currScale,scaleD);
-  s.fD.gDist = scaleD;
+  // rescaleD(pastScale,currScale,scaleD);
+  // s.fD.gDist = scaleD;
 
   std::vector<double> par = s.modelGen_r.getPar();
-  double power = getPower(s.modelGen_r,s.fD);
+  s.modelEst_r.putPar(par.begin());
+  // double power = getPower(s.modelGen_r,s.fD);
   double val = rn.run(s,nt,numReps,numYears,starts).smean();
-  double scale = 1.1, shrink = .9;
+  double scale = 1.025, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
 
@@ -121,8 +124,9 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
       if(!above)
 	scale*=shrink;
       
-      std::for_each(par.begin(),par.end(),
-		    [&scale](double & x){x*= 1.0 + scale;});
+      // std::for_each(par.begin(),par.end(),
+      // 		    [&scale](double & x){x*= 1.0 + scale;});
+      s.modelGen_r.linScale(1.0 + scale);
       
       above = 1;
     }
@@ -130,25 +134,29 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
       if(above)
 	scale*=shrink;
 
-      std::for_each(par.begin(),par.end(),
-		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
+      // std::for_each(par.begin(),par.end(),
+      // 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
+      s.modelGen_r.linScale(1.0/(1.0 + scale));
       
       above = 0;
     }
 
-    s.modelGen_r.putPar(par.begin());
-    putPower(power,s.modelGen_r,s.fD);
+    par = s.modelGen_r.getPar();
     s.modelEst_r.putPar(par.begin());
-    putPower(power,s.modelEst_r,s.fD);
+    
+    // s.modelGen_r.putPar(par.begin());
+    // putPower(power,s.modelGen_r,s.fD);
+    // s.modelEst_r.putPar(par.begin());
+    // putPower(power,s.modelEst_r,s.fD);
 
     s.revert();
 
-    pastScale = currScale;
-    currScale = getDPow(getPower(s.modelGen_r,s.fD),
-			getAlpha(s.modelGen_r,s.fD),
-			s.fD.caves);
-    rescaleD(pastScale,currScale,scaleD);
-    s.fD.gDist = scaleD;
+    // pastScale = currScale;
+    // currScale = getDPow(getPower(s.modelGen_r,s.fD),
+    // 			getAlpha(s.modelGen_r,s.fD),
+    // 			s.fD.caves);
+    // rescaleD(pastScale,currScale,scaleD);
+    // s.fD.gDist = scaleD;
 
 
     val = rn.run(s,nt,numReps,numYears,starts).smean();
@@ -160,20 +168,79 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 }
 
 
-template <class S, class PA, class RP>
-double TuneGenPA(S & s,const int numReps, const Starts & starts){
-  double trtSize = s.modelGen.tuneTrt(s.fD);
+template <class S, class MA,class RN>
+double TuneGenMA(S & s, const int numReps, const Starts & starts){
+  MA ma;
+  RN rn;
 
-  putActTrt(trtSize,s.modelGen_r,s.fD);
-  putPreTrt(trtSize,s.modelGen_r,s.fD);
-  putActTrt(trtSize,s.modelEst_r,s.fD);
-  putPreTrt(trtSize,s.modelEst_r,s.fD);
+  double goal = 0.5;
+  int numYears = s.fD.finalT;
+  double tol = 0.01;
 
-  PA pa;
-  RP rp;
+  std::vector<double> par;
+  double trt = 1.0;
+  
+  s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+  par = s.modelGen_r.getPar();
+  s.modelEst_r.putPar(par.begin());
+  s.revert();
+  
+  double val = rn.run(s,ma,numReps,numYears,starts).smean();
+  double scale = 1.1, shrink = .9;
+  int above = int(val > goal);
+  int iter = 0;
 
-  return rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+  printf("Iter: %05d  >>>  Current value: %08.6f\r",
+	 ++iter, val);
+
+  while(std::abs(val - goal) > tol){
+    if(val > goal){
+      if(!above)
+	scale*=shrink;
+
+      trt *= 1.0 + scale;
+      
+      above = 1;
+    }
+    else{
+      if(above)
+	scale*=shrink;
+
+      trt *= 1.0/(1.0 + scale);
+      
+      above = 0;
+    }
+
+
+    s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+    par = s.modelGen_r.getPar();
+    s.modelEst_r.putPar(par.begin());
+    s.revert();
+
+
+    val = rn.run(s,ma,numReps,numYears,starts).smean();
+    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
+    fflush(stdout);
+  }
+
+  return(val);
 }
+
+
+// template <class S, class PA, class RP>
+// double TuneGenPA(S & s,const int numReps, const Starts & starts){
+//   double trtSize = s.modelGen.tuneTrt(s.fD);
+
+//   putActTrt(trtSize,s.modelGen_r,s.fD);
+//   putPreTrt(trtSize,s.modelGen_r,s.fD);
+//   putActTrt(trtSize,s.modelEst_r,s.fD);
+//   putPreTrt(trtSize,s.modelEst_r,s.fD);
+
+//   PA pa;
+//   RP rp;
+
+//   return rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+// }
 
 
 int main(int argc, char ** argv){
@@ -260,8 +327,8 @@ int main(int argc, char ** argv){
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
     
-    MA ma;
-    RM rm;
+    PA pa;
+    RP rp;
 
     RA ra;
     RR rr;
@@ -273,9 +340,9 @@ int main(int argc, char ** argv){
 
     njm::message("Tuning Treatment");
 
-    double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
+    double valMA = TuneGenMA<S,MA,RM>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+    double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
     double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
@@ -292,8 +359,8 @@ int main(int argc, char ** argv){
 
     std::vector<double> par = s.modelGen_r.getPar();
 
-    double priorMeanTrt = (getPreTrt(s.modelGen_r,s.fD)
-			   + getPreTrt(s.modelGen_r,s.fD))/2.0;
+    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+			   + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
     priorMeanTrt *= 4.0;
 
     // write new distance matrix to file

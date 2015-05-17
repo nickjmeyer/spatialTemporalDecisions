@@ -45,6 +45,13 @@ void ModelBase::save() const{
 }
 
 
+void ModelBase::linScale(const double & scale){
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i)
+    pars.at(i)->linScale(scale);
+}
+
+
 void ModelBase::setType(const Estimation & est){
   fitType = est;
 }
@@ -205,6 +212,18 @@ std::vector<double> ModelBase::getPar() const{
 }
 
 
+std::vector<double>
+ModelBase::getPar(const std::vector<std::string> & name) const{
+  std::vector<double> res,add;
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i){
+    add = pars[i]->getPar(name);
+    res.insert(res.end(),add.begin(),add.end());
+  }
+  return res;
+}
+
+
 std::vector<double>::const_iterator
 ModelBase::putPar(std::vector<double>::const_iterator it){
   set = 0;
@@ -214,6 +233,22 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
     it = pars[i]->putPar(it);
   }
   return it;
+}
+
+
+void ModelBase::setPar(const std::string & name,
+		       const double & val){
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i)
+    pars[i]->setPar(name,val);
+}
+
+
+void ModelBase::setPar(const std::vector<std::string> & name,
+		       const double & val){
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i)
+    pars[i]->setPar(name,val);
 }
 
 

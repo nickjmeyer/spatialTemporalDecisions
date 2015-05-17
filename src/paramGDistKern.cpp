@@ -12,6 +12,12 @@ std::vector<std::string> ParamGDistKern::initNames(){
 }
 
 
+std::vector<bool> ParamGDistKern::initToScale(){
+  return {true,false};
+}
+
+
+
 void ParamGDistKern::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   dist = fD.gDist;

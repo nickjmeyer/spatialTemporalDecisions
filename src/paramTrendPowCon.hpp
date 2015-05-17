@@ -9,7 +9,9 @@ class ParamTrendPowCon : public ParamBase {
   
   virtual unsigned int initParsSize(const FixedData & fD);
 
-  virtual std::vector<std::string> initNames();  
+  virtual std::vector<std::string> initNames();
+
+  virtual std::vector<bool> initToScale();
 
   virtual void initInternal(const FixedData & fD);
   

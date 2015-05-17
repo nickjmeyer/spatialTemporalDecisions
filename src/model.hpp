@@ -107,9 +107,18 @@ class ModelBase {
 		   std::vector<double> pars) = 0;
   
   virtual std::vector<double> getPar() const;
+
+  virtual std::vector<double>
+  getPar(const std::vector<std::string> & name) const;
   
   virtual std::vector<double>::const_iterator
   putPar(std::vector<double>::const_iterator it);
+
+  virtual void setPar(const std::string & name, const double & val);
+  virtual void setPar(const std::vector<std::string> & name,
+		      const double & val);
+
+  virtual void linScale(const double & scale);
 
   virtual void setType(const Estimation & est);
   virtual Estimation getType() const;

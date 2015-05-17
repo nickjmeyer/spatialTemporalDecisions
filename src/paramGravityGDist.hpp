@@ -15,6 +15,8 @@ class ParamGravityGDist : public ParamBase {
 
   virtual std::vector<std::string> initNames();
 
+  virtual std::vector<bool> initToScale();
+
   virtual void initInternal(const FixedData & fD);
   
   virtual void updateBefore();

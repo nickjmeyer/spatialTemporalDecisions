@@ -11,6 +11,11 @@ std::vector<std::string> ParamTrendPow::initNames(){
 }
 
 
+std::vector<bool> ParamTrendPow::initToScale(){
+  return {true,false};
+}
+
+
 void ParamTrendPow::initInternal(const FixedData & fD){
   prevTime = 0;
 }

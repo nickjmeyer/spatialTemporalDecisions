@@ -12,6 +12,11 @@ std::vector<std::string> ParamRadius::initNames(){
 }
 
 
+std::vector<bool> ParamRadius::initToScale(){
+  return std::vector<bool>(parsSize,false);
+}
+
+
 void ParamRadius::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   logDist = fD.logGDist;

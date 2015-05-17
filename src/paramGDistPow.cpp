@@ -11,6 +11,11 @@ std::vector<std::string> ParamGDistPow::initNames(){
   return {"alpha","dPow"};
 }
 
+std::vector<bool> ParamGDistPow::initToScale(){
+  return {true,false};
+}
+
+
 
 void ParamGDistPow::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;

@@ -14,12 +14,17 @@ class ParamBase {
   std::vector<double> pars;
   std::vector<double>::iterator beg,end;
   unsigned int parsSize;
+  
   std::vector<std::string> names;
+
+  std::vector<bool> toScale;
 
 
   virtual unsigned int initParsSize(const FixedData & fD) = 0;
 
   virtual std::vector<std::string> initNames() = 0;
+
+  virtual std::vector<bool> initToScale();
   
   // initialize the internal book-keeping data
   virtual void initInternal(const FixedData & fD) = 0;
@@ -47,12 +52,17 @@ class ParamBase {
   
   // retrieve pars
   std::vector<double> getPar() const;
+  std::vector<double> getPar(const std::vector<std::string> & name) const;
   
   // change pars
   // requires that newParInt has at least parsSize elements left
   // requires that beg,end point to begin() and end() of pars
   std::vector<double>::const_iterator
   putPar(std::vector<double>::const_iterator newParIt);
+
+  // set par by name
+  void setPar(const std::string & name, const double & val);
+  void setPar(const std::vector<std::string> & name, const double & val);
 
   // set the probs matrix
   // adds in the corresponding term
@@ -87,7 +97,9 @@ class ParamBase {
 				       const TrtData & tD,
 				       const FixedData & fD,
 				       const DynamicData & dD);
-  
+
+  // linear scaling of the parameters
+  virtual void linScale(const double & scale);
 };
 
 

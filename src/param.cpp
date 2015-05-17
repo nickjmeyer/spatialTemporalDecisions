@@ -9,6 +9,7 @@ ParamBase::ParamBase(const ParamBase & p){
   end = pars.end();
   parsSize = p.parsSize;
   names = p.names;
+  toScale = p.toScale;
 }
 
 
@@ -24,8 +25,16 @@ void ParamBase::init(const FixedData & fD){
   // names
   names = initNames();
 
+  // toScale
+  toScale = initToScale();
+
   // initialize the internal information
   initInternal(fD);
+}
+
+
+std::vector<bool> ParamBase::initToScale(){
+  return std::vector<bool>(parsSize,true);
 }
 
 
@@ -54,6 +63,20 @@ std::vector<double> ParamBase::getPar() const {
 }
 
 
+std::vector<double>
+ParamBase::getPar(const std::vector<std::string> & name) const{
+  unsigned int i,j;
+  std::vector<double> res;
+  for(i = 0; i < parsSize; ++i){
+    for(j = 0; j < name.size(); ++j){
+      if(name.at(j) == names.at(i))
+	res.push_back(pars.at(i));
+    }
+  }
+  return res;
+}
+
+
 std::vector<double>::const_iterator
 ParamBase::putPar(std::vector<double>::const_iterator newParIt){
   updateBefore();
@@ -62,6 +85,24 @@ ParamBase::putPar(std::vector<double>::const_iterator newParIt){
     *it = *newParIt;
   updateAfter();
   return newParIt;
+}
+
+
+void ParamBase::setPar(const std::string & name, const double & val){
+  unsigned int i;
+  for(i = 0; i < parsSize; ++i){
+    if(names.at(i) == name)
+      pars.at(i) = val;
+  }
+}
+
+
+void ParamBase::setPar(const std::vector<std::string> & name,
+		       const double & val){
+  unsigned int i;
+  for(i = 0; i < name.size(); ++i){
+    setPar(name.at(i),val);
+  }
 }
 
 
@@ -79,3 +120,11 @@ std::vector<double> ParamBase::partial2(const int notNode,
   return std::vector<double>(parsSize*parsSize,0);
 }
   
+
+void ParamBase::linScale(const double & scale){
+  unsigned int i;
+  for(i = 0; i < parsSize; ++i){
+    if(toScale.at(i))
+      pars.at(i)*=scale;
+  }
+}

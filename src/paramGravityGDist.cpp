@@ -12,6 +12,11 @@ std::vector<std::string> ParamGravityGDist::initNames(){
 }
 
 
+std::vector<bool> ParamGravityGDist::initToScale(){
+  return {true,false};
+}
+
+
 void ParamGravityGDist::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);

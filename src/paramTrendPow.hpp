@@ -11,6 +11,8 @@ class ParamTrendPow : public ParamBase {
   virtual void initInternal(const FixedData & fD);
 
   virtual std::vector<std::string> initNames();
+
+  virtual std::vector<bool> initToScale();
   
   virtual void updateBefore();
   
