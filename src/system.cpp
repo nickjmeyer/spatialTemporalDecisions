@@ -558,8 +558,13 @@ void System<MG,
   int i;
   int node,numNewInf=0;
   sD.newInfec.clear();
+  double R,Rtot = 0;
+  double propTot = 0;
   for(i=0; i<sD.numNotInfec; i++){
-    if(njm::runif01() < infProbs.at(i)){
+    R = njm::runif01();
+    Rtot += R;
+    propTot += infProbs.at(i);
+    if(R < infProbs.at(i)){
       node = sD.notInfec.at(i);
       sD.infected.push_back(node);
       sD.newInfec.push_back(node);
@@ -567,6 +572,14 @@ void System<MG,
       numNewInf++;
     }
   }
+
+
+  std::stringstream ss;
+  ss << "propTot: " << propTot << std::endl
+     << "   Rtot: " << Rtot << std::endl
+     << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl;
+  njm::message(ss.str());
+  
   std::sort(sD.infected.begin(),sD.infected.end());
   std::sort(sD.notInfec.begin(),sD.notInfec.end());
   sD.numInfected+=numNewInf;
