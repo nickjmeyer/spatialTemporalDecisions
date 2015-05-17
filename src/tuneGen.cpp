@@ -95,7 +95,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   RN rn;
 
   double goal = 0.7;
-  njm::message("Goal: " + njm::toString(goal,"",0,0));
+  njm::message("Goal: " + njm::toString(goal,""));
   
   int numYears = s.fD.finalT;
   double tol = 0.01;
@@ -184,7 +184,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
   
   double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
-  njm::message("Goal: " + njm::toString(goal,"",0,0));
+  njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
   std::vector<double> par;
