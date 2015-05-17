@@ -102,6 +102,8 @@ template <class M>
 void runBayesP(const std::string & file, const int obs,
 	       const int numSamples,const int numBurn,
 	       const int numStats){
+  njm::resetSeed(0);
+  
   typedef System<M,M> S;
 
   S sObs("obsData.txt");
