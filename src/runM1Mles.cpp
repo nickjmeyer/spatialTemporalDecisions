@@ -53,6 +53,8 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
+  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
 
   // std::vector<double> d = s.fD.gDist;
 

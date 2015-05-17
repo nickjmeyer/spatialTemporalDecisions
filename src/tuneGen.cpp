@@ -176,8 +176,10 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   njm::message("Est. goal: " + njm::toString(val,""));
 
   // write new distance to file
-  njm::toFile(s.fD.gDist, njm::sett.srcExt("gDist.txt"),
+  njm::toFile(njm::toString(s.fD.gDist,"\n",""), njm::sett.srcExt("gDist.txt"),
 	      std::ios_base::out);
+
+  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
 
   return(val);
 }
@@ -251,6 +253,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   }
 
   njm::message("Est. goal: " + njm::toString(val,""));
+
+  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
 
   return(val);
 }
