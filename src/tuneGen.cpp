@@ -166,6 +166,8 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     fflush(stdout);
   }
 
+  njm::message("Est. goal: " + njm::toString(val,""));
+
   return(val);
 }
 
@@ -183,7 +185,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
   
-  double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
+  double goal = atTrtStart + 0.5*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
@@ -236,6 +238,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     printf("Iter: %05d  >>>  Current value: %08.6f\n", ++iter, val);
     fflush(stdout);
   }
+
+  njm::message("Est. goal: " + njm::toString(val,""));
 
   return(val);
 }
