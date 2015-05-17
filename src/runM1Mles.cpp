@@ -54,7 +54,7 @@ int main(int argc, char ** argv){
   RunStats rs;
 
 
-  std::vector<double> d = s.fD.gDist;
+  // std::vector<double> d = s.fD.gDist;
 
   // std::vector<double> gamma = {1,2,4};
   // std::vector<double> K = {3,5,10};
@@ -69,31 +69,31 @@ int main(int argc, char ** argv){
   // std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
   // 		[&gIt,&kIt](double & x){x = std::pow(x,*gIt)/ *kIt;});
 
-  double gamma,k;
-  njm::fromFile(gamma,njm::sett.srcExt("gamma.txt"));
-  njm::fromFile(k,njm::sett.srcExt("k.txt"));
+  // double gamma,k;
+  // njm::fromFile(gamma,njm::sett.srcExt("gamma.txt"));
+  // njm::fromFile(k,njm::sett.srcExt("k.txt"));
 
-  s.fD.gDist = d;
-  std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
-		[&gamma,&k](double & x){
-		  x = std::pow(x/k,gamma);
-		});
+  // s.fD.gDist = d;
+  // std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
+  // 		[&gamma,&k](double & x){
+  // 		  x = std::pow(x/k,gamma);
+  // 		});
 
-  s.preCompData();
+  // s.preCompData();
 
-  s.modelGen_r = MG(s.fD);
-  s.modelGen_r.read();
-  s.modelEst_r = ME(s.fD);
-  s.modelGen_r.setType(MLES);
-  s.modelEst_r.setType(MLES);
+  // s.modelGen_r = MG(s.fD);
+  // s.modelGen_r.read();
+  // s.modelEst_r = ME(s.fD);
+  // s.modelGen_r.setType(MLES);
+  // s.modelEst_r.setType(MLES);
 
   // std::cout << std::endl << std::endl
   // 	    << "k: " << *kIt << std::endl
   // 	    << "gamma: " << *gIt << std::endl;
   
-  std::cout << std::endl << std::endl
-  	    << "k: " << k << std::endl
-  	    << "gamma: " << gamma << std::endl;
+  // std::cout << std::endl << std::endl
+  // 	    << "k: " << k << std::endl
+  // 	    << "gamma: " << gamma << std::endl;
   
 
   rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);

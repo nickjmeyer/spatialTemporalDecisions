@@ -381,9 +381,9 @@ int main(int argc, char ** argv){
 			   + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
     priorMeanTrt *= 4.0;
 
-    // write new distance matrix to file
-    njm::toFile(s.fD.gDist,njm::sett.srcExt("gDist.txt"),
-		std::ios_base::out,"\n","");
+    // // write new distance matrix to file
+    // njm::toFile(s.fD.gDist,njm::sett.srcExt("gDist.txt"),
+    // 		std::ios_base::out,"\n","");
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);
