@@ -577,7 +577,8 @@ void System<MG,
   std::stringstream ss;
   ss << "propTot: " << propTot << std::endl
      << "   Rtot: " << Rtot << std::endl
-     << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl;
+     << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl
+     << " numNew: " << numNewInf << std::endl;
   njm::message(ss.str());
   
   std::sort(sD.infected.begin(),sD.infected.end());
