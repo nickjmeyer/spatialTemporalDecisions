@@ -531,6 +531,8 @@ void System<MG,
   std::stringstream ss;
   ss << " t: " << sD.time << std::endl
      << " o: " << value() << std::endl
+     << " n: " << n << std::endl
+     << "nn: " << sD.numNotInfec << std::endl
      << "mn: " << mn << std::endl
      << "sd: " << sd << std::endl;
 
