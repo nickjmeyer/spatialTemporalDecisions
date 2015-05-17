@@ -527,10 +527,13 @@ void System<MG,
 
   double n = sD.numNotInfec;
   mn*=mn/n;
-  std::cout << " t: " << sD.time << std::endl
-  	    << " o: " << value() << std::endl
-  	    << "mn: " << mn << std::endl
-  	    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+  std::stringstream ss;
+  ss << " t: " << sD.time << std::endl
+     << " o: " << value() << std::endl
+     << "mn: " << mn << std::endl
+     << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+
+  njm::message(ss.str());
 
   // std::vector<double> vals = modelGen.probs;
 

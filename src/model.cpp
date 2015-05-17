@@ -149,6 +149,9 @@ void ModelBase::setFill(const SimData & sD,
   probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
   for(i = 0; i < numPars; ++i){
     pars[i]->setFill(probs,sD,tD,fD,dD);
+    njm::message(njm::toString(i,"",0,0) + ": " +
+		 njm::toString(std::accumulate(probs.begin(),probs.end(),0.0),
+			       ""));
   }
   set = 1;
   ready = 0;
