@@ -11,6 +11,7 @@
 #include "paramIntercept.hpp"
 #include "paramGDist.hpp"
 #include "paramTrt.hpp"
+#include "mcmcGDist.hpp"
 
 
 class ModelGDist : public ModelBase {
@@ -29,6 +30,8 @@ class ModelGDist : public ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> pars);
+
+  GDistMcmc mcmc;
 };
 
 

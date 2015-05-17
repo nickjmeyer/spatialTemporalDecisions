@@ -13,6 +13,7 @@
 #include "paramGDist.hpp"
 #include "paramRad.hpp"
 #include "paramTrt.hpp"
+#include "mcmcRad.hpp"
 
 
 class ModelRad : public ModelBase {
@@ -31,6 +32,8 @@ class ModelRad : public ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> pars);
+
+  RadMcmc mcmc;
 };
 
 

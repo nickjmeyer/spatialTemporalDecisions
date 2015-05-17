@@ -81,11 +81,17 @@ template class System<ModelTimeExpCavesGDist,
 template class System<ModelGDist,
 		      ModelGDist>;
 
+template class System<ModelGDistPow,
+		      ModelGDistPow>;
+
 template class System<ModelGDistKern,
 		      ModelGDistKern>;
 
 template class System<ModelCovar,
 		      ModelCovar>;
+
+template class System<ModelRad,
+		      ModelRad>;
 
 
 

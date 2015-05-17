@@ -59,6 +59,7 @@ void ModelGDistPow::fit(const SimData & sD, const TrtData & tD,
     all.push_back(0.0);
     all.push_back(0.0);
     all.push_back(0.0);
+    all.push_back(0.0);
   
     fit(sD,tD,fD,dD,all);
   }

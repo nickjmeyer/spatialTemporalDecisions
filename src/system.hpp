@@ -28,6 +28,8 @@
 #include "modelTimeExpCavesEDist.hpp"
 #include "modelRadius.hpp"
 #include "modelGDist.hpp"
+#include "modelGDistPow.hpp"
+#include "modelRad.hpp"
 #include "modelGDistKern.hpp"
 #include "modelCovar.hpp"
 #include "rand.hpp"

@@ -11,6 +11,7 @@
 #include "paramIntercept.hpp"
 #include "paramGDistPow.hpp"
 #include "paramTrt.hpp"
+#include "mcmcGDistPow.hpp"
 
 
 class ModelGDistPow : public ModelBase {
@@ -29,6 +30,8 @@ class ModelGDistPow : public ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> pars);
+
+  GDistPowMcmc mcmc;
 };
 
 

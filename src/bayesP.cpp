@@ -325,6 +325,27 @@ int main(int argc, char ** argv){
 		  numSamples,numBurn,numStats);
     }
 
+#pragma omp section
+    {
+      runBayesP<ModelRad
+		>("rad",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelGDist
+		>("gDist",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
+      runBayesP<ModelGDistPow
+		>("gDistPow",0,
+		  numSamples,numBurn,numStats);
+    }
+
   }
   
   // njm::sett.clean();
