@@ -213,7 +213,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double tol = 0.01;
 
   std::vector<double> par;
-  double trt = 1.0;
+  double trt = s.modelGen_r.getPar({"trtAct"})[0];
   
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
   par = s.modelGen_r.getPar();
@@ -224,6 +224,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
+
 
   printf("Iter: %05d  >>>  Current value: %08.6f\r",
 	 ++iter, val);
