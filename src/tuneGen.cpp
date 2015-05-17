@@ -264,64 +264,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  // {
-  //   typedef ModelGravityGDist GM;
-  //   typedef GM EM;
-
-  //   typedef System<GM,EM> S;
-  //   typedef NoTrt<EM> NT;
-  //   typedef ProximalGDistAgent<EM> PA;
-  //   typedef MyopicAgent<EM> MA;
-
-  //   typedef ToyFeatures4<EM> F;
-  //   typedef RankAgent<F,EM> RA;
-
-  //   typedef VanillaRunnerNS<S,NT> RN;
-  //   typedef VanillaRunnerNS<S,PA> RP;
-  //   typedef VanillaRunnerNS<S,MA> RM;
-  //   typedef VanillaRunnerNS<S,RA> RR;
-
-  //   S s;
-  //   s.modelEst_r = s.modelGen_r;
-  //   s.revert();
-
-  //   njm::resetSeed();
-  //   int numReps = 500;
-  //   Starts starts(numReps,s.fD.numNodes);
-
-  //   MA ma;
-  //   RM rm;
-
-  //   RA ra;
-  //   RR rr;
-  //   ra.reset();
-
-  //   njm::message("Tuning Intercept");
-
-  //   double valNT = TuneGenNT<S,NT,RN>(s,numReps,starts);
-
-  //   njm::message("Tuning Treatment");
-
-  //   double valPA = TuneGenPA<S,PA,RP>(s,numReps,starts);
-
-  //   double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts);
-
-  //   double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts);
-
-  //   njm::message(" valNT: " + njm::toString(valNT,"") +
-  // 		 "\n" +
-  // 		 " valPA: " + njm::toString(valPA,"") +
-  // 		 "\n" +
-  // 		 " valMA: " + njm::toString(valMA,"") +
-  // 		 "\n" +
-  // 		 " valRA: " + njm::toString(valRA,""));
-
-  //   s.modelGen_r.save();
-  // }
-
-  
   {
-    typedef ModelTimeExpCavesGDistTrendPowCon GM;
+    typedef ModelTimeExpCavesGDist GM;
     typedef GM EM;
 
     typedef System<GM,EM> S;
