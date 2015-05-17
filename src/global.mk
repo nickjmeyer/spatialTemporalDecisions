@@ -47,6 +47,7 @@ OBJECTS += utilities.o \
 	paramGDistPow.o \
 	paramGDistKern.o \
 	paramRadius.o \
+	paramRad.o \
 	paramTrt.o \
 	model.o \
 	modelGravityGDist.o \
@@ -72,6 +73,7 @@ OBJECTS += utilities.o \
 	modelGDistKern.o \
 	modelRadius.o \
 	modelCovar.o \
+	modelRad.o \
 	mcmcGravity.o \
 	mcmcGravityTrend.o \
 	mcmcGravityTrendPow.o \
@@ -88,6 +90,9 @@ OBJECTS += utilities.o \
 	mcmcGravityTimeInfExpCavesTrend.o \
 	mcmcGravityTimeInfExpCavesTrendPow.o \
 	mcmcGravityTimeInfExpCavesTrendPowCon.o \
+	mcmcRad.o \
+	mcmcGDist.o \
+	mcmcGDistPow.o \
 	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o

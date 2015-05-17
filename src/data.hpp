@@ -112,6 +112,8 @@ struct FixedData {
   std::vector<double> propCaves;
   std::vector<double> logPropCaves;
   std::vector<double> rankCaves;
+
+  std::vector<double> cm; // circle mass, number of caves within d_{ij} of i
   
   std::vector<double> subGraphK;
   int subGraphKval;

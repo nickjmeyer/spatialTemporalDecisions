@@ -863,6 +863,17 @@ OptimRunner<System<ModelTimeGDistTrendPow,
 
 
 template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
+	    M1OsspOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			       ModelTimeExpCavesGDistTrendPowCon>,
+			OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
+			ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+			ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelRadius>,
 	    OsspAgent<ModelRadius>,

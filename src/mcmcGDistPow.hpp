@@ -7,7 +7,7 @@
 #include "data.hpp"
 
 
-class GravitySamples{
+class GDistPowSamples{
  public:
   int numSamples;
   int numCovar;
@@ -32,7 +32,7 @@ class GravitySamples{
 };
 
 
-class GravityMcmc{
+class GDistPowMcmc{
  public:
 
   void load(const std::vector<std::vector<int> > & history,
@@ -44,7 +44,7 @@ class GravityMcmc{
   double priorTrtMean;
   
   // MCMC samples
-  GravitySamples samples;
+  GDistPowSamples samples;
 
   // history information of simulation
   int numNodes,T;
@@ -57,9 +57,6 @@ class GravityMcmc{
   std::vector<double> d;
   int numCovar;
   
-  std::vector<double> w_cur;
-  std::vector<double> w_can;
-
   // current iteration of the parameters
   double intcp_cur;
   double alpha_cur;
@@ -92,42 +89,9 @@ class GravityMcmc{
 	      const std::vector<double> & par);
   double ll();
 
-  inline static void updateW(std::vector<double> & alphaW,
-			     const double & alphaOld,
-			     const double & alphaNew,
-			     const int numNodes);
-  inline static void updateW(std::vector<double> & alphaW,
-			     const std::vector<double> & d,
-			     const double & alpha,
-			     const double & powerNew,
-			     const int numNodes);
-
 };
 
 
-inline void GravityMcmc::updateW(std::vector<double> & w,
-				 const double & alphaOld,
-				 const double & alphaNew,
-				 const int numNodes){
-  double scale = alphaNew/alphaOld;
-  int i,j;
-  for(i = 0; i < numNodes; ++i)
-    for(j = i; j < numNodes; ++j)
-      w.at(i*numNodes + j) *= scale;
-}
-
-
-inline void GravityMcmc::updateW(std::vector<double> & w,
-				 const std::vector<double> & d,
-				 const double & alpha,
-				 const double & powerNew,
-				 const int numNodes){
-  int i,j;
-  for(i = 0; i < numNodes; ++i)
-    for(j = i; j < numNodes; ++j)
-      w.at(i*numNodes + j) =
-	alpha * std::pow(d.at(i*numNodes + j),std::exp(powerNew));
-}
 
 
 

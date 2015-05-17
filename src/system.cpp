@@ -357,10 +357,11 @@ template <class MG,
 	  class ME>
 void System<MG,
 	    ME>::preCompData(){
-  int i,j,tot;
+  int i,j,k,tot;
 
   // eDist
   double iLat,iLong,jLat,jLong;
+  fD.eDist.clear();
   fD.eDist.reserve(fD.numNodes);
   for(i = 0; i < fD.numNodes; ++i){
     iLat = fD.centroidsLat.at(i);
@@ -370,6 +371,22 @@ void System<MG,
       jLong = fD.centroidsLong.at(j);
       fD.eDist.push_back(std::sqrt((iLat - jLat)*(iLat - jLat)
 				   + (iLong - jLong)*(iLong - jLong)));
+    }
+  }
+
+  // circle mass
+  fD.cm.clear();
+  fD.cm.reserve(fD.numNodes*fD.numNodes);
+  for(i = 0; i < fD.numNodes; ++i){
+    for(j = 0; j < fD.numNodes; ++j){
+      double numCaves = 0;
+      double d = fD.gDist[i*fD.numNodes + j];
+      for(k = 0; k < fD.numNodes; ++k){
+	if(fD.gDist[i*fD.numNodes + k] <= d){
+	  numCaves += fD.caves[k];
+	}
+      }
+      fD.cm.push_back(numCaves);
     }
   }
 
