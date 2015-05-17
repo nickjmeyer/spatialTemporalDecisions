@@ -95,6 +95,8 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   RN rn;
 
   double goal = 0.7;
+  njm::message("Goal: " + njm::toString(goal,"",0,0));
+  
   int numYears = s.fD.finalT;
   double tol = 0.01;
 
@@ -168,13 +170,21 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 }
 
 
-template <class S, class MA,class RN>
+template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S & s, const int numReps, const Starts & starts){
-  MA ma;
+  NT nt;
   RN rn;
+  
+  MA ma;
+  RM rm;
 
-  double goal = 0.5;
   int numYears = s.fD.finalT;
+  
+  double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
+  double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
+  
+  double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
+  njm::message("Goal: " + njm::toString(goal,"",0,0));
   double tol = 0.01;
 
   std::vector<double> par;
@@ -185,7 +195,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   s.modelEst_r.putPar(par.begin());
   s.revert();
   
-  double val = rn.run(s,ma,numReps,numYears,starts).smean();
+  double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
@@ -222,7 +232,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     std::cout << "par: " << njm::toString(par," ","\n");
 
 
-    val = rn.run(s,ma,numReps,numYears,starts).smean();
+    val = rm.run(s,ma,numReps,numYears,starts).smean();
     printf("Iter: %05d  >>>  Current value: %08.6f\n", ++iter, val);
     fflush(stdout);
   }
@@ -344,7 +354,7 @@ int main(int argc, char ** argv){
 
     njm::message("Tuning Treatment");
 
-    double valMA = TuneGenMA<S,MA,RM>(s,numReps,starts);
+    double valMA = TuneGenMA<S,MA,RM,NT,RN>(s,numReps,starts);
 
     double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
