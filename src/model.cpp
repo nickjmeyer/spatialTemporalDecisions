@@ -145,6 +145,7 @@ void ModelBase::setFill(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD){
+  njm::message("setFill");
   int i,numPars = pars.size();
   probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
   for(i = 0; i < numPars; ++i){
@@ -163,9 +164,13 @@ void ModelBase::modFill(const SimData & sD,
 			const FixedData & fD,
 			const DynamicData & dD){
   if(set == 1){
+    njm::message("modFill");
     int i,numPars = pars.size();
     for(i = 0; i < numPars; ++i){
       pars[i]->modFill(probs,sD,tD,fD,dD);
+      njm::message(njm::toString(i,"",0,0) + ": " +
+		   njm::toString(std::accumulate(probs.begin(),probs.end(),0.0),
+				 ""));
     }
   }
   else if(set == 0){
