@@ -357,6 +357,26 @@ int main(int argc, char ** argv){
 		std::ios_base::out);
   }
 
+  {
+    typedef ModelTimeExpCavesGDist MG;
+    typedef MG ME;
+
+    typedef System<MG,ME> S;
+    typedef NoTrt<ME> NT;
+    
+    S s;
+    s.modelEst_r = s.modelGen_r;
+    s.revert();
+
+    int numReps = 500;
+    Starts starts(numReps,s.fD.numNodes);
+    
+    NT nt;
+    RN rn;
+
+    njm::message("test: " +
+		 njm::toString(rn.run(s,nt,numReps,
+				      s.fD.finalT,starts).smean(),""));
 
   
   njm::sett.clean();
