@@ -17,9 +17,9 @@ void ParamTimeExpCaves::initInternal(const FixedData & fD){
   std::for_each(iPropCaves.begin(),iPropCaves.end(),
 		[](double & x){ x = 1.0/x; });
   
-  njm::message("ipropCaves: " +
-	       njm::toString(std::accumulate(iPropCaves.begin(),
-					     iPropCaves.end(),0.0),""));
+  // njm::message("ipropCaves: " +
+  // 	       njm::toString(std::accumulate(iPropCaves.begin(),
+  // 					     iPropCaves.end(),0.0),""));
 }
 
 
@@ -48,10 +48,10 @@ void ParamTimeExpCaves::setFill(std::vector<double> & probs,
   for(i = 0; i < numNodes; ++i){
     xiTime.at(i) = xi * (std::exp(iPropCaves.at(i)*double(time.at(i)-1)) - 1.0);
   }
-  njm::message("    xi: " + njm::toString(xi,""));
-  njm::message("xiTime: " + njm::toString(std::accumulate(xiTime.begin(),
-							  xiTime.end(),
-							  0.0),""));
+  // njm::message("    xi: " + njm::toString(xi,""));
+  // njm::message("xiTime: " + njm::toString(std::accumulate(xiTime.begin(),
+  // 							  xiTime.end(),
+  // 							  0.0),""));
   
   beg = xiTime.begin();
   for(i = 0, it0 = probs.begin(); i < numNodes; ++i){
