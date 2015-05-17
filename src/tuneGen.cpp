@@ -379,6 +379,7 @@ int main(int argc, char ** argv){
     njm::message("test: " +
 		 njm::toString(rn.run(s,nt,numReps,
 				      s.fD.finalT,starts).smean(),""));
+  }
 
   
   njm::sett.clean();
