@@ -519,19 +519,20 @@ void System<MG,
 
   std::vector<double> infProbs = modelGen.infProbs();
 
-  double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
-  double sq = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
-  			      [](const double a, const double b){
-  				return a + b*b;
-  			      });
-
   double n = sD.numNotInfec;
-  mn*=mn/n;
+  double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
+  mn/=n;
+  double sd = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
+  			      [&mn](const double a, const double b){
+  				return a + (b-mn)*(b-mn);
+  			      });
+  sd/=n;
+  
   std::stringstream ss;
   ss << " t: " << sD.time << std::endl
      << " o: " << value() << std::endl
      << "mn: " << mn << std::endl
-     << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+     << "sd: " << sd << std::endl;
 
   njm::message(ss.str());
 
@@ -542,9 +543,6 @@ void System<MG,
   njm::message("raw probs: " + njm::toString(mn,""));
   
 
-  std::cout << std::endl;
-
-  
 					       
   nextPoint(modelGen.infProbs());
 }
