@@ -10,6 +10,8 @@ Starts::Starts(const std::string & file){
 }
 
 Starts::Starts(const int numReps, const int numNodes){
+  njm::resetSeed(0);
+  
   dynamic = 1;
   
   int num = std::max(numNodes/100,1);

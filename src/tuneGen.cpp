@@ -310,7 +310,6 @@ int main(int argc, char ** argv){
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    njm::resetSeed();
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
     
