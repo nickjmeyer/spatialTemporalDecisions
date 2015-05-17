@@ -20,6 +20,8 @@ void ParamTimeExpCaves::initInternal(const FixedData & fD){
   njm::message("ipropCaves: " +
 	       njm::toString(std::accumulate(iPropCaves.begin(),
 					     iPropCaves.end(),0.0),""));
+  if(omp_get_thread_num() == 0)
+    throw(1);
 }
 
 
