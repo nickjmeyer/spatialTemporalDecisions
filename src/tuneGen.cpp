@@ -109,12 +109,17 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
   std::vector<double> par = s.modelGen_r.getPar();
   rescaleD(pastScale,currScale,scaleD);
-  s.fD.gDist = scaleD;
-  s.preCompData();
-  s.modelGen_r = MG(s.fD);
+  njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
+	      std::ios_base::out);
+  s = S();
   s.modelGen_r.putPar(par.begin());
-  s.modelEst_r = MG(s.fD);
   s.modelEst_r.putPar(par.begin());
+  // s.fD.gDist = scaleD;
+  // s.preCompData();
+  // s.modelGen_r = MG(s.fD);
+  // s.modelGen_r.putPar(par.begin());
+  // s.modelEst_r = MG(s.fD);
+  // s.modelEst_r.putPar(par.begin());
   
   double val = rn.run(s,nt,numReps,numYears,starts).smean();
   double scale = 1.025, shrink = .9;
@@ -159,13 +164,18 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
     par = s.modelGen_r.getPar();
     rescaleD(pastScale,currScale,scaleD);
-    
-    s.fD.gDist = scaleD;
-    s.preCompData();
-    s.modelGen_r = MG(s.fD);
+    njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
+		std::ios_base::out);
+    s = S();
     s.modelGen_r.putPar(par.begin());
-    s.modelEst_r = MG(s.fD);
     s.modelEst_r.putPar(par.begin());
+    
+    // s.fD.gDist = scaleD;
+    // s.preCompData();
+    // s.modelGen_r = MG(s.fD);
+    // s.modelGen_r.putPar(par.begin());
+    // s.modelEst_r = MG(s.fD);
+    // s.modelEst_r.putPar(par.begin());
 
 
     val = rn.run(s,nt,numReps,numYears,starts).smean();
