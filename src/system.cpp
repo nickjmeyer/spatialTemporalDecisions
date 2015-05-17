@@ -517,33 +517,33 @@ void System<MG,
   modelGen.modFill(sD,tD,fD,dD);
   modelGen.infProbs(sD,tD,fD,dD);
 
-  std::vector<double> infProbs = modelGen.infProbs();
+  // std::vector<double> infProbs = modelGen.infProbs();
 
-  double n = sD.numNotInfec;
-  double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
-  mn/=n;
-  double sd = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
-  			      [&mn](const double a, const double b){
-  				return a + (b-mn)*(b-mn);
-  			      });
-  sd/=n;
+  // double n = sD.numNotInfec;
+  // double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
+  // mn/=n;
+  // double sd = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
+  // 			      [&mn](const double a, const double b){
+  // 				return a + (b-mn)*(b-mn);
+  // 			      });
+  // sd/=n;
   
-  std::stringstream ss;
-  ss << " t: " << sD.time << std::endl
-     << " o: " << value() << std::endl
-     << " n: " << n << std::endl
-     << "nn: " << sD.numNotInfec << std::endl
-     << "ei: " << mn*n << std::endl
-     << "mn: " << mn << std::endl
-     << "sd: " << sd << std::endl;
+  // std::stringstream ss;
+  // ss << " t: " << sD.time << std::endl
+  //    << " o: " << value() << std::endl
+  //    << " n: " << n << std::endl
+  //    << "nn: " << sD.numNotInfec << std::endl
+  //    << "ei: " << mn*n << std::endl
+  //    << "mn: " << mn << std::endl
+  //    << "sd: " << sd << std::endl;
 
-  njm::message(ss.str());
+  // njm::message(ss.str());
 
-  std::vector<double> vals = modelGen.probs;
+  // std::vector<double> vals = modelGen.probs;
 
-  mn = std::accumulate(vals.begin(),vals.end(),0.0);
+  // mn = std::accumulate(vals.begin(),vals.end(),0.0);
 
-  njm::message("raw probs: " + njm::toString(mn,""));
+  // njm::message("raw probs: " + njm::toString(mn,""));
   
 
 					       
@@ -575,12 +575,12 @@ void System<MG,
   }
 
 
-  std::stringstream ss;
-  ss << "propTot: " << propTot << std::endl
-     << "   Rtot: " << Rtot << std::endl
-     << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl
-     << " numNew: " << numNewInf << std::endl;
-  njm::message(ss.str());
+  // std::stringstream ss;
+  // ss << "propTot: " << propTot << std::endl
+  //    << "   Rtot: " << Rtot << std::endl
+  //    << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl
+  //    << " numNew: " << numNewInf << std::endl;
+  // njm::message(ss.str());
   
   std::sort(sD.infected.begin(),sD.infected.end());
   std::sort(sD.notInfec.begin(),sD.notInfec.end());
