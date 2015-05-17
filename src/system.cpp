@@ -533,6 +533,7 @@ void System<MG,
      << " o: " << value() << std::endl
      << " n: " << n << std::endl
      << "nn: " << sD.numNotInfec << std::endl
+     << "ei: " << mn*n << std::endl
      << "mn: " << mn << std::endl
      << "sd: " << sd << std::endl;
 
