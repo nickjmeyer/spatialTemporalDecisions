@@ -143,7 +143,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
     par = s.modelGen_r.getPar();
     s.modelEst_r.putPar(par.begin());
-    
+
     // s.modelGen_r.putPar(par.begin());
     // putPower(power,s.modelGen_r,s.fD);
     // s.modelEst_r.putPar(par.begin());
@@ -217,9 +217,13 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     s.modelEst_r.putPar(par.begin());
     s.revert();
 
+    std::cout << "par: " << njm::toString(par," ","\n");
+    par = s.modelGen.getPar({"trtAct","trtPre"});
+    std::cout << "par: " << njm::toString(par," ","\n");
+
 
     val = rn.run(s,ma,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
+    printf("Iter: %05d  >>>  Current value: %08.6f\n", ++iter, val);
     fflush(stdout);
   }
 
