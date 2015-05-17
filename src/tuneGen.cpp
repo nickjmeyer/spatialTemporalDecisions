@@ -229,9 +229,9 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     s.modelEst_r.putPar(par.begin());
     s.revert();
 
-    std::cout << "par: " << njm::toString(par," ","\n");
-    par = s.modelGen.getPar({"trtAct","trtPre"});
-    std::cout << "par: " << njm::toString(par," ","\n");
+    // std::cout << "par: " << njm::toString(par," ","\n");
+    // par = s.modelGen.getPar({"trtAct","trtPre"});
+    // std::cout << "par: " << njm::toString(par," ","\n");
 
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
