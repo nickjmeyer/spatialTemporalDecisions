@@ -278,10 +278,10 @@ VanillaRunner<S,A>
 
   RunStats rs;
   std::vector<std::vector<double> > valueAll(numReps);
-// #pragma omp parallel for num_threads(omp_get_max_threads())	\
-//   shared(valueAll,starts,rs)					\
-//   firstprivate(system,agent)					\
-//   private(r,t)
+#pragma omp parallel for num_threads(omp_get_max_threads())	\
+  shared(valueAll,starts,rs)					\
+  firstprivate(system,agent)					\
+  private(r,t)
   for(r=0; r<numReps; r++){
     njm::resetSeed(r);
     system.reset(starts[r]);
@@ -314,7 +314,7 @@ VanillaRunner<S,A>
     
     system.sD.history.push_back(system.sD.status);    
     njm::toFile(njm::toString(system.sD.history,"\n","")
-		,njm::sett.datExt(agent.name+
+		,njm::sett.datExt(agent.name +
 				  "_history_"+
 				  njm::toString(r,"",0,0)
 				  +"_",".txt"));
