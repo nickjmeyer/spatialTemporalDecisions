@@ -23,7 +23,7 @@ void GDistPowSamples::setRand(){
   intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
 
   int i = njm::runifInterv(0,numSamples);
-  
+
   intcpSet = intcp.at(i);
   alphaSet = alpha.at(i);
   powerSet = power.at(i);
@@ -183,8 +183,8 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
 
     // sample intcp
-    ++att.at(numCovar+INTCP_);
-    upd=intcp_cur+mh.at(numCovar+INTCP_)*njm::rnorm01();
+    ++att.at(INTCP_);
+    upd=intcp_cur+mh.at(INTCP_)*njm::rnorm01();
     intcp_can=upd;
     
     // get new likelihood
@@ -197,7 +197,7 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
     
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+INTCP_);
+      ++acc.at(INTCP_);
       intcp_cur=intcp_can;
       ll_cur=ll_can;
     }
@@ -209,8 +209,8 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
 
     // sample trtPre
-    ++att.at(numCovar+TRTP_);
-    upd=trtPre_cur+mh.at(numCovar+TRTP_)*njm::rnorm01();
+    ++att.at(TRTP_);
+    upd=trtPre_cur+mh.at(TRTP_)*njm::rnorm01();
     trtPre_can=upd;
 
 
@@ -222,7 +222,7 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+TRTP_);
+      ++acc.at(TRTP_);
       trtPre_cur=trtPre_can;
       ll_cur=ll_can;
     }
@@ -234,8 +234,8 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
 
     // sample trtAct
-    ++att.at(numCovar+TRTA_);
-    upd=trtAct_cur+mh.at(numCovar+TRTA_)*njm::rnorm01();
+    ++att.at(TRTA_);
+    upd=trtAct_cur+mh.at(TRTA_)*njm::rnorm01();
     trtAct_can=upd;
 
     // get new likelihood
@@ -247,7 +247,7 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
     
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+TRTA_);
+      ++acc.at(TRTA_);
       trtAct_cur=trtAct_can;
       ll_cur=ll_can;
     }
@@ -260,11 +260,11 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
 
     // sample alpha
-    ++att.at(numCovar+ALPHA_);
+    ++att.at(ALPHA_);
     
     logAlpha_cur=std::log(alpha_cur);
 
-    upd=std::exp(logAlpha_cur + mh.at(numCovar+ALPHA_)*njm::rnorm01());
+    upd=std::exp(logAlpha_cur + mh.at(ALPHA_)*njm::rnorm01());
     alpha_can=upd;
     logAlpha_can=std::log(alpha_can);
 
@@ -277,7 +277,7 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+ALPHA_);
+      ++acc.at(ALPHA_);
       alpha_cur=alpha_can;
       ll_cur=ll_can;
     }
@@ -290,8 +290,8 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
 
     // sample power
-    ++att.at(numCovar+POWER_);
-    upd=power_cur+mh.at(numCovar+POWER_)*njm::rnorm01();
+    ++att.at(POWER_);
+    upd=power_cur+mh.at(POWER_)*njm::rnorm01();
     power_can=upd;
 
     // get new likelihood
@@ -304,7 +304,7 @@ void GDistPowMcmc::sample(int const numSamples, int const numBurn,
 
     // accept?
     if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+POWER_);
+      ++acc.at(POWER_);
       power_cur=power_can;
       ll_cur=ll_can;
     }

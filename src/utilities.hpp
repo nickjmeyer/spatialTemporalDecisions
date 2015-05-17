@@ -52,7 +52,7 @@ namespace njm{
       return 0;
     }
     else{
-      std::cout << "Faild to write " << file << std::endl;
+      std::cout << "Failed to write " << file << std::endl;
       return 1;
     }
   };
@@ -71,7 +71,7 @@ namespace njm{
       return 0;
     }
     else{
-      std::cout << "Faild to write " << file << std::endl;
+      std::cout << "Failed to write " << file << std::endl;
       return 1;
     }
   };

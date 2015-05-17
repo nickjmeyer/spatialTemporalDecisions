@@ -36,6 +36,7 @@ ModelRad::ModelRad(const ModelRad & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  mcmc = m.mcmc;
 }
 
 

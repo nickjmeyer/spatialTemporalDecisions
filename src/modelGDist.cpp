@@ -34,6 +34,7 @@ ModelGDist::ModelGDist(const ModelGDist & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  mcmc = m.mcmc;
 }
 
 
