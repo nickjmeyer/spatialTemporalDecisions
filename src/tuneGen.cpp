@@ -175,6 +175,9 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
   njm::message("Est. goal: " + njm::toString(val,""));
 
+  // write new distance to file
+  njm::toFile(s.fD.gDist, njm::sett.srcExt("gDist.txt"));
+
   return(val);
 }
 
