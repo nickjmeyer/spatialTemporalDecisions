@@ -208,9 +208,9 @@ void runBayesP(const std::string & file, const int obs,
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  // int numSamples = 20000, numBurn = 10000, numStats = 10000;
+  int numSamples = 20000, numBurn = 10000, numStats = 10000;
   // int numSamples = 100, numBurn = 50, numStats = 50;
-  int numSamples = 10, numBurn = 5, numStats = 5;
+  // int numSamples = 10, numBurn = 5, numStats = 5;
 
 #pragma omp parallel sections			\
   shared(numSamples,numBurn,numStats)
