@@ -517,23 +517,23 @@ void System<MG,
   modelGen.modFill(sD,tD,fD,dD);
   modelGen.infProbs(sD,tD,fD,dD);
 
-  std::vector<double> infProbs = modelGen.infProbs();
+  // std::vector<double> infProbs = modelGen.infProbs();
 
-  double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
-  double sq = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
-  			      [](const double a, const double b){
-  				return a + b*b;
-  			      });
+  // double mn = std::accumulate(infProbs.begin(),infProbs.end(),0.0);
+  // double sq = std::accumulate(infProbs.begin(),infProbs.end(),0.0,
+  // 			      [](const double a, const double b){
+  // 				return a + b*b;
+  // 			      });
 
-  double n = sD.numNotInfec;
-  mn*=mn/n;
-  std::stringstream ss;
-  ss << " t: " << sD.time << std::endl
-     << " o: " << value() << std::endl
-     << "mn: " << mn << std::endl
-     << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
+  // double n = sD.numNotInfec;
+  // mn*=mn/n;
+  // std::stringstream ss;
+  // ss << " t: " << sD.time << std::endl
+  //    << " o: " << value() << std::endl
+  //    << "mn: " << mn << std::endl
+  //    << "sd: " << std::sqrt((sq - mn*mn)/(n-1)) << std::endl;
 
-  njm::message(ss.str());
+  // njm::message(ss.str());
 
   // std::vector<double> vals = modelGen.probs;
 
