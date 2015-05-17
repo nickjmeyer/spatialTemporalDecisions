@@ -319,7 +319,7 @@ int main(int argc, char ** argv){
 
     RA ra;
     RR rr;
-    ra.reset();
+    // ra.reset();
 
     njm::message("Tuning Intercept");
 
