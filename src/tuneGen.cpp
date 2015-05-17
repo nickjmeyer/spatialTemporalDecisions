@@ -235,7 +235,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f\n", ++iter, val);
+    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
     fflush(stdout);
   }
 
