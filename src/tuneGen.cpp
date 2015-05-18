@@ -111,9 +111,11 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   rescaleD(pastScale,currScale,scaleD);
   njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
 	      std::ios_base::out);
+  s.modelGen_r.save();
+    
   s = S();
-  s.modelGen_r.putPar(par.begin());
-  s.modelEst_r.putPar(par.begin());
+  s.modelEst_r = s.modelGen_r;
+  
   // s.fD.gDist = scaleD;
   // s.preCompData();
   // s.modelGen_r = MG(s.fD);
@@ -162,13 +164,14 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 			s.modelGen_r.getPar({"alpha"})[0],
 			s.fD.caves);
 
-    par = s.modelGen_r.getPar();
     rescaleD(pastScale,currScale,scaleD);
     njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
 		std::ios_base::out);
+    s.modelGen_r.save();
+    
     s = S();
-    s.modelGen_r.putPar(par.begin());
-    s.modelEst_r.putPar(par.begin());
+    s.modelEst_r = s.modelGen_r;
+    s.revert()
     
     // s.fD.gDist = scaleD;
     // s.preCompData();
@@ -263,6 +266,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     fflush(stdout);
   }
 
+  s.modelGen_r.save();
+
   njm::message("Est. goal: " + njm::toString(val,""));
 
   njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
@@ -341,8 +346,6 @@ int main(int argc, char ** argv){
 		 "\n" +
 		 " valRA: " + njm::toString(valRA,""));
 
-
-    s.modelGen_r.save();
 
     std::vector<double> par = s.modelGen_r.getPar();
 
