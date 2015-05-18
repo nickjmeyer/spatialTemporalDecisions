@@ -86,7 +86,7 @@ void ModelTimeGDistTrend::fit(const SimData & sD, const TrtData & tD,
   else{
     std::vector<double> all;
     int i;
-    for(i=0; i<(6+fD.numCovar); i++)
+    for(i=0; i<(7+fD.numCovar); i++)
       all.push_back(0);
     all[0] = -3.0;
     fit(sD,tD,fD,dD,all);
