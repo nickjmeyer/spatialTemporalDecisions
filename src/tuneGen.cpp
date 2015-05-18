@@ -171,7 +171,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     
     s = S();
     s.modelEst_r = s.modelGen_r;
-    s.revert()
+    s.revert();
     
     // s.fD.gDist = scaleD;
     // s.preCompData();
