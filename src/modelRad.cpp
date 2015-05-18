@@ -58,14 +58,9 @@ void ModelRad::fit(const SimData & sD, const TrtData & tD,
   }
   else{
     std::vector<double> all;
-    all.push_back(-3.0); // intcp
-    for(int i = 0; i < fD.numCovar; ++i)
-      all.push_back(0.0);
-    all.push_back(0.0); // GDist
-    all.push_back(0.0); // Rad
-    all.push_back(0.0); // trt
-    all.push_back(0.0); // trt
-  
+    for(i=0; i<(numPars); i++)
+      all.push_back(0);
+    all.at(0) = -3.0;
     fit(sD,tD,fD,dD,all);
   }
 }
