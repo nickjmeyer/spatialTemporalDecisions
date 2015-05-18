@@ -39,16 +39,16 @@ int main(int argc, char ** argv){
   PA pa;
   MA ma;
   RA ra;
-  OA oa;
+  // OA oa;
 
   SPO spo;
-  OSSPO osspo;
+  // OSSPO osspo;
 
   R_NT r_nt;
   R_PA r_pa;
   R_MA r_ma;
   R_RA r_ra;
-  R_OA r_oa;
+  // R_OA r_oa;
 
 
   RunStats rs;
