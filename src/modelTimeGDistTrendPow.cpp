@@ -85,8 +85,8 @@ void ModelTimeGDistTrendPow::fit(const SimData & sD, const TrtData & tD,
   }
   else{
     std::vector<double> all;
-    int i;
-    for(i=0; i<(numPars); i++)
+    unsigned int i;
+    for(i=0; i<numPars; i++)
       all.push_back(0);
     all.at(0) = -3.0;
     fit(sD,tD,fD,dD,all);
