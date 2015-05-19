@@ -108,98 +108,98 @@ void runBayesP(const std::string & file, const int obs,
 
   S sObs("obsData.txt");
 
-  std::vector<std::vector<int> > h;
-  h = sObs.sD.history;
-  h.push_back(sObs.sD.status);
+  // std::vector<std::vector<int> > h;
+  // h = sObs.sD.history;
+  // h.push_back(sObs.sD.status);
 
-  std::vector<std::string> names = {"n_inf","n_inf_2007","n_inf_2008",
-  				    "n_inf_2009","n_inf_2010","n_inf_2011",
-  				    "n_inf_2012","n_inf_2013","mean_year",
-  				    "mean_long","mean_lat",
-  				    "mean_dist_from_start",       
-  				    "min_long","min_lat",       
-  				    "max_long","max_lat",
-  				    "max_dist_from_start"};
+  // std::vector<std::string> names = {"n_inf","n_inf_2007","n_inf_2008",
+  // 				    "n_inf_2009","n_inf_2010","n_inf_2011",
+  // 				    "n_inf_2012","n_inf_2013","mean_year",
+  // 				    "mean_long","mean_lat",
+  // 				    "mean_dist_from_start",       
+  // 				    "min_long","min_lat",       
+  // 				    "max_long","max_lat",
+  // 				    "max_dist_from_start"};
 
-  if(obs){
-    njm::toFile(names,njm::sett.datExt("obsStats_",".txt"),
-		std::ios_base::out);
-    njm::toFile(getStats(h,sObs.sD,sObs.fD),
-		njm::sett.datExt("obsStats_",".txt"));
-  }
+  // if(obs){
+  //   njm::toFile(names,njm::sett.datExt("obsStats_",".txt"),
+  // 		std::ios_base::out);
+  //   njm::toFile(getStats(h,sObs.sD,sObs.fD),
+  // 		njm::sett.datExt("obsStats_",".txt"));
+  // }
 
-  sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
+  // sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
+  // sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
 
-  sObs.modelGen_r.mcmc.samples.setMean();
-  std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
-  sObs.modelGen_r.putPar(par.begin());
-  sObs.modelGen_r.save();
+  // sObs.modelGen_r.mcmc.samples.setMean();
+  // std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+  // sObs.modelGen_r.putPar(par.begin());
+  // sObs.modelGen_r.save();
 
-  std::vector< std::vector<double> > stats;
+  // std::vector< std::vector<double> > stats;
   
-  S s;
-  Starts starts("startingLocations.txt");
-  s.modelGen_r = sObs.modelGen_r;
-  s.modelEst_r = s.modelGen_r;
-  int r,t,R,T;
-  R = numStats;
-  T = sObs.sD.time;
-  for(r = 0; r < R; ++r){
-    s.modelGen_r.mcmc.samples.setRand();
-    par = s.modelGen_r.mcmc.samples.getPar();
-    s.modelGen_r.putPar(par.begin());
-    s.modelEst_r.putPar(par.begin());
+  // S s;
+  // Starts starts("startingLocations.txt");
+  // s.modelGen_r = sObs.modelGen_r;
+  // s.modelEst_r = s.modelGen_r;
+  // int r,t,R,T;
+  // R = numStats;
+  // T = sObs.sD.time;
+  // for(r = 0; r < R; ++r){
+  //   s.modelGen_r.mcmc.samples.setRand();
+  //   par = s.modelGen_r.mcmc.samples.getPar();
+  //   s.modelGen_r.putPar(par.begin());
+  //   s.modelEst_r.putPar(par.begin());
     
-    s.reset(starts[r]);
+  //   s.reset(starts[r]);
     
-    for(t = 0; t < T; ++t)
-      s.nextPoint();
-    h = s.sD.history;
-    h.push_back(s.sD.status);
+  //   for(t = 0; t < T; ++t)
+  //     s.nextPoint();
+  //   h = s.sD.history;
+  //   h.push_back(s.sD.status);
 
-    stats.push_back(getStats(h,s.sD,s.fD));
-  }
+  //   stats.push_back(getStats(h,s.sD,s.fD));
+  // }
 
-  njm::toFile(names,njm::sett.datExt("sampStats_"+file+"_",".txt"),
-  	      std::ios_base::out);
-  njm::toFile(njm::toString(stats,"\n",""),
-	      njm::sett.datExt("sampStats_"+file+"_",".txt"));
+  // njm::toFile(names,njm::sett.datExt("sampStats_"+file+"_",".txt"),
+  // 	      std::ios_base::out);
+  // njm::toFile(njm::toString(stats,"\n",""),
+  // 	      njm::sett.datExt("sampStats_"+file+"_",".txt"));
 
-  // param estimates
-  std::vector<std::vector<double> > parSamp;
-  int i;
-  for(i = 0; i < (numSamples-numBurn); ++i){
-    s.modelGen_r.mcmc.samples.setPar(i);
-    njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
-		std::ios_base::app);
-  }
+  // // param estimates
+  // std::vector<std::vector<double> > parSamp;
+  // int i;
+  // for(i = 0; i < (numSamples-numBurn); ++i){
+  //   s.modelGen_r.mcmc.samples.setPar(i);
+  //   njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  // 		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
+  // 		std::ios_base::app);
+  // }
 
-  // posterior mean
-  s.modelGen_r.mcmc.samples.setMean();
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-	      njm::sett.datExt("sampStats_"+file+"_paramMean_",".txt"));
+  // // posterior mean
+  // s.modelGen_r.mcmc.samples.setMean();
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  // 	      njm::sett.datExt("sampStats_"+file+"_paramMean_",".txt"));
 
-  // likelihood
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.ll,"\n",""),
-	      njm::sett.datExt("sampStats_"+file+"_ll_",".txt"));
+  // // likelihood
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.ll,"\n",""),
+  // 	      njm::sett.datExt("sampStats_"+file+"_ll_",".txt"));
 
-  // likelihood at mean
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.llPt,"\n"),
-	      njm::sett.datExt("sampStats_"+file+"_llPt_",".txt"));
+  // // likelihood at mean
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.llPt,"\n"),
+  // 	      njm::sett.datExt("sampStats_"+file+"_llPt_",".txt"));
 
-  // pD
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.pD,"\n"),
-	      njm::sett.datExt("sampStats_"+file+"_pD_",".txt"));
+  // // pD
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.pD,"\n"),
+  // 	      njm::sett.datExt("sampStats_"+file+"_pD_",".txt"));
 
-  // Dbar
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.Dbar,"\n"),
-	      njm::sett.datExt("sampStats_"+file+"_Dbar_",".txt"));
+  // // Dbar
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.Dbar,"\n"),
+  // 	      njm::sett.datExt("sampStats_"+file+"_Dbar_",".txt"));
 
-  // DIC
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
-	      njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
+  // // DIC
+  // njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
+  // 	      njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
 
   
   sObs.modelGen_r.setType(MLE);
