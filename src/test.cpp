@@ -4,14 +4,14 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDistTrendPowCon MG;
+  typedef ModelTimeExpCavesGDist MG;
   
   typedef MG ME;
 
   typedef System<MG,ME> S;
 
   typedef NoTrt<ME> NT;
-  typedef ProximalGDistAgent<ME> PA;
+  // typedef ProximalGDistAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
   // typedef ToyFeatures4<ME> F;
@@ -22,7 +22,7 @@ int main(int argc, char ** argv){
   // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef VanillaRunner<S,NT> R_NT;
-  typedef VanillaRunner<S,PA> R_PA;
+  // typedef VanillaRunner<S,PA> R_PA;
   // typedef FitOnlyRunner<S,MA> R_MA;
   // typedef OptimRunner<S,RA,SPO> R_RA;
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
@@ -33,13 +33,13 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 1;
+  int numReps = 10;
   // Starts starts("startingLocations.txt");
   Starts starts(10,s.fD.numNodes);
   // s.reset(starts[0]);
 
   NT nt;
-  PA pa;
+  // PA pa;
   // MA ma;
   // RA ra;
   // OA oa;
@@ -48,7 +48,7 @@ int main(int argc, char ** argv){
   // OSSPO osspo;
 
   R_NT r_nt;
-  R_PA r_pa;
+  // R_PA r_pa;
   // R_MA r_ma;
   // R_RA r_ra;
   // R_OA r_oa;
@@ -56,17 +56,17 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
-  std::cout << "gen mod: " << njm::toString(s.modelGen_r.getPar()," ","\n");
+  // std::cout << "gen mod: " << njm::toString(s.modelGen_r.getPar()," ","\n");
 
   rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
   njm::message("   No treatment: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
+  // njm::message("       Proximal: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   // rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   // njm::message("         Myopic: "

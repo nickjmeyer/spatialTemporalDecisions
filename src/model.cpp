@@ -236,7 +236,6 @@ ModelBase::getPar(const std::vector<std::string> & name) const{
 std::vector<double>::const_iterator
 ModelBase::putPar(std::vector<double>::const_iterator it){
   set = 0;
-  
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
     it = pars[i]->putPar(it);

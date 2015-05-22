@@ -50,11 +50,14 @@ void ParamBase::save(const std::string & m) const {
 void ParamBase::read(const std::string & m){
   unsigned int i;
   double val;
+  std::vector<double> vals;
+  vals.reserve(parsSize);
   for(i = 0; i < parsSize; ++i){
     njm::fromFile(val,
 		  njm::sett.srcExt("./Param"+m+"/"+names.at(i)+".txt"));
-    pars.at(i) = val;
+    vals.push_back(val);
   }
+  putPar(vals.begin());
 }
 
 
