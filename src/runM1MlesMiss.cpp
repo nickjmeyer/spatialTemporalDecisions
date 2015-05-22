@@ -5,7 +5,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
 
-  typedef ModelTimeExpCavesGDist MG;
+  typedef ModelTimeExpCavesGDistTrendPowCon MG;
   
   typedef ModelTimeExpCavesEDist ME;
 
@@ -28,8 +28,8 @@ int main(int argc, char ** argv){
 
 
   S s;
-  s.modelGen_r.setType(MLES);
-  s.modelEst_r.setType(MLES);
+  s.modelGen_r.setType(MLE);
+  s.modelEst_r.setType(MLE);
 
   int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
