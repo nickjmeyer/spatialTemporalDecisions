@@ -296,7 +296,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef ModelTimeExpCavesGDist MG;
+    typedef ModelTimeExpCavesGDistTrendPowCon MG;
     typedef MG ME;
 
     typedef System<MG,ME> S;
@@ -360,31 +360,6 @@ int main(int argc, char ** argv){
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);
   }
-
-  {
-    typedef ModelTimeExpCavesGDist MG;
-    typedef MG ME;
-
-    typedef System<MG,ME> S;
-    typedef NoTrt<ME> NT;
-    
-    typedef VanillaRunnerNS<S,NT> RN;
-    
-    S s;
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
-
-    int numReps = 500;
-    Starts starts(numReps,s.fD.numNodes);
-    
-    NT nt;
-    RN rn;
-
-    njm::message("test: " +
-		 njm::toString(rn.run(s,nt,numReps,
-				      s.fD.finalT,starts).smean(),""));
-  }
-
   
   njm::sett.clean();
   
