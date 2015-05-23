@@ -53,51 +53,6 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
-  // njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
-
-
-  // std::vector<double> d = s.fD.gDist;
-
-  // std::vector<double> gamma = {1,2,4};
-  // std::vector<double> K = {3,5,10};
-
-  // std::vector<double>::iterator gIt,gEnd;
-  // std::vector<double>::iterator kIt,kEnd;
-
-  // for(gIt = gamma.begin(); gIt != gEnd; ++gIt){
-  //   for(kIt = K.begin(); kIt != kEnd; ++kIt){
-
-  // s.fD.gDist = d;
-  // std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
-  // 		[&gIt,&kIt](double & x){x = std::pow(x,*gIt)/ *kIt;});
-
-  // double gamma,k;
-  // njm::fromFile(gamma,njm::sett.srcExt("gamma.txt"));
-  // njm::fromFile(k,njm::sett.srcExt("k.txt"));
-
-  // s.fD.gDist = d;
-  // std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
-  // 		[&gamma,&k](double & x){
-  // 		  x = std::pow(x/k,gamma);
-  // 		});
-
-  // s.preCompData();
-
-  // s.modelGen_r = MG(s.fD);
-  // s.modelGen_r.read();
-  // s.modelEst_r = ME(s.fD);
-  // s.modelGen_r.setType(MLES);
-  // s.modelEst_r.setType(MLES);
-
-  // std::cout << std::endl << std::endl
-  // 	    << "k: " << *kIt << std::endl
-  // 	    << "gamma: " << *gIt << std::endl;
-  
-  // std::cout << std::endl << std::endl
-  // 	    << "k: " << k << std::endl
-  // 	    << "gamma: " << gamma << std::endl;
-  
-
   rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
   njm::message("   No treatment: "
 	       + njm::toString(rs.smean(),"")
@@ -136,7 +91,7 @@ int main(int argc, char ** argv){
   		   + njm::toString(rs.smean(),"")
   		   + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 1000;
+  osspo.tp.N = 10000;
   osspo.tp.jitterScale = 4.0;
   osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
   	+ "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
@@ -145,7 +100,7 @@ int main(int argc, char ** argv){
   		   + njm::toString(rs.smean(),"")
   		   + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 1000;
+  osspo.tp.N = 10000;
   osspo.tp.jitterScale = 1.0;
   osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
   	+ "_" + njm::toString(osspo.tp.jitterScale,"",0,0);

@@ -84,7 +84,7 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 1000;
+  osspo.tp.N = 10000;
   osspo.tp.jitterScale = 4.0;
   osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
     + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
@@ -93,7 +93,7 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 1000;
+  osspo.tp.N = 10000;
   osspo.tp.jitterScale = 1.0;
   osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
     + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
