@@ -244,6 +244,11 @@ VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		     ModelTimeExpCavesGDistTrendPowCon>,
 	      ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class
+VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		     ModelTimeExpCavesEDist>,
+	      ProximalEDistAgent<ModelTimeExpCavesEDist> >;
+
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesEDist>,
 			     ProximalEDistAgent<ModelTimeExpCavesEDist> >;
@@ -472,6 +477,10 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				    ModelTimeExpCavesGDistTrendPowCon>,
 			     MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+				    ModelTimeExpCavesEDist>,
+			     MyopicAgent<ModelTimeExpCavesEDist> >;
+
 template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesEDist>,
 			     MyopicAgent<ModelTimeExpCavesEDist> >;
@@ -680,6 +689,18 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 
 template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesEDist>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+		      ModelTimeExpCavesEDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesEDist>,
+		      RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
+				ModelTimeExpCavesEDist>,
+		      ModelTimeExpCavesEDist> >;
+
+
+template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelRadius>,
 	    RankAgent<ToyFeatures5<ModelRadius>,
@@ -871,6 +892,17 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 			OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
 			ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
 			ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesEDist>,
+	    OsspAgent<ModelTimeExpCavesEDist>,
+	    M1OsspOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			       ModelTimeExpCavesEDist>,
+			OsspAgent<ModelTimeExpCavesEDist>,
+			ToyFeatures5<ModelTimeExpCavesEDist>,
+			ModelTimeExpCavesEDist> >;
 
 
 template class

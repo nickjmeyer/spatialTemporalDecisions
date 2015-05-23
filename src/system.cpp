@@ -51,6 +51,9 @@ template class System<ModelTimeExpCavesGDistTrendPow,
 template class System<ModelTimeExpCavesGDistTrendPowCon,
 		      ModelTimeExpCavesGDistTrendPowCon>;
 
+template class System<ModelTimeExpCavesGDistTrendPowCon,
+		      ModelTimeExpCavesEDist>;
+
 template class System<ModelTimeExpCavesGDist,
 		      ModelTimeExpCavesEDist>;
 
