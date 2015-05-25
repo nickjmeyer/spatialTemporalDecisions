@@ -217,7 +217,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
   
-  double goal = atTrtStart + 0.5*(atFinalT - atTrtStart);
+  double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
