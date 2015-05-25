@@ -530,18 +530,65 @@ void System<MG,
   // 				return a + (b-mn)*(b-mn);
   // 			      });
   // sd/=n;
+
+  // int sumInf,sumNot,trtInf,trtNot,j;
+  // j = 0;
+  // sumInf = std::accumulate(sD.status.begin(),sD.status.end(),0,
+  // 			   [&j](const int a, const int b){
+  // 			     int ret = a;
+  // 			     if(b > 1)
+  // 			       ret += j;
+  // 			     ++j;
+  // 			     return ret;
+  // 			   });
+
+  // j = 0;
+  // trtInf = std::accumulate(sD.status.begin(),sD.status.end(),0,
+  // 			   [&j](const int a, const int b){
+  // 			     int ret = a;
+  // 			     if(b == 3)
+  // 			       ret += j;
+  // 			     ++j;
+  // 			     return ret;
+  // 			   });
+
+  // j = 0;
+  // sumNot = std::accumulate(sD.status.begin(),sD.status.end(),0,
+  // 			   [&j](const int a, const int b){
+  // 			     int ret = a;
+  // 			     if(b < 2)
+  // 			       ret += j;
+  // 			     ++j;
+  // 			     return ret;
+  // 			   });
+
+  // j = 0;
+  // trtNot = std::accumulate(sD.status.begin(),sD.status.end(),0,
+  // 			   [&j](const int a, const int b){
+  // 			     int ret = a;
+  // 			     if(b == 1)
+  // 			       ret += j;
+  // 			     ++j;
+  // 			     return ret;
+  // 			   });
   
   // std::stringstream ss;
-  // ss << " t: " << sD.time << std::endl
-  //    << " o: " << value() << std::endl
-  //    << " n: " << n << std::endl
-  //    << "nn: " << sD.numNotInfec << std::endl
-  //    << "ei: " << mn*n << std::endl
-  //    << "mn: " << mn << std::endl
-  //    << "sd: " << sd << std::endl;
+  // ss << "       time: " << sD.time << std::endl
+  //    << "        obj: " << value() << std::endl
+  //    << "numNotInfec: " << n << std::endl
+  //    << "numNotInfec: " << sD.numNotInfec << std::endl
+  //    << "  exp infec: " << mn*n << std::endl
+  //    << "  mean prob: " << mn << std::endl
+  //    << "    sd prob: " << sd << std::endl
+  //    << "   infected: " << njm::toString(sD.infected," ","\n",0,0)
+  //    << "     sumInf: " << sumInf << std::endl
+  //    << "     sumNot: " << sumNot << std::endl
+  //    << "     trtInf: " << trtInf << std::endl
+  //    << "     trtNot: " << trtNot << std::endl;
 
   // njm::message(ss.str());
-
+  // std::cout << ss.str() << std::endl;
+  
   // std::vector<double> vals = modelGen.probs;
 
   // mn = std::accumulate(vals.begin(),vals.end(),0.0);

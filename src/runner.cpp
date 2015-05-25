@@ -432,10 +432,10 @@ VanillaRunnerNS<S,A>
   int r,t;
 
   RunStats rs;
-// #pragma omp parallel for num_threads(omp_get_max_threads())	\
-//   shared(starts,rs)						\
-//   firstprivate(system,agent)					\
-//   private(r,t)
+#pragma omp parallel for num_threads(omp_get_max_threads())	\
+  shared(starts,rs)						\
+  firstprivate(system,agent)					\
+  private(r,t)
   for(r=0; r<numReps; r++){
     njm::resetSeed(r);
     system.reset(starts[r]);

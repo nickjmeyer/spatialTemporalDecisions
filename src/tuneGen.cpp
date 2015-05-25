@@ -225,9 +225,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double trt = s.modelGen_r.getPar({"trtAct"})[0];
   
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-  par = s.modelGen_r.getPar();
-  s.modelEst_r.putPar(par.begin());
-  s.revert();
+  s.modelGen_r.save();
+  s = S();
   
   double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
@@ -258,9 +257,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
     s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-    par = s.modelGen_r.getPar();
-    s.modelEst_r.putPar(par.begin());
-    s.revert();
+    s.modelGen_r.save();
+    s = S();
 
     // std::cout << "par: " << njm::toString(par," ","\n");
     // par = s.modelGen.getPar({"trtAct","trtPre"});

@@ -44,7 +44,7 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     }
 
     sortNotInfec.push(std::pair<double,int>(-minDist,node0));
-  }    
+  }
 
   
   for(i=0; i<sD.numInfected; i++){
