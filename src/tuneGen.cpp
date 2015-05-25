@@ -217,7 +217,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
   
-  double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
+  double goal = atTrtStart + 0.5*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
@@ -300,7 +300,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef ModelTimeExpCavesGDist MG;
+    typedef ModelTimeExpCavesGDistTrendPowCon MG;
     typedef MG ME;
 
     typedef System<MG,ME> S;
