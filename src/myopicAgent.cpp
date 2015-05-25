@@ -34,11 +34,9 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
   int i,j,node0,total,count;
 
   m.modFill(sD,tD,fD,dD);
+  m.infProbs(sD,tD,fD,dD);
 
-  std::cout << "numNotInfec: " << sD.numNotInfec << std::endl;
   notFeat = arma::conv_to<arma::colvec>::from(m.infProbs());
-  std::cout << "notFeat: " << notFeat.size() << std::endl;
-  std::cout << "infProbs: " << m.infProbs().size() << std::endl;
 
   infFeat.zeros(sD.numInfected);
   for(i=0; i<sD.numInfected; i++){
@@ -47,14 +45,12 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
     total=0;
     for(j=0; j<sD.numNotInfec; j++){
       if(fD.network.at(node0*fD.numNodes + sD.notInfec.at(j))){
-	std::cout << j << " " << std::flush;
 	total+=notFeat(j);
 	count++;
       }
     }
     infFeat(i) = total/((double)count);
   }
-  std::cout << std::endl;
 
   std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
 
