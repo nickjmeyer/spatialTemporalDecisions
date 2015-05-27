@@ -100,6 +100,13 @@ M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 		    ModelTimeExpCavesEDist>,
 	  ModelTimeExpCavesEDist>;
 
+template class
+M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+		 ModelTimeExpCavesGDist>,
+	  RankAgent<ToyFeatures5<ModelTimeExpCavesGDist>,
+		    ModelTimeExpCavesGDist>,
+	  ModelTimeExpCavesGDist>;
+
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelTimeExpCavesEDist>,
 			 RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,

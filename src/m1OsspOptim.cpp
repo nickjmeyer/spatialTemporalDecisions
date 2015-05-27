@@ -80,6 +80,12 @@ template class M1OsspOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			   ToyFeatures5<ModelTimeExpCavesEDist>,
 			   ModelTimeExpCavesEDist>;
 
+template class M1OsspOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+				  ModelTimeExpCavesGDist>,
+			   OsspAgent<ModelTimeExpCavesGDist>,
+			   ToyFeatures5<ModelTimeExpCavesGDist>,
+			   ModelTimeExpCavesGDist>;
+
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesEDist>,
 			   OsspAgent<ModelTimeExpCavesEDist>,

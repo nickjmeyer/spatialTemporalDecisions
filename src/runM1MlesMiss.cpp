@@ -7,11 +7,10 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCavesGDistTrendPowCon MG;
   
-  typedef ModelTimeExpCavesEDist ME;
+  typedef ModelTimeExpCavesGDist ME;
 
   typedef System<MG,ME> S;
 
-  typedef ProximalEDistAgent<ME> PA;
   typedef MyopicAgent<ME> MA;
   
   typedef ToyFeatures5<ME> F;
@@ -22,7 +21,6 @@ int main(int argc, char ** argv){
   typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef FitOnlyRunner<S,MA> R_MA;
-  typedef VanillaRunner<S,PA> R_PA;
   typedef OptimRunner<S,RA,SPO> R_RA;
   typedef OptimRunner<S,OA,OSSPO> R_OA;
 
@@ -34,7 +32,6 @@ int main(int argc, char ** argv){
   int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
 
-  PA pa;
   MA ma;
   RA ra;
   OA oa;
@@ -42,7 +39,6 @@ int main(int argc, char ** argv){
   SPO spo;
   OSSPO osspo;
 
-  R_PA r_pa;
   R_MA r_ma;
   R_RA r_ra;
   R_OA r_oa;
@@ -50,11 +46,6 @@ int main(int argc, char ** argv){
 
   RunStats rs;
 
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
   rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   njm::message("         Myopic: "
   	       + njm::toString(rs.smean(),"")
@@ -66,41 +57,41 @@ int main(int argc, char ** argv){
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
 
-  osspo.tp.N = 100;
-  osspo.tp.jitterScale = 4.0;
-  osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-    + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
+  // osspo.tp.N = 100;
+  // osspo.tp.jitterScale = 4.0;
+  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
+  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
   rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
   njm::message("One Step Polish: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 100;
-  osspo.tp.jitterScale = 1.0;
-  osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-    + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  njm::message("One Step Polish: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // osspo.tp.N = 100;
+  // osspo.tp.jitterScale = 1.0;
+  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
+  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
+  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  // njm::message("One Step Polish: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 10000;
-  osspo.tp.jitterScale = 4.0;
-  osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-    + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  njm::message("One Step Polish: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // osspo.tp.N = 10000;
+  // osspo.tp.jitterScale = 4.0;
+  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
+  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
+  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  // njm::message("One Step Polish: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  osspo.tp.N = 10000;
-  osspo.tp.jitterScale = 1.0;
-  osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-    + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  njm::message("One Step Polish: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // osspo.tp.N = 10000;
+  // osspo.tp.jitterScale = 1.0;
+  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
+  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
+  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  // njm::message("One Step Polish: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   return 0;
 }
