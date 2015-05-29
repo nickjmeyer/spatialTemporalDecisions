@@ -1,10 +1,12 @@
-#ifndef TEST_HPP__
-#define TEST_HPP__
+#ifndef PROB_INF_DIST_HPP__
+#define PROB_INF_DIST_HPP__
 
 
 
 #include <iostream>
 #include <numeric>
+#include <eigen3/Eigen/SuperLUSupport>
+#include <tuple>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"

@@ -91,8 +91,8 @@ void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
 }
 
 void ModelGravityGDist::fit(const SimData & sD, const TrtData & tD,
-		       const FixedData & fD, const DynamicData & dD,
-		       std::vector<double> all){
+			    const FixedData & fD, const DynamicData & dD,
+			    std::vector<double> all){
   if(fitType == MLE || fitType == MLES){
     size_t iter=0;
     int status;
