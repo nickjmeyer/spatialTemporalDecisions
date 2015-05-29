@@ -10,7 +10,47 @@ class TuneData {
 
 void tuneSpread(System & s);
 
-void tuneSpread(System & s){
+void tuneSpread(System & s, const Starts & starts,
+		const int numReps){
+  size_t iter = 0;
+  int status;
+  gsl_vector *x, *ss;
+  int i,dim=2;
+
+  TuneData tuneData(s,starts,numReps);
+
+  x = gsl_vector_alloc(dim);
+  gsl_vector_set_all(x,1.0);
+  ss = gsl_vector_alloc(dim);
+  gsl_vector_set_all(ss,0.1);
+
+  gsl_multimin_function minex_func;
+  minex_func.n = dim;
+  minex_func.f = &tuneSpreadHelper;
+  minex_func.params = & tuneData;
+
+  const gsl_multimin_fminimizer_type * T = gsl_multimin_fminimizer_nmsimplex2;
+  gsl_multimin_fminimizer * s = NULL;
+  s = gsl_multimin_fminmizer_alloc(T,dim);
+  gsl_multimin_fminimizer_set(s,&minex_func,x,ss);
+
+  double curSize;
+  double size = 0.001;
+
+  do{
+    ++iter;
+    status = gsl_multimin_fminimizer_iterate(s);
+    if(status)
+      break;
+    curSize = gsl_multimin_fminimizer_size(s);
+    status = gsl_multimin_test_size(curSize,size);
+  } while(status == GSL_CONTINUE && iter < 1000);
+
+
+
+  gsl_multimin_fminimizer_free(s);
+  gsl_vector_free(x);
+  gsl_vector_free(ss);
 }
 
 double tuneSpreadHelper(const gsl_vector * x, void * params);
@@ -51,18 +91,18 @@ double tuneTrtHelper(const gsl_vector * x, void * params);
 template <class M>
 double tuneTrtHelper(const gsl_vector * x, void * params){
   typedef System<M,M> S;
-  // typedef NoTrt<M> NT;
-  typedef VanillaRunnerNS<S,NT> RN;
+  typedef Myopic<M> MA;
+  typedef VanillaRunnerNS<S,MA> RM;
   TuneData<M> * tuneData = static_cast<TuneData<M>*>(params);
-  NT nt;
-  RN rn;
+  MA ma;
+  RM rm;
   
   double curTrt = gsl_vector_get(x,0);
   
   tuneData->s.modelGen.setPar({"trtPre","trtAct"},curTrt);
   tuneData->s.modelEst.setPar({"trtPre","trtAct"},curTrt);
 
-  return rn.run(tuneData->s,nt,tuneData->numReps,tuneData->s.fD.finalT,
+  return rm.run(tuneData->s,ma,tuneData->numReps,tuneData->s.fD.finalT,
 		tuneData->starts).smean();
 }
 
