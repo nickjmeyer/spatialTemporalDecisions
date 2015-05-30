@@ -11,7 +11,7 @@ int main(int argc, char ** argv){
   typedef System<MG,ME> S;
 
   typedef NoTrt<ME> NT;
-  typedef ProximalGDistAgent<ME> PA;
+  // typedef ProximalGDistAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
   // typedef ToyFeatures4<ME> F;
@@ -22,7 +22,7 @@ int main(int argc, char ** argv){
   // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
   typedef VanillaRunner<S,NT> R_NT;
-  typedef VanillaRunner<S,PA> R_PA;
+  // typedef VanillaRunner<S,PA> R_PA;
   // typedef FitOnlyRunner<S,MA> R_MA;
   // typedef OptimRunner<S,RA,SPO> R_RA;
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
@@ -39,7 +39,7 @@ int main(int argc, char ** argv){
   // s.reset(starts[0]);
 
   NT nt;
-  PA pa;
+  // PA pa;
   // MA ma;
   // RA ra;
   // OA oa;
@@ -48,7 +48,7 @@ int main(int argc, char ** argv){
   // OSSPO osspo;
 
   R_NT r_nt;
-  R_PA r_pa;
+  // R_PA r_pa;
   // R_MA r_ma;
   // R_RA r_ra;
   // R_OA r_oa;
@@ -58,25 +58,25 @@ int main(int argc, char ** argv){
 
   // std::cout << "gen mod: " << njm::toString(s.modelGen_r.getPar()," ","\n");
 
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message("   No treatment: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  // njm::message("   No treatment: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
+  // njm::message("       Proximal: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message("   No treatment: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  // njm::message("   No treatment: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
+  // njm::message("       Proximal: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   // rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   // njm::message("         Myopic: "
@@ -99,6 +99,45 @@ int main(int argc, char ** argv){
   //   s.nextPoint();
   // }
 
+
+  std::vector<double> par = s.modelGen_r.getPar();
+
+  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  njm::message(rs.smean());
+
+  std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
+		[](double & x){
+		  x += 1.0;
+		});
+  
+  s.preCompData();
+  
+  s.modelGen_r = MG(s.fD);
+  // s.modelGen_r.read();
+  s.modelGen_r.putPar(par.begin());
+  s.modelEst_r = ME(s.fD);
+  s.modelGen_r.setType(INVALID);
+  s.modelEst_r.setType(INVALID);
+
+  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  njm::message(rs.smean());
+
+  std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
+		[](double & x){
+		  x -= 1.0;
+		});
+  
+  s.preCompData();
+  
+  s.modelGen_r = MG(s.fD);
+  // s.modelGen_r.read();
+  s.modelGen_r.putPar(par.begin());
+  s.modelEst_r = ME(s.fD);
+  s.modelGen_r.setType(INVALID);
+  s.modelEst_r.setType(INVALID);
+
+  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  njm::message(rs.smean());
 
   njm::sett.clean();
   return 0;
