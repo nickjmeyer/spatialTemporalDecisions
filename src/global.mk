@@ -30,6 +30,7 @@ OBJECTS += utilities.o \
 	toyFeatures3.o \
 	toyFeatures4.o \
 	toyFeatures5.o \
+	toyFeatures6.o \
 	wnsFeatures0.o \
 	wnsFeatures1.o \
 	param.o \
