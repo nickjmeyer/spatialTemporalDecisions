@@ -83,6 +83,13 @@ PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		      ModelTimeExpCavesGDistTrendPowCon> >;
 
 
+template class
+PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
+
+
 template class PlainRunner<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesEDist>,
 			   RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
@@ -429,6 +436,11 @@ template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 			       RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
 					 ModelTimeExpCavesGDist> >;
 
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
+				      ModelTimeExpCavesGDist>,
+			       RankAgent<ToyFeatures7<ModelTimeExpCavesGDist>,
+					 ModelTimeExpCavesGDist> >;
+
 
 
 
@@ -718,6 +730,18 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesGDistTrendPowCon>,
+		      RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
+				ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesEDist>,
 	    RankAgent<ToyFeatures5<ModelTimeExpCavesEDist>,
 		      ModelTimeExpCavesEDist>,
@@ -942,6 +966,17 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 			       ModelTimeExpCavesGDistTrendPowCon>,
 			OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
 			ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
+			ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
+	    M1OsspOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			       ModelTimeExpCavesGDistTrendPowCon>,
+			OsspAgent<ModelTimeExpCavesGDistTrendPowCon>,
+			ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
 			ModelTimeExpCavesGDistTrendPowCon> >;
 
 
@@ -1357,6 +1392,18 @@ TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			    ModelTimeExpCavesGDistTrendPowCon>,
 		     RankAgent<ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
+			       ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		  ModelTimeExpCavesGDistTrendPowCon>,
+	   RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon>,
+	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			    ModelTimeExpCavesGDistTrendPowCon>,
+		     RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
 			       ModelTimeExpCavesGDistTrendPowCon>,
 		     ModelTimeExpCavesGDistTrendPowCon> >;
 

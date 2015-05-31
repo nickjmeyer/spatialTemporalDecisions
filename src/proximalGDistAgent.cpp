@@ -32,8 +32,16 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
 
   std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
 
+  std::priority_queue<std::pair<double,int> > shufInfected,shufNotInfec;
+  for(i = 0; i < sD.numNotInfec; ++i)
+    shufNotInfec.push(std::pair<double,int>(njm::runif01(),i));
+  for(i = 0; i < sD.numInfected; ++i)
+    shufInfected.push(std::pair<double,int>(njm::runif01(),i));
+  
   for(i=0; i<sD.numNotInfec; i++){
-    node0=sD.notInfec.at(i);
+    // node0=sD.notInfec.at(i);
+    node0 = sD.notInfec.at(shufNotInfec.top().second);
+    shufNotInfec.pop();
 
     minDist=maxDist;
     for(j=0; j<sD.numInfected; j++){
@@ -48,7 +56,9 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
 
   
   for(i=0; i<sD.numInfected; i++){
-    node0=sD.infected.at(i);
+    // node0=sD.infected.at(i);
+    node0 = sD.infected.at(shufInfected.top().second);
+    shufInfected.pop();
 
     minDist=maxDist;
     for(j=0; j<sD.numNotInfec; j++){

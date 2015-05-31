@@ -16,6 +16,9 @@ template class RankAgent<ToyFeatures4<ModelGravityGDist>,
 template class RankAgent<ToyFeatures4<ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
 
+template class RankAgent<ToyFeatures7<ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
+
 template class RankAgent<ToyFeatures4<ModelTimeGDistTrendPow>,
 			 ModelTimeGDistTrendPow>;
 
@@ -26,6 +29,9 @@ template class RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
 			 ModelTimeExpCavesGDistTrendPowCon>;
 
 template class RankAgent<ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
+			 ModelTimeExpCavesGDistTrendPowCon>;
+
+template class RankAgent<ToyFeatures7<ModelTimeExpCavesGDistTrendPowCon>,
 			 ModelTimeExpCavesGDistTrendPowCon>;
 
 template class RankAgent<ToyFeatures4<ModelTimeExpCavesEDist>,
@@ -154,29 +160,40 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     infRanks = f.infFeat * (tp.weights + jitter);
     notRanks = f.notFeat * (tp.weights + jitter);
 
+    // shuffle the node indices
+    std::priority_queue<std::pair<double,int> > shufInfected,shufNotInfec;
+    for(j = 0; j < sD.numInfected; ++j)
+      shufInfected.push(std::pair<double,int>(njm::runif01(),j));
+    for(j = 0; j < sD.numNotInfec; ++j)
+      shufNotInfec.push(std::pair<double,int>(njm::runif01(),j));
 
     // sort the locations by their ranks
     // if treated, get lowest value possible
     std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
     
     for(j=0; j<sD.numInfected; j++){
-      if(tD.a.at(sD.infected.at(j)))
+      node0 = shufInfected.top().second;
+      shufInfected.pop();
+      if(tD.a.at(sD.infected.at(node0)))
 	sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
-						::lowest(),j));
+						::lowest(),node0));
       else
-	sortInfected.push(std::pair<double,int>(infRanks(j),j));
+	sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
     }
 
 
     for(j=0; j<sD.numNotInfec; j++){
-      if(tD.p.at(sD.notInfec.at(j)))
+      node0 = shufNotInfec.top().second;
+      shufNotInfec.pop();
+      if(tD.p.at(sD.notInfec.at(node0)))
 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
-						::lowest(),j));
+						::lowest(),node0));
       else
-	sortNotInfec.push(std::pair<double,int>(notRanks(j),j));
+	sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
     }
 
 
+    // randomly select from the top nodes
     std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
     for(j = 0; j < (numAct - cI); j++){
       selInfected.push(std::pair<double,int>(njm::runif01(),

@@ -10,19 +10,20 @@ int main(int argc, char ** argv){
 
   typedef System<MG,ME> S;
 
-  typedef NoTrt<ME> NT;
+  // typedef NoTrt<ME> NT;
   typedef ProximalGDistAgent<ME> PA;
   // typedef MyopicAgent<ME> MA;
   
-  // typedef ToyFeatures4<ME> F;
-  // typedef RankAgent<F,ME> RA;
+  typedef ToyFeatures7<ME> F;
+  typedef RankAgent<F,ME> RA;
   // typedef OsspAgent<ME> OA;
 
   // typedef M1SpOptim<S,RA,ME> SPO;
   // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
-  typedef VanillaRunner<S,NT> R_NT;
-  typedef VanillaRunner<S,PA> R_PA;
+  // typedef VanillaRunner<S,NT> R_NT;
+  typedef VanillaRunnerNS<S,PA> R_PA;
+  typedef VanillaRunnerNS<S,RA> R_RA;
   // typedef FitOnlyRunner<S,MA> R_MA;
   // typedef OptimRunner<S,RA,SPO> R_RA;
   // typedef OptimRunner<S,OA,OSSPO> R_OA;
@@ -33,47 +34,40 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLE);
   s.modelEst_r.setType(MLE);
 
-  int numReps = 10;
+  int numReps = 5000;
   // Starts starts("startingLocations.txt");
   Starts starts(numReps,s.fD.numNodes);
   // s.reset(starts[0]);
 
-  NT nt;
+  // NT nt;
   PA pa;
   // MA ma;
-  // RA ra;
+  RA ra;
+  ra.tp.jitterScale = std::numeric_limits<double>::max();
+  ra.tp.weights.ones();
+  ra.tp.weights *= -1.0;
   // OA oa;
 
   // SPO spo;
   // OSSPO osspo;
 
-  R_NT r_nt;
+  // R_NT r_nt;
   R_PA r_pa;
   // R_MA r_ma;
-  // R_RA r_ra;
+  R_RA r_ra;
   // R_OA r_oa;
 
 
   RunStats rs;
 
-  // std::cout << "gen mod: " << njm::toString(s.modelGen_r.getPar()," ","\n");
+  int end = s.fD.finalT;
 
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message("   No treatment: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  // njm::message("   No treatment: "
+  // 	       + njm::toString(rs.smean(),"")
+  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message("   No treatment: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
+  rs = r_pa.run(s,pa,numReps,end,starts);
   njm::message("       Proximal: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
@@ -82,6 +76,11 @@ int main(int argc, char ** argv){
   // njm::message("         Myopic: "
   // 	       + njm::toString(rs.smean(),"")
   // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  
+  rs = r_ra.run(s,ra,numReps,end,starts);
+  njm::message("  Policy Search: "
+  	       + njm::toString(rs.smean(),"")
+  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   // rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
   // njm::message("  Policy Search: "

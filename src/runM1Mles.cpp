@@ -15,23 +15,23 @@ int main(int argc, char ** argv){
   typedef MyopicAgent<ME> MA;
   
   typedef ToyFeatures5<ME> F5;
-  typedef ToyFeatures6<ME> F6;
+  typedef ToyFeatures7<ME> F7;
   typedef RankAgent<F5,ME> RA5;
-  typedef RankAgent<F6,ME> RA6;
+  typedef RankAgent<F7,ME> RA7;
   typedef OsspAgent<ME> OA;
 
   typedef M1SpOptim<S,RA5,ME> SPO5;
   typedef M1OsspOptim<S,OA,F5,ME> OSSPO5;
-  typedef M1SpOptim<S,RA6,ME> SPO6;
-  typedef M1OsspOptim<S,OA,F6,ME> OSSPO6;
+  typedef M1SpOptim<S,RA7,ME> SPO7;
+  typedef M1OsspOptim<S,OA,F7,ME> OSSPO7;
   
   typedef VanillaRunner<S,NT> R_NT;
   typedef VanillaRunner<S,PA> R_PA;
   typedef FitOnlyRunner<S,MA> R_MA;
   typedef OptimRunner<S,RA5,SPO5> R_RA5;
   typedef OptimRunner<S,OA,OSSPO5> R_OA5;
-  typedef OptimRunner<S,RA6,SPO6> R_RA6;
-  typedef OptimRunner<S,OA,OSSPO6> R_OA6;
+  typedef OptimRunner<S,RA7,SPO7> R_RA7;
+  typedef OptimRunner<S,OA,OSSPO7> R_OA7;
 
 
   S s;
@@ -45,28 +45,28 @@ int main(int argc, char ** argv){
   PA pa;
   MA ma;
   RA5 ra5;
-  RA6 ra6;
+  RA7 ra7;
   OA oa;
 
   ra5.name = "rank_5";
-  ra6.name = "rank_6";
+  ra7.name = "rank_7";
   
 
   SPO5 spo5;
   OSSPO5 osspo5;
-  SPO6 spo6;
-  OSSPO6 osspo6;
+  SPO7 spo7;
+  OSSPO7 osspo7;
 
   osspo5.name = "M1Ossp_5";
-  osspo6.name = "M1Ossp_6";
+  osspo7.name = "M1Ossp_7";
 
   R_NT r_nt;
   R_PA r_pa;
   R_MA r_ma;
   R_RA5 r_ra5;
-  R_RA6 r_ra6;
+  R_RA7 r_ra7;
   R_OA5 r_oa5;
-  R_OA6 r_oa6;
+  R_OA7 r_oa7;
 
 
   RunStats rs;
@@ -91,7 +91,7 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  rs = r_ra6.run(s,ra6,spo6,numReps,s.fD.finalT,starts);
+  rs = r_ra7.run(s,ra7,spo7,numReps,s.fD.finalT,starts);
   njm::message("  Policy Search: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
@@ -113,11 +113,11 @@ int main(int argc, char ** argv){
   		   + njm::toString(rs.smean(),"")
   		   + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-      osspo6.tp.N = *itN;
-      osspo6.tp.jitterScale = *itJS;
-      osspo6.name = "M1Ossp_" + njm::toString(osspo6.tp.N,"",0,0)
-  	+ "_" + njm::toString(osspo6.tp.jitterScale,"",0,0);
-      rs = r_oa6.run(s,oa,osspo6,numReps,s.fD.finalT,starts);
+      osspo7.tp.N = *itN;
+      osspo7.tp.jitterScale = *itJS;
+      osspo7.name = "M1Ossp_" + njm::toString(osspo7.tp.N,"",0,0)
+  	+ "_" + njm::toString(osspo7.tp.jitterScale,"",0,0);
+      rs = r_oa7.run(s,oa,osspo7,numReps,s.fD.finalT,starts);
       njm::message("One Step Polish: "
   		   + njm::toString(rs.smean(),"")
   		   + "  (" + njm::toString(rs.seMean(),"") + ")");
