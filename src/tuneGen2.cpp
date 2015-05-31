@@ -1,28 +1,32 @@
 #include "tuneGen2.hpp"
 
 
-void scaleD(TuneData * const tuneData, const double & pow){
+template <class M>
+void scaleD(TuneData<M> * const tuneData, const double & pow){
   int i, I = tuneData->s.fD.numNodes * tuneData->s.fD.numNodes;
   for(i = 0; i < I; ++i)
     tuneData->s.fD.gDist.at(i) = std::pow(tuneData->d.at(i),pow);
   
   tuneData->s.preCompData();
   
-  tuneData->s.modelGen_r = MG(tuneData->s.fD);
+  tuneData->s.modelGen_r = M(tuneData->s.fD);
   tuneData->s.modelGen_r.setType(INVALID);
   tuneData->s.modelGen_r.putPar(tuneData->par.begin());
 }
 
 
+template <class M>
 void tuneSpread(System<M,M> s, const Starts & starts,
-		const int numReps, double & pow,
-		double & scale, const double goal){
+		const int numReps,
+		double & pow, double & scale,
+		const double goal0, const double goal1){
   size_t iter = 0;
   int status;
   gsl_vector *x, *ss;
-  int i,dim=2;
+  int dim=2;
 
-  TuneData<M> tuneData(s,s.modelGen_r.getPar(),s.fD.gDist,starts,numReps,goal);
+  TuneData<M> tuneData(s,s.modelGen_r.getPar(),s.fD.gDist,
+		       starts,numReps,goal0,goal1);
 
   x = gsl_vector_alloc(dim);
   gsl_vector_set_all(x,0.0);
@@ -31,12 +35,12 @@ void tuneSpread(System<M,M> s, const Starts & starts,
 
   gsl_multimin_function minex_func;
   minex_func.n = dim;
-  minex_func.f = &tuneSpreadHelper;
+  minex_func.f = &tuneSpreadHelper<M>;
   minex_func.params = &tuneData;
 
   const gsl_multimin_fminimizer_type * T = gsl_multimin_fminimizer_nmsimplex2;
   gsl_multimin_fminimizer * m = NULL;
-  m = gsl_multimin_fminmizer_alloc(T,dim);
+  m = gsl_multimin_fminimizer_alloc(T,dim);
   gsl_multimin_fminimizer_set(m,&minex_func,x,ss);
 
   double curSize;
@@ -61,11 +65,12 @@ void tuneSpread(System<M,M> s, const Starts & starts,
 }
 
 
+template <class M>
 double tuneSpreadHelper(const gsl_vector * x, void * params){
   typedef System<M,M> S;
   typedef NoTrt<M> NT;
   typedef VanillaRunnerNS<S,NT> RN;
-  TuneData<M> * tuneData = static_cast<TuneData<M>*>(params);
+  TuneData<M> * tuneData = static_cast<TuneData<M> *>(params);
   NT nt;
   RN rn;
   
@@ -78,10 +83,19 @@ double tuneSpreadHelper(const gsl_vector * x, void * params){
 
   tuneData->s.modelEst_r = tuneData->s.modelGen_r;
 
-  double val = n.run(tuneData->s,nt,tuneData->numReps,tuneData->s.fD.finalT,
-		     tuneData->starts).smean();
+  double val0 = rn.run(tuneData->s,nt,tuneData->numReps,tuneData->s.fD.trtStart,
+		       tuneData->starts).smean();
 
-  return std::pow(val - tuneData->goal,2.0);
+  double val1 = rn.run(tuneData->s,nt,tuneData->numReps,tuneData->s.fD.finalT,
+		       tuneData->starts).smean();
+
+  printf("{%5.4f, %5.4f}\r",val0,val1);
+  fflush(stdout);
+
+  double ret = std::pow(val0 - tuneData->goal0,2.0) +
+    std::pow(val1 - tuneData->goal1,2.0);
+
+  return ret;
 }
 
 
@@ -116,7 +130,9 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef System<MG,ME> S;
+    typedef ModelTimeExpCavesGDistTrendPowCon MG;
+    
+    typedef System<MG,MG> S;
     // typedef NoTrt<ME> NT;
     // typedef ProximalGDistAgent<ME> PA;
     // typedef MyopicAgent<ME> MA;
@@ -136,9 +152,10 @@ int main(int argc, char ** argv){
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
 
-    double pow,scale,goal;
-    goal = 0.7;
-    tuneSpread<MG>(s,starts,numReps,pow,scale,goal);
+    double pow,scale,goal0,goal1;
+    goal0 = 0.3;
+    goal1 = 0.7;
+    tuneSpread<MG>(s,starts,numReps,pow,scale,goal0,goal1);
     // PA pa;
     // RP rp;
 
