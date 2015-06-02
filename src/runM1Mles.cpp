@@ -96,7 +96,7 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  std::vector<int> N = {100, 10000};
+  std::vector<int> N = {100};
   std::vector<double> JS = {4.0, 1.0};
   std::vector<int>::const_iterator itN;
   std::vector<double>::const_iterator itJS;
