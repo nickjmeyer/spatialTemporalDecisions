@@ -14,6 +14,7 @@
 #include "dataDepth.hpp"
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
+#include "proxStocGDistAgent.hpp"
 #include "rankAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
@@ -23,7 +24,8 @@
 #include "runner.hpp"
 #include "settings.hpp"
 #include "m1SpOptim.hpp"
-
+#include "nullOptim.hpp"
+#include "psOsspOptim.hpp"
 
 
 

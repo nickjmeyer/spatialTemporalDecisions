@@ -32,6 +32,7 @@
 #include "mcmcGravityTimeInf.hpp"
 #include "mcmcGravityTimeInfExp.hpp"
 #include "mcmcGravityTimeInfExpCaves.hpp"
+#include "proxStocGDistAgent.hpp"
 
 
 

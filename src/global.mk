@@ -18,11 +18,14 @@ OBJECTS += utilities.o \
 	randomAgent.o \
 	myopicAgent.o \
 	proximalGDistAgent.o \
+	proxStocGDistAgent.o \
 	proximalEDistAgent.o \
 	rankAgent.o \
 	osspAgent.o \
+	nullOptim.o \
 	m1SpOptim.o \
 	m1OsspOptim.o \
+	psOsspOptim.o \
 	m2QOptim.o \
 	features.o featuresInt.o \
 	toyFeatures0.o \

@@ -4,99 +4,112 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDist MG;
+  // typedef ModelTimeExpCavesGDist MG;
   
-  typedef MG ME;
+  // typedef MG ME;
 
-  typedef System<MG,ME> S;
+  // typedef System<MG,ME> S;
 
-  // typedef NoTrt<ME> NT;
-  typedef ProximalGDistAgent<ME> PA;
-  // typedef MyopicAgent<ME> MA;
+  // // typedef NoTrt<ME> NT;
+  // typedef ProximalGDistAgent<ME> PA;
+  // // typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures7<ME> F;
-  typedef RankAgent<F,ME> RA;
-  // typedef OsspAgent<ME> OA;
+  // typedef ToyFeatures7<ME> F;
+  // typedef RankAgent<F,ME> RA;
+  // // typedef OsspAgent<ME> OA;
 
-  // typedef M1SpOptim<S,RA,ME> SPO;
-  // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
+  // // typedef M1SpOptim<S,RA,ME> SPO;
+  // // typedef M1OsspOptim<S,OA,F,ME> OSSPO;
 
-  // typedef VanillaRunner<S,NT> R_NT;
-  typedef VanillaRunnerNS<S,PA> R_PA;
-  typedef VanillaRunnerNS<S,RA> R_RA;
-  // typedef FitOnlyRunner<S,MA> R_MA;
-  // typedef OptimRunner<S,RA,SPO> R_RA;
-  // typedef OptimRunner<S,OA,OSSPO> R_OA;
-
-
-  // S s("obsData.txt");
-  S s;
-  s.modelGen_r.setType(MLE);
-  s.modelEst_r.setType(MLE);
-
-  int numReps = 5000;
-  // Starts starts("startingLocations.txt");
-  Starts starts(numReps,s.fD.numNodes);
-  // s.reset(starts[0]);
-
-  // NT nt;
-  PA pa;
-  // MA ma;
-  RA ra;
-  ra.tp.jitterScale = std::numeric_limits<double>::max();
-  ra.tp.weights.ones();
-  ra.tp.weights *= -1.0;
-  // OA oa;
-
-  // SPO spo;
-  // OSSPO osspo;
-
-  // R_NT r_nt;
-  R_PA r_pa;
-  // R_MA r_ma;
-  R_RA r_ra;
-  // R_OA r_oa;
+  // // typedef VanillaRunner<S,NT> R_NT;
+  // typedef VanillaRunnerNS<S,PA> R_PA;
+  // typedef VanillaRunnerNS<S,RA> R_RA;
+  // // typedef FitOnlyRunner<S,MA> R_MA;
+  // // typedef OptimRunner<S,RA,SPO> R_RA;
+  // // typedef OptimRunner<S,OA,OSSPO> R_OA;
 
 
-  RunStats rs;
+  // // S s("obsData.txt");
+  // S s;
+  // s.modelGen_r.setType(MLE);
+  // s.modelEst_r.setType(MLE);
 
-  int end = s.fD.finalT;
+  // int numReps = 5000;
+  // // Starts starts("startingLocations.txt");
+  // Starts starts(numReps,s.fD.numNodes);
+  // // s.reset(starts[0]);
 
-  // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  // njm::message("   No treatment: "
+  // // NT nt;
+  // PA pa;
+  // // MA ma;
+  // RA ra;
+  // ra.tp.jitterScale = std::numeric_limits<double>::max();
+  // ra.tp.weights.ones();
+  // ra.tp.weights *= -1.0;
+  // // OA oa;
+
+  // // SPO spo;
+  // // OSSPO osspo;
+
+  // // R_NT r_nt;
+  // R_PA r_pa;
+  // // R_MA r_ma;
+  // R_RA r_ra;
+  // // R_OA r_oa;
+
+
+  // RunStats rs;
+
+  // int end = s.fD.finalT;
+
+  // // rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
+  // // njm::message("   No treatment: "
+  // // 	       + njm::toString(rs.smean(),"")
+  // // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  
+  // rs = r_pa.run(s,pa,numReps,end,starts);
+  // njm::message("       Proximal: "
   // 	       + njm::toString(rs.smean(),"")
   // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_pa.run(s,pa,numReps,end,starts);
-  njm::message("       Proximal: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // // rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
+  // // njm::message("         Myopic: "
+  // // 	       + njm::toString(rs.smean(),"")
+  // // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  // rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
-  // njm::message("         Myopic: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  rs = r_ra.run(s,ra,numReps,end,starts);
-  njm::message("  Policy Search: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  // rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
+  // rs = r_ra.run(s,ra,numReps,end,starts);
   // njm::message("  Policy Search: "
   // 	       + njm::toString(rs.smean(),"")
   // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  // // rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
+  // // njm::message("  Policy Search: "
+  // // 	       + njm::toString(rs.smean(),"")
+  // // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  
+  // // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
+  // // njm::message("One Step Polish: "
+  // // 	       + njm::toString(rs.smean(),"")
+  // // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  // int i;
-  // for(i = 0; i < 8; ++i){
-  //   s.updateStatus();
-  //   s.nextPoint();
-  // }
+  // // int i;
+  // // for(i = 0; i < 8; ++i){
+  // //   s.updateStatus();
+  // //   s.nextPoint();
+  // // }
+
+
+  std::vector<double> vals;
+  int i, I = 100;
+  for(i = 0; i < I; ++i){
+    vals.push_back(njm::rnorm01());
+  }
+
+  std::cout << optCorr(vals,0.3) << std::endl;
+  std::cout << optCorr(vals,0.7) << std::endl;
+  std::cout << optCorr(vals,0.8) << std::endl;
+  std::cout << optCorr(vals,0.9) << std::endl;
+  
 
 
   njm::sett.clean();
