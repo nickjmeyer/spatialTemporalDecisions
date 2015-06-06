@@ -152,8 +152,11 @@ double optCorr(const std::vector<double> vals,
     pOver = over;
 
 
-    corr = getCorr(vals,appScale(stdNorm,var));
+    // corr = getCorr(vals,appScale(stdNorm,var));
+    // printf("Corr: %16.15f |  Var: %16.15f\r",corr,var);
+    // fflush(stdout);
   }
+  // std::cout << std::endl;
   
   return var;
 }

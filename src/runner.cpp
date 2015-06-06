@@ -79,6 +79,12 @@ PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 template class
 PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesGDistTrendPowCon>,
+	    ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
 	    ProxStocGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
 
@@ -377,6 +383,11 @@ template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
 		ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGDist,
+		       ModelTimeExpCavesGDist>,
+		ProxStocGDistAgent<ModelTimeExpCavesGDist> >;
 
 template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,

@@ -86,7 +86,8 @@ void PsOsspOptim<S,A,M>
 
 
   // initialize runner and original state
-  PlainRunner<System<M,M>,ProxStocGDistAgent<M> > runner;
+  PlainRunner<System<M,M>, ProximalGDistAgent<M> > runner;
+  ProximalGDistAgent<M> pa;
   System<M,M> s0(s.sD,s.tD,s.fD,s.dD,s.modelGen,s.modelEst);
   int b;
   double qvalue;
@@ -117,7 +118,7 @@ void PsOsspOptim<S,A,M>
       // this also is our estimate of Q
       // if we include past rewards it doesn't effect
       // the ranking of current rewards
-      qvalue += - runner.run(s,ps,tp.mcReps,s.fD.finalT).smean();
+      qvalue += - runner.run(s,pa,tp.mcReps,s.fD.finalT).smean();
     }
     qvalue /= double(tp.B);
 
