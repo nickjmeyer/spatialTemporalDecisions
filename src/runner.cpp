@@ -378,6 +378,11 @@ VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
 		ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+		       ModelTimeExpCavesGDistTrendPowCon>,
+		ProxStocGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 				      ModelTimeExpCavesGDistTrendPowCon>,
 			       MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
