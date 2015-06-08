@@ -59,7 +59,7 @@ int main(int argc, char ** argv){
   SPO7 spo7;
   // OSSPO7 osspo7;
   PSOSSPO psosspo;
-  psosspo.N = 10000;
+  psosspo.tp.N = 10000;
 
   // osspo5.name = "M1Ossp_5";
   // osspo7.name = "M1Ossp_7";
