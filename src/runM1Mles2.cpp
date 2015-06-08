@@ -110,7 +110,7 @@ int main(int argc, char ** argv){
     for(itJS = JS.begin(); itJS != JS.end(); ++itJS){
       if(itN == N.begin()){
 	ra6.tp.jitterScale = *itJS;
-	ra6.name = "rank_6_" + njm::toString(ra6.tp.jitterScale,"",0,0);
+	ra6.name = "rank_6_" + njm::toString(ra6.tp.jitterScale*100,"",0,0);
 	rs = r_ra6.run(s,ra6,spo6,numReps,s.fD.finalT,starts);
 	njm::message(njm::toString(ra6.name,": ",0,0)
 		     + njm::toString(rs.smean(),"")
@@ -120,7 +120,7 @@ int main(int argc, char ** argv){
       osspo6.tp.N = *itN;
       osspo6.tp.jitterScale = *itJS;
       osspo6.name = "M1Ossp_6_" + njm::toString(osspo6.tp.N,"",0,0)
-  	+ "_" + njm::toString(osspo6.tp.jitterScale,"",0,0);
+  	+ "_" + njm::toString(osspo6.tp.jitterScale*100,"",0,0);
       rs = r_oa6.run(s,oa,osspo6,numReps,s.fD.finalT,starts);
       njm::message(njm::toString(osspo6.name,": ",0,0)
   		   + njm::toString(rs.smean(),"")
