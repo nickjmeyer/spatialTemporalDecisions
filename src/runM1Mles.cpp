@@ -59,6 +59,7 @@ int main(int argc, char ** argv){
   SPO7 spo7;
   // OSSPO7 osspo7;
   PSOSSPO psosspo;
+  psosspo.N = 10000;
 
   // osspo5.name = "M1Ossp_5";
   // osspo7.name = "M1Ossp_7";
@@ -100,7 +101,8 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  std::vector<double> corrGoal = {0.9,0.8,0,0.7,0.6,0.5,0.4,0.3};
+  // std::vector<double> corrGoal = {0.9,0.8,0,0.7,0.6,0.5,0.4,0.3};
+  std::vector<double> corrGoal = {0.8,0.5};
   std::vector<double>::const_iterator cgIt;
   for(cgIt = corrGoal.begin(); cgIt != corrGoal.end(); ++cgIt){
     psosspo.tp.corrGoal = *cgIt;
