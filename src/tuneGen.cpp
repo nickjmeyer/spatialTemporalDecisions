@@ -103,7 +103,8 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   std::vector<double> scaleD;
   njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
   double kScale;
-  njm::fromFile(kScale, njm::sett.srcExt("kScale.txt"));
+  // njm::fromFile(kScale, njm::sett.srcExt("kScale.txt"));
+  kScale = 1.0;
   std::for_each(scaleD.begin(),scaleD.end(),
 		[&kScale](double & x){
 		  x/=kScale;
