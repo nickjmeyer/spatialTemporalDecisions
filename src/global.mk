@@ -22,6 +22,7 @@ OBJECTS += utilities.o \
 	proximalEDistAgent.o \
 	rankAgent.o \
 	osspAgent.o \
+	incremAgent.o \
 	nullOptim.o \
 	m1SpOptim.o \
 	m1OsspOptim.o \

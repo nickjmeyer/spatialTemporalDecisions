@@ -17,6 +17,7 @@
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
 #include "osspAgent.hpp"
+#include "incremAgent.hpp"
 #include "optim.hpp"
 #include "m1SpOptim.hpp"
 #include "m1OsspOptim.hpp"

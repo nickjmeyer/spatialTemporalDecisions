@@ -551,6 +551,17 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 				    ModelGDistKern>,
 			     MyopicAgent<ModelGDistKern> >;
 
+template class
+FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+				    ModelTimeExpCavesGDistTrendPowCon>,
+	      IncremAgent<ModelTimeExpCavesGDistTrendPowCon,
+			  ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon>,
+			  NullOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+					   ModelTimeExpCavesGDistTrendPowCon>,
+				    ProximalGDistAgent
+				    <ModelTimeExpCavesGDistTrendPowCon>,
+				    ModelTimeExpCavesGDistTrendPowCon> > >;
+
 
 
 template <class S, class A>

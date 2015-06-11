@@ -7,6 +7,12 @@ template class NullOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			 ModelTimeExpCavesGDistTrendPowCon>;
 
 
+template class NullOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+				ModelTimeExpCavesGDistTrendPowCon>,
+			 ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon>,
+			 ModelTimeExpCavesGDistTrendPowCon>;
+
+
 template <class S, class A, class M>
 NullOptim<S,A,M>::NullOptim(){
   name = "Null";

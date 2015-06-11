@@ -16,6 +16,7 @@
 #include "myopicAgent.hpp"
 #include "proxStocGDistAgent.hpp"
 #include "rankAgent.hpp"
+#include "incremAgent.hpp"
 #include "features.hpp"
 #include "toyFeatures2.hpp"
 #include "toyFeatures3.hpp"
