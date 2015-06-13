@@ -60,8 +60,6 @@ void IncremAgent<M,A,O>::applyTrt(const SimData & sD,
   std::vector<int>::const_iterator it,beg,end;
   int type;
   for(i = 0; i < numTot; ++i){
-    printf("Round: %3d\n",i);
-    
     type = pq.top().second;
     pq.pop();
 
@@ -84,8 +82,6 @@ void IncremAgent<M,A,O>::applyTrt(const SimData & sD,
     typedef std::pair<double,std::vector<int>::const_iterator> DblIt;
     std::priority_queue<DblIt> res;
     for(it = beg; it != end; ++it){
-      printf("Test: %3d\n",*it);
-      
       if(type == preVal)
 	s.tD_r.p.at(*it) = 1;
       else if(type == actVal)
@@ -174,7 +170,6 @@ template <class M, class A, class O>
 double IncremAgent<M,A,O>::eval(System<M,M> s,
 				A a){
   PlainRunner<System<M,M>,A> r;
-  printf("eval: %3d\n",tp.N);
 
   int i;
   double tot = 0.0;
@@ -184,8 +179,6 @@ double IncremAgent<M,A,O>::eval(System<M,M> s,
     int sumPre, sumAct;
     sumPre = std::accumulate(s.tD.p.begin(),s.tD.p.end(),0);
     sumAct = std::accumulate(s.tD.a.begin(),s.tD.a.end(),0);
-
-    printf("(%3d,%3d)\n",sumPre,sumAct);
 
     s.nextPoint();
     
