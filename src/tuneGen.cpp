@@ -235,8 +235,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   int iter = 0;
 
 
-  printf("Iter: %05d  >>>  Current value: %08.6f\r",
-	 ++iter, val);
+  printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+	 ++iter, val, trt);
 
   while(std::abs(val - goal) > tol){
     if(val > goal){
@@ -267,10 +267,11 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
+    printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+	   ++iter, val, trt);
     fflush(stdout);
   }
-
+  
   s.modelGen_r.save();
 
   njm::message("Est. goal: " + njm::toString(val,""));
