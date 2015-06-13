@@ -21,12 +21,7 @@ OBJECTS += utilities.o \
 	proximalEDistAgent.o \
 	rankAgent.o \
 	osspAgent.o \
-<<<<<<< Updated upstream
-=======
-	incremAgent.o \
 	allAgent.o \
-	nullOptim.o \
->>>>>>> Stashed changes
 	m1SpOptim.o \
 	m1OsspOptim.o \
 	m2QOptim.o \
