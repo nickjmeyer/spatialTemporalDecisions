@@ -218,7 +218,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
   
-  double goal = atTrtStart + 0.75*(atFinalT - atTrtStart);
+  double goal = atTrtStart + 0.1*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
@@ -309,6 +309,8 @@ int main(int argc, char ** argv){
     typedef ProximalGDistAgent<ME> PA;
     typedef MyopicAgent<ME> MA;
 
+    typedef AllAgent<ME> AA;
+
     typedef ToyFeatures5<ME> F;
     typedef RankAgent<F,ME> RA;
 
@@ -316,6 +318,8 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,PA> RP;
     typedef VanillaRunnerNS<S,MA> RM;
     typedef VanillaRunnerNS<S,RA> RR;
+    
+    typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s;
     s.modelEst_r = s.modelGen_r;
@@ -323,11 +327,13 @@ int main(int argc, char ** argv){
 
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
-    
+
+    MA ma;
     PA pa;
     RP rp;
 
     RA ra;
+    RM rm;
     RR rr;
     // ra.reset();
 
@@ -337,7 +343,9 @@ int main(int argc, char ** argv){
 
     njm::message("Tuning Treatment");
 
-    double valMA = TuneGenMA<S,MA,RM,NT,RN>(s,numReps,starts);
+    double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+
+    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
     double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
@@ -349,7 +357,9 @@ int main(int argc, char ** argv){
 		 "\n" +
 		 " valMA: " + njm::toString(valMA,"") +
 		 "\n" +
-		 " valRA: " + njm::toString(valRA,""));
+		 " valRA: " + njm::toString(valRA,"") +
+		 "\n" +
+		 " valAA: " + njm::toString(valAA,""));
 
 
     std::vector<double> par = s.modelGen_r.getPar();

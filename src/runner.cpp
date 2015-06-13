@@ -379,6 +379,10 @@ template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 				      ModelTimeExpCavesGDistTrendPowCon>,
 			       NoTrt<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+				      ModelTimeExpCavesGDistTrendPowCon>,
+			       AllAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
 template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
