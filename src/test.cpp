@@ -37,45 +37,6 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  std::vector<double> par = s.modelGen_r.getPar();
-
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message(rs.smean());
-
-  std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
-		[](double & x){
-		  x += 1.0;
-		});
-  
-  s.preCompData();
-  
-  s.modelGen_r = MG(s.fD);
-  // s.modelGen_r.read();
-  s.modelGen_r.putPar(par.begin());
-  s.modelEst_r = ME(s.fD);
-  s.modelGen_r.setType(INVALID);
-  s.modelEst_r.setType(INVALID);
-
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message(rs.smean());
-
-  std::for_each(s.fD.gDist.begin(),s.fD.gDist.end(),
-		[](double & x){
-		  x -= 1.0;
-		});
-  
-  s.preCompData();
-  
-  s.modelGen_r = MG(s.fD);
-  // s.modelGen_r.read();
-  s.modelGen_r.putPar(par.begin());
-  s.modelEst_r = ME(s.fD);
-  s.modelGen_r.setType(INVALID);
-  s.modelEst_r.setType(INVALID);
-
-  rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-  njm::message(rs.smean());
-
   njm::sett.clean();
   return 0;
 }
