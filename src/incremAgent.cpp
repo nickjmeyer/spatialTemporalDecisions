@@ -13,14 +13,15 @@ IncremAgent<ModelTimeExpCavesGDistTrendPowCon,
 
 template <class M, class A, class O>
 IncremAgent<M,A,O>::IncremAgent(){
+  tp.N = 100;
+  tp.mcReps = 10;
+  
   name="increm";
 }
 
 
 template <class M, class A, class O>
 void IncremAgent<M,A,O>::reset(){
-  tp.N = 100;
-  tp.mcReps = 10;
 }
 
   
@@ -59,6 +60,8 @@ void IncremAgent<M,A,O>::applyTrt(const SimData & sD,
   std::vector<int>::const_iterator it,beg,end;
   int type;
   for(i = 0; i < numTot; ++i){
+    printf("Round: %3d\n",i);
+    
     type = pq.top().second;
     pq.pop();
 
@@ -81,6 +84,8 @@ void IncremAgent<M,A,O>::applyTrt(const SimData & sD,
     typedef std::pair<double,std::vector<int>::const_iterator> DblIt;
     std::priority_queue<DblIt> res;
     for(it = beg; it != end; ++it){
+      printf("Test: %3d\n",*it);
+      
       if(type == preVal)
 	s.tD_r.p.at(*it) = 1;
       else if(type == actVal)
@@ -98,10 +103,12 @@ void IncremAgent<M,A,O>::applyTrt(const SimData & sD,
     std::vector<int>::const_iterator best = res.top().second;
     if(type == preVal){
       tD.p.at(*best) = 1;
+      s.tD_r.p.at(*best) = 1;
       notCand.erase(best);
     }
     else if(type == actVal){
       tD.a.at(*best) = 1;
+      s.tD_r.a.at(*best) = 1;
       infCand.erase(best);
     }
   }
@@ -167,11 +174,18 @@ template <class M, class A, class O>
 double IncremAgent<M,A,O>::eval(System<M,M> s,
 				A a){
   PlainRunner<System<M,M>,A> r;
+  printf("eval: %3d\n",tp.N);
 
   int i;
   double tot = 0.0;
   for(i = 0; i < tp.N; ++i){
     s.revert();
+
+    int sumPre, sumAct;
+    sumPre = std::accumulate(s.tD.p.begin(),s.tD.p.end(),0);
+    sumAct = std::accumulate(s.tD.a.begin(),s.tD.a.end(),0);
+
+    printf("(%3d,%3d)\n",sumPre,sumAct);
 
     s.nextPoint();
     
