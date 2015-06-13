@@ -89,7 +89,7 @@ double tuneSpreadHelper(const gsl_vector * x, void * params){
   double val1 = rn.run(tuneData->s,nt,tuneData->numReps,tuneData->s.fD.finalT,
 		       tuneData->starts).smean();
 
-  printf("{%5.4f, %5.4f}\r",val0,val1);
+  printf("{%5.4f, %5.4f} (%16.4f, %16.4f)\r",val0,val1,curScale,curPow);
   fflush(stdout);
 
   double ret = std::pow(val0 - tuneData->goal0,2.0) +
