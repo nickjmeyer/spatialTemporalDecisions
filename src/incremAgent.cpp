@@ -176,10 +176,6 @@ double IncremAgent<M,A,O>::eval(System<M,M> s,
   for(i = 0; i < tp.N; ++i){
     s.revert();
 
-    int sumPre, sumAct;
-    sumPre = std::accumulate(s.tD.p.begin(),s.tD.p.end(),0);
-    sumAct = std::accumulate(s.tD.a.begin(),s.tD.a.end(),0);
-
     s.nextPoint();
     
     tot += r.run(s,a,tp.mcReps,s.fD.finalT).smean();
