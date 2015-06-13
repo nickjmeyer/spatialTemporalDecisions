@@ -24,6 +24,7 @@ OBJECTS += utilities.o \
 	osspAgent.o \
 	incremAgent.o \
 	nullOptim.o \
+	allAgent.o \
 	m1SpOptim.o \
 	m1OsspOptim.o \
 	psOsspOptim.o \
