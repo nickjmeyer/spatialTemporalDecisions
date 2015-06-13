@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <numeric>
-#include <eigen3/Eigen/SuperLUSupport>
 #include <tuple>
 #include "utilities.hpp"
 #include "timer.hpp"
