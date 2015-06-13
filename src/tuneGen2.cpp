@@ -31,7 +31,7 @@ void tuneSpread(System<M,M> s, const Starts & starts,
   x = gsl_vector_alloc(dim);
   gsl_vector_set_all(x,0.0);
   ss = gsl_vector_alloc(dim);
-  gsl_vector_set_all(ss,0.1);
+  gsl_vector_set_all(ss,1.0);
 
   gsl_multimin_function minex_func;
   minex_func.n = dim;
@@ -53,7 +53,7 @@ void tuneSpread(System<M,M> s, const Starts & starts,
       break;
     curSize = gsl_multimin_fminimizer_size(m);
     status = gsl_multimin_test_size(curSize,size);
-  } while(status == GSL_CONTINUE && iter < 1000);
+  } while(status == GSL_CONTINUE && iter < 100000);
 
   pow = std::exp(gsl_vector_get(m->x,0));
   scale = std::exp(gsl_vector_get(m->x,1));
