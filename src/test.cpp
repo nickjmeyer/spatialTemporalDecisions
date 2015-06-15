@@ -10,11 +10,16 @@ int main(int argc, char ** argv){
 
   typedef System<MG,ME> S;
 
-  typedef ProximalGDistAgent<ME> PA;
+  typedef ToyFeatures5<ME> F5;
 
-  typedef NullOptim<S,PA,ME> NO;
+  // typedef ProximalGDistAgent<ME> PA;
+  typedef RankAgent<F5,ME> RA5;
 
-  typedef IncremAgent<ME,PA,NO> IA;
+  // typedef NullOptim<S,PA,ME> NO;
+  typedef M1SpOptim<S,RA5,ME> RSA;
+
+  // typedef IncremAgent<ME,PA,NO> IA;
+  typedef IncremAgent<ME,RA5,RSA> IA;
 
   typedef FitOnlyRunner<S,IA> R_IA;
   

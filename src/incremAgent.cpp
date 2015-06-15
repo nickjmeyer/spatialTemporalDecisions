@@ -8,7 +8,15 @@ IncremAgent<ModelTimeExpCavesGDistTrendPowCon,
 			     ModelTimeExpCavesGDistTrendPowCon>,
 		      ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon>,
 		      ModelTimeExpCavesGDistTrendPowCon> >;
-
+template class
+IncremAgent<ModelTimeExpCavesGDistTrendPowCon,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon >,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesGDistTrendPowCon>,
+		      RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
+				ModelTimeExpCavesGDistTrendPowCon >,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
 
 
 template <class M, class A, class O>

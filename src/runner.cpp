@@ -566,6 +566,21 @@ FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				    <ModelTimeExpCavesGDistTrendPowCon>,
 				    ModelTimeExpCavesGDistTrendPowCon> > >;
 
+template class
+FitOnlyRunner
+<System<ModelTimeExpCavesGDistTrendPowCon,
+	ModelTimeExpCavesGDistTrendPowCon>,
+ IncremAgent<ModelTimeExpCavesGDistTrendPowCon,
+	     RankAgent<ToyFeatures5
+		       <ModelTimeExpCavesGDistTrendPowCon>,
+		       ModelTimeExpCavesGDistTrendPowCon>,
+	     M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			      ModelTimeExpCavesGDistTrendPowCon>,
+		       RankAgent<ToyFeatures5
+				 <ModelTimeExpCavesGDistTrendPowCon>,
+				 ModelTimeExpCavesGDistTrendPowCon>,
+		       ModelTimeExpCavesGDistTrendPowCon> > >;
+
 
 
 template <class S, class A>
