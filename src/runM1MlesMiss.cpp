@@ -13,16 +13,13 @@ int main(int argc, char ** argv){
 
   typedef MyopicAgent<ME> MA;
   
-  typedef ToyFeatures5<ME> F;
-  typedef RankAgent<F,ME> RA;
-  typedef OsspAgent<ME> OA;
+  typedef ToyFeatures5<ME> F5;
+  typedef RankAgent<F5,ME> RA5;
 
-  typedef M1SpOptim<S,RA,ME> SPO;
-  typedef M1OsspOptim<S,OA,F,ME> OSSPO;
+  typedef M1SpOptim<S,RA5,ME> SPO5;
 
   typedef FitOnlyRunner<S,MA> R_MA;
-  typedef OptimRunner<S,RA,SPO> R_RA;
-  typedef OptimRunner<S,OA,OSSPO> R_OA;
+  typedef OptimRunner<S,RA5,SPO5> R_RA5;
 
 
   S s;
@@ -33,15 +30,14 @@ int main(int argc, char ** argv){
   Starts starts(numReps,s.fD.numNodes);
 
   MA ma;
-  RA ra;
-  OA oa;
+  RA5 ra5;
 
-  SPO spo;
-  OSSPO osspo;
+  ra5.name = "rank_5";
+
+  SPO5 spo5;
 
   R_MA r_ma;
-  R_RA r_ra;
-  R_OA r_oa;
+  R_RA5 r_ra5;
 
 
   RunStats rs;
@@ -51,47 +47,10 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
-  rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
+  rs = r_ra5.run(s,ra5,spo5,numReps,s.fD.finalT,starts);
   njm::message("  Policy Search: "
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-
-  // osspo.tp.N = 100;
-  // osspo.tp.jitterScale = 4.0;
-  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  njm::message("One Step Polish: "
-  	       + njm::toString(rs.smean(),"")
-  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  // osspo.tp.N = 100;
-  // osspo.tp.jitterScale = 1.0;
-  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  // osspo.tp.N = 10000;
-  // osspo.tp.jitterScale = 4.0;
-  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
-  // osspo.tp.N = 10000;
-  // osspo.tp.jitterScale = 1.0;
-  // osspo.name = "M1Ossp_" + njm::toString(osspo.tp.N,"",0,0)
-  //   + "_" + njm::toString(osspo.tp.jitterScale,"",0,0);
-  // rs = r_oa.run(s,oa,osspo,numReps,s.fD.finalT,starts);
-  // njm::message("One Step Polish: "
-  // 	       + njm::toString(rs.smean(),"")
-  // 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
   
   return 0;
 }
