@@ -37,6 +37,7 @@ ModelTimeExpCavesEDist::ModelTimeExpCavesEDist(const
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  fixSample = m.fixSample;
 }
 
 

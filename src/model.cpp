@@ -57,6 +57,11 @@ void ModelBase::setType(const Estimation & est){
 }
 
 
+void ModelBase::setFixSample(const int & fix){
+  fixSample = fix;
+}
+
+
 Estimation ModelBase::getType() const{
   return fitType;
 }
@@ -441,8 +446,8 @@ void ModelBase::setFisher(const SimData & sD,
 }
 
 
-bool ModelBase::sample(){
-  if(fitType == MLES){
+bool ModelBase::sample(const bool force){
+  if(fitType == MLES && (!fixSample || force)){
     std::vector<double> rand;
     unsigned int i;
     for(i = 0; i < numPars; ++i){

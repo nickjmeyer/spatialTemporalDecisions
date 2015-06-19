@@ -24,6 +24,8 @@ class M1SpOptimTunePar : public TuneParam{
   double C,t,ell,muMin,A,B;
 
   int tune;
+
+  int fixSample;
 };
 
 

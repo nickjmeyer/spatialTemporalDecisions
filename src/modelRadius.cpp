@@ -32,6 +32,7 @@ ModelRadius::ModelRadius(const ModelRadius & m){
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   mcmc = m.mcmc;
+  fixSample = m.fixSample;
 }
 
 

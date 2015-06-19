@@ -27,6 +27,7 @@ class ModelBase {
   Eigen::MatrixXd varHit;
   int ready;
   int numInfected,numNotInfec;
+  int fixSample;
 
  public:
   ModelBase(){ };
@@ -92,7 +93,7 @@ class ModelBase {
 			 const FixedData & fD,
 			 const DynamicData & dD);
 
-  virtual bool sample();
+  virtual bool sample(const bool force = false);
   
   virtual void revert();
 
@@ -121,6 +122,7 @@ class ModelBase {
   virtual void linScale(const double & scale);
 
   virtual void setType(const Estimation & est);
+  virtual void setFixSample(const int & fix);
   virtual Estimation getType() const;
   virtual Estimation & getType();
 

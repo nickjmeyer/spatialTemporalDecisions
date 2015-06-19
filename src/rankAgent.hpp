@@ -47,6 +47,8 @@ class RankAgent : public BaseAgent<M> {
 			const DynamicData & dD,
 			M & m);
 
+  virtual double calcJitter();
+
   F f;
 
   arma::colvec infRanks;

@@ -37,6 +37,7 @@ ModelTimeEDist::ModelTimeEDist(const ModelTimeEDist & m){
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   mcmc = m.mcmc;
+  fixSample = m.fixSample;
 }
 
 

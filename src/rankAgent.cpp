@@ -151,7 +151,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 	featStddev.insert_rows(0,f.infFeat.row(j));
     }
     featStddev = arma::cov(featStddev);
-    jitter = arma::sqrt(featStddev.diag())/tp.jitterScale;
+    jitter = arma::sqrt(featStddev.diag())*calcJitter();
 
     for(j = 0; j < f.numFeatures; j++)
       jitter(j) *= njm::rnorm01();
@@ -312,4 +312,7 @@ void RankTuneParam::putPar(const std::vector<double> & par){
 }
 
 
-
+template <class F, class M>
+double RankAgent<F,M>::calcJitter(){
+  return tp.jitterScale > 0 ? 1.0/tp.jitterScale : 0.0;
+}

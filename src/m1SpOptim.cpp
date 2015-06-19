@@ -16,6 +16,8 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
   B = 1;
 
   tune = 0;
+
+  fixSample = 0;
 }
 
 std::vector<double> M1SpOptimTunePar::getPar() const{
@@ -237,9 +239,16 @@ void M1SpOptim<S,A,M>
   System<M,M> s(system.sD,system.tD,system.fD,system.dD,
 		system.modelEst,system.modelEst);
 
-  if(tp.tune == 1 && system.sD.time == (system.fD.trtStart + 1))
+  if(tp.tune != 0 && system.sD.time == (system.fD.trtStart + 1))
     tune(s,agent);
 
+  if(tp.fixSample != 0){
+    s.modelGen_r.setFixSample(1);
+    s.modelEst_r.setFixSample(1);
+
+    s.revert();
+  }
+    
   
   PlainRunner<System<M,M>,A> runner;
 
@@ -264,6 +273,12 @@ void M1SpOptim<S,A,M>
       parMH.at(i) = par.at(i) - h.at(i);
     }
 
+    if(tp.fixSample != 0){
+      s.modelGen_r.sample(true);
+      s.modelEst_r = s.modelGen_r;
+      
+      s.revert();
+    }
 
     
     agent.tp.putPar(parPH);

@@ -33,6 +33,7 @@ ModelCovar::ModelCovar(const ModelCovar & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  fixSample = m.fixSample;
 }
 
 

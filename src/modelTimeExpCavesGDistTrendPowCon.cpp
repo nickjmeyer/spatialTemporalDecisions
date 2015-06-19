@@ -42,6 +42,7 @@ ModelTimeExpCavesGDistTrendPowCon
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   mcmc = m.mcmc;
+  fixSample = m.fixSample;
 }
 
 

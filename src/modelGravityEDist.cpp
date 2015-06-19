@@ -34,6 +34,7 @@ ModelGravityEDist::ModelGravityEDist(const ModelGravityEDist & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
+  fixSample = m.fixSample;
 }
 
 
