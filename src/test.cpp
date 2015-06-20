@@ -28,7 +28,7 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
-  int numReps = 4;
+  int numReps = 96;
   Starts starts(numReps,s.fD.numNodes);
 
   NT nt;
