@@ -654,9 +654,8 @@ getStart<-function(n){
 saveNet<-function(net,dir=NULL){
   if(is.null(dir))
     dir=paste(net$name,net$n,sep="")
-  ## system(paste("rm -rf",dir))
-  system(paste("mkdir -p",dir))
   dir=paste("../data/toy/",dir,"/",sep="")
+  system(paste("mkdir -p",dir))
 
   ## fips
   file=paste(dir,"fips.txt",sep="")
