@@ -601,50 +601,7 @@ getCovOrig<-function(n,nodes,rho=10,tau=10,eta=10,p=5){
 
 
 
-getCovLarge<-function(n,nodes,rho=10,tau=10,eta=10,p=5,tol=1e-5){
-  set.seed(0);
-  np=n*p
-
-  for(i in 1:ncol(nodes)){
-    if(length(unique(nodes[,i])) > 1)
-      nodes[,i] = scale(nodes[,i])
-  }
-  nodes = as.matrix(nodes)
-
-  drift=nodes
-  drift[,1]=drift[,1]^2
-
-  sigma=Matrix(0,np,np,sparse=TRUE)
-  mu=c(sapply(drift%*%matrix(c(2,1),ncol=1),rep,times=p))
-  for(i in 1:n){
-    for(j in 1:p){
-      for(k in 1:n){
-        for(l in 1:p){
-          ij=(i-1)*p + j
-          kl=(k-1)*p + l
-          val = rho*exp(-tau*sqrt(sum((nodes[i,]-nodes[k,])^2))
-                        -eta*abs(j-l))
-          if(val > tol){
-            sigma[ij,kl]= val
-            sigma[kl,ij]=sigma[ij,kl]
-          }
-        }
-      }
-    }
-  }
-  return(sigma)
-
-  Xcov=matrix(mvrnorm(n=1,mu=mu,Sigma=sigma),nrow=n,ncol=p,byrow=TRUE)
-  caves=floor(Xcov[,1]-min(Xcov[,1]) + 1)
-  for(i in 1:ncol(Xcov))
-    if(length(unique(Xcov[,i]))>1)
-      Xcov[,i]=scale(Xcov[,i])
-
-  return(list(Xcov=Xcov,caves=caves))
-}
-
-
-getCovFast<-function(n,nodes,rho=10,tau=10,eta=10,p=5,tol=1e-2){
+getCovFast<-function(n,nodes,rho=10,tau=10,eta=10,p=5,tol=1e-1){
   set.seed(0);
   np=n*p
 
