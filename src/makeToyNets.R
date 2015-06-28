@@ -614,9 +614,9 @@ getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
 
   mu=c(sapply(drift%*%matrix(c(2,1),ncol=1),rep,times=p))
 
-  Xcov = rep(0,n*p)
+  Xcov = rep(0,np)
 
-  rv = rnorm(n*p)
+  rv = rnorm(np)
 
   print(length(Xcov))
   print(length(rv))
