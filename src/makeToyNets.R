@@ -550,17 +550,15 @@ getDist<-function(net,preAlloc=0){
 }
 
 
-getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5){
-  return(getCovFast(n,nodes,rho,tau,eta,p))
-  ## if(n > 1000){
-  ##     return(getCovFast(n,nodes,rho,tau,eta,p))
-  ## }
-  ## else{
-  ##     return(getCovOrig(n,nodes,rho,tau,eta,p))
-  ## }
+getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
+  if(fast)
+    return(getCovFast(n,nodes,rho,tau,eta,p))
+  else
+    return(getCovOrig(n,nodes,rho,tau,eta,p))
 }
 
-getCovOrig<-function(n,nodes,rho=10,tau=10,eta=10,p=5){
+
+getCovOrig<-function(n,nodes,rho,tau,eta,p){
   set.seed(0);
   np=n*p
 
@@ -601,7 +599,7 @@ getCovOrig<-function(n,nodes,rho=10,tau=10,eta=10,p=5){
 
 
 
-getCovFast<-function(n,nodes,rho=10,tau=10,eta=10,p=5,tol=1e-1){
+getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
   set.seed(0);
   np=n*p
 
@@ -995,11 +993,4 @@ extract<-function(mat,ind){
     mat = mat[1:(nrow(mat) - ind + 1),ind:ncol(mat)]
     return(mat[upper.tri(mat,diag=TRUE)])
   }
-}
-
-
-if(!interactive()){
-  nets10000 = generateNets(10000,FALSE)
-  for(i in nets10000)
-    saveNet(i)
 }
