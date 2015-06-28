@@ -617,6 +617,17 @@ getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
   Xcov = rep(0,n*p)
 
   rv = rnorm(n*p)
+
+  print(length(Xcov))
+  print(length(rv))
+  print(dim(nodes))
+  print(n)
+  print(rho)
+  print(tau)
+  print(eta)
+  print(p)
+  print(tol)
+
   dyn.load("getCov.so")
   out = .C("getCov",
            Xcov = as.double(Xcov),
@@ -694,6 +705,7 @@ saveNet<-function(net,dir=NULL){
   write.table(net$nodes[,2],file,col.names=FALSE,row.names=FALSE)
 
   ## centroidsMds
+  print(dim(net$d))
   centroidsMds = cmdscale(net$d,k=2)
   file=paste(dir,"centroidsMds.txt",sep="")
   write.table(centroidsMds,file,col.names=FALSE,row.names=FALSE)

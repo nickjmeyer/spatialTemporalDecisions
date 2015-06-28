@@ -45,15 +45,20 @@ extern "C" void getCov(double * const cov,
   const double tol = *tol_;
 
   Eigen::SparseMatrix<double> sigma;
+  std::cout << "sigma" << std::endl;
   getSigmaSparse(sigma,cenX,cenY,n,rho,tau,eta,p,tol);
 
+  std::cout << "decomp" << std::endl;
   Eigen::SimplicialLLT<Eigen::SparseMatrix<double> > llt;
   llt.compute(sigma);
 
   Eigen::Map<Eigen::VectorXd> covEig(cov,n*p);
   Eigen::Map<const Eigen::VectorXd> rvEig(rv,n*p);
 
+  std::cout << "generate" << std::endl;
   covEig = llt.matrixL() * rvEig;
+
+  std::cout << "done" << std::endl;
 }
 
 
