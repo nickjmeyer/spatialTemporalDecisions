@@ -1,24 +1,27 @@
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <cstdio>
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/Sparse>
+#include <vector>
+// #include <Rcpp.h>
 
-extern "C" void getCov(double * const cov,
-		       const double * const rnorm,
-		       const double * const cenX,
-		       const double * const cenY,
-		       const int * const n_,
-		       const double * rho_,
-		       const double * tau_,
-		       const double * eta_,
-		       const int * p_,
-		       const double * tol_);
+// [[Rcpp::export]]
+std::vector<double> getCovCpp(const std::vector<double> & rv,
+			      const std::vector<double> & cenX,
+			      const std::vector<double> & cenY,
+			      const int n,
+			      const double rho,
+			      const double tau,
+			      const double eta,
+			      const int p,
+			      const double tol);
 
 
 void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
-		    const double * const cenX,
-		    const double * const cenY,
+		    const std::vector<double> & cenX,
+		    const std::vector<double> & cenY,
 		    const int n,
 		    const double rho,
 		    const double tau,
@@ -27,23 +30,80 @@ void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
 		    const double tol);
 
 
-extern "C" void getCov(double * const cov,
-		       const double * const rv,
-		       const double * const cenX,
-		       const double * const cenY,
-		       const int * n_,
-		       const double * rho_,
-		       const double * tau_,
-		       const double * eta_,
-		       const int * p_,
-		       const double * tol_){
-  const int n = *n_;
-  const double rho = *rho_;
-  const double tau = *tau_;
-  const double eta = *eta_;
-  const int p = *p_;
-  const double tol = *tol_;
+int main(){
+  std::ifstream ifs;
+  ifs.open("eta.txt");
+  double eta;
+  ifs >> eta;
+  ifs.close();
 
+  ifs.open("n.txt");
+  int n;
+  ifs >> n;
+  ifs.close();
+
+  ifs.open("p.txt");
+  int p;
+  ifs >> p;
+  ifs.close();
+
+  ifs.open("rho.txt");
+  double rho;
+  ifs >> rho;
+  ifs.close();
+
+  ifs.open("rv.txt");
+  std::vector<double> rv;
+  while(ifs.good()){
+    double val;
+    ifs >> val;
+    rv.push_back(val);
+  }
+  ifs.close();
+
+  ifs.open("tau.txt");
+  double tau;
+  ifs >> tau;
+  ifs.close();
+
+  ifs.open("tol.txt");
+  double tol;
+  ifs >> tol;
+  ifs.close();
+
+  ifs.open("x.txt");
+  std::vector<double> x;
+  while(ifs.good()){
+    double val;
+    ifs >> val;
+    x.push_back(val);
+  }
+  ifs.close();
+
+  ifs.open("y.txt");
+  std::vector<double> y;
+  while(ifs.good()){
+    double val;
+    ifs >> val;
+    y.push_back(val);
+  }
+  ifs.close();
+
+  std::vector<double> cov = getCovCpp(rv,x,y,n,rho,tau,eta,p,tol);
+
+  return 0;
+}
+
+
+std::vector<double> getCovCpp(const std::vector<double> & rv,
+			      const std::vector<double> & cenX,
+			      const std::vector<double> & cenY,
+			      const int n,
+			      const double rho,
+			      const double tau,
+			      const double eta,
+			      const int p,
+			      const double tol){
   Eigen::SparseMatrix<double> sigma;
   std::cout << "sigma" << std::endl;
   getSigmaSparse(sigma,cenX,cenY,n,rho,tau,eta,p,tol);
@@ -52,20 +112,26 @@ extern "C" void getCov(double * const cov,
   Eigen::SimplicialLLT<Eigen::SparseMatrix<double> > llt;
   llt.compute(sigma);
 
-  Eigen::Map<Eigen::VectorXd> covEig(cov,n*p);
-  Eigen::Map<const Eigen::VectorXd> rvEig(rv,n*p);
+  Eigen::VectorXd covEig;
+  Eigen::Map<const Eigen::VectorXd> rvEig(&rv[0],n*p);
+
+  Eigen::SparseMatrix<double> L = llt.matrixL();
 
   std::cout << "generate" << std::endl;
-  covEig = llt.matrixL() * rvEig;
+  covEig = L * rvEig;
+
+  std::vector<double> cov(covEig.data(),
+			  covEig.data() + covEig.rows()*covEig.cols());
 
   std::cout << "done" << std::endl;
+  return cov;
 }
 
 
 
 void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
-		    const double * const cenX,
-		    const double * const cenY,
+		    const std::vector<double> & cenX,
+		    const std::vector<double> & cenY,
 		    const int n,
 		    const double rho,
 		    const double tau,
@@ -85,8 +151,8 @@ void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
       for(k = 0; k < n; ++k){
 	for(l = 0; l < p; ++l){
 	  ind1 = k*p + l;
-	  dist = std::sqrt(std::pow(cenX[i] - cenX[k],2.0) +
-			   std::pow(cenY[i] - cenY[k],2.0));
+	  dist = std::sqrt(std::pow(cenX.at(i) - cenX.at(k),2.0) +
+			   std::pow(cenY.at(i) - cenY.at(k),2.0));
 	  val = rho*std::exp(-tau*dist - eta*std::abs(j-l));
 	  if(val > tol){
 	    sigma.insert(ind0,ind1) = val;

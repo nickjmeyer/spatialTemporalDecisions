@@ -4,7 +4,11 @@ library(Matrix)
 library(MASS)
 library(ggplot2)
 library(igraph)
+library(Rcpp)
 registerDoMC(8)
+
+
+sourceCpp("getCov.cpp")
 
 
 genRandNet<-function(n,numNeigh=3){
@@ -550,7 +554,8 @@ getDist<-function(net,preAlloc=0){
 }
 
 
-getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
+## getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
+getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=2,fast=TRUE){
   if(fast)
     return(getCovFast(n,nodes,rho,tau,eta,p))
   else
@@ -612,38 +617,27 @@ getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
   drift=nodes
   drift[,1]=drift[,1]^2
 
-  mu=c(sapply(drift%*%matrix(c(2,1),ncol=1),rep,times=p))
-
-  Xcov = rep(0,np)
+  ## mu=c(sapply(drift%*%matrix(c(2,1),ncol=1),rep,times=p))
 
   rv = rnorm(np)
 
-  print(length(Xcov))
-  print(length(rv))
-  print(dim(nodes))
-  print(n)
-  print(rho)
-  print(tau)
-  print(eta)
-  print(p)
-  print(tol)
+  ## write.table(rv,file="rv.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(nodes[,1],file="x.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(nodes[,2],file="y.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(n,file="n.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(rho,file="rho.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(tau,file="tau.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(eta,file="eta.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(p,file="p.txt",row.names=FALSE,col.names=FALSE)
+  ## write.table(tol,file="tol.txt",row.names=FALSE,col.names=FALSE)
 
-  dyn.load("getCov.so")
-  out = .C("getCov",
-           Xcov = as.double(Xcov),
-           rv = as.double(rv),
-           cenX = as.double(nodes[,1]),
-           cenY = as.double(nodes[,2]),
-           n = as.integer(n),
-           rho = as.double(rho),
-           tau = as.double(tau),
-           eta = as.double(eta),
-           p = as.integer(p),
-           tol = as.double(tol)
-           )
-  dyn.unload("getCov.so")
+  nodesX = nodes[,1]
+  nodesY = nodes[,2]
 
-  Xcov = matrix(mu + out$Xcov,ncol=p,byrow=TRUE)
+  Xcov = getCovCpp(rv,nodesX,nodesY,n,rho,tau,eta,p,tol)
+
+  ## Xcov = matrix(mu + Xcov,ncol=p,byrow=TRUE)
+  Xcov = matrix(Xcov,ncol=p,byrow=TRUE)
 
   caves=floor(Xcov[,1]-min(Xcov[,1]) + 1)
   for(i in 1:ncol(Xcov))
