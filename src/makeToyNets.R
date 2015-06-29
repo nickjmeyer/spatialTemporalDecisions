@@ -722,6 +722,10 @@ saveNet<-function(net,dir=NULL){
   subGraph = subgraph.centrality(graph.adjacency(net$neigh),diag=TRUE)
   file = paste(dir,"subGraph.txt",sep="")
   write.table(subGraph,file,col.names=FALSE,row.names=FALSE)
+
+  ## prior treatment mean
+  file = paste(dir,"priorTrtMean.txt",sep="")
+  write.table(0.0,file,col.names=FALSE,row.names=FALSE)
 }
 
 
