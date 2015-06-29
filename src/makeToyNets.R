@@ -885,6 +885,25 @@ generateNets <- function(n,display=TRUE){
 }
 
 
+
+generateAndSaveNets <- function(n){
+  nets = c("alleyNet","bowTieNet","gridNet","randNet",
+           "scaleFreeNet")
+  foreach(net = nets)%dopar%{
+    argGen = get(paste(net,"Args",sep=""))
+    netGen = get(paste("gen",
+                       paste(toupper(substring(net,1,1)),
+                             substring(net,2),sep=""),sep=""))
+
+    netRes = do.call(netGen,argGen(n))
+
+    saveNet(netRes)
+
+    cat(paste(net,"is done","\n"))
+  }
+}
+
+
 if(FALSE){
 
   nets100 = generateNets(100,FALSE)
