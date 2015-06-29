@@ -1,11 +1,12 @@
 rm(list=ls(all=TRUE))
-
+library(doMC)
 library(Matrix)
 library(MASS)
 library(ggplot2)
 library(igraph)
 library(Rcpp)
 library(RcppArmadillo)
+registerDoMC(8)
 
 
 sourceCpp("getCov.cpp")

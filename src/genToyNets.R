@@ -1,8 +1,5 @@
 rm(list=ls(all=TRUE))
 
-library(doMC)
-registerDoMC(8)
-
 
 generateNets <- function(n,display=TRUE){
   nets = c("alleyNet","bowTieNet","gridNet","randNet",
