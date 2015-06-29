@@ -6,7 +6,7 @@ library(ggplot2)
 library(igraph)
 library(Rcpp)
 library(RcppArmadillo)
-registerDoMC(8)
+registerDoMC(detectCores())
 
 
 sourceCpp("getCov.cpp")
@@ -685,7 +685,6 @@ saveNet<-function(net,dir=NULL){
   write.table(net$nodes[,2],file,col.names=FALSE,row.names=FALSE)
 
   ## centroidsMds
-  print(dim(net$d))
   centroidsMds = cmdscale(net$d,k=2)
   file=paste(dir,"centroidsMds.txt",sep="")
   write.table(centroidsMds,file,col.names=FALSE,row.names=FALSE)
