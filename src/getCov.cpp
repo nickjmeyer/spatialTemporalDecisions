@@ -42,6 +42,8 @@ int main(){
   ifs >> n;
   ifs.close();
 
+  n = 1000;
+
   ifs.open("p.txt");
   int p;
   ifs >> p;
@@ -54,7 +56,7 @@ int main(){
 
   ifs.open("rv.txt");
   std::vector<double> rv;
-  while(ifs.good()){
+  for(int i = 0; i < n*p; ++i){
     double val;
     ifs >> val;
     rv.push_back(val);
@@ -73,7 +75,7 @@ int main(){
 
   ifs.open("x.txt");
   std::vector<double> x;
-  while(ifs.good()){
+  for(int i = 0; i < n; ++i){
     double val;
     ifs >> val;
     x.push_back(val);
@@ -82,7 +84,7 @@ int main(){
 
   ifs.open("y.txt");
   std::vector<double> y;
-  while(ifs.good()){
+  for(int i = 0; i < n; ++i){
     double val;
     ifs >> val;
     y.push_back(val);
@@ -107,15 +109,33 @@ std::vector<double> getCovCpp(const std::vector<double> & rv,
   Eigen::SparseMatrix<double> sigma;
   std::cout << "sigma" << std::endl;
   getSigmaSparse(sigma,cenX,cenY,n,rho,tau,eta,p,tol);
+  sigma.makeCompressed();
+
+  std::cout << sigma.rows() << std::endl
+	    << sigma.cols() << std::endl
+	    << sigma.nonZeros() << std::endl;
 
   std::cout << "decomp" << std::endl;
-  Eigen::SimplicialLLT<Eigen::SparseMatrix<double> > llt;
-  llt.compute(sigma);
+
+  Eigen::SparseQR<Eigen::SparseMatrix<double>,
+		  Eigen::COLAMDOrdering<int> > sqr(sigma);
+  if(sqr.info() == Eigen::Success){
+    std::cout << "success" << std::endl;
+  }
+  else{
+    std::cout << "fail" << std::endl;
+  }
+
+  int rank = sqr.rank();
+  std::cout << "rank: " << rank << std::endl;
+
+  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > chol;
+  chol.compute(sigma);
 
   Eigen::VectorXd covEig;
   Eigen::Map<const Eigen::VectorXd> rvEig(&rv[0],n*p);
 
-  Eigen::SparseMatrix<double> L = llt.matrixL();
+  Eigen::SparseMatrix<double> L = chol.matrixL();
 
   std::cout << "generate" << std::endl;
   covEig = L * rvEig;
