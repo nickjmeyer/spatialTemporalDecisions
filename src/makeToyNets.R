@@ -5,6 +5,7 @@ library(MASS)
 library(ggplot2)
 library(igraph)
 library(Rcpp)
+library(RcppArmadillo)
 registerDoMC(8)
 
 
@@ -604,7 +605,7 @@ getCovOrig<-function(n,nodes,rho,tau,eta,p){
 
 
 
-getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
+getCovFast<-function(n,nodes,rho,tau,eta,p){
   set.seed(0);
   np=n*p
 
@@ -614,29 +615,14 @@ getCovFast<-function(n,nodes,rho,tau,eta,p,tol=1e-1){
   }
   nodes = as.matrix(nodes)
 
-  drift=nodes
-  drift[,1]=drift[,1]^2
-
-  ## mu=c(sapply(drift%*%matrix(c(2,1),ncol=1),rep,times=p))
 
   rv = rnorm(np)
-
-  ## write.table(rv,file="rv.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(nodes[,1],file="x.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(nodes[,2],file="y.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(n,file="n.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(rho,file="rho.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(tau,file="tau.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(eta,file="eta.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(p,file="p.txt",row.names=FALSE,col.names=FALSE)
-  ## write.table(tol,file="tol.txt",row.names=FALSE,col.names=FALSE)
 
   nodesX = nodes[,1]
   nodesY = nodes[,2]
 
-  Xcov = getCovCpp(rv,nodesX,nodesY,n,rho,tau,eta,p,tol)
+  Xcov = getCovCpp(rv,nodesX,nodesY,n,rho,tau,eta,p)
 
-  ## Xcov = matrix(mu + Xcov,ncol=p,byrow=TRUE)
   Xcov = matrix(Xcov,ncol=p,byrow=TRUE)
 
   caves=floor(Xcov[,1]-min(Xcov[,1]) + 1)

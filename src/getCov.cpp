@@ -5,7 +5,11 @@
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/Sparse>
 #include <vector>
+// #include <armadillo>
 // #include <Rcpp.h>
+#include <RcppArmadillo.h>
+
+// [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
 std::vector<double> getCovCpp(const std::vector<double> & rv,
@@ -15,86 +19,79 @@ std::vector<double> getCovCpp(const std::vector<double> & rv,
 			      const double rho,
 			      const double tau,
 			      const double eta,
-			      const int p,
-			      const double tol);
+			      const int p);
 
-
-void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
+// [[Rcpp::export]]
+void getSigmaSparse(arma::mat & sigma,
 		    const std::vector<double> & cenX,
 		    const std::vector<double> & cenY,
 		    const int n,
 		    const double rho,
 		    const double tau,
 		    const double eta,
-		    const int p,
-		    const double tol);
+		    const int p);
 
 
-int main(){
-  std::ifstream ifs;
-  ifs.open("eta.txt");
-  double eta;
-  ifs >> eta;
-  ifs.close();
+// int main(){
+//   std::ifstream ifs;
+//   ifs.open("eta.txt");
+//   double eta;
+//   ifs >> eta;
+//   ifs.close();
 
-  ifs.open("n.txt");
-  int n;
-  ifs >> n;
-  ifs.close();
+//   ifs.open("n.txt");
+//   int n;
+//   ifs >> n;
+//   ifs.close();
 
-  n = 1000;
+//   n = 1000;
 
-  ifs.open("p.txt");
-  int p;
-  ifs >> p;
-  ifs.close();
+//   ifs.open("p.txt");
+//   int p;
+//   ifs >> p;
+//   ifs.close();
 
-  ifs.open("rho.txt");
-  double rho;
-  ifs >> rho;
-  ifs.close();
+//   ifs.open("rho.txt");
+//   double rho;
+//   ifs >> rho;
+//   ifs.close();
 
-  ifs.open("rv.txt");
-  std::vector<double> rv;
-  for(int i = 0; i < n*p; ++i){
-    double val;
-    ifs >> val;
-    rv.push_back(val);
-  }
-  ifs.close();
+//   ifs.open("rv.txt");
+//   std::vector<double> rv;
+//   for(int i = 0; i < n*p; ++i){
+//     double val;
+//     ifs >> val;
+//     rv.push_back(val);
+//   }
+//   ifs.close();
 
-  ifs.open("tau.txt");
-  double tau;
-  ifs >> tau;
-  ifs.close();
+//   ifs.open("tau.txt");
+//   double tau;
+//   ifs >> tau;
+//   ifs.close();
 
-  ifs.open("tol.txt");
-  double tol;
-  ifs >> tol;
-  ifs.close();
+//   ifs.open("x.txt");
+//   std::vector<double> x;
+//   for(int i = 0; i < n; ++i){
+//     double val;
+//     ifs >> val;
+//     x.push_back(val);
+//   }
+//   ifs.close();
 
-  ifs.open("x.txt");
-  std::vector<double> x;
-  for(int i = 0; i < n; ++i){
-    double val;
-    ifs >> val;
-    x.push_back(val);
-  }
-  ifs.close();
+//   ifs.open("y.txt");
+//   std::vector<double> y;
+//   for(int i = 0; i < n; ++i){
+//     double val;
+//     ifs >> val;
+//     y.push_back(val);
+//   }
+//   ifs.close();
 
-  ifs.open("y.txt");
-  std::vector<double> y;
-  for(int i = 0; i < n; ++i){
-    double val;
-    ifs >> val;
-    y.push_back(val);
-  }
-  ifs.close();
+//   std::vector<double> cov = getCovCpp(rv,x,y,n,rho,tau,eta,p);
 
-  std::vector<double> cov = getCovCpp(rv,x,y,n,rho,tau,eta,p,tol);
-
-  return 0;
-}
+//   return 0;
+// }
 
 
 std::vector<double> getCovCpp(const std::vector<double> & rv,
@@ -104,66 +101,34 @@ std::vector<double> getCovCpp(const std::vector<double> & rv,
 			      const double rho,
 			      const double tau,
 			      const double eta,
-			      const int p,
-			      const double tol){
-  Eigen::SparseMatrix<double> sigma;
-  std::cout << "sigma" << std::endl;
-  getSigmaSparse(sigma,cenX,cenY,n,rho,tau,eta,p,tol);
-  sigma.makeCompressed();
+			      const int p){
+  arma::mat sigma;
+  getSigmaSparse(sigma,cenX,cenY,n,rho,tau,eta,p);
 
-  std::cout << sigma.rows() << std::endl
-	    << sigma.cols() << std::endl
-	    << sigma.nonZeros() << std::endl;
 
-  std::cout << "decomp" << std::endl;
+  arma::colvec rvArma(rv);
 
-  Eigen::SparseQR<Eigen::SparseMatrix<double>,
-		  Eigen::COLAMDOrdering<int> > sqr(sigma);
-  if(sqr.info() == Eigen::Success){
-    std::cout << "success" << std::endl;
-  }
-  else{
-    std::cout << "fail" << std::endl;
-  }
+  arma::mat r = arma::chol(sigma);
 
-  int rank = sqr.rank();
-  std::cout << "rank: " << rank << std::endl;
-
-  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > chol;
-  chol.compute(sigma);
-
-  Eigen::VectorXd covEig;
-  Eigen::Map<const Eigen::VectorXd> rvEig(&rv[0],n*p);
-
-  Eigen::SparseMatrix<double> L = chol.matrixL();
-
-  std::cout << "generate" << std::endl;
-  covEig = L * rvEig;
-
-  std::vector<double> cov(covEig.data(),
-			  covEig.data() + covEig.rows()*covEig.cols());
-
-  std::cout << "done" << std::endl;
-  return cov;
+  return arma::conv_to<std::vector<double> >::from(r.t()*rvArma);
 }
 
 
 
-void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
+void getSigmaSparse(arma::mat & sigma,
 		    const std::vector<double> & cenX,
 		    const std::vector<double> & cenY,
 		    const int n,
 		    const double rho,
 		    const double tau,
 		    const double eta,
-		    const int p,
-		    const double tol){
+		    const int p){
   int i,j,k,l,ind0,ind1;
   double val;
   double dist;
 
   sigma.resize(n*p,n*p);
-  sigma.setZero();
+  sigma.zeros();
 
   for(i = 0; i < n; ++i){
     for(j = 0; j < p; ++j){
@@ -174,9 +139,8 @@ void getSigmaSparse(Eigen::SparseMatrix<double> & sigma,
 	  dist = std::sqrt(std::pow(cenX.at(i) - cenX.at(k),2.0) +
 			   std::pow(cenY.at(i) - cenY.at(k),2.0));
 	  val = rho*std::exp(-tau*dist - eta*std::abs(j-l));
-	  if(val > tol){
-	    sigma.insert(ind0,ind1) = val;
-	  }
+
+	  sigma(ind0,ind1) = val;
 	}
       }
     }
