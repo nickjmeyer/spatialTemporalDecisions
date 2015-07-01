@@ -5,7 +5,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   typedef ModelTimeExpCavesGDistTrendPowCon MG;
-  
+
   typedef MG ME;
 
   typedef System<MG,ME> S;
@@ -18,7 +18,7 @@ int main(int argc, char ** argv){
   typedef RankAgent<F5,ME> RA5;
 
   typedef M1SpOptim<S,RA5,ME> SPO5;
-  
+
   typedef VanillaRunner<S,NT> R_NT;
   typedef VanillaRunner<S,PA> R_PA;
   typedef FitOnlyRunner<S,MA> R_MA;
@@ -37,9 +37,11 @@ int main(int argc, char ** argv){
   RA5 ra5;
 
   ra5.name = "rank_5";
+  ra5.tp.jitterScale = -1;
 
   SPO5 spo5;
-  
+  spo5.fixSample = 1;
+
   R_NT r_nt;
   R_PA r_pa;
   R_MA r_ma;
@@ -51,17 +53,17 @@ int main(int argc, char ** argv){
   njm::message("   No treatment: "
 	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
   rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
   njm::message("       Proximal: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
   rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
   njm::message("         Myopic: "
   	       + njm::toString(rs.smean(),"")
   	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
   rs = r_ra5.run(s,ra5,spo5,numReps,s.fD.finalT,starts);
   njm::message("  Policy Search: "
   	       + njm::toString(rs.smean(),"")
@@ -69,4 +71,3 @@ int main(int argc, char ** argv){
 
   return 0;
 }
-

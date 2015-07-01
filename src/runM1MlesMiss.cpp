@@ -6,13 +6,13 @@ int main(int argc, char ** argv){
 
 
   typedef ModelTimeExpCavesGDistTrendPowCon MG;
-  
+
   typedef ModelTimeExpCavesGDist ME;
 
   typedef System<MG,ME> S;
 
   typedef MyopicAgent<ME> MA;
-  
+
   typedef ToyFeatures5<ME> F5;
   typedef RankAgent<F5,ME> RA5;
 
@@ -33,8 +33,10 @@ int main(int argc, char ** argv){
   RA5 ra5;
 
   ra5.name = "rank_5";
+  ra5.tp.jitterScale = -1;
 
   SPO5 spo5;
+  spo5.fixSample = 1;
 
   R_MA r_ma;
   R_RA5 r_ra5;
@@ -46,12 +48,11 @@ int main(int argc, char ** argv){
   njm::message("         Myopic: "
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
   rs = r_ra5.run(s,ra5,spo5,numReps,s.fD.finalT,starts);
   njm::message("  Policy Search: "
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
-  
+
   return 0;
 }
-
