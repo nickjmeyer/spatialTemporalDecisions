@@ -887,21 +887,22 @@ generateNets <- function(n,display=TRUE){
 
 
 
-generateAndSaveNets <- function(n){
+generateAndSaveNets <- function(nVals){
   nets = c("alleyNet","bowTieNet","gridNet","randNet",
            "scaleFreeNet")
-  foreach(net = nets)%dopar%{
-    argGen = get(paste(net,"Args",sep=""))
-    netGen = get(paste("gen",
-                       paste(toupper(substring(net,1,1)),
-                             substring(net,2),sep=""),sep=""))
+  foreach(n = nVals)%:%
+      foreach(net = nets)%dopar%{
+        argGen = get(paste(net,"Args",sep=""))
+        netGen = get(paste("gen",
+                           paste(toupper(substring(net,1,1)),
+                                 substring(net,2),sep=""),sep=""))
 
-    netRes = do.call(netGen,argGen(n))
+        netRes = do.call(netGen,argGen(n))
 
-    saveNet(netRes)
+        saveNet(netRes)
 
-    cat(paste(net,"is done","\n"))
-  }
+        cat(paste(net," of size ", n, " is done","\n"))
+      }
 }
 
 
