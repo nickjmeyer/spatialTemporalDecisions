@@ -27,7 +27,3 @@ extern "C" void isConnected(int * const b,
   }while(tOld!=t);
   *b = (t == n);
 }
-
-
-  
-			    

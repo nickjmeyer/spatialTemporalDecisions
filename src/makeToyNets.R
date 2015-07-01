@@ -4,27 +4,38 @@ library(Matrix)
 library(MASS)
 library(ggplot2)
 library(igraph)
+library(RColorBrewer)
 library(Rcpp)
 library(RcppArmadillo)
 registerDoMC(detectCores())
 
 
 sourceCpp("getCov.cpp")
-
+sourceCpp("mergeClusters.cpp")
 
 genRandNet<-function(n,numNeigh=3){
   set.seed(0)
-  connected=FALSE
-  while(!connected){
-    nodes=matrix(runif(2*n),ncol=2)
-    d=as.matrix(dist(nodes))
-    neigh=diag(n)
-    for(i in 1:n){
-      ind=order(d[i,])[2:(numNeigh+1)]
-      neigh[i,ind]=1
-      neigh[ind,i]=1
-    }
-    connected=isConnected(list(n=n,neigh=neigh))
+
+  nodes=matrix(runif(2*n),ncol=2)
+  d=as.matrix(dist(nodes))
+  neigh=diag(n)
+  for(i in 1:n){
+    ind=order(d[i,])[2:(numNeigh+1)]
+    neigh[i,ind]=1
+    neigh[ind,i]=1
+  }
+
+
+
+  clusters = getClusters(neigh,n)
+  nClusters = length(unique(clusters))
+
+  while(nClusters > 1){
+    neigh = mergeOneCluster(neigh,clusters,nodes[,1],nodes[,2],n)
+    neigh = matrix(neigh,ncol=n)
+
+    clusters = getClusters(neigh,n)
+    nClusters = length(unique(clusters))
   }
 
 
@@ -93,18 +104,6 @@ genAlleyNetBreak<-function(nodes){
   net$start = getStart(net$n)
 
   return(net)
-}
-
-
-
-isConnected<-function(net){
-  dyn.load("isConnected.so")
-  out = .C("isConnected",
-           b=as.integer(0),
-           n=as.integer(net$n),
-           neigh=as.integer(net$neigh))
-  dyn.unload("isConnected.so")
-  return(out$b==1)
 }
 
 
@@ -555,8 +554,10 @@ getDist<-function(net,preAlloc=0){
 }
 
 
-## getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
-getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=2,fast=TRUE){
+getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
+  ## tau is set so that a distance of one results in correlation of
+  ## 0.1 and eta is set so that a covariate difference of one results
+  ## in correaltion of 0.25
   if(fast)
     return(getCovFast(n,nodes,rho,tau,eta,p))
   else
@@ -1006,4 +1007,38 @@ extract<-function(mat,ind){
     mat = mat[1:(nrow(mat) - ind + 1),ind:ncol(mat)]
     return(mat[upper.tri(mat,diag=TRUE)])
   }
+}
+
+
+
+
+if(FALSE){
+  ## testing the merge cluster routines
+
+  sourceCpp("mergeClusters.cpp")
+  cols = colorRampPalette(brewer.pal(9,"Spectral"))
+
+  net = genRandNet(100)
+
+  clusters = getClusters(net$neigh,net$n)
+  nClusters = length(unique(clusters))
+
+  plotNet(net,vertex.color=cols(nClusters)[clusters+1])
+
+  while(nClusters > 1){
+
+    net$neigh = mergeOneCluster(net$neigh,clusters,net$nodes[,1],
+                              net$nodes[,2],net$n)
+    net$neigh = matrix(net$neigh,ncol=net$n)
+
+    readline("Merge clusters")
+    plotNet(net,vertex.color=cols(nClusters)[clusters+1])
+
+    clusters = getClusters(net$neigh,net$n)
+    nClusters = length(unique(clusters))
+
+    readline("Remove cluster")
+    plotNet(net,vertex.color=cols(nClusters)[clusters+1])
+  }
+
 }
