@@ -1,11 +1,11 @@
-#include "toyFeatures5.hpp"
+#include "wnsFeatures2.hpp"
 
-std::vector<double> ToyFeatures5TuneParam::getPar() const{
+std::vector<double> WnsFeatures2TuneParam::getPar() const{
   return std::vector<double>(0);
 }
 
 
-void ToyFeatures5TuneParam::putPar(const std::vector<double> & par){
+void WnsFeatures2TuneParam::putPar(const std::vector<double> & par){
   // do nothing!
 }
 
@@ -13,30 +13,28 @@ void ToyFeatures5TuneParam::putPar(const std::vector<double> & par){
 
 
 
-template class ToyFeatures5<ModelGravityGDist>;
 
-template class ToyFeatures5<ModelTimeGDist>;
+template class WnsFeatures2<ModelGravityGDist>;
 
-template class ToyFeatures5<ModelTimeExpCavesGDist>;
+template class WnsFeatures2<ModelGravityEDist>;
 
-template class ToyFeatures5<ModelTimeGDistTrendPow>;
+template class WnsFeatures2<ModelTimeGDist>;
 
-template class ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>;
+template class WnsFeatures2<ModelTimeExpCavesGDist>;
 
-template class ToyFeatures5<ModelTimeExpCavesEDist>;
+template class WnsFeatures2<ModelTimeExpCavesEDist>;
 
-template class ToyFeatures5<ModelRadius>;
+template class WnsFeatures2<ModelRadius>;
 
-template class ToyFeatures5<ModelGDist>;
+template class WnsFeatures2<ModelGDist>;
 
-template class ToyFeatures5<ModelGDistKern>;
+template class WnsFeatures2<ModelGDistKern>;
 
-template class ToyFeatures5<ModelCovar>;
 
 
 
 template <class M>
-void ToyFeatures5<M>::preCompData(const SimData & sD,
+void WnsFeatures2<M>::preCompData(const SimData & sD,
 				  const TrtData & tD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
@@ -47,11 +45,11 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   m.modFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
 
-  // extract subgraph connectiviy for not infected
+  // extract  connectiviy for not infected
   int i;
-  subGraphNotInfec.resize(sD.numNotInfec);
+  hpddNotInfec.resize(sD.numNotInfec);
   for(i=0; i<sD.numNotInfec; i++)
-    subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+    hpddNotInfec(i) = fD.hpdd.at(sD.notInfec.at(i));
 
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
@@ -69,22 +67,37 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
 
 
   std::vector<int>::const_iterator itD0,itD1,beg;
-  int j;
+  int j,node,numNeigh = std::min(int(std::log(fD.numNodes)),
+				 sD.numNotInfec);
   beg=sD.notInfec.begin();
   for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
-    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
-      if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
-	// neighbors of i
-	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
+    // sort by distance
+    std::priority_queue<std::pair<double,int> > pqd;
+    for(j = 0, itD1 = beg; j < sD.numNotInfec; ++j,++itD1){
+      pqd.push(std::pair<double,int>(-fD.gDist.at((*itD0)*fD.numNodes
+						  + (*itD1)),
+				     j));
+    }
 
-	// i is a neighbor of j
-	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
+    // obtain the closest
+    std::vector<int> neigh;
+    for(j = 0; j < numNeigh; ++j){
+      neigh.push_back(pqd.top().second);
+      pqd.pop();
+    }
+    std::sort(neigh.begin(),neigh.end());
 
-	// increment totals
-	notNeighNum.at(i)++;
-	notNeighOfNum.at(j)++;
-      }
+    // enter the fill in the containers
+    for(j = 0,itD1=neigh.begin(); j < numNeigh; ++j,++itD1){
+      node = sD.notInfec.at(*itD1);
+      notNeigh.at(i).push_back(std::pair<int,double>
+			       (*itD1,
+				m.oneOnOne(node,*itD0,fD.numNodes)));
+
+      notNeighOf.at(*itD1).push_back(std::pair<int,int>(i,notNeighNum[i]));
+
+      ++notNeighNum.at(i);
+      ++notNeighOfNum.at(*itD1);
     }
   }
 }
@@ -92,7 +105,7 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
 
 
 template <class M>
-void ToyFeatures5<M>::getFeatures(const SimData & sD,
+void WnsFeatures2<M>::getFeatures(const SimData & sD,
 				  const TrtData & tD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
@@ -101,16 +114,14 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
 
-
-
   arma::mat weightMat(m.getQuick().data(),sD.numInfected,sD.numNotInfec,false);
-
 
   // start feature construction
 
 
   int i,j,featNum=0;
   std::vector<int>::const_iterator itD0,itD1,beg;
+
 
   // feature 0
   // probability of infection or infecting
@@ -119,6 +130,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 
   featNum++;
+
 
 
   // feature 1
@@ -158,17 +170,16 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 
   // feature 2
-  // weighted subgraph connectivity measures
-  notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
+  // weighted half plane data depth
+  notFeat.col(featNum) = notFeat.col(0) % hpddNotInfec;
 
   infFeat.col(featNum) = (1.0 - weightMat) * notFeat.col(0);
 
 
   featNum++;
 
-
-
   tDPre = tD;
+
 
   arma::colvec notMx = arma::max(notFeat,0).t();
   arma::colvec notMn = arma::min(notFeat,0).t();
@@ -184,6 +195,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
     }
   }
 
+
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
     std::cout << "Error: in getFeatures: featNum != numFeatures"
@@ -196,7 +208,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 
 template <class M>
-void ToyFeatures5<M>::updateFeatures(const SimData & sD,
+void WnsFeatures2<M>::updateFeatures(const SimData & sD,
 				     const TrtData & tD,
 				     const FixedData & fD,
 				     const DynamicData & dD,
