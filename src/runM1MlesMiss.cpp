@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
   ra5.tp.jitterScale = -1;
 
   SPO5 spo5;
-  spo5.fixSample = 1;
+  spo5.tp.fixSample = 1;
 
   R_MA r_ma;
   R_RA5 r_ra5;
