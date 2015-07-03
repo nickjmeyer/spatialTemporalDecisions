@@ -67,26 +67,29 @@ template class RankAgent<ToyFeatures5<ModelGDistKern>,
 template class RankAgent<ToyFeatures5<ModelCovar>,
 			 ModelCovar>;
 
-template class RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+template class RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
 
-template class RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+template class RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
 			 ModelTimeExpCavesEDist>;
 
-template class RankAgent<WnsFeatures1<ModelRadius>,
+template class RankAgent<WnsFeatures2<ModelRadius>,
 			 ModelRadius>;
 
-template class RankAgent<WnsFeatures1<ModelGDist>,
+template class RankAgent<WnsFeatures2<ModelGDist>,
 			 ModelGDist>;
 
-template class RankAgent<WnsFeatures1<ModelGDistKern>,
+template class RankAgent<WnsFeatures2<ModelGDistKern>,
 			 ModelGDistKern>;
 
-template class RankAgent<WnsFeatures1<ModelGravityGDist>,
+template class RankAgent<WnsFeatures2<ModelGravityGDist>,
 			 ModelGravityGDist>;
 
-template class RankAgent<WnsFeatures1<ModelGravityEDist>,
+template class RankAgent<WnsFeatures2<ModelGravityEDist>,
 			 ModelGravityEDist>;
+
+template class RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+			 ModelTimeExpCavesGDistTrendPowCon>;
 
 
 
@@ -97,7 +100,7 @@ RankAgent<F,M>::RankAgent(){
   tp.weights.ones(f.numFeatures);
 
   tp.jitterScale = 4.0;
-  
+
   name="rank";
 }
 
@@ -107,7 +110,7 @@ void RankAgent<F,M>::reset(){
   tp.weights = tp.weights_r;
 }
 
-  
+
 template <class F, class M>
 void RankAgent<F,M>::applyTrt(const SimData & sD,
 			      TrtData & tD,
@@ -129,15 +132,15 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   arma::colvec jitter;
   arma::mat featStddev;
   jitter.zeros(f.numFeatures);
-  
+
   int i=0,j=0,node0=0,addPre=0,addAct=0;
   int cI = 0,cN = 0;
-  
+
   int numChunks = std::log((double)fD.numNodes) + 1.0;
 
   numChunks = std::min(std::max(numPre,numAct),numChunks);
 
-  
+
   for(i = 0; i < numChunks; i++){
 
     // get jitter
@@ -170,7 +173,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // sort the locations by their ranks
     // if treated, get lowest value possible
     std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
-    
+
     for(j=0; j<sD.numInfected; j++){
       node0 = shufInfected.top().second;
       shufInfected.pop();
@@ -206,13 +209,13 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 					     sortNotInfec.top().second));
       sortNotInfec.pop();
     }
-    
+
     // number of locations to add treatment too for this iteration
     addPre = 0;
     if(numPre > 0)
       addPre = (int)((i+1)*numPre/std::min(numChunks,numPre)) -
 	(int)(i*numPre/std::min(numChunks,numPre));
-    
+
     addAct = 0;
     if(numAct > 0)
       addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -

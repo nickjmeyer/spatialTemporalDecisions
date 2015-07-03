@@ -20,7 +20,7 @@ TrainRunner<S,A>
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst,system.paramEst);
       system.updateStatus();
-      
+
       system.nextPoint();
     }
     rs(system.value());
@@ -28,7 +28,7 @@ TrainRunner<S,A>
   }
   return rs;
 }
-						
+
 
 
 
@@ -162,45 +162,52 @@ template class PlainRunner<System<ModelGravityGDist,
 			   NoTrt<ModelGravityGDist> >;
 
 
+template class PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+				  ModelTimeExpCavesGDistTrendPowCon>,
+			   RankAgent<WnsFeatures2
+				     <ModelTimeExpCavesGDistTrendPowCon>,
+				     ModelTimeExpCavesGDistTrendPowCon> >;
+
+
 template class PlainRunner<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesGDist>,
-			   RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+			   RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 				     ModelTimeExpCavesGDist> >;
 
 
 template class PlainRunner<System<ModelTimeExpCavesEDist,
 				  ModelTimeExpCavesEDist>,
-			   RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+			   RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
 				     ModelTimeExpCavesEDist> >;
 
 
 template class PlainRunner<System<ModelGravityGDist,
 				  ModelGravityGDist>,
-			   RankAgent<WnsFeatures1<ModelGravityGDist>,
+			   RankAgent<WnsFeatures2<ModelGravityGDist>,
 				     ModelGravityGDist> >;
 
 
 template class PlainRunner<System<ModelGravityEDist,
 				  ModelGravityEDist>,
-			   RankAgent<WnsFeatures1<ModelGravityEDist>,
+			   RankAgent<WnsFeatures2<ModelGravityEDist>,
 				     ModelGravityEDist> >;
 
 
 template class PlainRunner<System<ModelRadius,
 				  ModelRadius>,
-			   RankAgent<WnsFeatures1<ModelRadius>,
+			   RankAgent<WnsFeatures2<ModelRadius>,
 				     ModelRadius> >;
 
 
 template class PlainRunner<System<ModelGDist,
 				  ModelGDist>,
-			   RankAgent<WnsFeatures1<ModelGDist>,
+			   RankAgent<WnsFeatures2<ModelGDist>,
 				     ModelGDist> >;
 
 
 template class PlainRunner<System<ModelGDistKern,
 				  ModelGDistKern>,
-			   RankAgent<WnsFeatures1<ModelGDistKern>,
+			   RankAgent<WnsFeatures2<ModelGDistKern>,
 				     ModelGDistKern> >;
 
 
@@ -223,7 +230,7 @@ PlainRunner<S,A>
       system.modelGen_r.setFill(system.sD,system.tD,system.fD,system.dD);
       system.modelEst_r.setFill(system.sD,system.tD,system.fD,system.dD);
     }
-    
+
     system.revert();
 
     for(t=system.sD.time; t<numPoints; t++){
@@ -235,7 +242,7 @@ PlainRunner<S,A>
 
       system.nextPoint();
     }
-    
+
     rs(system.value());
     // value += system.value();
   }
@@ -321,9 +328,9 @@ VanillaRunner<S,A>
   for(r=0; r<numReps; r++){
     njm::resetSeed(r);
     system.reset(starts[r]);
-    
+
 #pragma omp critical
-    {    
+    {
       valueAll.at(r).clear();
       valueAll.at(r).push_back(system.value());
     }
@@ -331,9 +338,9 @@ VanillaRunner<S,A>
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
 #pragma omp critical
@@ -347,8 +354,8 @@ VanillaRunner<S,A>
       rs(system.value());
       // value += system.value();
     }
-    
-    system.sD.history.push_back(system.sD.status);    
+
+    system.sD.history.push_back(system.sD.status);
     njm::toFile(njm::toString(system.sD.history,"\n","")
 		,njm::sett.datExt(agent.name +
 				  "_history_"+
@@ -454,12 +461,12 @@ template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
-			       RankAgent<WnsFeatures1<ModelGravityGDist>,
+			       RankAgent<WnsFeatures2<ModelGravityGDist>,
 					 ModelGravityGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,
-			       RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+			       RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 					 ModelTimeExpCavesGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
@@ -493,9 +500,9 @@ VanillaRunnerNS<S,A>
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
     }
@@ -602,9 +609,9 @@ FitOnlyRunner<S,A>
   for(r=0; r<numReps; r++){
     njm::resetSeed(r);
     system.reset(starts[r]);
-    
+
 #pragma omp critical
-    {    
+    {
       valueAll.at(r).clear();
       valueAll.at(r).push_back(system.value());
     }
@@ -616,9 +623,9 @@ FitOnlyRunner<S,A>
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
       }
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
 #pragma omp critical
@@ -875,35 +882,59 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 
 template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesGDistTrendPowCon>,
+		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+				ModelTimeExpCavesGDistTrendPowCon>,
+		      ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelTimeExpCavesGDist>,
+	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+		      ModelTimeExpCavesGDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelTimeExpCavesGDist>,
+		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+				ModelTimeExpCavesGDist>,
+		      ModelTimeExpCavesGDist> >;
+
+
+template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelTimeExpCavesGDist>,
-	    RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelTimeExpCavesGDist>,
-		      RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 				ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist> >;
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelRadius>,
-	    RankAgent<WnsFeatures1<ModelRadius>,
+	    RankAgent<WnsFeatures2<ModelRadius>,
 		      ModelRadius>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelRadius>,
-		      RankAgent<WnsFeatures1<ModelRadius>,
+		      RankAgent<WnsFeatures2<ModelRadius>,
 				ModelRadius>,
 		      ModelRadius> >;
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelGDist>,
-	    RankAgent<WnsFeatures1<ModelGDist>,
+	    RankAgent<WnsFeatures2<ModelGDist>,
 		      ModelGDist>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelGDist>,
-		      RankAgent<WnsFeatures1<ModelGDist>,
+		      RankAgent<WnsFeatures2<ModelGDist>,
 				ModelGDist>,
 		      ModelGDist> >;
 
@@ -911,11 +942,11 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelGDistKern>,
-	    RankAgent<WnsFeatures1<ModelGDistKern>,
+	    RankAgent<WnsFeatures2<ModelGDistKern>,
 		      ModelGDistKern>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelGDistKern>,
-		      RankAgent<WnsFeatures1<ModelGDistKern>,
+		      RankAgent<WnsFeatures2<ModelGDistKern>,
 				ModelGDistKern>,
 		      ModelGDistKern> >;
 
@@ -1103,7 +1134,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelTimeExpCavesGDist>,
 			OsspAgent<ModelTimeExpCavesGDist>,
-			WnsFeatures1<ModelTimeExpCavesGDist>,
+			WnsFeatures2<ModelTimeExpCavesGDist>,
 			ModelTimeExpCavesGDist> >;
 
 template class
@@ -1113,7 +1144,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelRadius>,
 			OsspAgent<ModelRadius>,
-			WnsFeatures1<ModelRadius>,
+			WnsFeatures2<ModelRadius>,
 			ModelRadius> >;
 
 template class
@@ -1123,7 +1154,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelGDist>,
 			OsspAgent<ModelGDist>,
-			WnsFeatures1<ModelGDist>,
+			WnsFeatures2<ModelGDist>,
 			ModelGDist> >;
 
 
@@ -1147,10 +1178,10 @@ OptimRunner<S,A,Optim>
   std::vector<std::vector<double> > weights;
 
   std::vector<int> times(numReps);
-  
+
   // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
   int threads = omp_get_max_threads();
-  
+
 #pragma omp parallel for num_threads(threads)	\
   shared(valueAll,tock,tick,starts,rs)		\
   firstprivate(system,agent,optim,weights)	\
@@ -1163,9 +1194,9 @@ OptimRunner<S,A,Optim>
     system.reset(starts[r]);
     agent.reset();
     optim.reset();
-    
+
 #pragma omp critical
-    {    
+    {
       valueAll.at(r).clear();
       valueAll.at(r).push_back(system.value());
     }
@@ -1176,17 +1207,17 @@ OptimRunner<S,A,Optim>
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
 			    t > system.fD.trtStart);
-	
+
 	optim.optim(system,agent);
-	
+
 	weights.push_back(agent.tp.getPar());
-	
+
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
       }
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
 #pragma omp critical
@@ -1246,7 +1277,7 @@ OptimRunner<S,A,Optim>
 		  njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
 				   ".txt"));
     }
-    
+
   }
 
   njm::toFile(njm::toString(valueAll,"\n",""),
@@ -1275,9 +1306,9 @@ OptimRunnerNS<S,A,Optim>
   RunStats rs;
   // double value=0;
   int r,t;
-  
+
   int threads = omp_get_max_threads();
-  
+
 #pragma omp parallel for num_threads(threads)	\
   shared(starts,rs)				\
   firstprivate(system,agent,optim)		\
@@ -1286,7 +1317,7 @@ OptimRunnerNS<S,A,Optim>
     system.reset(starts[r]);
     agent.reset();
     optim.reset();
-    
+
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
       if(t>=system.fD.trtStart){
@@ -1294,13 +1325,13 @@ OptimRunnerNS<S,A,Optim>
 			    t > system.fD.trtStart);
 
 	optim.optim(system,agent);
-	
+
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
       }
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
     }
@@ -1533,24 +1564,37 @@ TuneRunner<System<ModelGDistKern,
 template class
 TuneRunner<System<ModelTimeExpCavesGDist,
 		  ModelTimeExpCavesGDist>,
-	   RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+	   RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 		     ModelTimeExpCavesGDist>,
 	   M1SpOptim<System<ModelTimeExpCavesGDist,
 			    ModelTimeExpCavesGDist>,
-		     RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+		     RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 			       ModelTimeExpCavesGDist>,
 		     ModelTimeExpCavesGDist> >;
 
 
 
 template class
+TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		  ModelTimeExpCavesGDistTrendPowCon>,
+	   RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon>,
+	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			    ModelTimeExpCavesGDistTrendPowCon>,
+		     RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+			       ModelTimeExpCavesGDistTrendPowCon>,
+		     ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+
+template class
 TuneRunner<System<ModelTimeExpCavesEDist,
 		  ModelTimeExpCavesEDist>,
-	   RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+	   RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
 		     ModelTimeExpCavesEDist>,
 	   M1SpOptim<System<ModelTimeExpCavesEDist,
 			    ModelTimeExpCavesEDist>,
-		     RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+		     RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
 			       ModelTimeExpCavesEDist>,
 		     ModelTimeExpCavesEDist> >;
 
@@ -1558,11 +1602,11 @@ TuneRunner<System<ModelTimeExpCavesEDist,
 template class
 TuneRunner<System<ModelRadius,
 		  ModelRadius>,
-	   RankAgent<WnsFeatures1<ModelRadius>,
+	   RankAgent<WnsFeatures2<ModelRadius>,
 		     ModelRadius>,
 	   M1SpOptim<System<ModelRadius,
 			    ModelRadius>,
-		     RankAgent<WnsFeatures1<ModelRadius>,
+		     RankAgent<WnsFeatures2<ModelRadius>,
 			       ModelRadius>,
 		     ModelRadius> >;
 
@@ -1570,11 +1614,11 @@ TuneRunner<System<ModelRadius,
 template class
 TuneRunner<System<ModelGDist,
 		  ModelGDist>,
-	   RankAgent<WnsFeatures1<ModelGDist>,
+	   RankAgent<WnsFeatures2<ModelGDist>,
 		     ModelGDist>,
 	   M1SpOptim<System<ModelGDist,
 			    ModelGDist>,
-		     RankAgent<WnsFeatures1<ModelGDist>,
+		     RankAgent<WnsFeatures2<ModelGDist>,
 			       ModelGDist>,
 		     ModelGDist> >;
 
@@ -1584,11 +1628,11 @@ TuneRunner<System<ModelGDist,
 template class
 TuneRunner<System<ModelGDistKern,
 		  ModelGDistKern>,
-	   RankAgent<WnsFeatures1<ModelGDistKern>,
+	   RankAgent<WnsFeatures2<ModelGDistKern>,
 		     ModelGDistKern>,
 	   M1SpOptim<System<ModelGDistKern,
 			    ModelGDistKern>,
-		     RankAgent<WnsFeatures1<ModelGDistKern>,
+		     RankAgent<WnsFeatures2<ModelGDistKern>,
 			       ModelGDistKern>,
 		     ModelGDistKern> >;
 
@@ -1596,11 +1640,11 @@ TuneRunner<System<ModelGDistKern,
 template class
 TuneRunner<System<ModelGravityGDist,
 		  ModelGravityGDist>,
-	   RankAgent<WnsFeatures1<ModelGravityGDist>,
+	   RankAgent<WnsFeatures2<ModelGravityGDist>,
 		     ModelGravityGDist>,
 	   M1SpOptim<System<ModelGravityGDist,
 			    ModelGravityGDist>,
-		     RankAgent<WnsFeatures1<ModelGravityGDist>,
+		     RankAgent<WnsFeatures2<ModelGravityGDist>,
 			       ModelGravityGDist>,
 		     ModelGravityGDist> >;
 
@@ -1608,11 +1652,11 @@ TuneRunner<System<ModelGravityGDist,
 template class
 TuneRunner<System<ModelGravityEDist,
 		  ModelGravityEDist>,
-	   RankAgent<WnsFeatures1<ModelGravityEDist>,
+	   RankAgent<WnsFeatures2<ModelGravityEDist>,
 		     ModelGravityEDist>,
 	   M1SpOptim<System<ModelGravityEDist,
 			    ModelGravityEDist>,
-		     RankAgent<WnsFeatures1<ModelGravityEDist>,
+		     RankAgent<WnsFeatures2<ModelGravityEDist>,
 			       ModelGravityEDist>,
 		     ModelGravityEDist> >;
 
@@ -1643,19 +1687,19 @@ TuneRunner<S,A,Optim>
 
     // begin rep r
     for(t=system.sD.time; t<numPoints; t++){
-      
+
       if(t>=system.fD.trtStart){
 	system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
 			    t > system.fD.trtStart);
-	  
+
 	optim.optim(system,agent);
 
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst);
       }
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
     }
@@ -1694,7 +1738,7 @@ TestRunner<S,A,Optim>
   for(r=0; r<numReps; r++){
     system.reset();
 #pragma omp critical
-    {    
+    {
       valueAll.at(r).clear();
       valueAll.at(r).push_back(system.value());
     }
@@ -1702,15 +1746,15 @@ TestRunner<S,A,Optim>
     for(t=system.sD.time; t<numPoints; t++){
       if(t==system.fD.trtStart){
 	optim.optim(system,agent);
-	weights.push_back(agent.tp.getPar());	
+	weights.push_back(agent.tp.getPar());
       }
-      
+
       if(t>=system.fD.trtStart)
 	agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
 		       system.modelEst,system.paramEst);
-      
+
       system.updateStatus();
-      
+
       system.nextPoint();
 
 #pragma omp critical
@@ -1724,7 +1768,7 @@ TestRunner<S,A,Optim>
       rs(system.value());
       // value += system.value();
     }
-    
+
     system.sD.history.push_back(system.sD.status);
     njm::toFile(njm::toString(system.sD.history,"\n","")
 		,njm::sett.datExt(agent.name+"_"+optim.name+

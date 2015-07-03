@@ -5,8 +5,8 @@ LINKS = -larmadillo -llapack -lblas -lgsl -lgslcblas
 HOST = $(shell hostname)
 DEBUG = -g3 -ggdb
 PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
-PROF = $(DEBUG) -pg 
-OBJECTS = $(BINARY).o 
+PROF = $(DEBUG) -pg
+OBJECTS = $(BINARY).o
 OBJECTS += utilities.o \
 	rand.o \
 	runStats.o \
@@ -38,7 +38,7 @@ OBJECTS += utilities.o \
 	toyFeatures6.o \
 	toyFeatures7.o \
 	wnsFeatures0.o \
-	wnsFeatures1.o \
+	wnsFeatures2.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \
@@ -189,4 +189,3 @@ $(OBJECTS):%.o: %.cpp
 
 clean:
 	rm -f $(BINARY) $(OBJECTS) $(DEPENDS) $(BINARY).tar.bz2
-

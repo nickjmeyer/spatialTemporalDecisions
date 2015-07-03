@@ -18,7 +18,7 @@
 #include "toyFeatures6.hpp"
 #include "toyFeatures7.hpp"
 #include "wnsFeatures0.hpp"
-#include "wnsFeatures1.hpp"
+#include "wnsFeatures2.hpp"
 #include "calcCentrality.hpp"
 
 
@@ -40,7 +40,7 @@ class RankAgent : public BaseAgent<M> {
   RankAgent();
 
   void reset();
-  
+
   virtual void applyTrt(const SimData & sD,
 			TrtData & tD,
 			const FixedData & fD,
@@ -53,7 +53,7 @@ class RankAgent : public BaseAgent<M> {
 
   arma::colvec infRanks;
   arma::colvec notRanks;
-  
+
   int numAct;
   int numPre;
 

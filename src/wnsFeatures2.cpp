@@ -30,6 +30,7 @@ template class WnsFeatures2<ModelGDist>;
 
 template class WnsFeatures2<ModelGDistKern>;
 
+template class WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>;
 
 
 

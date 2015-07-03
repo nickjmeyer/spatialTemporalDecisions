@@ -163,58 +163,72 @@ template class M1SpOptim<System<ModelTimeExpCavesGDist,
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelTimeExpCavesGDist>,
-			 RankAgent<WnsFeatures1<ModelTimeExpCavesGDist>,
+			 RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
 				   ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesEDist,
 				ModelTimeExpCavesEDist>,
-			 RankAgent<WnsFeatures1<ModelTimeExpCavesEDist>,
+			 RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
 				   ModelTimeExpCavesEDist>,
 			 ModelTimeExpCavesEDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelRadius>,
-			 RankAgent<WnsFeatures1<ModelRadius>,
+			 RankAgent<WnsFeatures2<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
 template class M1SpOptim<System<ModelRadius,
 				ModelRadius>,
-			 RankAgent<WnsFeatures1<ModelRadius>,
+			 RankAgent<WnsFeatures2<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelGDist>,
-			 RankAgent<WnsFeatures1<ModelGDist>,
+			 RankAgent<WnsFeatures2<ModelGDist>,
 				   ModelGDist>,
 			 ModelGDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelGDistKern>,
-			 RankAgent<WnsFeatures1<ModelGDistKern>,
+			 RankAgent<WnsFeatures2<ModelGDistKern>,
 				   ModelGDistKern>,
 			 ModelGDistKern>;
 
 template class M1SpOptim<System<ModelGDist,
 				ModelGDist>,
-			 RankAgent<WnsFeatures1<ModelGDist>,
+			 RankAgent<WnsFeatures2<ModelGDist>,
 				   ModelGDist>,
 			 ModelGDist>;
 
 
 template class M1SpOptim<System<ModelGravityGDist,
 				ModelGravityGDist>,
-			 RankAgent<WnsFeatures1<ModelGravityGDist>,
+			 RankAgent<WnsFeatures2<ModelGravityGDist>,
 				   ModelGravityGDist>,
 			 ModelGravityGDist>;
 
 template class M1SpOptim<System<ModelGravityEDist,
 				ModelGravityEDist>,
-			 RankAgent<WnsFeatures1<ModelGravityEDist>,
+			 RankAgent<WnsFeatures2<ModelGravityEDist>,
 				   ModelGravityEDist>,
 			 ModelGravityEDist>;
+
+template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+				ModelTimeExpCavesGDistTrendPowCon>,
+			 RankAgent<WnsFeatures2
+				   <ModelTimeExpCavesGDistTrendPowCon>,
+				   ModelTimeExpCavesGDistTrendPowCon>,
+			 ModelTimeExpCavesGDistTrendPowCon>;
+
+template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+				ModelTimeExpCavesGDist>,
+			 RankAgent<WnsFeatures2
+				   <ModelTimeExpCavesGDist>,
+				   ModelTimeExpCavesGDist>,
+			 ModelTimeExpCavesGDist>;
 
 
 
@@ -248,8 +262,8 @@ void M1SpOptim<S,A,M>
 
     s.revert();
   }
-    
-  
+
+
   PlainRunner<System<M,M>,A> runner;
 
   std::vector<double> par=agent.tp.getPar();
@@ -259,9 +273,9 @@ void M1SpOptim<S,A,M>
 
 
   double valP, valM;
-  
+
   int iter=1;
-  
+
   double mu = tp.A/std::pow(tp.B+iter,tp.ell);
   double cm = tp.C / std::pow(iter,tp.t);
 
@@ -276,22 +290,22 @@ void M1SpOptim<S,A,M>
     if(tp.fixSample != 0){
       s.modelGen_r.sample(true);
       s.modelEst_r = s.modelGen_r;
-      
+
       s.revert();
     }
 
-    
+
     agent.tp.putPar(parPH);
     valP = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
 
     agent.tp.putPar(parMH);
     valM = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
 
-    
+
     for(i=0; i<numPar; i++)
       par.at(i) = par.at(i) - mu*(valP - valM)/(2.0*h.at(i));
 
-    
+
     // if(omp_get_thread_num() == 0)
     //   std::cout << "iter: " + njm::toString(iter,"",4,0) +
     // 	" || " + njm::toString(valP,"",6,4) + " - " +
@@ -301,15 +315,15 @@ void M1SpOptim<S,A,M>
 
 
     ++iter;
-      
+
     mu = tp.A/std::pow(tp.B + iter,tp.ell);
     cm = tp.C/std::pow(iter,tp.t);
 
-    
+
     if(mu < tp.muMin){
       converged = 1;
     }
-    
+
   }
 
   agent.tp.putPar(par); // assign optimized par to the agent
@@ -332,16 +346,16 @@ void M1SpOptim<S,A,M>
 
   M1SpOptim<System<M,M>,A,M> o;
   o.tp.tune = 0;
-  
+
   TuneRunner<System<M,M>,A,
 	     M1SpOptim<System<M,M>,A,M> > r;
-  
+
   std::vector<double> scale;
   scale.push_back(0.5);
   scale.push_back(1.0);
   scale.push_back(2.0);
 
-  
+
   int i,j;
   std::vector<std::pair<double,double> > abVals;
   for(i = 0; i < (int)scale.size(); ++i)

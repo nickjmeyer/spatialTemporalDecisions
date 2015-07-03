@@ -8,7 +8,7 @@ M1OsspOptimTunePar::M1OsspOptimTunePar(){
   mcReps = 10;
 
   jitterScale = 4.0;
-  
+
   // N = 10;
   // B = 5;
   // mcReps = 2;
@@ -128,19 +128,19 @@ template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesGDist>,
 			   OsspAgent<ModelTimeExpCavesGDist>,
-			   WnsFeatures1<ModelTimeExpCavesGDist>,
+			   WnsFeatures2<ModelTimeExpCavesGDist>,
 			   ModelTimeExpCavesGDist>;
 
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
-			   WnsFeatures1<ModelRadius>,
+			   WnsFeatures2<ModelRadius>,
 			   ModelRadius>;
 
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelGDist>,
 			   OsspAgent<ModelGDist>,
-			   WnsFeatures1<ModelGDist>,
+			   WnsFeatures2<ModelGDist>,
 			   ModelGDist>;
 
 
@@ -167,7 +167,7 @@ void M1OsspOptim<S,A,F,M>
   M1SpOptim<System<M,M>,RankAgent<F,M>,M> spo;
   RankAgent<F,M> ra;
   ra.tp.jitterScale = tp.jitterScale;
-  
+
   spo.optim(s,ra);
 
 
@@ -222,12 +222,12 @@ void M1OsspOptim<S,A,F,M>
 
       // the above are the revert containers
       s.revert();
-      
+
       // generate next step
       s.nextPoint();
 
       s.checkPoint();
-      
+
       // estimate V
       // this also is our estimate of Q
       // if we include past rewards it doesn't effect
