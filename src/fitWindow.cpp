@@ -66,16 +66,15 @@ int main(int argc, char ** argv){
 
   int i;
   // note can't put const variables in shared
-  const int I = 7, win = 3, numSamples = 200, numBurn = 100;
-#pragma omp parallel for num_threads(omp_get_num_threads())	\
+  const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+#pragma omp parallel for num_threads(omp_get_max_threads())	\
   private(i)
   for(i = 0; i < I; ++i){
-    std::string file = (njm::toString(i+1,"",0,0)
+    std::string file = (njm::toString(i,"",0,0)
 			+ "-"
-			+ njm::toString(i+win,"",0,0));
+			+ njm::toString(i+win-1,"",0,0));
     fitWindow<M>(file,numSamples,numBurn);
   }
 
-  njm::sett.clean();
   return 0;
 }
