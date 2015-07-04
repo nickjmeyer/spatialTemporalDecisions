@@ -3,14 +3,15 @@
 cd ../bin
 
 NETS=("scalefree")
-SIZE=("100" "500" "1000")
+#SIZE=("100" "500" "1000" "10000")
+SIZE=("10000")
 
 for i in ${NETS[@]}
 do
     for j in ${SIZE[@]}
     do
-	../bin/tuneGen "../data/toy/${i}${j}" y;
-	submit ../bin/runM1Mles "../data/toy/${i}${j}" y;
-	submit ../bin/runM1MlesMiss "../data/toy/${i}${j}" y;
+	./tuneGen "../data/toy/${i}${j}" y;
+	submit ./runM1Mles "../data/toy/${i}${j}" y;
+	submit ./runM1MlesMiss "../data/toy/${i}${j}" y;
     done
 done
