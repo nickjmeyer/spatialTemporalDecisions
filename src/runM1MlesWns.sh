@@ -2,5 +2,5 @@
 
 cd ../bin
 
-submit ./runM1Mles ../data/wns/ y;
-submit ./runM1MlesMiss ../data/wns/ y;
+submit ./runM1MlesWns ../data/wns/ y;
+submit ./runM1MlesWnsMiss ../data/wns/ y;
