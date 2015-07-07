@@ -3,9 +3,21 @@
 
 template class NoTrt<ModelGravityGDist>;
 
+template class NoTrt<ModelTimeExpGDist>;
+
+template class NoTrt<ModelTimeExpGDistTrend>;
+
+template class NoTrt<ModelTimeExpGDistTrendPow>;
+
 template class NoTrt<ModelTimeExpCavesGDist>;
 
+template class NoTrt<ModelTimeExpCavesGDistTrend>;
+
+template class NoTrt<ModelTimeExpCavesGDistTrendPow>;
+
 template class NoTrt<ModelTimeGDist>;
+
+template class NoTrt<ModelTimeGDistTrend>;
 
 template class NoTrt<ModelTimeGDistTrendPow>;
 
@@ -23,4 +35,3 @@ void NoTrt<M>::applyTrt(const SimData & sD,
 			const DynamicData & dD,
 			M & model){
 }
-

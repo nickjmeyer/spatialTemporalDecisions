@@ -64,7 +64,7 @@ void fitWindow(const std::string & ext,
 
 
   typedef NoTrt<M> NT;
-  typedef VanillaRunner<S,NT> R;
+  typedef VanillaRunnerNS<S,NT> R;
 
   NT nt;
 
@@ -73,13 +73,13 @@ void fitWindow(const std::string & ext,
   RunStats rs;
 
   rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
-  njm::toFile(njm::toString(rs.smean(),"",0,0),
+  njm::toFile(njm::toString(rs.smean(),"\n"),
 	      njm::sett.datExt(name+"_fcReg_"+ext+"_",".txt"));
 
   sObs.fD.forecastFlat = true;
 
   rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
-  njm::toFile(njm::toString(rs.smean(),"",0,0),
+  njm::toFile(njm::toString(rs.smean(),"\n"),
 	      njm::sett.datExt(name+"_fcFlat_"+ext+"_",".txt"));
 }
 

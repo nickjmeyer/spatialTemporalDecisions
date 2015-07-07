@@ -370,6 +370,22 @@ VanillaRunner<S,A>
 
 
 
+template class VanillaRunnerNS<System<ModelTimeGDistTrend,
+				      ModelTimeGDistTrend>,
+			       NoTrt<ModelTimeGDistTrend> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpGDistTrend,
+				      ModelTimeExpGDistTrend>,
+			       NoTrt<ModelTimeExpGDistTrend> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpGDistTrendPow,
+				      ModelTimeExpGDistTrendPow>,
+			       NoTrt<ModelTimeExpGDistTrendPow> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrend,
+				      ModelTimeExpCavesGDistTrend>,
+			       NoTrt<ModelTimeExpCavesGDistTrend> >;
+
 template class VanillaRunnerNS<System<ModelTimeGDistTrendPow,
 				      ModelTimeGDistTrendPow>,
 			       NoTrt<ModelTimeGDistTrendPow> >;
