@@ -12,49 +12,53 @@ void fitWindow(const std::string & ext,
 
   std::string name = sObs.modelGen_r.name;
 
-  // sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  // sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
+  sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
+  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
 
-  // // posterior mean
-  // sObs.modelGen_r.mcmc.samples.setMean();
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
-  // 	      njm::sett.datExt(name + "_postMean_"+ext+"_",".txt"));
+  // posterior mean
+  sObs.modelGen_r.mcmc.samples.setMean();
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  	      njm::sett.datExt(name + "_postMean_"+ext+"_",".txt"));
 
-  // // mcmc samples
-  // int i;
-  // for(i = 0; i < (numSamples - numBurn); ++i){
-  //   sObs.modelGen_r.mcmc.samples.setPar(i);
-  //   if(i)
-  //     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
-  // 				" ","\n"),
-  // 		  njm::sett.datExt(name+"_samples_"+ext+"_",".txt"),
-  // 		  std::ios_base::app);
-  //   else
-  //     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
-  // 				" ","\n"),
-  // 		  njm::sett.datExt(name+"_samples_"+ext+"_",".txt"),
-  // 		  std::ios_base::out);
-  // }
+  std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
 
-  // // likelihood
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
-  // 	      njm::sett.datExt(name+"_ll_"+ext+"_",".txt"));
 
-  // // likelihood at mean
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.llPt,"\n"),
-  // 	      njm::sett.datExt(name+"_llPt_"+ext+"_",".txt"));
 
-  // // pD
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.pD,"\n"),
-  // 	      njm::sett.datExt(name+"_pD_"+ext+"_",".txt"));
+  // mcmc samples
+  int i;
+  for(i = 0; i < (numSamples - numBurn); ++i){
+    sObs.modelGen_r.mcmc.samples.setPar(i);
+    if(i)
+      njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+  				" ","\n"),
+  		  njm::sett.datExt(name+"_samples_"+ext+"_",".txt"),
+  		  std::ios_base::app);
+    else
+      njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+  				" ","\n"),
+  		  njm::sett.datExt(name+"_samples_"+ext+"_",".txt"),
+  		  std::ios_base::out);
+  }
 
-  // // Dbar
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.Dbar,"\n"),
-  // 	      njm::sett.datExt(name+"_Dbar_"+ext+"_",".txt"));
+  // likelihood
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
+  	      njm::sett.datExt(name+"_ll_"+ext+"_",".txt"));
 
-  // // DIC
-  // njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.DIC,"\n"),
-  // 	      njm::sett.datExt(name+"_DIC_"+ext+"_",".txt"));
+  // likelihood at mean
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.llPt,"\n"),
+  	      njm::sett.datExt(name+"_llPt_"+ext+"_",".txt"));
+
+  // pD
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.pD,"\n"),
+  	      njm::sett.datExt(name+"_pD_"+ext+"_",".txt"));
+
+  // Dbar
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.Dbar,"\n"),
+  	      njm::sett.datExt(name+"_Dbar_"+ext+"_",".txt"));
+
+  // DIC
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.DIC,"\n"),
+  	      njm::sett.datExt(name+"_DIC_"+ext+"_",".txt"));
 
   sObs.modelGen_r.setType(MLE);
   sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
@@ -63,8 +67,14 @@ void fitWindow(const std::string & ext,
 
 
 
+
+
   typedef NoTrt<M> NT;
   typedef VanillaRunnerNS<S,NT> R;
+
+  S s;
+  s.modelGen_r.putPar(par.begin());
+  s.modelEst_r = s.modelGen_r;
 
   NT nt;
 
@@ -72,13 +82,13 @@ void fitWindow(const std::string & ext,
   Starts starts("startingLocations.txt");
   RunStats rs;
 
-  rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
+  rs = r.run(s,nt,500,s.fD.finalT,starts);
   njm::toFile(njm::toString(rs.smean(),"\n"),
 	      njm::sett.datExt(name+"_fcReg_"+ext+"_",".txt"));
 
-  sObs.fD.forecastFlat = true;
+  s.fD.forecastFlat = true;
 
-  rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
+  rs = r.run(s,nt,500,s.fD.finalT,starts);
   njm::toFile(njm::toString(rs.smean(),"\n"),
 	      njm::sett.datExt(name+"_fcFlat_"+ext+"_",".txt"));
 }
