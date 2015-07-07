@@ -97,6 +97,8 @@ void fitWindow(const std::string & ext,
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
+  omp_set_nested(1);
+
 #pragma omp parallel sections
   {
 #pragma omp section
