@@ -34,10 +34,11 @@ void ParamTrendPow::setFill(std::vector<double> & probs,
 			    const TrtData & tD,
 			    const FixedData & fD,
 			    const DynamicData & dD){
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double val = alpha*std::pow(double(sD.time+1),power);
-  prevTime = (unsigned int)(sD.time);
+  double val = alpha*std::pow(double(time+1),power);
+  prevTime = (unsigned int)(time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
 		  x += val;
@@ -50,11 +51,12 @@ void ParamTrendPow::modFill(std::vector<double> & probs,
 			    const TrtData & tD,
 			    const FixedData & fD,
 			    const DynamicData & dD){
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double val = alpha*(std::pow(double(sD.time+1),power)
+  double val = alpha*(std::pow(double(time+1),power)
 		      - std::pow(double(prevTime+1),power));
-  prevTime = (unsigned int)(sD.time);
+  prevTime = (unsigned int)(time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
 		  x += val;
@@ -68,11 +70,12 @@ std::vector<double> ParamTrendPow::partial(const int notNode,
 					   const TrtData & tD,
 					   const FixedData & fD,
 					   const DynamicData & dD){
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double tPower = std::pow(double(sD.time+1),power);
-  
-  return {tPower,alpha*std::log(double(sD.time+1))*tPower};
+  double tPower = std::pow(double(time+1),power);
+
+  return {tPower,alpha*std::log(double(time+1))*tPower};
 }
 
 
@@ -83,10 +86,11 @@ std::vector<double> ParamTrendPow::partial2(const int notNode,
 					    const TrtData & tD,
 					    const FixedData & fD,
 					    const DynamicData & dD){
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
   double alpha = pars.at(0);
   double power = pars.at(1);
-  double tPower = std::pow(double(sD.time+1),power);
-  double logT = std::log(double(sD.time+1));
-  
+  double tPower = std::pow(double(time+1),power);
+  double logT = std::log(double(time+1));
+
   return {0.0, logT*tPower, logT*tPower, alpha*logT*logT*tPower};
 }

@@ -106,7 +106,7 @@ template <class MG,
 System<MG,
        ME>::System(){
   specialInit = 0;
-  
+
   initialize();
 }
 
@@ -121,7 +121,7 @@ System<MG,
 		   const MG & modelGen,
 		   const ME & modelEst){
   specialInit = 1;
-    
+
   this->sD_r = sD;
   this->tD_r = tD;
   this->fD = fD;
@@ -137,7 +137,7 @@ template <class MG,
 System<MG,
        ME>::System(const std::string file){
   specialInit = 1;
-  
+
   initialize();
 
   std::vector<int> historyFile;
@@ -150,7 +150,7 @@ System<MG,
   // history
   sD_r.history.clear();
   sD_r.history.resize(numPoints - 1);
-  
+
   int i,j,k;
   for(i = 0, k = 0; i < (numPoints - 1); i++){
     sD_r.history.at(i).clear();
@@ -192,7 +192,7 @@ System<MG,
     std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
     std::fill(tD_r.aPast.begin(),tD_r.aPast.end(),0);
   }
-	
+
   // infected & not infected
   sD_r.infected.clear();
   sD_r.notInfec.clear();
@@ -226,7 +226,7 @@ System<MG,
   for(j = 0; j < fD.numNodes; j++)
     if(sD_r.status.at(j) >= 2)
       sD_r.timeInf.at(j)++;
-  
+
   // current time
   sD_r.time = numPoints - 1;
 
@@ -288,9 +288,9 @@ void System<MG,
 
     // load probs
     modelGen_r.setFill(sD_r,tD_r,fD,dD_r);
-    
+
   }
-  
+
   // revert
   revert();
 }
@@ -316,7 +316,7 @@ void System<MG,
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
-  
+
   modelGen_r = modelGen;
   modelEst_r = modelEst;
 }
@@ -333,32 +333,34 @@ void System<MG,
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
   fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
   njm::fromFile(fD.network,njm::sett.srcExt("network.txt"));
-  
+
   njm::fromFile(fD.centroidsLong,njm::sett.srcExt("centroidsLong.txt"));
   njm::fromFile(fD.centroidsLat,njm::sett.srcExt("centroidsLat.txt"));
   njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsMdsLong.txt"));
   njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsMdsLat.txt"));
-  
+
   njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
   njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
 
   njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
 
-  // only start treatment at time trtStart and on  
+  // only start treatment at time trtStart and on
   njm::fromFile(fD.trtStart,njm::sett.srcExt("trtStart.txt"));
   // only update every period steps
   njm::fromFile(fD.period,njm::sett.srcExt("period.txt"));
   // final time step in simulation
   njm::fromFile(fD.finalT,njm::sett.srcExt("finalT.txt"));
 
+  fD.forecastFlat = false;
+
   preCompData();
 
-  
+
   modelGen_r = MG(fD);
   modelGen_r.read();
-  
+
   modelEst_r = ME(fD);
-  
+
   modelGen_r.setType(INVALID);
   modelEst_r.setType(INVALID);
 
@@ -434,7 +436,7 @@ void System<MG,
 	++numGt;
     fD.rankCaves.at(i) = ((double)numGt)/((double)fD.numNodes);
   }
-  
+
   // subGraph only K steps out
   fD.subGraphKval = 4;
   getSubGraph(fD.numNodes,&fD.network,&fD.subGraphK,fD.subGraphKval);
@@ -442,7 +444,7 @@ void System<MG,
   for(i=0; i<fD.numNodes; i++)
     if(fD.subGraphKmax < fD.subGraphK.at(i))
       fD.subGraphKmax = fD.subGraphK.at(i);
-  
+
   // invGDistSD
   double mn=0,mnSq=0,d;
   tot=0;
@@ -457,7 +459,7 @@ void System<MG,
   mn/=(double)(tot);
   mnSq/=(double)(tot);
   fD.invGDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
-  
+
   // expInvGDistSD
   fD.expInvGDistSD.clear();
   fD.expInvGDistSD.reserve(fD.numNodes*fD.numNodes);
@@ -574,7 +576,7 @@ void System<MG,
   // 			     ++j;
   // 			     return ret;
   // 			   });
-  
+
   // std::stringstream ss;
   // ss << "       time: " << sD.time << std::endl
   //    << "        obj: " << value() << std::endl
@@ -591,15 +593,15 @@ void System<MG,
 
   // njm::message(ss.str());
   // std::cout << ss.str() << std::endl;
-  
+
   // std::vector<double> vals = modelGen.probs;
 
   // mn = std::accumulate(vals.begin(),vals.end(),0.0);
 
   // njm::message("raw probs: " + njm::toString(mn,""));
-  
 
-					       
+
+
   nextPoint(modelGen.infProbs());
 }
 
@@ -634,7 +636,7 @@ void System<MG,
   //    << "  Rmean: " << Rtot/double(sD.numNotInfec) << std::endl
   //    << " numNew: " << numNewInf << std::endl;
   // njm::message(ss.str());
-  
+
   std::sort(sD.infected.begin(),sD.infected.end());
   std::sort(sD.notInfec.begin(),sD.notInfec.end());
   sD.numInfected+=numNewInf;
@@ -656,7 +658,7 @@ void System<MG,
   std::fill(tD.a.begin(),tD.a.end(),0);
 
   updateStatus();
-  
+
   sD.time++; // turn the calendar
 }
 
@@ -676,7 +678,7 @@ void System<MG,
       isInf = 1;
     else
       isInf = 0;
-    
+
     if(isInf){
       j++;
       if(tD.a.at(i))

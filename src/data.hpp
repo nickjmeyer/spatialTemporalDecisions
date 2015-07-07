@@ -19,11 +19,11 @@ struct SimData {
 
   std::vector<int> newInfec;
   std::vector<int> timeInf;
-  
+
   std::vector<int> status;
   std::vector<std::vector<int> > history;
 
-  
+
   bool operator == (const SimData & rhs) const{
     if(time != rhs.time)
       return false;
@@ -84,7 +84,7 @@ struct FixedData {
   // double propTrt;
 
   double priorTrtMean;
-  
+
   std::vector<double> eDist; // euclidean distance
   std::vector<double> gDist; // geodesic distance
 
@@ -96,38 +96,41 @@ struct FixedData {
   std::vector<int> fips;
 
   std::vector<int> network;
-  
+
   std::vector<double> centroidsLong;
   std::vector<double> centroidsLat;
 
   std::vector<double> centroidsMdsLong;
   std::vector<double> centroidsMdsLat;
-  
+
   std::vector<double> subGraph;
   std::vector<double> betweenness;
 
 
-  
+
   // pre-computed data
   std::vector<double> propCaves;
   std::vector<double> logPropCaves;
   std::vector<double> rankCaves;
 
   std::vector<double> cm; // circle mass, number of caves within d_{ij} of i
-  
+
   std::vector<double> subGraphK;
   int subGraphKval;
   double subGraphKmax;
-  
+
   double invGDistSD;
   std::vector<double> expInvGDistSD; // e^{[1/(1+gDist)]/[sd(1+gDist)]}
 
   double gDistSD;
   std::vector<double> expGDistSD; // e^{-gDist^2/(2*sd(gDist)^2)}
-  
+
   std::vector<double> logGDist; // log(2+gDist)
 
   std::vector<double> hpdd;
+
+
+  bool forecastFlat; // extend the last time point out
 };
 
 

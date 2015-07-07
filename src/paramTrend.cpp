@@ -29,8 +29,9 @@ void ParamTrend::setFill(std::vector<double> & probs,
 			 const TrtData & tD,
 			 const FixedData & fD,
 			 const DynamicData & dD){
-  double val = *beg*double(sD.time);
-  prevTime = (unsigned int)(sD.time);
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
+  double val = *beg*double(time);
+  prevTime = (unsigned int)(time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
 		  x += val;
@@ -43,14 +44,15 @@ void ParamTrend::modFill(std::vector<double> & probs,
 			 const TrtData & tD,
 			 const FixedData & fD,
 			 const DynamicData & dD){
-  double val = *beg*(double(sD.time) - double(prevTime));
-  prevTime = (unsigned int)(sD.time);
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
+  double val = *beg*(double(time) - double(prevTime));
+  prevTime = (unsigned int)(time);
   std::for_each(probs.begin(),probs.end(),
 		[&val](double & x){
 		  x += val;
 		});
 }
-							   
+
 
 std::vector<double> ParamTrend::partial(const int notNode,
 					const int infNode,
@@ -58,5 +60,6 @@ std::vector<double> ParamTrend::partial(const int notNode,
 					const TrtData & tD,
 					const FixedData & fD,
 					const DynamicData & dD){
-  return std::vector<double>(parsSize,sD.time);
+  double time = fD.forecastFlat ? std::min(sD.time,fD.trtStart-1) : sD.time;
+  return std::vector<double>(parsSize,time);
 }
