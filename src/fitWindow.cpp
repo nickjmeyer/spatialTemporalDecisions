@@ -63,7 +63,24 @@ void fitWindow(const std::string & ext,
 
 
 
-  VanillaRunner
+  typedef NoTrt<M> NT;
+  typedef VanillaRunner<S,NT> R;
+
+  NT nt;
+
+  R r;
+  Starts starts("startingLocations.txt");
+  RunStats rs;
+
+  rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
+  njm::toFile(njm::toString(rs.smean(),"",0,0),
+	      njm::sett.datExt(name+"_fcReg_"+ext+"_",".txt"));
+
+  sObs.fD.forecastFlat = true;
+
+  rs = r.run(sObs,nt,500,sObs.fD.finalT,starts);
+  njm::toFile(njm::toString(rs.smean(),"",0,0),
+	      njm::sett.datExt(name+"_fcFlat_"+ext+"_",".txt"));
 }
 
 
