@@ -10,9 +10,11 @@
 class GDistSamples{
  public:
   int numSamples;
+  int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,beta,alpha,trtPre,trtAct;
+  std::vector<double> intcpHist,betaHist,alphaHist,trtPreHist,trtActHist;
 
   double intcpSet;
   std::vector<double> betaSet;
@@ -21,12 +23,13 @@ class GDistSamples{
   double trtActSet;
 
   std::vector<double> ll;
+  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
   void setRand();
 
-  void setPar(const int i);
+  void setPar(const int i,const bool fromBurn = false);
 
   std::vector<double> getPar() const;
 };
@@ -42,7 +45,7 @@ class GDistMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   GDistSamples samples;
 
@@ -57,7 +60,7 @@ class GDistMcmc{
   std::vector<double> d;
   std::vector<double> covar;
   int numCovar;
-  
+
   // current iteration of the parameters
   double intcp_cur;
   double alpha_cur;
@@ -83,9 +86,11 @@ class GDistMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+	      const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+	      const bool saveBurn = false);
   double ll();
 
 };

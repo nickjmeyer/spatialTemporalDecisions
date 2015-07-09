@@ -10,9 +10,11 @@
 class GravityTimeInfExpCavesTrendSamples{
  public:
   int numSamples;
+  int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,beta,alpha,power,trend,xi,trtPre,trtAct;
+  std::vector<double> intcpHist,betaHist,alphaHist,powerHist,trendHist,xiHist,trtPreHist,trtActHist;
 
   double intcpSet;
   std::vector<double> betaSet;
@@ -24,13 +26,14 @@ class GravityTimeInfExpCavesTrendSamples{
   double trtActSet;
 
   std::vector<double> ll;
+  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
   void setRand();
 
-  void setPar(const int i);
-  
+  void setPar(const int i,const bool fromBurn = false);
+
   std::vector<double> getPar() const;
 };
 
@@ -45,7 +48,7 @@ class GravityTimeInfExpCavesTrendMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   GravityTimeInfExpCavesTrendSamples samples;
 
@@ -61,7 +64,7 @@ class GravityTimeInfExpCavesTrendMcmc{
   std::vector<double> cc;
   std::vector<double> covar;
   int numCovar;
-  
+
   std::vector<double> covarBeta_cur;
   std::vector<double> covarBeta_can;
   std::vector<double> alphaW_cur;
@@ -102,9 +105,11 @@ class GravityTimeInfExpCavesTrendMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+	      const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+	      const bool saveBurn = false);
   double ll();
 
   inline static void updateAlphaW(std::vector<double> & alphaW,

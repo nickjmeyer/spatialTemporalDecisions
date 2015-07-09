@@ -24,7 +24,7 @@ class CaveModel : public BaseModel {
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD);
-  
+
   virtual void update(const SimData & sD,
 		      const TrtData & tD,
 		      const FixedData & fD,
@@ -55,9 +55,9 @@ class CaveModel : public BaseModel {
 class CaveModelFitData {
  public:
   CaveModelFitData(const CaveModel & m, const CaveParam & mP,
-		      const SimData & sD,
-		      const FixedData & fD,
-		      const std::vector<std::vector<int> > & history);
+		   const SimData & sD,
+		   const FixedData & fD,
+		   const std::vector<std::vector<int> > & history);
 
   CaveModel m;
   CaveParam mP;

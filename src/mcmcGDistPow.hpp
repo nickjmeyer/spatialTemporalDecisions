@@ -10,9 +10,11 @@
 class GDistPowSamples{
  public:
   int numSamples;
+  int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,alpha,power,trtPre,trtAct;
+  std::vector<double> intcpHist,alphaHist,powerHist,trtPreHist,trtActHist;
 
   double intcpSet;
   double alphaSet;
@@ -21,12 +23,13 @@ class GDistPowSamples{
   double trtActSet;
 
   std::vector<double> ll;
+  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
   void setRand();
 
-  void setPar(const int i);
+  void setPar(const int i,const bool fromBurn = false);
 
   std::vector<double> getPar() const;
 };
@@ -42,7 +45,7 @@ class GDistPowMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   GDistPowSamples samples;
 
@@ -56,7 +59,7 @@ class GDistPowMcmc{
   // information about each county
   std::vector<double> d;
   int numCovar;
-  
+
   // current iteration of the parameters
   double intcp_cur;
   double alpha_cur;
@@ -84,9 +87,11 @@ class GDistPowMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+	      const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+	      const bool saveBurn = false);
   double ll();
 
 };

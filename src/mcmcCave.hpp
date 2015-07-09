@@ -10,9 +10,11 @@
 class CaveSamples{
  public:
   int numSamples;
+  int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,cave,trtPre,trtAct;
+  std::vector<double> intcpHist,caveHist,trtPreHist,trtActHist;
 
   double intcpSet;
   double caveSet;
@@ -20,6 +22,7 @@ class CaveSamples{
   double trtActSet;
 
   std::vector<double> ll;
+  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
@@ -39,7 +42,7 @@ class CaveMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   CaveSamples samples;
 
@@ -55,7 +58,7 @@ class CaveMcmc{
   std::vector<double> cc;
   std::vector<double> covar;
   int numCovar;
-  
+
 
   // current iteration of the parameters
   double intcp_cur;
@@ -82,9 +85,11 @@ class CaveMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+	      const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+	      const bool saveBurn = false);
   double ll();
 
 };

@@ -21,7 +21,7 @@ void GDistSamples::setMean(){
 void GDistSamples::setRand(){
   intcpSet = alphaSet = trtPreSet = trtActSet = 0.0;
   int i = njm::runifInterv(0,numSamples);
-  
+
   intcpSet = intcp.at(i);
   alphaSet = alpha.at(i);
   trtPreSet = trtPre.at(i);
@@ -29,13 +29,21 @@ void GDistSamples::setRand(){
 
 }
 
-void GDistSamples::setPar(const int i){
+void GDistSamples::setPar(const int i,const bool fromBurn){
   intcpSet = alphaSet = trtPreSet = trtActSet = 0.0;
 
-  intcpSet = intcp.at(i);
-  alphaSet = alpha.at(i);
-  trtPreSet = trtPre.at(i);
-  trtActSet = trtAct.at(i);
+  if(fromBurn){
+    intcpSet = intcpHist.at(i);
+    alphaSet = alphaHist.at(i);
+    trtPreSet = trtPreHist.at(i);
+    trtActSet = trtActHist.at(i);
+  }
+  else{
+    intcpSet = intcp.at(i);
+    alphaSet = alpha.at(i);
+    trtPreSet = trtPre.at(i);
+    trtActSet = trtAct.at(i);
+  }
 }
 
 
@@ -46,7 +54,7 @@ std::vector<double> GDistSamples::getPar() const {
   par.push_back(alphaSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
-  
+
   return par;
 }
 
@@ -71,7 +79,7 @@ void GDistMcmc::load(const std::vector<std::vector<int> > & history,
   samples.numCovar = numCovar;
 
   priorTrtMean = fD.priorTrtMean;
-  
+
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
@@ -98,23 +106,26 @@ void GDistMcmc::load(const std::vector<std::vector<int> > & history,
       timeInf.at(i*T + j) = val;
     }
   }
-  
-}
 
-
-void GDistMcmc::sample(int const numSamples, int const numBurn){
-  std::vector<double> par = {-3.0, // intcp
-			     0.1, // alpha
-			     0.0, // trtAct
-			     0.0}; // trtPre
-  sample(numSamples,numBurn,par);
 }
 
 
 void GDistMcmc::sample(int const numSamples, int const numBurn,
-		       const std::vector<double> & par){
+		       const bool saveBurn){
+  std::vector<double> par = {-3.0, // intcp
+			     0.1, // alpha
+			     0.0, // trtAct
+			     0.0}; // trtPre
+  sample(numSamples,numBurn,par,saveBurn);
+}
+
+
+void GDistMcmc::sample(int const numSamples, int const numBurn,
+		       const std::vector<double> & par,
+		       const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
-  
+  samples.numBurn = numBurn;
+
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,alpha_mean=0,
@@ -136,16 +147,31 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
+  samples.intcpHist.clear();
   samples.intcp.reserve(numSamples-numBurn);
+  samples.intcpHist.reserve(numBurn);
+
   samples.alpha.clear();
+  samples.alphaHist.clear();
   samples.alpha.reserve(numSamples-numBurn);
+  samples.alphaHist.reserve(numBurn);
+
   samples.trtPre.clear();
+  samples.trtPreHist.clear();
   samples.trtPre.reserve(numSamples-numBurn);
+  samples.trtPreHist.reserve(numBurn);
+
   samples.trtAct.clear();
+  samples.trtActHist.clear();
   samples.trtAct.reserve(numSamples-numBurn);
+  samples.trtActHist.reserve(numBurn);
+
 
   samples.ll.clear();
+  samples.llHist.clear();
   samples.ll.reserve(numSamples-numBurn);
+  samples.llHist.reserve(numBurn);
+
 
 
   // get the likelihood with the current parameters
@@ -155,13 +181,13 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
   acc=att= std::vector<int>(par.size(),0);
   mh=std::vector<double>(par.size(),0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
-  
+
   // mu=std::vector<double>(numCovar+2,0.0);
   // mu.at(numCovar+INTCP_) = -3;
-  
+
   double upd;
   double R;
-  
+
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
@@ -179,15 +205,15 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
     ++att.at(INTCP_);
     upd=intcp_cur+mh.at(INTCP_)*njm::rnorm01();
     intcp_can=upd;
-    
+
     // get new likelihood
     ll_can=ll();
-    
-    
+
+
     R=ll_can + (-.5/intcp_var)*std::pow(intcp_can - intcp_mean,2.0)
       - ll_cur - (-.5/intcp_var)*std::pow(intcp_cur - intcp_mean,2.0);
-      
-    
+
+
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(INTCP_);
@@ -203,7 +229,7 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 
 
 
-    
+
     // sample trtPre
     ++att.at(TRTP_);
     upd=trtPre_cur+mh.at(TRTP_)*njm::rnorm01();
@@ -240,7 +266,7 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
     R=ll_can + (-.5/trtAct_var)*std::pow(trtAct_can - trtAct_mean,2.0)
       - ll_cur - (-.5/trtAct_var)*std::pow(trtAct_cur - trtAct_mean,2.0);
 
-    
+
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(TRTA_);
@@ -257,7 +283,7 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 
     // sample alpha
     ++att.at(ALPHA_);
-    
+
     logAlpha_cur=std::log(alpha_cur);
 
     upd=std::exp(logAlpha_cur + mh.at(ALPHA_)*njm::rnorm01());
@@ -266,8 +292,8 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 
     // get new likelihood
     ll_can=ll();
-    
-    
+
+
     R=ll_can + (-.5/alpha_var)*std::pow(logAlpha_can - alpha_mean,2.0)
       - ll_cur - (-.5/alpha_var)*std::pow(logAlpha_cur - alpha_mean,2.0);
 
@@ -296,11 +322,17 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 	    mh.at(j)*=.8;
 	  else if(accRatio > .6)
 	    mh.at(j)*=1.2;
-	  
+
 	  acc.at(j)=0;
 	  att.at(j)=0;
 	}
-      }     
+      }
+      if(saveBurn){
+	samples.intcpHist.push_back(intcp_cur);
+	samples.alphaHist.push_back(alpha_cur);
+	samples.trtPreHist.push_back(trtPre_cur);
+	samples.trtActHist.push_back(trtAct_cur);
+      }
     }
     else if(i%thin==0){
       // save the samples
@@ -308,7 +340,7 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
       samples.alpha.push_back(alpha_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
-      
+
       samples.ll.push_back(ll_cur);
     }
   }
@@ -366,14 +398,14 @@ double GDistMcmc::ll(){
 	    wontProb*=1.0/(1.0+expProb);
 	  }
 	}
-	
+
 	prob=1.0-wontProb;
 
 	if(!(prob > 0.0))
 	  prob=std::exp(-30.0);
 	else if(!(prob < 1.0))
 	  prob=1.0 - std::exp(-30.0);
-	
+
 	if(infHist.at(j*T + i)==0)
 	  llVal+=std::log(1-prob);
 	else
@@ -384,6 +416,3 @@ double GDistMcmc::ll(){
 
   return llVal;
 }
-
-
-

@@ -21,7 +21,7 @@ void CaveSamples::setRand(){
   intcpSet = caveSet = trtPreSet = trtActSet = 0.0;
 
   int i = njm::runifInterv(0,numSamples);
-  
+
   intcpSet = intcp.at(i);
   caveSet = cave.at(i);
   trtPreSet = trtPre.at(i);
@@ -36,15 +36,15 @@ std::vector<double> CaveSamples::getPar() const {
   par.push_back(caveSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
-  
+
   return par;
 }
 
 
 
 void CaveMcmc::load(const std::vector<std::vector<int> > & history,
-		       const std::vector<int> & status,
-		       const FixedData & fD){
+		    const std::vector<int> & status,
+		    const FixedData & fD){
   std::vector<std::vector<int> > all;
   all = history;
   all.push_back(status);
@@ -54,14 +54,14 @@ void CaveMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void CaveMcmc::load(const std::vector<std::vector<int> > & history,
-		       const FixedData & fD){
+		    const FixedData & fD){
   numNodes=fD.numNodes;
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
 
   priorTrtMean = fD.priorTrtMean;
-  
+
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
@@ -93,21 +93,24 @@ void CaveMcmc::load(const std::vector<std::vector<int> > & history,
       timeInf.at(i*T + j) = val;
     }
   }
-  
+
 }
 
-void CaveMcmc::sample(int const numSamples, int const numBurn){
+void CaveMcmc::sample(int const numSamples, int const numBurn,
+		      const bool saveBurn){
   std::vector<double> par = {-3.0,
 			     0.0,
 			     0.0,
 			     0.0};
-  sample(numSamples,numBurn,par);
+  sample(numSamples,numBurn,par,saveBurn);
 }
 
 void CaveMcmc::sample(int const numSamples, int const numBurn,
-		      const std::vector<double> & par){
+		      const std::vector<double> & par,
+		      const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
-  
+  samples.numBurn = numBurn;
+
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,cave_mean=0,
@@ -125,16 +128,31 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
+  samples.intcpHist.clear();
   samples.intcp.reserve(numSamples-numBurn);
+  samples.intcpHist.reserve(numBurn);
+
   samples.cave.clear();
+  samples.caveHist.clear();
   samples.cave.reserve(numSamples-numBurn);
+  samples.caveHist.reserve(numBurn);
+
   samples.trtPre.clear();
+  samples.trtPreHist.clear();
   samples.trtPre.reserve(numSamples-numBurn);
+  samples.trtPreHist.reserve(numBurn);
+
   samples.trtAct.clear();
+  samples.trtActHist.clear();
   samples.trtAct.reserve(numSamples-numBurn);
+  samples.trtActHist.reserve(numBurn);
+
 
   samples.ll.clear();
+  samples.llHist.clear();
   samples.ll.reserve(numSamples-numBurn);
+  samples.llHist.reserve(numBurn);
+
 
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
@@ -143,13 +161,13 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
   acc=att= std::vector<int>(4,0);
   mh=std::vector<double>(4,0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
-  
+
   // mu=std::vector<double>(numCovar+2,0.0);
   // mu.at(numCovar+INTCP_) = -3;
-  
+
   double upd;
   double R;
-  
+
   int displayOn=1;
   int display=0;
 
@@ -165,15 +183,15 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
     ++att.at(INTCP_);
     upd=intcp_cur+mh.at(INTCP_)*njm::rnorm01();
     intcp_can=upd;
-    
+
     // get new likelihood
     ll_can=ll();
-    
-    
+
+
     R=ll_can + (-.5/intcp_var)*std::pow(intcp_can - intcp_mean,2.0)
       - ll_cur - (-.5/intcp_var)*std::pow(intcp_cur - intcp_mean,2.0);
-      
-    
+
+
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(INTCP_);
@@ -190,15 +208,15 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
     ++att.at(CAVE_);
     upd=cave_cur+mh.at(CAVE_)*njm::rnorm01();
     cave_can=upd;
-    
+
     // get new likelihood
     ll_can=ll();
-    
-    
+
+
     R=ll_can + (-.5/cave_var)*std::pow(cave_can - cave_mean,2.0)
       - ll_cur - (-.5/cave_var)*std::pow(cave_cur - cave_mean,2.0);
-      
-    
+
+
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(CAVE_);
@@ -211,7 +229,7 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
     }
 
 
-    
+
     // sample trtPre
     ++att.at(TRTP_);
     upd=trtPre_cur+mh.at(TRTP_)*njm::rnorm01();
@@ -248,7 +266,7 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
     R=ll_can + (-.5/trtAct_var)*std::pow(trtAct_can - trtAct_mean,2.0)
       - ll_cur - (-.5/trtAct_var)*std::pow(trtAct_cur - trtAct_mean,2.0);
 
-    
+
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(TRTA_);
@@ -274,11 +292,17 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
 	    mh.at(j)*=.8;
 	  else if(accRatio > .6)
 	    mh.at(j)*=1.2;
-	  
+
 	  acc.at(j)=0;
 	  att.at(j)=0;
 	}
-      }      
+      }
+      if(saveBurn){
+	samples.intcpHist.push_back(intcp_cur);
+	samples.caveHist.push_back(cave_cur);
+	samples.trtPreHist.push_back(trtPre_cur);
+	samples.trtActHist.push_back(trtAct_cur);
+      }
     }
     else if(i%thin==0){
       // save the samples
@@ -286,7 +310,7 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
       samples.cave.push_back(cave_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
-      
+
       samples.ll.push_back(ll_cur);
     }
   }
@@ -334,7 +358,7 @@ double CaveMcmc::ll(){
 	  if(infHist.at(k*T + i-1)==1){
 	    // calculate infProb
 	    baseProb=baseProbInit;
-	    
+
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;
 
@@ -343,14 +367,14 @@ double CaveMcmc::ll(){
 	    wontProb*=1.0/(1.0+expProb);
 	  }
 	}
-	
+
 	prob=1.0-wontProb;
 
 	if(!(prob > 0.0))
 	  prob=std::exp(-30.0);
 	else if(!(prob < 1.0))
 	  prob=1.0 - std::exp(-30.0);
-	
+
 	if(infHist.at(j*T + i)==0)
 	  llVal+=std::log(1-prob);
 	else
@@ -361,6 +385,3 @@ double CaveMcmc::ll(){
 
   return llVal;
 }
-
-
-

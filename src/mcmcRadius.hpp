@@ -10,9 +10,11 @@
 class RadiusSamples{
  public:
   int numSamples;
+  int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,radius,trtPre,trtAct;
+  std::vector<double> intcpHist,radiusHist,trtPreHist,trtActHist;
 
   double intcpSet;
   double radiusSet;
@@ -20,6 +22,7 @@ class RadiusSamples{
   double trtActSet;
 
   std::vector<double> ll;
+  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
@@ -39,7 +42,7 @@ class RadiusMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   RadiusSamples samples;
 
@@ -55,7 +58,7 @@ class RadiusMcmc{
   std::vector<double> cc;
   std::vector<double> covar;
   int numCovar;
-  
+
 
   // current iteration of the parameters
   double intcp_cur;
@@ -82,9 +85,11 @@ class RadiusMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+	      const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+	      const bool saveBurn = false);
   double ll();
 
 };
