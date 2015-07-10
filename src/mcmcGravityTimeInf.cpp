@@ -37,7 +37,7 @@ void GravityTimeInfSamples::setRand(){
   std::fill(betaSet.begin(),betaSet.end(),0.0);
 
   int i = njm::runifInterv(0,numSamples);
-
+  
   intcpSet = intcp.at(i);
   alphaSet = alpha.at(i);
   powerSet = power.at(i);
@@ -52,37 +52,22 @@ void GravityTimeInfSamples::setRand(){
 }
 
 
-void GravityTimeInfSamples::setPar(const int i,const bool fromBurn){
+void GravityTimeInfSamples::setPar(const int i){
   intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
+  
+  intcpSet = intcp.at(i);
+  alphaSet = alpha.at(i);
+  powerSet = power.at(i);
+  xiSet = xi.at(i);
+  trtPreSet = trtPre.at(i);
+  trtActSet = trtAct.at(i);
 
-  if(fromBurn){
-    intcpSet = intcpHist.at(i);
-    alphaSet = alphaHist.at(i);
-    powerSet = powerHist.at(i);
-    xiSet = xiHist.at(i);
-    trtPreSet = trtPreHist.at(i);
-    trtActSet = trtActHist.at(i);
-
-    int j = 0;
-    std::for_each(betaSet.begin(),betaSet.end(),
-		  [this,&i,&j](double & x){
-		    x = betaHist.at(i*numCovar + j++);});
-  }
-  else{
-    intcpSet = intcp.at(i);
-    alphaSet = alpha.at(i);
-    powerSet = power.at(i);
-    xiSet = xi.at(i);
-    trtPreSet = trtPre.at(i);
-    trtActSet = trtAct.at(i);
-
-    int j = 0;
-    std::for_each(betaSet.begin(),betaSet.end(),
-		  [this,&i,&j](double & x){
-		    x = beta.at(i*numCovar + j++);});
-  }
+  int j = 0;
+  std::for_each(betaSet.begin(),betaSet.end(),
+		[this,&i,&j](double & x){
+		  x = beta.at(i*numCovar + j++);});
 }
 
 
@@ -94,15 +79,15 @@ std::vector<double> GravityTimeInfSamples::getPar() const {
   par.push_back(xiSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
-
+  
   return par;
 }
 
 
 
 void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
-			      const std::vector<int> & status,
-			      const FixedData & fD){
+		       const std::vector<int> & status,
+		       const FixedData & fD){
   std::vector<std::vector<int> > all;
   all = history;
   all.push_back(status);
@@ -112,14 +97,14 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
-			      const FixedData & fD){
+		       const FixedData & fD){
   numNodes=fD.numNodes;
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
 
   priorTrtMean = fD.priorTrtMean;
-
+  
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
@@ -151,12 +136,11 @@ void GravityTimeInfMcmc::load(const std::vector<std::vector<int> > & history,
       timeInfMinOne.at(i*T + j) = val - 1.0;
     }
   }
-
+  
 }
 
 
-void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
-				const bool saveBurn){
+void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn){
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
@@ -165,17 +149,15 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 			     0.0, // trtAct
 			     0.0}; // trtPre
   par.insert(par.begin()+1,beta.begin(),beta.end());
-  sample(numSamples,numBurn,par,saveBurn);
+  sample(numSamples,numBurn,par);
 }
-
+				
 
 
 void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
-				const std::vector<double> & par,
-				const bool saveBurn){
+				const std::vector<double> & par){
   samples.numSamples = numSamples - numBurn;
-  samples.numBurn = numBurn;
-
+  
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
@@ -205,46 +187,22 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
-  samples.intcpHist.clear();
   samples.intcp.reserve(numSamples-numBurn);
-  samples.intcpHist.reserve(numBurn);
-
   samples.beta.clear();
-  samples.betaHist.clear();
   samples.beta.reserve((numSamples-numBurn)*numCovar);
-  samples.betaHist.reserve((numBurn)*numCovar);
-
   samples.alpha.clear();
-  samples.alphaHist.clear();
   samples.alpha.reserve(numSamples-numBurn);
-  samples.alphaHist.reserve(numBurn);
-
   samples.power.clear();
-  samples.powerHist.clear();
   samples.power.reserve(numSamples-numBurn);
-  samples.powerHist.reserve(numBurn);
-
   samples.xi.clear();
-  samples.xiHist.clear();
   samples.xi.reserve(numSamples-numBurn);
-  samples.xiHist.reserve(numBurn);
-
   samples.trtPre.clear();
-  samples.trtPreHist.clear();
   samples.trtPre.reserve(numSamples-numBurn);
-  samples.trtPreHist.reserve(numBurn);
-
   samples.trtAct.clear();
-  samples.trtActHist.clear();
   samples.trtAct.reserve(numSamples-numBurn);
-  samples.trtActHist.reserve(numBurn);
-
 
   samples.ll.clear();
-  samples.llHist.clear();
   samples.ll.reserve(numSamples-numBurn);
-  samples.llHist.reserve(numBurn);
-
 
   covarBeta_cur.resize(numNodes);
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
@@ -257,7 +215,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   xiTimeInfMinOne_cur = timeInfMinOne;
   updateXiTimeInf(xiTimeInfMinOne_cur,xi_cur);
   xiTimeInfMinOne_can = xiTimeInfMinOne_cur;
-
+  
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
 
@@ -265,13 +223,13 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
   acc=att= std::vector<int>(par.size(),0);
   mh=std::vector<double>(par.size(),0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
-
+  
   // mu=std::vector<double>(numCovar+2,0.0);
   // mu.at(numCovar+INTCP_) = -3;
-
+  
   double upd;
   double R;
-
+  
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
@@ -289,15 +247,15 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
     ++att.at(numCovar+INTCP_);
     upd=intcp_cur+mh.at(numCovar+INTCP_)*njm::rnorm01();
     intcp_can=upd;
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/intcp_var)*std::pow(intcp_can - intcp_mean,2.0)
       - ll_cur - (-.5/intcp_var)*std::pow(intcp_cur - intcp_mean,2.0);
-
-
+      
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+INTCP_);
@@ -312,20 +270,20 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
     // sample beta
     for(j = 0; j < numCovar; ++j){
       ++att.at(j);
-
+      
       upd=beta_cur.at(j)+mh.at(j)*njm::rnorm01();
       beta_can.at(j)=upd;
 
       updateCovarBeta(covarBeta_can,covar,
 		      beta_cur.at(j),beta_can.at(j),
 		      j,numCovar);
-
+      
       // get new likelihood
       ll_can=ll();
 
       R=ll_can + (-.5/beta_var)*std::pow(beta_can.at(j) - beta_mean,2.0)
 	- ll_cur - (-.5/beta_var)*std::pow(beta_cur.at(j) - beta_mean,2.0);
-
+      
       // accept?
       if(std::log(njm::runif01()) < R){
 	++acc.at(j);
@@ -377,7 +335,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
     R=ll_can + (-.5/trtAct_var)*std::pow(trtAct_can - trtAct_mean,2.0)
       - ll_cur - (-.5/trtAct_var)*std::pow(trtAct_cur - trtAct_mean,2.0);
 
-
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+TRTA_);
@@ -394,7 +352,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 
     // sample alpha
     ++att.at(numCovar+ALPHA_);
-
+    
     logAlpha_cur=std::log(alpha_cur);
 
     upd=std::exp(logAlpha_cur + mh.at(numCovar+ALPHA_)*njm::rnorm01());
@@ -406,8 +364,8 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/alpha_var)*std::pow(logAlpha_can - alpha_mean,2.0)
       - ll_cur - (-.5/alpha_var)*std::pow(logAlpha_cur - alpha_mean,2.0);
 
@@ -464,16 +422,16 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
     xi_can=upd;
 
     updateXiTimeInf(xiTimeInfMinOne_can,xi_can/xi_cur);
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/xi_var)*std::pow(xi_can - xi_mean,2.0)
       - ll_cur - (-.5/xi_var)*std::pow(xi_cur - xi_mean,2.0);
-
-
-
+      
+    
+      
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+XI_);
@@ -487,7 +445,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
       ll_can=ll_cur;
     }
 
-
+    
 
     if(i<numBurn){
       // time for tuning!
@@ -500,22 +458,11 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
 	    mh.at(j)*=.8;
 	  else if(accRatio > .6)
 	    mh.at(j)*=1.2;
-
+	  
 	  acc.at(j)=0;
 	  att.at(j)=0;
 	}
-      }
-      if(saveBurn){
-	samples.intcpHist.push_back(intcp_cur);
-	samples.betaHist.insert(samples.beta.end(),
-				beta_cur.begin(),
-				beta_cur.end());
-	samples.alphaHist.push_back(alpha_cur);
-	samples.powerHist.push_back(power_cur);
-	samples.xiHist.push_back(xi_cur);
-	samples.trtPreHist.push_back(trtPre_cur);
-	samples.trtActHist.push_back(trtAct_cur);
-      }
+      }      
     }
     else if(i%thin==0){
       // save the samples
@@ -526,7 +473,7 @@ void GravityTimeInfMcmc::sample(int const numSamples, int const numBurn,
       samples.xi.push_back(xi_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
-
+      
       samples.ll.push_back(ll_cur);
     }
   }
@@ -588,7 +535,7 @@ double GravityTimeInfMcmc::ll(){
 	      baseProb -= alphaW_can.at(k*numNodes + j);
 
 	    baseProb += xiTimeInfMinOne_can.at(k*T + i-1);
-
+	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;
 
@@ -597,14 +544,14 @@ double GravityTimeInfMcmc::ll(){
 	    wontProb*=1.0/(1.0+expProb);
 	  }
 	}
-
+	
 	prob=1.0-wontProb;
 
 	if(!(prob > 0.0))
 	  prob=std::exp(-30.0);
 	else if(!(prob < 1.0))
 	  prob=1.0 - std::exp(-30.0);
-
+	
 	if(infHist.at(j*T + i)==0)
 	  llVal+=std::log(1-prob);
 	else
@@ -615,3 +562,6 @@ double GravityTimeInfMcmc::ll(){
 
   return llVal;
 }
+
+
+

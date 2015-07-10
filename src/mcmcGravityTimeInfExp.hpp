@@ -10,11 +10,9 @@
 class GravityTimeInfExpSamples{
  public:
   int numSamples;
-  int numBurn;
   int numCovar;
-
+  
   std::vector<double> intcp,beta,alpha,power,xi,trtPre,trtAct;
-  std::vector<double> intcpHist,betaHist,alphaHist,powerHist,xiHist,trtPreHist,trtActHist;
 
   double intcpSet;
   std::vector<double> betaSet;
@@ -25,14 +23,13 @@ class GravityTimeInfExpSamples{
   double trtActSet;
 
   std::vector<double> ll;
-  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
   void setRand();
 
-  void setPar(const int i,const bool fromBurn = false);
-
+  void setPar(const int i);
+  
   std::vector<double> getPar() const;
 };
 
@@ -47,7 +44,7 @@ class GravityTimeInfExpMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-
+  
   // MCMC samples
   GravityTimeInfExpSamples samples;
 
@@ -63,7 +60,7 @@ class GravityTimeInfExpMcmc{
   std::vector<double> cc;
   std::vector<double> covar;
   int numCovar;
-
+  
   std::vector<double> covarBeta_cur;
   std::vector<double> covarBeta_can;
   std::vector<double> alphaW_cur;
@@ -102,11 +99,9 @@ class GravityTimeInfExpMcmc{
   // std::vector<double> mu;
 
   //functions
+  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const bool saveBurn = false);
-  void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par,
-	      const bool saveBurn = false);
+	      const std::vector<double> & par);
   double ll();
 
   inline static void updateAlphaW(std::vector<double> & alphaW,
@@ -131,15 +126,15 @@ class GravityTimeInfExpMcmc{
 				     const int covarInd,
 				     const int numCovar);
   inline static void updateXiTimeInfExp(std::vector<double> & xiTimeInfExp,
-					const double & scale);
+					 const double & scale);
 };
 
 
 
 inline void GravityTimeInfExpMcmc::updateAlphaW(std::vector<double> & alphaW,
-						const double & alphaOld,
-						const double & alphaNew,
-						const int numNodes){
+						 const double & alphaOld,
+						 const double & alphaNew,
+						 const int numNodes){
   double scale = alphaNew/alphaOld;
   int i,j;
   for(i = 0; i < numNodes; ++i)
@@ -149,11 +144,11 @@ inline void GravityTimeInfExpMcmc::updateAlphaW(std::vector<double> & alphaW,
 
 
 inline void GravityTimeInfExpMcmc::updateAlphaW(std::vector<double> & alphaW,
-						const std::vector<double> & d,
-						const std::vector<double> & cc,
-						const double & alpha,
-						const double & powerNew,
-						const int numNodes){
+						 const std::vector<double> & d,
+						 const std::vector<double> & cc,
+						 const double & alpha,
+						 const double & powerNew,
+						 const int numNodes){
   int i,j;
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
@@ -164,10 +159,10 @@ inline void GravityTimeInfExpMcmc::updateAlphaW(std::vector<double> & alphaW,
 // add intercept into covarBeta
 inline
 void GravityTimeInfExpMcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					    const std::vector<double> & covar,
-					    const std::vector<double> & beta,
-					    const int numNodes,
-					    const int numCovar){
+					     const std::vector<double> & covar,
+					     const std::vector<double> & beta,
+					     const int numNodes,
+					     const int numCovar){
   int i,j;
   double prod;
   for(i = 0; i < numNodes; ++i){
@@ -182,11 +177,11 @@ void GravityTimeInfExpMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 
 inline
 void GravityTimeInfExpMcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					    const std::vector<double> & covar,
-					    const double & betaOld,
-					    const double & betaNew,
-					    const int covarInd,
-					    const int numCovar){
+					     const std::vector<double> & covar,
+					     const double & betaOld,
+					     const double & betaNew,
+					     const int covarInd,
+					     const int numCovar){
   int i = 0;
   double diff = betaNew - betaOld;
   std::for_each(covarBeta.begin(),covarBeta.end(),
@@ -201,7 +196,7 @@ void GravityTimeInfExpMcmc::updateCovarBeta(std::vector<double> & covarBeta,
 inline
 void GravityTimeInfExpMcmc
 ::updateXiTimeInfExp(std::vector<double> & xiTimeInfExp,
-		     const double & scale){
+		      const double & scale){
   std::for_each(xiTimeInfExp.begin(),xiTimeInfExp.end(),
 		[&scale](double & x){x *= scale;});
 }

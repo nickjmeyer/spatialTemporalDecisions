@@ -85,7 +85,7 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
   stats.push_back(cLong);
   stats.push_back(cLat);
 
-
+  
   // max dist from starting location
   sDist = std::numeric_limits<double>::lowest();
   for(i = 0; i < sD.numInfected; ++i)
@@ -103,7 +103,7 @@ void runBayesP(const std::string & file, const int obs,
 	       const int numSamples,const int numBurn,
 	       const int numStats){
   njm::resetSeed(0);
-
+  
   typedef System<M,M> S;
 
   S sObs("obsData.txt");
@@ -116,8 +116,8 @@ void runBayesP(const std::string & file, const int obs,
   				    "n_inf_2009","n_inf_2010","n_inf_2011",
   				    "n_inf_2012","n_inf_2013","mean_year",
   				    "mean_long","mean_lat",
-  				    "mean_dist_from_start",
-  				    "min_long","min_lat",
+  				    "mean_dist_from_start",       
+  				    "min_long","min_lat",       
   				    "max_long","max_lat",
   				    "max_dist_from_start"};
 
@@ -129,7 +129,7 @@ void runBayesP(const std::string & file, const int obs,
   }
 
   sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen_r.mcmc.sample(numSamples,numBurn,true);
+  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
 
   sObs.modelGen_r.mcmc.samples.setMean();
   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
@@ -137,7 +137,7 @@ void runBayesP(const std::string & file, const int obs,
   sObs.modelGen_r.save();
 
   std::vector< std::vector<double> > stats;
-
+  
   S s;
   Starts starts("startingLocations.txt");
   s.modelGen_r = sObs.modelGen_r;
@@ -150,9 +150,9 @@ void runBayesP(const std::string & file, const int obs,
     par = s.modelGen_r.mcmc.samples.getPar();
     s.modelGen_r.putPar(par.begin());
     s.modelEst_r.putPar(par.begin());
-
+    
     s.reset(starts[r]);
-
+    
     for(t = 0; t < T; ++t)
       s.nextPoint();
     h = s.sD.history;
@@ -173,12 +173,6 @@ void runBayesP(const std::string & file, const int obs,
     s.modelGen_r.mcmc.samples.setPar(i);
     njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
   		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
-  		std::ios_base::app);
-  }
-  for(i = 0; i < numBurn; ++i){
-    s.modelGen_r.mcmc.samples.setPar(i,true);
-    njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-  		njm::sett.datExt("sampStats_"+file+"_paramBurn_",".txt"),
   		std::ios_base::app);
   }
 
@@ -207,7 +201,7 @@ void runBayesP(const std::string & file, const int obs,
   njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
   	      njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
 
-
+  
   sObs.modelGen_r.setType(MLE);
   sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
 
@@ -233,7 +227,7 @@ int main(int argc, char ** argv){
 		>("gravity",1,
 		  numSamples,numBurn,numStats);
     }
-
+    
 #pragma omp section
     {
       runBayesP<ModelGravityGDistTrend
@@ -361,7 +355,7 @@ int main(int argc, char ** argv){
     }
 
   }
-
+  
   // njm::sett.clean();
   return 0;
 }

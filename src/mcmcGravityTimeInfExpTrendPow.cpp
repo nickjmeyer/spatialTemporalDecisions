@@ -44,7 +44,7 @@ void GravityTimeInfExpTrendPowSamples::setRand(){
   std::fill(betaSet.begin(),betaSet.end(),0.0);
 
   int i = njm::runifInterv(0,numSamples);
-
+  
   intcpSet = intcp.at(i);
   alphaSet = alpha.at(i);
   powerSet = power.at(i);
@@ -61,43 +61,26 @@ void GravityTimeInfExpTrendPowSamples::setRand(){
 }
 
 
-void GravityTimeInfExpTrendPowSamples::setPar(const int i,const bool fromBurn){
+void GravityTimeInfExpTrendPowSamples::setPar(const int i){
   intcpSet = alphaSet = powerSet = trendSet = trendPowSet = xiSet =
     trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
 
+  
+  intcpSet = intcp.at(i);
+  alphaSet = alpha.at(i);
+  powerSet = power.at(i);
+  trendSet = trend.at(i);
+  trendPowSet = trendPow.at(i);
+  xiSet = xi.at(i);
+  trtPreSet = trtPre.at(i);
+  trtActSet = trtAct.at(i);
 
-  if(fromBurn){
-    intcpSet = intcpHist.at(i);
-    alphaSet = alphaHist.at(i);
-    powerSet = powerHist.at(i);
-    trendSet = trendHist.at(i);
-    trendPowSet = trendPowHist.at(i);
-    xiSet = xiHist.at(i);
-    trtPreSet = trtPreHist.at(i);
-    trtActSet = trtActHist.at(i);
-
-    int j = 0;
-    std::for_each(betaSet.begin(),betaSet.end(),
-		  [this,&i,&j](double & x){
-		    x = betaHist.at(i*numCovar + j++);});
-  }
-  else{
-    intcpSet = intcp.at(i);
-    alphaSet = alpha.at(i);
-    powerSet = power.at(i);
-    trendSet = trend.at(i);
-    trendPowSet = trendPow.at(i);
-    xiSet = xi.at(i);
-    trtPreSet = trtPre.at(i);
-    trtActSet = trtAct.at(i);
-
-    int j = 0;
-    std::for_each(betaSet.begin(),betaSet.end(),
-		  [this,&i,&j](double & x){
-		    x = beta.at(i*numCovar + j++);});
-  }
+  int j = 0;
+  std::for_each(betaSet.begin(),betaSet.end(),
+		[this,&i,&j](double & x){
+		  x = beta.at(i*numCovar + j++);});
 }
 
 
@@ -112,7 +95,7 @@ std::vector<double> GravityTimeInfExpTrendPowSamples::getPar() const {
   par.push_back(xiSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
-
+  
   return par;
 }
 
@@ -141,7 +124,7 @@ GravityTimeInfExpTrendPowMcmc
   samples.numCovar = numCovar;
 
   priorTrtMean = fD.priorTrtMean;
-
+  
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
@@ -173,13 +156,12 @@ GravityTimeInfExpTrendPowMcmc
       timeInfExp.at(i*T + j) = (val > 0) ? (std::exp(val - 1.0) - 1.0) : 0.0;
     }
   }
-
+  
 }
 
 
 void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
-					   int const numBurn,
-					   const bool saveBurn){
+					   int const numBurn){
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
@@ -190,18 +172,16 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 			     0.0, // trtAct
 			     0.0}; // trtPre
   par.insert(par.begin()+1,beta.begin(),beta.end());
-  sample(numSamples,numBurn,par,saveBurn);
+  sample(numSamples,numBurn,par);
 }
-
+				
 
 
 void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 					   int const numBurn,
-					   const std::vector<double> & par,
-					   const bool saveBurn){
+					   const std::vector<double> & par){
   samples.numSamples = numSamples - numBurn;
-  samples.numBurn = numBurn;
-
+  
   // priors
   int thin=1;
   double intcp_mean=0,intcp_var=100,beta_mean=0,beta_var=10,alpha_mean=0,
@@ -235,56 +215,26 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
-  samples.intcpHist.clear();
   samples.intcp.reserve(numSamples-numBurn);
-  samples.intcpHist.reserve(numBurn);
-
   samples.beta.clear();
-  samples.betaHist.clear();
   samples.beta.reserve((numSamples-numBurn)*numCovar);
-  samples.betaHist.reserve((numBurn)*numCovar);
-
   samples.alpha.clear();
-  samples.alphaHist.clear();
   samples.alpha.reserve(numSamples-numBurn);
-  samples.alphaHist.reserve(numBurn);
-
   samples.power.clear();
-  samples.powerHist.clear();
   samples.power.reserve(numSamples-numBurn);
-  samples.powerHist.reserve(numBurn);
-
   samples.trend.clear();
-  samples.trendHist.clear();
   samples.trend.reserve(numSamples-numBurn);
-  samples.trendHist.reserve(numBurn);
-
   samples.trendPow.clear();
-  samples.trendPowHist.clear();
   samples.trendPow.reserve(numSamples-numBurn);
-  samples.trendPowHist.reserve(numBurn);
-
   samples.xi.clear();
-  samples.xiHist.clear();
   samples.xi.reserve(numSamples-numBurn);
-  samples.xiHist.reserve(numBurn);
-
   samples.trtPre.clear();
-  samples.trtPreHist.clear();
   samples.trtPre.reserve(numSamples-numBurn);
-  samples.trtPreHist.reserve(numBurn);
-
   samples.trtAct.clear();
-  samples.trtActHist.clear();
   samples.trtAct.reserve(numSamples-numBurn);
-  samples.trtActHist.reserve(numBurn);
-
 
   samples.ll.clear();
-  samples.llHist.clear();
   samples.ll.reserve(numSamples-numBurn);
-  samples.llHist.reserve(numBurn);
-
 
   covarBeta_cur.resize(numNodes);
   updateCovarBeta(covarBeta_cur,covar,beta_cur,numNodes,numCovar);
@@ -297,7 +247,7 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
   xiTimeInfExp_cur = timeInfExp;
   updateXiTimeInfExp(xiTimeInfExp_cur,xi_cur);
   xiTimeInfExp_can = xiTimeInfExp_cur;
-
+  
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
 
@@ -305,13 +255,13 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
   acc=att= std::vector<int>(par.size(),0);
   mh=std::vector<double>(par.size(),0.5);
   // tau=std::vector<double>(numCovar+2,0.0);
-
+  
   // mu=std::vector<double>(numCovar+2,0.0);
   // mu.at(numCovar+INTCP_) = -3;
-
+  
   double upd;
   double R;
-
+  
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
@@ -329,15 +279,15 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     ++att.at(numCovar+INTCP_);
     upd=intcp_cur+mh.at(numCovar+INTCP_)*njm::rnorm01();
     intcp_can=upd;
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/intcp_var)*std::pow(intcp_can - intcp_mean,2.0)
       - ll_cur - (-.5/intcp_var)*std::pow(intcp_cur - intcp_mean,2.0);
-
-
+      
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+INTCP_);
@@ -350,24 +300,24 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     }
 
 
-
+    
     // sample beta
     for(j = 0; j < numCovar; ++j){
       ++att.at(j);
-
+      
       upd=beta_cur.at(j)+mh.at(j)*njm::rnorm01();
       beta_can.at(j)=upd;
 
       updateCovarBeta(covarBeta_can,covar,
 		      beta_cur.at(j),beta_can.at(j),
 		      j,numCovar);
-
+      
       // get new likelihood
       ll_can=ll();
 
       R=ll_can + (-.5/beta_var)*std::pow(beta_can.at(j) - beta_mean,2.0)
 	- ll_cur - (-.5/beta_var)*std::pow(beta_cur.at(j) - beta_mean,2.0);
-
+      
       // accept?
       if(std::log(njm::runif01()) < R){
 	++acc.at(j);
@@ -419,7 +369,7 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     R=ll_can + (-.5/trtAct_var)*std::pow(trtAct_can - trtAct_mean,2.0)
       - ll_cur - (-.5/trtAct_var)*std::pow(trtAct_cur - trtAct_mean,2.0);
 
-
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+TRTA_);
@@ -436,7 +386,7 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 
     // sample alpha
     ++att.at(numCovar+ALPHA_);
-
+    
     logAlpha_cur=std::log(alpha_cur);
 
     upd=std::exp(logAlpha_cur + mh.at(numCovar+ALPHA_)*njm::rnorm01());
@@ -448,8 +398,8 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/alpha_var)*std::pow(logAlpha_can - alpha_mean,2.0)
       - ll_cur - (-.5/alpha_var)*std::pow(logAlpha_cur - alpha_mean,2.0);
 
@@ -504,15 +454,15 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     ++att.at(numCovar+TREND_);
     upd=trend_cur+mh.at(numCovar+TREND_)*njm::rnorm01();
     trend_can=upd;
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/trend_var)*std::pow(trend_can - trend_mean,2.0)
       - ll_cur - (-.5/trend_var)*std::pow(trend_cur - trend_mean,2.0);
-
-
+      
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+TREND_);
@@ -525,20 +475,20 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     }
 
 
-
+    
     // sample trendPow
     ++att.at(numCovar+TRENDPOW_);
     upd=trendPow_cur+mh.at(numCovar+TRENDPOW_)*njm::rnorm01();
     trendPow_can=upd;
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/trendPow_var)*std::pow(trendPow_can - trendPow_mean,2.0)
       - ll_cur - (-.5/trendPow_var)*std::pow(trendPow_cur - trendPow_mean,2.0);
-
-
+      
+    
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+TRENDPOW_);
@@ -551,23 +501,23 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
     }
 
 
-
+    
     // sample xi
     ++att.at(numCovar+XI_);
     upd=xi_cur+mh.at(numCovar+XI_)*njm::rnorm01();
     xi_can=upd;
 
     updateXiTimeInfExp(xiTimeInfExp_can,xi_can/xi_cur);
-
+    
     // get new likelihood
     ll_can=ll();
-
-
+    
+    
     R=ll_can + (-.5/xi_var)*std::pow(xi_can - xi_mean,2.0)
       - ll_cur - (-.5/xi_var)*std::pow(xi_cur - xi_mean,2.0);
-
-
-
+      
+    
+      
     // accept?
     if(std::log(njm::runif01()) < R){
       ++acc.at(numCovar+XI_);
@@ -581,7 +531,7 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
       ll_can=ll_cur;
     }
 
-
+    
 
     if(i<numBurn){
       // time for tuning!
@@ -594,24 +544,11 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
 	    mh.at(j)*=.8;
 	  else if(accRatio > .6)
 	    mh.at(j)*=1.2;
-
+	  
 	  acc.at(j)=0;
 	  att.at(j)=0;
 	}
-      }
-      if(saveBurn){
-	samples.intcpHist.push_back(intcp_cur);
-	samples.betaHist.insert(samples.beta.end(),
-				beta_cur.begin(),
-				beta_cur.end());
-	samples.alphaHist.push_back(alpha_cur);
-	samples.powerHist.push_back(power_cur);
-	samples.trendHist.push_back(trend_cur);
-	samples.trendPowHist.push_back(trendPow_cur);
-	samples.xiHist.push_back(xi_cur);
-	samples.trtPreHist.push_back(trtPre_cur);
-	samples.trtActHist.push_back(trtAct_cur);
-      }
+      }      
     }
     else if(i%thin==0){
       // save the samples
@@ -624,7 +561,7 @@ void GravityTimeInfExpTrendPowMcmc::sample(int const numSamples,
       samples.xi.push_back(xi_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
-
+      
       samples.ll.push_back(ll_cur);
     }
   }
@@ -691,7 +628,7 @@ double GravityTimeInfExpTrendPowMcmc::ll(){
 	    baseProb += trend_can*std::pow(double(i),trendPow_can);
 
 	    baseProb += xiTimeInfExp_can.at(k*T + i-1);
-
+	    
 	    if(trtActHist.at(k*T + i-1)==1)
 	      baseProb -= trtAct_can;
 
@@ -700,14 +637,14 @@ double GravityTimeInfExpTrendPowMcmc::ll(){
 	    wontProb*=1.0/(1.0+expProb);
 	  }
 	}
-
+	
 	prob=1.0-wontProb;
 
 	if(!(prob > 0.0))
 	  prob=std::exp(-30.0);
 	else if(!(prob < 1.0))
 	  prob=1.0 - std::exp(-30.0);
-
+	
 	if(infHist.at(j*T + i)==0)
 	  llVal+=std::log(1-prob);
 	else
@@ -718,3 +655,6 @@ double GravityTimeInfExpTrendPowMcmc::ll(){
 
   return llVal;
 }
+
+
+

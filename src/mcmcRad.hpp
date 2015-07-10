@@ -10,11 +10,9 @@
 class RadSamples{
  public:
   int numSamples;
-  int numBurn;
   int numCovar;
-
+  
   std::vector<double> intcp,beta,alpha,rad,trtPre,trtAct;
-  std::vector<double> intcpHist,betaHist,alphaHist,radHist,trtPreHist,trtActHist;
 
   double intcpSet;
   std::vector<double> betaSet;
@@ -24,13 +22,12 @@ class RadSamples{
   double trtActSet;
 
   std::vector<double> ll;
-  std::vector<double> llHist;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
   void setRand();
 
-  void setPar(const int i,const bool fromBurn = false);
+  void setPar(const int i);
 
   std::vector<double> getPar() const;
 };
@@ -46,7 +43,7 @@ class RadMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-
+  
   // MCMC samples
   RadSamples samples;
 
@@ -62,7 +59,7 @@ class RadMcmc{
   std::vector<double> radVal;
   std::vector<double> covar;
   int numCovar;
-
+  
   std::vector<double> covarBeta_cur;
   std::vector<double> covarBeta_can;
 
@@ -95,11 +92,9 @@ class RadMcmc{
   // std::vector<double> mu;
 
   //functions
+  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const bool saveBurn = false);
-  void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par,
-	      const bool saveBurn = false);
+	      const std::vector<double> & par);
   double ll();
 
   inline static void updateCovarBeta(std::vector<double> & covarBeta,
