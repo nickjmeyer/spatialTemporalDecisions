@@ -69,6 +69,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
   s.modelGen_r.save();
 
+  printf("\n");
+
   njm::message("Est. goal: " + njm::toString(val,""));
 
   njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
