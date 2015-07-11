@@ -129,7 +129,7 @@ void runBayesP(const std::string & file, const int obs,
   }
 
   sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
+  sObs.modelGen_r.mcmc.sample(numSamples,numBurn,true);
 
   sObs.modelGen_r.mcmc.samples.setMean();
   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
