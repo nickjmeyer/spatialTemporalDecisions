@@ -122,7 +122,7 @@ int main(int argc, char ** argv){
     s.revert();
 
     int numReps = 500;
-    Starts starts("startingLocations");
+    Starts starts("startingLocations.txt");
 
     NT nt;
     MA ma;
