@@ -6,10 +6,10 @@ import sys
 if len(sys.argv) != 2:
     raise ValueError("Wrong number of command line arguments.")
 
+fname = "mcmcGravity"
+
 fname = re.sub(r"[.].*$","",sys.argv[1])
 print "Base file: %s" % fname
-
-# fname = "mcmcGravity"
 
 ########################################
 ## header
@@ -78,9 +78,10 @@ txt = re.search(r"(.*[}]([^}]*\n){2}"+
                 r"((.*samples[.][^.]*[.].*\n)*))",
                 source)
 
-ins = re.sub(r"(samples[.][^.]*)([.].*\n)",
+ins = re.sub(r"(samples[.][^.]*)([.])",
              r"\1Burn\2",
              txt.groups()[3])
+
 ins = re.sub(r",",r",\n",ins)
 
 source = re.sub(r"(.*[}]([^}]*\n){2}"+
