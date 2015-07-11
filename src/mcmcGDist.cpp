@@ -29,13 +29,21 @@ void GDistSamples::setRand(){
 
 }
 
-void GDistSamples::setPar(const int i){
+void GDistSamples::setPar(const int i,const bool fromBurn){
   intcpSet = alphaSet = trtPreSet = trtActSet = 0.0;
 
+if(fromBurn){
+  intcpSet = intcpBurn.at(i);
+  alphaSet = alphaBurn.at(i);
+  trtPreSet = trtPreBurn.at(i);
+  trtActSet = trtActBurn.at(i);
+}
+else{
   intcpSet = intcp.at(i);
   alphaSet = alpha.at(i);
   trtPreSet = trtPre.at(i);
   trtActSet = trtAct.at(i);
+}
 }
 
 
@@ -102,18 +110,21 @@ void GDistMcmc::load(const std::vector<std::vector<int> > & history,
 }
 
 
-void GDistMcmc::sample(int const numSamples, int const numBurn){
+void GDistMcmc::sample(int const numSamples, int const numBurn,
+const bool saveBurn){
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
 			     0.0, // trtAct
 			     0.0}; // trtPre
-  sample(numSamples,numBurn,par);
+  sample(numSamples,numBurn,par,saveBurn);
 }
 
 
 void GDistMcmc::sample(int const numSamples, int const numBurn,
-		       const std::vector<double> & par){
+		       const std::vector<double> & par,
+const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
+samples.numBurn = numBurn;
   
   // priors
   int thin=1;
@@ -136,16 +147,31 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
+samples.intcpBurn.clear();
   samples.intcp.reserve(numSamples-numBurn);
+samples.intcpBurn.reserve(numBurn);
+
   samples.alpha.clear();
+samples.alphaBurn.clear();
   samples.alpha.reserve(numSamples-numBurn);
+samples.alphaBurn.reserve(numBurn);
+
   samples.trtPre.clear();
+samples.trtPreBurn.clear();
   samples.trtPre.reserve(numSamples-numBurn);
+samples.trtPreBurn.reserve(numBurn);
+
   samples.trtAct.clear();
+samples.trtActBurn.clear();
   samples.trtAct.reserve(numSamples-numBurn);
+samples.trtActBurn.reserve(numBurn);
+
 
   samples.ll.clear();
+samples.llBurn.clear();
   samples.ll.reserve(numSamples-numBurn);
+samples.llBurn.reserve(numBurn);
+
 
 
   // get the likelihood with the current parameters
@@ -301,6 +327,12 @@ void GDistMcmc::sample(int const numSamples, int const numBurn,
 	  att.at(j)=0;
 	}
       }     
+if(saveBurn){
+      samples.intcpBurn.push_back(intcp_cur);
+      samples.alphaBurn.push_back(alpha_cur);
+      samples.trtPreBurn.push_back(trtPre_cur);
+      samples.trtActBurn.push_back(trtAct_cur);
+}
     }
     else if(i%thin==0){
       // save the samples

@@ -100,19 +100,22 @@ void RangeMcmc::load(const std::vector<std::vector<int> > & history,
   
 }
 
-void RangeMcmc::sample(int const numSamples, int const numBurn){
+void RangeMcmc::sample(int const numSamples, int const numBurn,
+const bool saveBurn){
   std::vector<double> par = {-3.0, // intcp
 			     100, // range
 			     1.0, // alpha
 			     0.0, // trtAct
 			     0.0}; // trtPre
-  sample(numSamples,numBurn,par);
+  sample(numSamples,numBurn,par,saveBurn);
 }
 
 
 void RangeMcmc::sample(int const numSamples, int const numBurn,
-		       const std::vector<double> & par){
+		       const std::vector<double> & par,
+const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
+samples.numBurn = numBurn;
   
   // priors
   int thin=1;
@@ -133,18 +136,36 @@ void RangeMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
+samples.intcpBurn.clear();
   samples.intcp.reserve(numSamples-numBurn);
+samples.intcpBurn.reserve(numBurn);
+
   samples.range.clear();
+samples.rangeBurn.clear();
   samples.range.reserve(numSamples-numBurn);
+samples.rangeBurn.reserve(numBurn);
+
   samples.alpha.clear();
+samples.alphaBurn.clear();
   samples.alpha.reserve(numSamples-numBurn);
+samples.alphaBurn.reserve(numBurn);
+
   samples.trtPre.clear();
+samples.trtPreBurn.clear();
   samples.trtPre.reserve(numSamples-numBurn);
+samples.trtPreBurn.reserve(numBurn);
+
   samples.trtAct.clear();
+samples.trtActBurn.clear();
   samples.trtAct.reserve(numSamples-numBurn);
+samples.trtActBurn.reserve(numBurn);
+
 
   samples.ll.clear();
+samples.llBurn.clear();
   samples.ll.reserve(numSamples-numBurn);
+samples.llBurn.reserve(numBurn);
+
 
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
@@ -326,6 +347,13 @@ void RangeMcmc::sample(int const numSamples, int const numBurn,
 	  att.at(j)=0;
 	}
       }      
+if(saveBurn){
+      samples.intcpBurn.push_back(intcp_cur);
+      samples.rangeBurn.push_back(range_cur);
+      samples.alphaBurn.push_back(alpha_cur);
+      samples.trtPreBurn.push_back(trtPre_cur);
+      samples.trtActBurn.push_back(trtAct_cur);
+}
     }
     else if(i%thin==0){
       // save the samples

@@ -96,17 +96,20 @@ void CaveMcmc::load(const std::vector<std::vector<int> > & history,
   
 }
 
-void CaveMcmc::sample(int const numSamples, int const numBurn){
+void CaveMcmc::sample(int const numSamples, int const numBurn,
+const bool saveBurn){
   std::vector<double> par = {-3.0,
 			     0.0,
 			     0.0,
 			     0.0};
-  sample(numSamples,numBurn,par);
+  sample(numSamples,numBurn,par,saveBurn);
 }
 
 void CaveMcmc::sample(int const numSamples, int const numBurn,
-		      const std::vector<double> & par){
+		      const std::vector<double> & par,
+const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
+samples.numBurn = numBurn;
   
   // priors
   int thin=1;
@@ -125,16 +128,31 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
+samples.intcpBurn.clear();
   samples.intcp.reserve(numSamples-numBurn);
+samples.intcpBurn.reserve(numBurn);
+
   samples.cave.clear();
+samples.caveBurn.clear();
   samples.cave.reserve(numSamples-numBurn);
+samples.caveBurn.reserve(numBurn);
+
   samples.trtPre.clear();
+samples.trtPreBurn.clear();
   samples.trtPre.reserve(numSamples-numBurn);
+samples.trtPreBurn.reserve(numBurn);
+
   samples.trtAct.clear();
+samples.trtActBurn.clear();
   samples.trtAct.reserve(numSamples-numBurn);
+samples.trtActBurn.reserve(numBurn);
+
 
   samples.ll.clear();
+samples.llBurn.clear();
   samples.ll.reserve(numSamples-numBurn);
+samples.llBurn.reserve(numBurn);
+
 
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
@@ -279,6 +297,12 @@ void CaveMcmc::sample(int const numSamples, int const numBurn,
 	  att.at(j)=0;
 	}
       }      
+if(saveBurn){
+      samples.intcpBurn.push_back(intcp_cur);
+      samples.caveBurn.push_back(cave_cur);
+      samples.trtPreBurn.push_back(trtPre_cur);
+      samples.trtActBurn.push_back(trtAct_cur);
+}
     }
     else if(i%thin==0){
       // save the samples

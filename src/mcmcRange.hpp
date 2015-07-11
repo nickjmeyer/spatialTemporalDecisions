@@ -10,9 +10,11 @@
 class RangeSamples{
  public:
   int numSamples;
+int numBurn;
   int numCovar;
   
   std::vector<double> intcp,range,alpha,trtPre,trtAct;
+std::vector<double> intcpBurn,rangeBurn,alphaBurn,trtPreBurn,trtActBurn;
 
   double intcpSet;
   double rangeSet;
@@ -21,6 +23,7 @@ class RangeSamples{
   double trtActSet;
 
   std::vector<double> ll;
+std::vector<double> llBurn;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
@@ -85,9 +88,11 @@ class RangeMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+const bool saveBurn = false);
   double ll();
 
 };

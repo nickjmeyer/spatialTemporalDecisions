@@ -10,9 +10,11 @@
 class RadiusSamples{
  public:
   int numSamples;
+int numBurn;
   int numCovar;
   
   std::vector<double> intcp,radius,trtPre,trtAct;
+std::vector<double> intcpBurn,radiusBurn,trtPreBurn,trtActBurn;
 
   double intcpSet;
   double radiusSet;
@@ -20,6 +22,7 @@ class RadiusSamples{
   double trtActSet;
 
   std::vector<double> ll;
+std::vector<double> llBurn;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
@@ -82,9 +85,11 @@ class RadiusMcmc{
   // std::vector<double> mu;
 
   //functions
-  void sample(int const numSamples, int const numBurn);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par);
+const bool saveBurn = false);
+  void sample(int const numSamples, int const numBurn,
+	      const std::vector<double> & par,
+const bool saveBurn = false);
   double ll();
 
 };
