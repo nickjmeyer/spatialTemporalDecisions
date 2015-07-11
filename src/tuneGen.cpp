@@ -1,72 +1,5 @@
 #include "tuneGen.hpp"
 
-// template <class M>
-// double getAlpha(const M & m,
-// 		const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   return par.at(1 + fD.numCovar);
-// }
-
-// template <class M>
-// void putAlpha(const double & alpha,
-// 	      M & m,
-// 	      const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   par.at(1 + fD.numCovar) = alpha;
-//   m.putPar(par.begin());
-// }
-
-// template <class M>
-// double getPower(const M & m,
-// 		const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   return par.at(1 + fD.numCovar + 1);
-// }
-
-// template <class M>
-// void putPower(const double & power,
-// 	      M & m,
-// 	      const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   par.at(1 + fD.numCovar + 1) = power;
-//   m.putPar(par.begin());
-// }
-
-// template <class M>
-// double getActTrt(const M & m,
-// 		 const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   return par.at(par.size() - 2);
-// }
-
-// template <class M>
-// void putActTrt(const double & trt,
-// 	       M & m,
-// 	       const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   par.at(par.size() - 2) = trt;
-//   m.putPar(par.begin());
-// }
-
-
-// template <class M>
-// double getPreTrt(const M & m,
-// 		 const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   return par.at(par.size() - 1);
-// }
-
-// template <class M>
-// void putPreTrt(const double & trt,
-// 	       M & m,
-// 	       const FixedData & fD){
-//   std::vector<double> par = m.getPar();
-//   par.at(par.size() - 1) = trt;
-//   m.putPar(par.begin());
-// }
-
-
-
 double getDPow(const double & power, const double & alpha,
 	       const std::vector<double> & caves){
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
@@ -96,7 +29,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
   double goal = 0.7;
   njm::message("Goal: " + njm::toString(goal,""));
-  
+
   int numYears = s.fD.finalT;
   double tol = 0.01;
 
@@ -119,17 +52,17 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
 	      std::ios_base::out);
   s.modelGen_r.save();
-    
+
   s = S();
   s.modelEst_r = s.modelGen_r;
-  
+
   // s.fD.gDist = scaleD;
   // s.preCompData();
   // s.modelGen_r = MG(s.fD);
   // s.modelGen_r.putPar(par.begin());
   // s.modelEst_r = MG(s.fD);
   // s.modelEst_r.putPar(par.begin());
-  
+
   double val = rn.run(s,nt,numReps,numYears,starts).smean();
   double scale = 1.025, shrink = .9;
   int above = int(val > goal);
@@ -142,11 +75,11 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     if(val > goal){
       if(!above)
 	scale*=shrink;
-      
+
       // std::for_each(par.begin(),par.end(),
       // 		    [&scale](double & x){x*= 1.0 + scale;});
       s.modelGen_r.linScale(1.0 + scale);
-      
+
       above = 1;
     }
     else{
@@ -156,7 +89,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
       // std::for_each(par.begin(),par.end(),
       // 		    [&scale](double & x){x*= 1.0/(1.0 + scale);});
       s.modelGen_r.linScale(1.0/(1.0 + scale));
-      
+
       above = 0;
     }
 
@@ -165,7 +98,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
     s.revert();
 
-    
+
     pastScale = currScale;
     currScale = getDPow(s.modelGen_r.getPar({"power"})[0],
 			s.modelGen_r.getPar({"alpha"})[0],
@@ -175,11 +108,11 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
 		std::ios_base::out);
     s.modelGen_r.save();
-    
+
     s = S();
     s.modelEst_r = s.modelGen_r;
     s.revert();
-    
+
     // s.fD.gDist = scaleD;
     // s.preCompData();
     // s.modelGen_r = MG(s.fD);
@@ -209,26 +142,26 @@ template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S & s, const int numReps, const Starts & starts){
   NT nt;
   RN rn;
-  
+
   MA ma;
   RM rm;
 
   int numYears = s.fD.finalT;
-  
+
   double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
   double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
-  
+
   double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 0.01;
 
   std::vector<double> par;
   double trt = s.modelGen_r.getPar({"trtAct"})[0];
-  
+
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
   s.modelGen_r.save();
   s = S();
-  
+
   double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
@@ -244,7 +177,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 	scale*=shrink;
 
       trt *= 1.0 + scale;
-      
+
       above = 1;
     }
     else{
@@ -252,7 +185,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 	scale*=shrink;
 
       trt *= 1.0/(1.0 + scale);
-      
+
       above = 0;
     }
 
@@ -271,7 +204,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 	   ++iter, val, trt);
     fflush(stdout);
   }
-  
+
   s.modelGen_r.save();
 
   njm::message("Est. goal: " + njm::toString(val,""));
@@ -319,7 +252,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,PA> RP;
     typedef VanillaRunnerNS<S,MA> RM;
     typedef VanillaRunnerNS<S,RA> RR;
-    
+
     typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s;
@@ -376,8 +309,8 @@ int main(int argc, char ** argv){
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);
   }
-  
+
   njm::sett.clean();
-  
+
   return 0;
 }

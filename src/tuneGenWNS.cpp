@@ -1,133 +1,151 @@
 #include "tuneGenWNS.hpp"
 
-template <class M>
-double getAlpha(const M & m,
-		const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(1 + fD.numCovar);
+template <class S, class MA, class RM, class NT, class RN>
+double TuneGenMA(S & s, const int numReps, const Starts & starts){
+  NT nt;
+  RN rn;
+
+  MA ma;
+  RM rm;
+
+  int numYears = s.fD.finalT;
+
+  double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
+  double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
+
+  double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
+  njm::message("Goal: " + njm::toString(goal,""));
+  double tol = 0.01;
+
+  std::vector<double> par;
+  double trt = s.modelGen_r.getPar({"trtAct"})[0];
+
+  s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+  s.modelGen_r.save();
+  s = S("obsData.txt");
+
+  double val = rm.run(s,ma,numReps,numYears,starts).smean();
+  double scale = 1.1, shrink = .9;
+  int above = int(val > goal);
+  int iter = 0;
+
+
+  printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+	 ++iter, val, trt);
+
+  while(std::abs(val - goal) > tol){
+    if(val > goal){
+      if(!above)
+	scale*=shrink;
+
+      trt *= 1.0 + scale;
+
+      above = 1;
+    }
+    else{
+      if(above)
+	scale*=shrink;
+
+      trt *= 1.0/(1.0 + scale);
+
+      above = 0;
+    }
+
+
+    s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+    s.modelGen_r.save();
+    s = S("obsData.txt");
+
+    // std::cout << "par: " << njm::toString(par," ","\n");
+    // par = s.modelGen.getPar({"trtAct","trtPre"});
+    // std::cout << "par: " << njm::toString(par," ","\n");
+
+
+    val = rm.run(s,ma,numReps,numYears,starts).smean();
+    printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+	   ++iter, val, trt);
+    fflush(stdout);
+  }
+
+  s.modelGen_r.save();
+
+  njm::message("Est. goal: " + njm::toString(val,""));
+
+  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
+  return(val);
 }
 
-template <class M>
-void putAlpha(const double & alpha,
-	      M & m,
-	      const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(1 + fD.numCovar) = alpha;
-  m.putPar(par.begin());
-}
 
-template <class M>
-double getPower(const M & m,
-		const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(1 + fD.numCovar + 1);
-}
+// template <class S, class PA, class RP>
+// double TuneGenPA(S & s,const int numReps, const Starts & starts){
+//   double trtSize = s.modelGen.tuneTrt(s.fD);
 
-template <class M>
-void putPower(const double & power,
-	      M & m,
-	      const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(1 + fD.numCovar + 1) = power;
-  m.putPar(par.begin());
-}
+//   putActTrt(trtSize,s.modelGen_r,s.fD);
+//   putPreTrt(trtSize,s.modelGen_r,s.fD);
+//   putActTrt(trtSize,s.modelEst_r,s.fD);
+//   putPreTrt(trtSize,s.modelEst_r,s.fD);
 
-template <class M>
-double getActTrt(const M & m,
-		 const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(par.size() - 2);
-}
+//   PA pa;
+//   RP rp;
 
-template <class M>
-void putActTrt(const double & trt,
-	       M & m,
-	       const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(par.size() - 2) = trt;
-  m.putPar(par.begin());
-}
-
-
-template <class M>
-double getPreTrt(const M & m,
-		 const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  return par.at(par.size() - 1);
-}
-
-template <class M>
-void putPreTrt(const double & trt,
-	       M & m,
-	       const FixedData & fD){
-  std::vector<double> par = m.getPar();
-  par.at(par.size() - 1) = trt;
-  m.putPar(par.begin());
-}
-
-
-template <class S, class PA, class RP>
-double TuneGenPA(S & s,const Starts & starts){
-  double trtSize = s.modelGen.tuneTrt(s.fD);
-
-  putActTrt(trtSize,s.modelGen_r,s.fD);
-  putPreTrt(trtSize,s.modelGen_r,s.fD);
-  putActTrt(trtSize,s.modelEst_r,s.fD);
-  putPreTrt(trtSize,s.modelEst_r,s.fD);
-
-  PA pa;
-  RP rp;
-
-  return rp.run(s,pa,500,s.fD.finalT,starts);
-}
+//   return rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+// }
 
 
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef ModelGravity GM;
-    typedef GM EM;
+    typedef ModelTimeExpCavesGDistTrendPowCon MG;
+    typedef MG ME;
 
-    typedef System<GM,EM> S;
-    typedef NoTrt<EM> NT;
-    typedef ProximalAgent<EM> PA;
-    typedef MyopicAgent<EM> MA;
+    typedef System<MG,ME> S;
+    typedef NoTrt<ME> NT;
+    typedef ProximalGDistAgent<ME> PA;
+    typedef MyopicAgent<ME> MA;
 
-    typedef WnsFeatures1<EM> F;
-    typedef RankAgent<F,EM> RA;
+    typedef AllAgent<ME> AA;
+
+    typedef ToyFeatures5<ME> F;
+    typedef RankAgent<F,ME> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
     typedef VanillaRunnerNS<S,PA> RP;
     typedef VanillaRunnerNS<S,MA> RM;
     typedef VanillaRunnerNS<S,RA> RR;
 
-    S s;
+    typedef VanillaRunnerNS<S,AA> R_AA;
+
+    S s("obsData.txt");
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    njm::resetSeed();
     int numReps = 500;
-    Starts starts(numReps,s.fD.numNodes);
+    Starts starts("startingLocations");
 
     NT nt;
     MA ma;
-    RM rm;
+    PA pa;
+    RP rp;
 
     RN rn;
     RA ra;
+    RM rm;
     RR rr;
-    ra.reset();
+    // ra.reset();
+
+    double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
 
     njm::message("Tuning Treatment");
 
-    double valNT = rn.run(s,nt,500,s.fD.finalT,starts);
+    double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
 
-    double valPA = TuneGenPA<S,PA,RP>(s,starts);
+    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
-    double valMA = rm.run(s,ma,500,s.fD.finalT,starts);
+    double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
-    double valRA = rr.run(s,ra,500,s.fD.finalT,starts);
+    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
     njm::message(" valNT: " + njm::toString(valNT,"") +
 		 "\n" +
@@ -135,84 +153,23 @@ int main(int argc, char ** argv){
 		 "\n" +
 		 " valMA: " + njm::toString(valMA,"") +
 		 "\n" +
-		 " valRA: " + njm::toString(valRA,""));
-
-    s.modelGen_r.save();
-  }
-
-  
-  {
-    typedef ModelTimeExpCaves GM;
-    typedef GM EM;
-
-    typedef System<GM,EM> S;
-    typedef NoTrt<EM> NT;
-    typedef ProximalAgent<EM> PA;
-    typedef MyopicAgent<EM> MA;
-
-    typedef WnsFeatures1<EM> F;
-    typedef RankAgent<F,EM> RA;
-
-    typedef VanillaRunnerNS<S,NT> RN;
-    typedef VanillaRunnerNS<S,PA> RP;
-    typedef VanillaRunnerNS<S,MA> RM;
-    typedef VanillaRunnerNS<S,RA> RR;
-
-    S s;
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
-
-    njm::resetSeed();
-    int numReps = 500;
-    Starts starts(numReps,s.fD.numNodes);
-
-    NT nt;
-    MA ma;
-    RM rm;
-
-    RN rn;
-    RA ra;
-    RR rr;
-    ra.reset();
-
-    njm::message("Tuning Treatment");
-
-    double valNT = rn.run(s,nt,500,s.fD.finalT,starts);
-
-    double valPA = TuneGenPA<S,PA,RP>(s,starts);
-
-    double valMA = rm.run(s,ma,500,s.fD.finalT,starts);
-
-    double valRA = rr.run(s,ra,500,s.fD.finalT,starts);
-
-    njm::message(" valNT: " + njm::toString(valNT,"") +
+		 " valRA: " + njm::toString(valRA,"") +
 		 "\n" +
-		 " valPA: " + njm::toString(valPA,"") +
-		 "\n" +
-		 " valMA: " + njm::toString(valMA,"") +
-		 "\n" +
-		 " valRA: " + njm::toString(valRA,""));
-
-    s.modelGen_r.save();
-
-    s.modelGen_r.save();
+		 " valAA: " + njm::toString(valAA,""));
 
 
-    double priorMeanTrt = (getPreTrt(s.modelGen_r,s.fD)
-			   + getPreTrt(s.modelGen_r,s.fD))/2.0;
+    std::vector<double> par = s.modelGen_r.getPar();
+
+    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+			   + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
     priorMeanTrt *= 4.0;
 
-    // write new distance matrix to file
-    njm::toFile(s.fD.dist,njm::sett.srcExt("d.txt"),
-		std::ios_base::out,"\n","");
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
 		std::ios_base::out);
   }
 
-
-  
   njm::sett.clean();
-  
+
   return 0;
 }
