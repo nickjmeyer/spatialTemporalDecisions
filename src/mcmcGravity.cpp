@@ -257,7 +257,7 @@ samples.llBurn.reserve(numBurn);
   double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
-  int display=1;
+  int display=0;
 
   // do a bunch of nonsense...
   for(i=0; i<numSamples; ++i){
@@ -503,8 +503,8 @@ beta_cur.end());
   samples.DIC=samples.pD + samples.Dbar;
 
 
-  // if(display)
-  //   printf("\33[2K\r");
+  if(display)
+    printf("\33[2K\r");
 }
 
 
