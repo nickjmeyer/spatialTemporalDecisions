@@ -6,7 +6,7 @@ int main(int argc, char ** argv){
 
   typedef ModelTimeExpCavesGDistTrendPowCon MG;
 
-  typedef ModelTimeExpCavesGDist ME;
+  typedef ModelGDist ME;
 
   typedef System<MG,ME> S;
 

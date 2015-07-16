@@ -14,11 +14,11 @@ double getDPow(const double & power, const double & alpha,
 }
 
 
-void rescaleD(const double & pastScale, const double & currScale,
-	      std::vector<double> & d){
-  double scale = currScale/pastScale;
-  std::for_each(d.begin(),d.end(),[&scale](double & x){x=std::pow(x,scale);});
-}
+// void rescaleD(const double & pastScale, const double & currScale,
+// 	      std::vector<double> & d){
+//   double scale = currScale/pastScale;
+//   std::for_each(d.begin(),d.end(),[&scale](double & x){x=std::pow(x,scale);});
+// }
 
 
 
@@ -33,28 +33,36 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   int numYears = s.fD.finalT;
   double tol = 0.01;
 
-  std::vector<double> scaleD;
-  njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
-  double kScale;
+  // std::vector<double> scaleD;
+  // njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
+  // double kScale;
   // njm::fromFile(kScale, njm::sett.srcExt("kScale.txt"));
-  kScale = 1.0;
-  std::for_each(scaleD.begin(),scaleD.end(),
-		[&kScale](double & x){
-		  x/=kScale;
-		});
-  double pastScale = 1.0;
-  double currScale = getDPow(s.modelGen_r.getPar({"power"})[0],
-  			     s.modelGen_r.getPar({"alpha"})[0],
-  			     s.fD.caves);
+  // kScale = 1.0;
+  // std::for_each(scaleD.begin(),scaleD.end(),
+  // 		[&kScale](double & x){
+  // 		  x/=kScale;
+  // 		});
+  // double pastScale = 1.0;
+  // double currScale = getDPow(s.modelGen_r.getPar({"power"})[0],
+  // 			     s.modelGen_r.getPar({"alpha"})[0],
+  // 			     s.fD.caves);
+  s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+				     s.modelGen_r.getPar({"alpha"})[0],
+				     s.fD.caves));
 
   std::vector<double> par = s.modelGen_r.getPar();
-  rescaleD(pastScale,currScale,scaleD);
-  njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
-	      std::ios_base::out);
-  s.modelGen_r.save();
+  par = s.modelGen_r.getPar();
+  s.modelEst_r.putPar(par.begin());
 
-  s = S();
-  s.modelEst_r = s.modelGen_r;
+  s.revert();
+
+  // rescaleD(pastScale,currScale,scaleD);
+  // njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
+  // 	      std::ios_base::out);
+  // s.modelGen_r.save();
+
+  // s = S();
+  // s.modelEst_r = s.modelGen_r;
 
   // s.fD.gDist = scaleD;
   // s.preCompData();
@@ -99,19 +107,22 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     s.revert();
 
 
-    pastScale = currScale;
-    currScale = getDPow(s.modelGen_r.getPar({"power"})[0],
-			s.modelGen_r.getPar({"alpha"})[0],
-			s.fD.caves);
+    // pastScale = currScale;
+    // currScale = getDPow(s.modelGen_r.getPar({"power"})[0],
+    // 			s.modelGen_r.getPar({"alpha"})[0],
+    // 			s.fD.caves);
+    s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+				       s.modelGen_r.getPar({"alpha"})[0],
+				       s.fD.caves));
 
-    rescaleD(pastScale,currScale,scaleD);
-    njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
-		std::ios_base::out);
-    s.modelGen_r.save();
+    // rescaleD(pastScale,currScale,scaleD);
+    // njm::toFile(njm::toString(scaleD,"\n",""),njm::sett.srcExt("gDist.txt"),
+    // 		std::ios_base::out);
+    // s.modelGen_r.save();
 
-    s = S();
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
+    // s = S();
+    // s.modelEst_r = s.modelGen_r;
+    // s.revert();
 
     // s.fD.gDist = scaleD;
     // s.preCompData();
@@ -235,7 +246,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef ModelTimeExpCavesGDistTrendPowCon MG;
+    typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
     typedef MG ME;
 
     typedef System<MG,ME> S;

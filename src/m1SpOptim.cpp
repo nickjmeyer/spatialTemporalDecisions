@@ -96,6 +96,27 @@ M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 	  ModelTimeExpCavesGDistTrendPowCon>;
 
 template class
+M1SpOptim<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		 ModelTimeExpCavesGPowGDistTrendPowCon>,
+	  RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
+		    ModelTimeExpCavesGPowGDistTrendPowCon>,
+	  ModelTimeExpCavesGPowGDistTrendPowCon>;
+
+template class
+M1SpOptim<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		 ModelGDist>,
+	  RankAgent<ToyFeatures5<ModelGDist>,
+		    ModelGDist>,
+	  ModelGDist>;
+
+template class
+M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+		 ModelGDist>,
+	  RankAgent<ToyFeatures5<ModelGDist>,
+		    ModelGDist>,
+	  ModelGDist>;
+
+template class
 M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 		 ModelTimeExpCavesGDistTrendPowCon>,
 	  RankAgent<ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
@@ -229,6 +250,14 @@ template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 				   <ModelTimeExpCavesGDist>,
 				   ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
+
+template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+				ModelGDist>,
+			 RankAgent<WnsFeatures3
+				   <ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
+
 
 
 

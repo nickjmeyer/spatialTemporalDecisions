@@ -77,6 +77,13 @@ PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 
 template class
+PlainRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		   ModelTimeExpCavesGPowGDistTrendPowCon>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
+		      ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+
+template class
 PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesGDistTrendPowCon>,
 	    ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
@@ -264,6 +271,10 @@ template class VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				    ModelTimeExpCavesGDistTrendPowCon>,
 			     NoTrt<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class VanillaRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+				    ModelTimeExpCavesGPowGDistTrendPowCon>,
+			     NoTrt<ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesGDist>,
 			     ProximalGDistAgent<ModelTimeExpCavesGDist> >;
@@ -278,6 +289,11 @@ VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 	      ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class
+VanillaRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		     ModelTimeExpCavesGPowGDistTrendPowCon>,
+	      ProximalGDistAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+template class
 VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		     ModelTimeExpCavesEDist>,
 	      ProximalEDistAgent<ModelTimeExpCavesEDist> >;
@@ -286,6 +302,11 @@ template class
 VanillaRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		     ModelTimeExpCavesGDist>,
 	      ProximalGDistAgent<ModelTimeExpCavesGDist> >;
+
+template class
+VanillaRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		     ModelGDist>,
+	      ProximalGDistAgent<ModelGDist> >;
 
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesEDist>,
@@ -402,14 +423,28 @@ template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 				      ModelTimeExpCavesGDistTrendPowCon>,
 			       NoTrt<ModelTimeExpCavesGDistTrendPowCon> >;
 
+template class VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+				      ModelTimeExpCavesGPowGDistTrendPowCon>,
+			       NoTrt<ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 				      ModelTimeExpCavesGDistTrendPowCon>,
 			       AllAgent<ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class
+VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		       ModelTimeExpCavesGPowGDistTrendPowCon>,
+		AllAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
 		ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		       ModelTimeExpCavesGPowGDistTrendPowCon>,
+		ProximalGDistAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
 
 template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDist,
@@ -424,6 +459,11 @@ VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 				      ModelTimeExpCavesGDistTrendPowCon>,
 			       MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		       ModelTimeExpCavesGPowGDistTrendPowCon>,
+		MyopicAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,
@@ -464,6 +504,12 @@ VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
 		RankAgent<ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>,
 			  ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		       ModelTimeExpCavesGPowGDistTrendPowCon>,
+		RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
+			  ModelTimeExpCavesGPowGDistTrendPowCon> >;
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
@@ -549,6 +595,21 @@ template class FitOnlyRunner<System<ModelTimeGDistTrendPow,
 template class FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				    ModelTimeExpCavesGDistTrendPowCon>,
 			     MyopicAgent<ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
+FitOnlyRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		     ModelTimeExpCavesGPowGDistTrendPowCon>,
+	      MyopicAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+template class
+FitOnlyRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		     ModelGDist>,
+	      MyopicAgent<ModelGDist> >;
+
+template class
+FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		     ModelGDist>,
+	      MyopicAgent<ModelGDist> >;
 
 template class FitOnlyRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				    ModelTimeExpCavesEDist>,
@@ -792,6 +853,45 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 
 template class
+OptimRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		   ModelTimeExpCavesGPowGDistTrendPowCon>,
+	    RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
+		      ModelTimeExpCavesGPowGDistTrendPowCon>,
+	    M1SpOptim<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+			     ModelTimeExpCavesGPowGDistTrendPowCon>,
+		      RankAgent<ToyFeatures5
+				<ModelTimeExpCavesGPowGDistTrendPowCon>,
+				ModelTimeExpCavesGPowGDistTrendPowCon>,
+		      ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		   ModelGDist>,
+	    RankAgent<ToyFeatures5<ModelGDist>,
+		      ModelGDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+			     ModelGDist>,
+		      RankAgent<ToyFeatures5
+				<ModelGDist>,
+				ModelGDist>,
+		      ModelGDist> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelGDist>,
+	    RankAgent<ToyFeatures5<ModelGDist>,
+		      ModelGDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelGDist>,
+		      RankAgent<ToyFeatures5
+				<ModelGDist>,
+				ModelGDist>,
+		      ModelGDist> >;
+
+
+template class
 OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesGDistTrendPowCon>,
 	    RankAgent<ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
@@ -907,6 +1007,18 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		      RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 				ModelTimeExpCavesGDistTrendPowCon>,
 		      ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+template class
+OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		   ModelGDist>,
+	    RankAgent<WnsFeatures3<ModelGDist>,
+		      ModelGDist>,
+	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			     ModelGDist>,
+		      RankAgent<WnsFeatures3<ModelGDist>,
+				ModelGDist>,
+		      ModelGDist> >;
 
 
 template class
@@ -1492,6 +1604,19 @@ TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 
 
 template class
+TuneRunner<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+		  ModelTimeExpCavesGPowGDistTrendPowCon>,
+	   RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
+		     ModelTimeExpCavesGPowGDistTrendPowCon>,
+	   M1SpOptim<System<ModelTimeExpCavesGPowGDistTrendPowCon,
+			    ModelTimeExpCavesGPowGDistTrendPowCon>,
+		     RankAgent<ToyFeatures5
+			       <ModelTimeExpCavesGPowGDistTrendPowCon>,
+			       ModelTimeExpCavesGPowGDistTrendPowCon>,
+		     ModelTimeExpCavesGPowGDistTrendPowCon> >;
+
+
+template class
 TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		  ModelTimeExpCavesGDistTrendPowCon>,
 	   RankAgent<ToyFeatures6<ModelTimeExpCavesGDistTrendPowCon>,
@@ -1600,6 +1725,19 @@ TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		     RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 			       ModelTimeExpCavesGDistTrendPowCon>,
 		     ModelTimeExpCavesGDistTrendPowCon> >;
+
+
+
+template class
+TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
+		  ModelGDist>,
+	   RankAgent<WnsFeatures3<ModelGDist>,
+		     ModelGDist>,
+	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
+			    ModelGDist>,
+		     RankAgent<WnsFeatures3<ModelGDist>,
+			       ModelGDist>,
+		     ModelGDist> >;
 
 
 

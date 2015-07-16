@@ -8,6 +8,8 @@ template class MyopicAgent<ModelTimeGDistTrendPow>;
 
 template class MyopicAgent<ModelTimeExpCavesGDistTrendPowCon>;
 
+template class MyopicAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
+
 template class MyopicAgent<ModelTimeExpCavesEDist>;
 
 template class MyopicAgent<ModelRadius>;
@@ -31,7 +33,8 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 
-  int i,j,node0,total,count;
+  int i;
+  // int j,node0,total,count;
 
   // m.modFill(sD,tD,fD,dD);
   // m.infProbs(sD,tD,fD,dD);

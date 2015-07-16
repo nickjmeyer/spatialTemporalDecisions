@@ -6,11 +6,15 @@ template class ProximalGDistAgent<ModelTimeGDistTrendPow>;
 
 template class ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon>;
 
+template class ProximalGDistAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
+
 template class ProximalGDistAgent<ModelTimeExpCavesGDist>;
 
 template class ProximalGDistAgent<ModelRadius>;
 
 template class ProximalGDistAgent<ModelGDistKern>;
+
+template class ProximalGDistAgent<ModelGDist>;
 
 
 template<class M>
@@ -37,7 +41,7 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     shufNotInfec.push(std::pair<double,int>(njm::runif01(),i));
   for(i = 0; i < sD.numInfected; ++i)
     shufInfected.push(std::pair<double,int>(njm::runif01(),i));
-  
+
   for(i=0; i<sD.numNotInfec; i++){
     // node0=sD.notInfec.at(i);
     node0 = sD.notInfec.at(shufNotInfec.top().second);
@@ -54,7 +58,7 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     sortNotInfec.push(std::pair<double,int>(-minDist,node0));
   }
 
-  
+
   for(i=0; i<sD.numInfected; i++){
     // node0=sD.infected.at(i);
     node0 = sD.infected.at(shufInfected.top().second);
@@ -69,8 +73,8 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     }
 
     sortInfected.push(std::pair<double,int>(-minDist,node0));
-  }    
-	 
+  }
+
 
   for(i=0; i<numAct; i++){
     tD.a.at(sortInfected.top().second) = 1;
@@ -82,4 +86,3 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     sortNotInfec.pop();
   }
 }
-

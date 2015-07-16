@@ -5,9 +5,9 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
 
-  typedef ModelTimeExpCavesGDistTrendPowCon MG;
+  typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-  typedef ModelTimeExpCavesGDist ME;
+  typedef ModelGDist ME;
 
   typedef System<MG,ME> S;
 

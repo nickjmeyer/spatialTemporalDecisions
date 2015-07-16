@@ -25,6 +25,7 @@
 #include "modelTimeExpCavesGDistTrend.hpp"
 #include "modelTimeExpCavesGDistTrendPow.hpp"
 #include "modelTimeExpCavesGDistTrendPowCon.hpp"
+#include "modelTimeExpCavesGPowGDistTrendPowCon.hpp"
 #include "modelTimeExpCavesEDist.hpp"
 #include "modelRadius.hpp"
 #include "modelGDist.hpp"
@@ -47,7 +48,7 @@ class System {
   System(const std::string file);
 
   int specialInit;
-  
+
   SimData sD;
   TrtData tD;
   FixedData fD;
@@ -65,7 +66,7 @@ class System {
 
 
   virtual void reset(const std::vector<int> & ind);
-  
+
   virtual void revert();
 
   virtual void checkPoint();
@@ -78,7 +79,7 @@ class System {
   virtual void nextPoint(const std::vector<double> & infProbs);
 
   virtual void updateStatus();
-  
+
   virtual double value();
 };
 

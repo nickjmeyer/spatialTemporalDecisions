@@ -23,6 +23,8 @@ template class NoTrt<ModelTimeGDistTrendPow>;
 
 template class NoTrt<ModelTimeExpCavesGDistTrendPowCon>;
 
+template class NoTrt<ModelTimeExpCavesGPowGDistTrendPowCon>;
+
 template class NoTrt<ModelRadius>;
 
 template<class M>

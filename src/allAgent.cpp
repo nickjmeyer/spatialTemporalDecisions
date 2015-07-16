@@ -8,6 +8,8 @@ template class AllAgent<ModelTimeGDistTrendPow>;
 
 template class AllAgent<ModelTimeExpCavesGDistTrendPowCon>;
 
+template class AllAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
+
 template class AllAgent<ModelTimeExpCavesEDist>;
 
 template class AllAgent<ModelRadius>;

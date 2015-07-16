@@ -43,6 +43,7 @@ OBJECTS += utilities.o \
 	paramIntercept.o \
 	paramBeta.o \
 	paramGravityGDist.o \
+	paramGravPowGDist.o \
 	paramGravityEDist.o \
 	paramTrend.o \
 	paramTrendPow.o \
@@ -74,6 +75,7 @@ OBJECTS += utilities.o \
 	modelTimeExpCavesGDistTrend.o\
 	modelTimeExpCavesGDistTrendPow.o \
 	modelTimeExpCavesGDistTrendPowCon.o \
+	modelTimeExpCavesGPowGDistTrendPowCon.o \
 	modelTimeExpCavesEDist.o \
 	modelGDist.o \
 	modelGDistPow.o \

@@ -23,6 +23,8 @@ template class ToyFeatures5<ModelTimeGDistTrendPow>;
 
 template class ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>;
 
+template class ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>;
+
 template class ToyFeatures5<ModelTimeExpCavesEDist>;
 
 template class ToyFeatures5<ModelRadius>;
