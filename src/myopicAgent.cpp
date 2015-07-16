@@ -33,39 +33,26 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
 
-  int i;
-  // int j,node0,total,count;
+  int i,j,node0,total,count;
 
-  // m.modFill(sD,tD,fD,dD);
-  // m.infProbs(sD,tD,fD,dD);
-
-  // notFeat = arma::conv_to<arma::colvec>::from(m.infProbs());
-
-  // infFeat.zeros(sD.numInfected);
-  // for(i=0; i<sD.numInfected; i++){
-  //   node0 = sD.infected.at(i);
-  //   count=0;
-  //   total=0;
-  //   for(j=0; j<sD.numNotInfec; j++){
-  //     if(fD.network.at(node0*fD.numNodes + sD.notInfec.at(j))){
-  // 	total+=notFeat(j);
-  // 	count++;
-  //     }
-  //   }
-  //   infFeat(i) = total/((double)count);
-  // }
-
-
-  ////////////////////////////////////////
   m.modFill(sD,tD,fD,dD);
-  m.setQuick(sD,tD,fD,dD);
+  m.infProbs(sD,tD,fD,dD);
 
-  arma::mat weightMat(m.getQuick().data(),sD.numInfected,sD.numNotInfec,false);
+  notFeat = arma::conv_to<arma::colvec>::from(m.infProbs());
 
-  infFeat = 1 - arma::prod(weightMat,1);
-  notFeat = 1 - arma::prod(weightMat,0).t();
-  ////////////////////////////////////////
-
+  infFeat.zeros(sD.numInfected);
+  for(i=0; i<sD.numInfected; i++){
+    node0 = sD.infected.at(i);
+    count=0;
+    total=0;
+    for(j=0; j<sD.numNotInfec; j++){
+      if(fD.network.at(node0*fD.numNodes + sD.notInfec.at(j))){
+	total+=notFeat(j);
+	count++;
+      }
+    }
+    infFeat(i) = total/((double)count);
+  }
 
   std::priority_queue<std::pair<double,int> > sortInfected,sortNotInfec;
 
