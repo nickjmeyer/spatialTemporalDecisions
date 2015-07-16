@@ -13,13 +13,13 @@ int main(int argc, char ** argv){
 
   typedef MyopicAgent<ME> MA;
 
-  typedef ToyFeatures5<ME> F5;
-  typedef RankAgent<F5,ME> RA5;
+  typedef ToyFeatures5<ME> F;
+  typedef RankAgent<F,ME> RA;
 
-  typedef M1SpOptim<S,RA5,ME> SPO5;
+  typedef M1SpOptim<S,RA,ME> SPO;
 
   typedef FitOnlyRunner<S,MA> R_MA;
-  typedef OptimRunner<S,RA5,SPO5> R_RA5;
+  typedef OptimRunner<S,RA,SPO> R_RA;
 
 
   S s;
@@ -30,16 +30,15 @@ int main(int argc, char ** argv){
   Starts starts(numReps,s.fD.numNodes);
 
   MA ma;
-  RA5 ra5;
+  RA ra;
 
-  ra5.name = "rank_5";
-  ra5.tp.jitterScale = -1;
+  ra.tp.jitterScale = -1;
 
-  SPO5 spo5;
-  spo5.tp.fixSample = 1;
+  SPO spo;
+  spo.tp.fixSample = 1;
 
   R_MA r_ma;
-  R_RA5 r_ra5;
+  R_RA r_ra;
 
 
   RunStats rs;
@@ -49,7 +48,7 @@ int main(int argc, char ** argv){
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  rs = r_ra5.run(s,ra5,spo5,numReps,s.fD.finalT,starts);
+  rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
   njm::message("  Policy Search: "
   	       + njm::toString(rs.smean(),"")
 	       + "  (" + njm::toString(rs.seMean(),"") + ")");

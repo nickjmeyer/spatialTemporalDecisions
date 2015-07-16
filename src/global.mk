@@ -38,7 +38,7 @@ OBJECTS += utilities.o \
 	toyFeatures6.o \
 	toyFeatures7.o \
 	wnsFeatures0.o \
-	wnsFeatures2.o \
+	wnsFeatures3.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \

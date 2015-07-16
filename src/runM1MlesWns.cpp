@@ -14,7 +14,7 @@ int main(int argc, char ** argv){
   typedef ProximalGDistAgent<ME> PA;
   typedef MyopicAgent<ME> MA;
 
-  typedef WnsFeatures2<ME> F;
+  typedef WnsFeatures3<ME> F;
   typedef RankAgent<F,ME> RA;
 
   typedef M1SpOptim<S,RA,ME> SPO;

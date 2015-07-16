@@ -128,19 +128,19 @@ template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesGDist>,
 			   OsspAgent<ModelTimeExpCavesGDist>,
-			   WnsFeatures2<ModelTimeExpCavesGDist>,
+			   WnsFeatures3<ModelTimeExpCavesGDist>,
 			   ModelTimeExpCavesGDist>;
 
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelRadius>,
 			   OsspAgent<ModelRadius>,
-			   WnsFeatures2<ModelRadius>,
+			   WnsFeatures3<ModelRadius>,
 			   ModelRadius>;
 
 template class M1OsspOptim<System<ModelTimeExpCavesGDist,
 				  ModelGDist>,
 			   OsspAgent<ModelGDist>,
-			   WnsFeatures2<ModelGDist>,
+			   WnsFeatures3<ModelGDist>,
 			   ModelGDist>;
 
 

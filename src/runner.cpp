@@ -164,50 +164,50 @@ template class PlainRunner<System<ModelGravityGDist,
 
 template class PlainRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 				  ModelTimeExpCavesGDistTrendPowCon>,
-			   RankAgent<WnsFeatures2
+			   RankAgent<WnsFeatures3
 				     <ModelTimeExpCavesGDistTrendPowCon>,
 				     ModelTimeExpCavesGDistTrendPowCon> >;
 
 
 template class PlainRunner<System<ModelTimeExpCavesGDist,
 				  ModelTimeExpCavesGDist>,
-			   RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+			   RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 				     ModelTimeExpCavesGDist> >;
 
 
 template class PlainRunner<System<ModelTimeExpCavesEDist,
 				  ModelTimeExpCavesEDist>,
-			   RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
+			   RankAgent<WnsFeatures3<ModelTimeExpCavesEDist>,
 				     ModelTimeExpCavesEDist> >;
 
 
 template class PlainRunner<System<ModelGravityGDist,
 				  ModelGravityGDist>,
-			   RankAgent<WnsFeatures2<ModelGravityGDist>,
+			   RankAgent<WnsFeatures3<ModelGravityGDist>,
 				     ModelGravityGDist> >;
 
 
 template class PlainRunner<System<ModelGravityEDist,
 				  ModelGravityEDist>,
-			   RankAgent<WnsFeatures2<ModelGravityEDist>,
+			   RankAgent<WnsFeatures3<ModelGravityEDist>,
 				     ModelGravityEDist> >;
 
 
 template class PlainRunner<System<ModelRadius,
 				  ModelRadius>,
-			   RankAgent<WnsFeatures2<ModelRadius>,
+			   RankAgent<WnsFeatures3<ModelRadius>,
 				     ModelRadius> >;
 
 
 template class PlainRunner<System<ModelGDist,
 				  ModelGDist>,
-			   RankAgent<WnsFeatures2<ModelGDist>,
+			   RankAgent<WnsFeatures3<ModelGDist>,
 				     ModelGDist> >;
 
 
 template class PlainRunner<System<ModelGDistKern,
 				  ModelGDistKern>,
-			   RankAgent<WnsFeatures2<ModelGDistKern>,
+			   RankAgent<WnsFeatures3<ModelGDistKern>,
 				     ModelGDistKern> >;
 
 
@@ -477,12 +477,12 @@ template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
-			       RankAgent<WnsFeatures2<ModelGravityGDist>,
+			       RankAgent<WnsFeatures3<ModelGravityGDist>,
 					 ModelGravityGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,
-			       RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+			       RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 					 ModelTimeExpCavesGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
@@ -900,11 +900,11 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 template class
 OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesGDistTrendPowCon>,
-	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+	    RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 		      ModelTimeExpCavesGDistTrendPowCon>,
 	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			     ModelTimeExpCavesGDistTrendPowCon>,
-		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+		      RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 				ModelTimeExpCavesGDistTrendPowCon>,
 		      ModelTimeExpCavesGDistTrendPowCon> >;
 
@@ -912,11 +912,11 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 template class
 OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		   ModelTimeExpCavesGDist>,
-	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+	    RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist>,
 	    M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			     ModelTimeExpCavesGDist>,
-		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+		      RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 				ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist> >;
 
@@ -924,33 +924,33 @@ OptimRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelTimeExpCavesGDist>,
-	    RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+	    RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelTimeExpCavesGDist>,
-		      RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+		      RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 				ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist> >;
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelRadius>,
-	    RankAgent<WnsFeatures2<ModelRadius>,
+	    RankAgent<WnsFeatures3<ModelRadius>,
 		      ModelRadius>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelRadius>,
-		      RankAgent<WnsFeatures2<ModelRadius>,
+		      RankAgent<WnsFeatures3<ModelRadius>,
 				ModelRadius>,
 		      ModelRadius> >;
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelGDist>,
-	    RankAgent<WnsFeatures2<ModelGDist>,
+	    RankAgent<WnsFeatures3<ModelGDist>,
 		      ModelGDist>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelGDist>,
-		      RankAgent<WnsFeatures2<ModelGDist>,
+		      RankAgent<WnsFeatures3<ModelGDist>,
 				ModelGDist>,
 		      ModelGDist> >;
 
@@ -958,11 +958,11 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
 		   ModelGDistKern>,
-	    RankAgent<WnsFeatures2<ModelGDistKern>,
+	    RankAgent<WnsFeatures3<ModelGDistKern>,
 		      ModelGDistKern>,
 	    M1SpOptim<System<ModelTimeExpCavesGDist,
 			     ModelGDistKern>,
-		      RankAgent<WnsFeatures2<ModelGDistKern>,
+		      RankAgent<WnsFeatures3<ModelGDistKern>,
 				ModelGDistKern>,
 		      ModelGDistKern> >;
 
@@ -1150,7 +1150,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelTimeExpCavesGDist>,
 			OsspAgent<ModelTimeExpCavesGDist>,
-			WnsFeatures2<ModelTimeExpCavesGDist>,
+			WnsFeatures3<ModelTimeExpCavesGDist>,
 			ModelTimeExpCavesGDist> >;
 
 template class
@@ -1160,7 +1160,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelRadius>,
 			OsspAgent<ModelRadius>,
-			WnsFeatures2<ModelRadius>,
+			WnsFeatures3<ModelRadius>,
 			ModelRadius> >;
 
 template class
@@ -1170,7 +1170,7 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 	    M1OsspOptim<System<ModelTimeExpCavesGDist,
 			       ModelGDist>,
 			OsspAgent<ModelGDist>,
-			WnsFeatures2<ModelGDist>,
+			WnsFeatures3<ModelGDist>,
 			ModelGDist> >;
 
 
@@ -1580,11 +1580,11 @@ TuneRunner<System<ModelGDistKern,
 template class
 TuneRunner<System<ModelTimeExpCavesGDist,
 		  ModelTimeExpCavesGDist>,
-	   RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+	   RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 		     ModelTimeExpCavesGDist>,
 	   M1SpOptim<System<ModelTimeExpCavesGDist,
 			    ModelTimeExpCavesGDist>,
-		     RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+		     RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 			       ModelTimeExpCavesGDist>,
 		     ModelTimeExpCavesGDist> >;
 
@@ -1593,11 +1593,11 @@ TuneRunner<System<ModelTimeExpCavesGDist,
 template class
 TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 		  ModelTimeExpCavesGDistTrendPowCon>,
-	   RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+	   RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 		     ModelTimeExpCavesGDistTrendPowCon>,
 	   M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 			    ModelTimeExpCavesGDistTrendPowCon>,
-		     RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+		     RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 			       ModelTimeExpCavesGDistTrendPowCon>,
 		     ModelTimeExpCavesGDistTrendPowCon> >;
 
@@ -1606,11 +1606,11 @@ TuneRunner<System<ModelTimeExpCavesGDistTrendPowCon,
 template class
 TuneRunner<System<ModelTimeExpCavesEDist,
 		  ModelTimeExpCavesEDist>,
-	   RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
+	   RankAgent<WnsFeatures3<ModelTimeExpCavesEDist>,
 		     ModelTimeExpCavesEDist>,
 	   M1SpOptim<System<ModelTimeExpCavesEDist,
 			    ModelTimeExpCavesEDist>,
-		     RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
+		     RankAgent<WnsFeatures3<ModelTimeExpCavesEDist>,
 			       ModelTimeExpCavesEDist>,
 		     ModelTimeExpCavesEDist> >;
 
@@ -1618,11 +1618,11 @@ TuneRunner<System<ModelTimeExpCavesEDist,
 template class
 TuneRunner<System<ModelRadius,
 		  ModelRadius>,
-	   RankAgent<WnsFeatures2<ModelRadius>,
+	   RankAgent<WnsFeatures3<ModelRadius>,
 		     ModelRadius>,
 	   M1SpOptim<System<ModelRadius,
 			    ModelRadius>,
-		     RankAgent<WnsFeatures2<ModelRadius>,
+		     RankAgent<WnsFeatures3<ModelRadius>,
 			       ModelRadius>,
 		     ModelRadius> >;
 
@@ -1630,11 +1630,11 @@ TuneRunner<System<ModelRadius,
 template class
 TuneRunner<System<ModelGDist,
 		  ModelGDist>,
-	   RankAgent<WnsFeatures2<ModelGDist>,
+	   RankAgent<WnsFeatures3<ModelGDist>,
 		     ModelGDist>,
 	   M1SpOptim<System<ModelGDist,
 			    ModelGDist>,
-		     RankAgent<WnsFeatures2<ModelGDist>,
+		     RankAgent<WnsFeatures3<ModelGDist>,
 			       ModelGDist>,
 		     ModelGDist> >;
 
@@ -1644,11 +1644,11 @@ TuneRunner<System<ModelGDist,
 template class
 TuneRunner<System<ModelGDistKern,
 		  ModelGDistKern>,
-	   RankAgent<WnsFeatures2<ModelGDistKern>,
+	   RankAgent<WnsFeatures3<ModelGDistKern>,
 		     ModelGDistKern>,
 	   M1SpOptim<System<ModelGDistKern,
 			    ModelGDistKern>,
-		     RankAgent<WnsFeatures2<ModelGDistKern>,
+		     RankAgent<WnsFeatures3<ModelGDistKern>,
 			       ModelGDistKern>,
 		     ModelGDistKern> >;
 
@@ -1656,11 +1656,11 @@ TuneRunner<System<ModelGDistKern,
 template class
 TuneRunner<System<ModelGravityGDist,
 		  ModelGravityGDist>,
-	   RankAgent<WnsFeatures2<ModelGravityGDist>,
+	   RankAgent<WnsFeatures3<ModelGravityGDist>,
 		     ModelGravityGDist>,
 	   M1SpOptim<System<ModelGravityGDist,
 			    ModelGravityGDist>,
-		     RankAgent<WnsFeatures2<ModelGravityGDist>,
+		     RankAgent<WnsFeatures3<ModelGravityGDist>,
 			       ModelGravityGDist>,
 		     ModelGravityGDist> >;
 
@@ -1668,11 +1668,11 @@ TuneRunner<System<ModelGravityGDist,
 template class
 TuneRunner<System<ModelGravityEDist,
 		  ModelGravityEDist>,
-	   RankAgent<WnsFeatures2<ModelGravityEDist>,
+	   RankAgent<WnsFeatures3<ModelGravityEDist>,
 		     ModelGravityEDist>,
 	   M1SpOptim<System<ModelGravityEDist,
 			    ModelGravityEDist>,
-		     RankAgent<WnsFeatures2<ModelGravityEDist>,
+		     RankAgent<WnsFeatures3<ModelGravityEDist>,
 			       ModelGravityEDist>,
 		     ModelGravityEDist> >;
 

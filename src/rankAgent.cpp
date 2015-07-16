@@ -67,28 +67,28 @@ template class RankAgent<ToyFeatures5<ModelGDistKern>,
 template class RankAgent<ToyFeatures5<ModelCovar>,
 			 ModelCovar>;
 
-template class RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+template class RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
 
-template class RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
+template class RankAgent<WnsFeatures3<ModelTimeExpCavesEDist>,
 			 ModelTimeExpCavesEDist>;
 
-template class RankAgent<WnsFeatures2<ModelRadius>,
+template class RankAgent<WnsFeatures3<ModelRadius>,
 			 ModelRadius>;
 
-template class RankAgent<WnsFeatures2<ModelGDist>,
+template class RankAgent<WnsFeatures3<ModelGDist>,
 			 ModelGDist>;
 
-template class RankAgent<WnsFeatures2<ModelGDistKern>,
+template class RankAgent<WnsFeatures3<ModelGDistKern>,
 			 ModelGDistKern>;
 
-template class RankAgent<WnsFeatures2<ModelGravityGDist>,
+template class RankAgent<WnsFeatures3<ModelGravityGDist>,
 			 ModelGravityGDist>;
 
-template class RankAgent<WnsFeatures2<ModelGravityEDist>,
+template class RankAgent<WnsFeatures3<ModelGravityEDist>,
 			 ModelGravityEDist>;
 
-template class RankAgent<WnsFeatures2<ModelTimeExpCavesGDistTrendPowCon>,
+template class RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
 			 ModelTimeExpCavesGDistTrendPowCon>;
 
 

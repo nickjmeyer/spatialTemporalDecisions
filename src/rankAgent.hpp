@@ -18,7 +18,7 @@
 #include "toyFeatures6.hpp"
 #include "toyFeatures7.hpp"
 #include "wnsFeatures0.hpp"
-#include "wnsFeatures2.hpp"
+#include "wnsFeatures3.hpp"
 #include "calcCentrality.hpp"
 
 

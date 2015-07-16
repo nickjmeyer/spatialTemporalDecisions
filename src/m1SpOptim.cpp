@@ -163,69 +163,69 @@ template class M1SpOptim<System<ModelTimeExpCavesGDist,
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelTimeExpCavesGDist>,
-			 RankAgent<WnsFeatures2<ModelTimeExpCavesGDist>,
+			 RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 				   ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesEDist,
 				ModelTimeExpCavesEDist>,
-			 RankAgent<WnsFeatures2<ModelTimeExpCavesEDist>,
+			 RankAgent<WnsFeatures3<ModelTimeExpCavesEDist>,
 				   ModelTimeExpCavesEDist>,
 			 ModelTimeExpCavesEDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelRadius>,
-			 RankAgent<WnsFeatures2<ModelRadius>,
+			 RankAgent<WnsFeatures3<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
 template class M1SpOptim<System<ModelRadius,
 				ModelRadius>,
-			 RankAgent<WnsFeatures2<ModelRadius>,
+			 RankAgent<WnsFeatures3<ModelRadius>,
 				   ModelRadius>,
 			 ModelRadius>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelGDist>,
-			 RankAgent<WnsFeatures2<ModelGDist>,
+			 RankAgent<WnsFeatures3<ModelGDist>,
 				   ModelGDist>,
 			 ModelGDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDist,
 				ModelGDistKern>,
-			 RankAgent<WnsFeatures2<ModelGDistKern>,
+			 RankAgent<WnsFeatures3<ModelGDistKern>,
 				   ModelGDistKern>,
 			 ModelGDistKern>;
 
 template class M1SpOptim<System<ModelGDist,
 				ModelGDist>,
-			 RankAgent<WnsFeatures2<ModelGDist>,
+			 RankAgent<WnsFeatures3<ModelGDist>,
 				   ModelGDist>,
 			 ModelGDist>;
 
 
 template class M1SpOptim<System<ModelGravityGDist,
 				ModelGravityGDist>,
-			 RankAgent<WnsFeatures2<ModelGravityGDist>,
+			 RankAgent<WnsFeatures3<ModelGravityGDist>,
 				   ModelGravityGDist>,
 			 ModelGravityGDist>;
 
 template class M1SpOptim<System<ModelGravityEDist,
 				ModelGravityEDist>,
-			 RankAgent<WnsFeatures2<ModelGravityEDist>,
+			 RankAgent<WnsFeatures3<ModelGravityEDist>,
 				   ModelGravityEDist>,
 			 ModelGravityEDist>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 				ModelTimeExpCavesGDistTrendPowCon>,
-			 RankAgent<WnsFeatures2
+			 RankAgent<WnsFeatures3
 				   <ModelTimeExpCavesGDistTrendPowCon>,
 				   ModelTimeExpCavesGDistTrendPowCon>,
 			 ModelTimeExpCavesGDistTrendPowCon>;
 
 template class M1SpOptim<System<ModelTimeExpCavesGDistTrendPowCon,
 				ModelTimeExpCavesGDist>,
-			 RankAgent<WnsFeatures2
+			 RankAgent<WnsFeatures3
 				   <ModelTimeExpCavesGDist>,
 				   ModelTimeExpCavesGDist>,
 			 ModelTimeExpCavesGDist>;
