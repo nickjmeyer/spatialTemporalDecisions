@@ -3,8 +3,7 @@
 cd ../bin
 
 NETS=("scalefree")
-#SIZE=("100" "500" "1000" "10000")
-SIZE=("10000")
+SIZE=("100" "500" "1000")
 
 for i in ${NETS[@]}
 do
