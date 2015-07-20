@@ -109,7 +109,7 @@ int main(int argc, char ** argv){
 
     typedef AllAgent<ME> AA;
 
-    typedef ToyFeatures5<ME> F;
+    typedef WnsFeatures3<ME> F;
     typedef RankAgent<F,ME> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;

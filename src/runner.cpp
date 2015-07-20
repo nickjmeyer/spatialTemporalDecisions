@@ -506,6 +506,12 @@ VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 			  ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class
+VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
+		       ModelTimeExpCavesGDistTrendPowCon>,
+		RankAgent<WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>,
+			  ModelTimeExpCavesGDistTrendPowCon> >;
+
+template class
 VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
 		       ModelTimeExpCavesGPowGDistTrendPowCon>,
 		RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
