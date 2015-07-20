@@ -4,7 +4,7 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDist MG;
+  typedef ModelTimeExpCavesGDistTrendPowCon MG;
 
   typedef ModelGDist ME;
 
@@ -21,8 +21,8 @@ int main(int argc, char ** argv){
   typedef OptimRunner<S,RA,SPO> R_RA;
 
 
-  // S s;
-  S s("obsData.txt");
+  S s;
+  // S s("obsData.txt");
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
