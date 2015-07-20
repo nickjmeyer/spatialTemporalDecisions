@@ -99,7 +99,7 @@ int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
   {
-    typedef ModelTimeExpCavesGDistTrendPowCon MG;
+    typedef ModelTimeExpCavesGDist MG;
     typedef MG ME;
 
     typedef System<MG,ME> S;
@@ -109,7 +109,7 @@ int main(int argc, char ** argv){
 
     typedef AllAgent<ME> AA;
 
-    typedef WnsFeatures3<ME> F;
+    typedef ToyFeatures5<ME> F;
     typedef RankAgent<F,ME> RA;
 
     typedef VanillaRunnerNS<S,NT> RN;
