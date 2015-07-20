@@ -437,11 +437,6 @@ VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
 		AllAgent<ModelTimeExpCavesGPowGDistTrendPowCon> >;
 
 template class
-VanillaRunnerNS<System<ModelTimeExpCavesGDist,
-		       ModelTimeExpCavesGDist>,
-		AllAgent<ModelTimeExpCavesGDist> >;
-
-template class
 VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 		       ModelTimeExpCavesGDistTrendPowCon>,
 		ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon> >;
@@ -517,12 +512,6 @@ VanillaRunnerNS<System<ModelTimeExpCavesGDistTrendPowCon,
 			  ModelTimeExpCavesGDistTrendPowCon> >;
 
 template class
-VanillaRunnerNS<System<ModelTimeExpCavesGDist,
-		       ModelTimeExpCavesGDist>,
-		RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
-			  ModelTimeExpCavesGDist> >;
-
-template class
 VanillaRunnerNS<System<ModelTimeExpCavesGPowGDistTrendPowCon,
 		       ModelTimeExpCavesGPowGDistTrendPowCon>,
 		RankAgent<ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>,
@@ -542,6 +531,11 @@ template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       RankAgent<WnsFeatures3<ModelGravityGDist>,
 					 ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
+				      ModelTimeExpCavesGDist>,
+			       RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
+					 ModelTimeExpCavesGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,

@@ -4,7 +4,7 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDist MG;
+  typedef ModelTimeExpCavesGDistTrendPowCon MG;
 
   typedef MG ME;
 
