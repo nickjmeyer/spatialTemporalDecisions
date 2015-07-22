@@ -131,81 +131,129 @@ void runBayesP(const std::string & file, const int obs,
   sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
   sObs.modelGen_r.mcmc.sample(numSamples,numBurn,true);
 
-  sObs.modelGen_r.mcmc.samples.setMean();
-  std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
-  sObs.modelGen_r.putPar(par.begin());
-  sObs.modelGen_r.save();
+  { // mean
+    sObs.modelGen_r.mcmc.samples.setMean();
+    std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+    sObs.modelGen_r.putPar(par.begin());
+    sObs.modelGen_r.save();
 
-  std::vector< std::vector<double> > stats;
+    std::vector< std::vector<double> > stats;
 
-  S s;
-  Starts starts("startingLocations.txt");
-  s.modelGen_r = sObs.modelGen_r;
-  s.modelEst_r = s.modelGen_r;
-  int r,t,R,T;
-  R = numStats;
-  T = sObs.sD.time;
-  for(r = 0; r < R; ++r){
-    s.modelGen_r.mcmc.samples.setRand();
-    par = s.modelGen_r.mcmc.samples.getPar();
-    s.modelGen_r.putPar(par.begin());
-    s.modelEst_r.putPar(par.begin());
+    S s;
+    Starts starts("startingLocations.txt");
+    s.modelGen_r = sObs.modelGen_r;
+    s.modelEst_r = s.modelGen_r;
+    int r,t,R,T;
+    R = numStats;
+    T = sObs.sD.time;
+    for(r = 0; r < R; ++r){
+      s.modelGen_r.mcmc.samples.setRand();
+      par = s.modelGen_r.mcmc.samples.getPar();
+      s.modelGen_r.putPar(par.begin());
+      s.modelEst_r.putPar(par.begin());
 
-    s.reset(starts[r]);
+      s.reset(starts[r]);
 
-    for(t = 0; t < T; ++t)
-      s.nextPoint();
-    h = s.sD.history;
-    h.push_back(s.sD.status);
+      for(t = 0; t < T; ++t)
+	s.nextPoint();
+      h = s.sD.history;
+      h.push_back(s.sD.status);
 
-    stats.push_back(getStats(h,s.sD,s.fD));
+      stats.push_back(getStats(h,s.sD,s.fD));
+    }
+
+    njm::toFile(names,njm::sett.datExt("sampStats_mean_"+file+"_",".txt"),
+		std::ios_base::out);
+    njm::toFile(njm::toString(stats,"\n",""),
+		njm::sett.datExt("sampStats_mean_"+file+"_",".txt"));
   }
 
-  njm::toFile(names,njm::sett.datExt("sampStats_"+file+"_",".txt"),
-  	      std::ios_base::out);
-  njm::toFile(njm::toString(stats,"\n",""),
-  	      njm::sett.datExt("sampStats_"+file+"_",".txt"));
+
+  { // mode
+    sObs.modelGen_r.mcmc.samples.setMode();
+    std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+    sObs.modelGen_r.putPar(par.begin());
+    sObs.modelGen_r.save();
+
+    std::vector< std::vector<double> > stats;
+
+    S s;
+    Starts starts("startingLocations.txt");
+    s.modelGen_r = sObs.modelGen_r;
+    s.modelEst_r = s.modelGen_r;
+    int r,t,R,T;
+    R = numStats;
+    T = sObs.sD.time;
+    for(r = 0; r < R; ++r){
+      s.modelGen_r.mcmc.samples.setRand();
+      par = s.modelGen_r.mcmc.samples.getPar();
+      s.modelGen_r.putPar(par.begin());
+      s.modelEst_r.putPar(par.begin());
+
+      s.reset(starts[r]);
+
+      for(t = 0; t < T; ++t)
+	s.nextPoint();
+      h = s.sD.history;
+      h.push_back(s.sD.status);
+
+      stats.push_back(getStats(h,s.sD,s.fD));
+    }
+
+    njm::toFile(names,njm::sett.datExt("sampStats_mode_"+file+"_",".txt"),
+		std::ios_base::out);
+    njm::toFile(njm::toString(stats,"\n",""),
+		njm::sett.datExt("sampStats_mode_"+file+"_",".txt"));
+  }
+
 
   // param estimates
   std::vector<std::vector<double> > parSamp;
   int i;
   for(i = 0; i < (numSamples-numBurn); ++i){
-    s.modelGen_r.mcmc.samples.setPar(i);
-    njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+    sObs.modelGen_r.mcmc.samples.setPar(i);
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+			      " ","\n"),
   		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
   		std::ios_base::app);
   }
 
   for(i = 0; i < numBurn; ++i){
-    s.modelGen_r.mcmc.samples.setPar(i,true);
-    njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+    sObs.modelGen_r.mcmc.samples.setPar(i,true);
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+			      " ","\n"),
   		njm::sett.datExt("sampStats_"+file+"_paramBurn_",".txt"),
   		std::ios_base::app);
   }
 
+  // posterior mode
+  sObs.modelGen_r.mcmc.samples.setMode();
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  	      njm::sett.datExt("sampStats_"+file+"_paramMode_",".txt"));
+
   // posterior mean
-  s.modelGen_r.mcmc.samples.setMean();
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  sObs.modelGen_r.mcmc.samples.setMean();
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
   	      njm::sett.datExt("sampStats_"+file+"_paramMean_",".txt"));
 
   // likelihood
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.ll,"\n",""),
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
   	      njm::sett.datExt("sampStats_"+file+"_ll_",".txt"));
 
   // likelihood at mean
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.llPt,"\n"),
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.llPt,"\n"),
   	      njm::sett.datExt("sampStats_"+file+"_llPt_",".txt"));
 
   // pD
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.pD,"\n"),
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.pD,"\n"),
   	      njm::sett.datExt("sampStats_"+file+"_pD_",".txt"));
 
   // Dbar
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.Dbar,"\n"),
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.Dbar,"\n"),
   	      njm::sett.datExt("sampStats_"+file+"_Dbar_",".txt"));
 
   // DIC
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.DIC,"\n"),
   	      njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
 
 
@@ -221,147 +269,147 @@ void runBayesP(const std::string & file, const int obs,
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  int numSamples = 20000, numBurn = 10000, numStats = 10000;
-  // int numSamples = 100, numBurn = 50, numStats = 50;
+  // int numSamples = 20000, numBurn = 10000, numStats = 10000;
+  int numSamples = 100, numBurn = 50, numStats = 50;
   // int numSamples = 10, numBurn = 5, numStats = 5;
 
-#pragma omp parallel sections			\
-  shared(numSamples,numBurn,numStats)
-  {
-#pragma omp section
-    {
+// #pragma omp parallel sections			\
+//   shared(numSamples,numBurn,numStats)
+//   {
+// #pragma omp section
+//     {
       runBayesP<ModelGravityGDist
 		>("gravity",1,
 		  numSamples,numBurn,numStats);
-    }
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrend
-		>("gravityTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrend
+// 		>("gravityTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrendPow
-		>("gravityTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrendPow
+// 		>("gravityTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrendPowCon
-		>("gravityTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrendPowCon
+// 		>("gravityTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDist
-		>("timeInf",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDist
+// 		>("timeInf",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrend
-		>("timeInfTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrend
+// 		>("timeInfTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrendPow
-		>("timeInfTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrendPow
+// 		>("timeInfTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrendPowCon
-		>("timeInfTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrendPowCon
+// 		>("timeInfTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDist
-		>("timeInfExp",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDist
+// 		>("timeInfExp",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrend
-		>("timeInfExpTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrend
+// 		>("timeInfExpTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrendPow
-		>("timeInfExpTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrendPow
+// 		>("timeInfExpTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrendPowCon
-		>("timeInfExpTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrendPowCon
+// 		>("timeInfExpTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDist
-		>("timeInfExpCaves",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDist
+// 		>("timeInfExpCaves",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrend
-		>("timeInfExpCavesTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrend
+// 		>("timeInfExpCavesTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrendPow
-		>("timeInfExpCavesTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrendPow
+// 		>("timeInfExpCavesTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrendPowCon
-		>("timeInfExpCavesTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrendPowCon
+// 		>("timeInfExpCavesTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelRad
-		>("rad",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelRad
+// 		>("rad",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGDist
-		>("gDist",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGDist
+// 		>("gDist",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGDistPow
-		>("gDistPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGDistPow
+// 		>("gDistPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-  }
+//   }
 
   // njm::sett.clean();
   return 0;
