@@ -107,7 +107,7 @@ std::pair<double,double> DensityEst::max(){
 
     } while(status == GSL_CONTINUE && iter < 100);
 
-    std::pair<double,double> res(-s->f,-gsl_vector_get(s->x,0));
+    std::pair<double,double> res(-s->f,gsl_vector_get(s->x,0));
 
     gsl_multimin_fdfminimizer_free(s);
     gsl_vector_free(x);
