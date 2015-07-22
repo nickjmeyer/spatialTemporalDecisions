@@ -448,7 +448,7 @@ int main(int argc, char ** argv){
 		  numSamples,numBurn,numStats);
     }
 
-  }
+  // }
 
   // njm::sett.clean();
   return 0;
