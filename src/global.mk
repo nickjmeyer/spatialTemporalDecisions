@@ -8,6 +8,7 @@ PROD = -O3 -DNDEBUG -DBOOST_UBLAS_NDEBUG -DARMA_NO_DEBUG -DNJM_NO_DEBUG
 PROF = $(DEBUG) -pg
 OBJECTS = $(BINARY).o
 OBJECTS += utilities.o \
+	densityEst.o \
 	rand.o \
 	runStats.o \
 	system.o \

@@ -2,79 +2,213 @@
 #include <omp.h>
 
 
-template <class M>
-void fitWindow(const std::string & ext,
-	       const int numSamples, const int numBurn){
-  njm::resetSeed(0);
-
-  typedef System<M,M> S;
-
-  S sObs("obsData_"+ext+".txt");
-
-  sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
-  sObs.modelGen_r.mcmc.sample(numSamples,numBurn);
-
-  // posterior mean
-  sObs.modelGen_r.mcmc.samples.setMean();
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-	      njm::sett.datExt("postMean_"+ext+"_",".txt"));
-
-  // mcmc samples
-  int i;
-  for(i = 0; i < (numSamples - numBurn); ++i){
-    s.modelGen_r.mcmc.samples.setPar(i);
-    if(i)
-      njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-		  njm::sett.datExt("samples_"+ext+"_",".txt"),
-		  std::ios_base::app);
-    else
-      njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.getPar()," ","\n"),
-		  njm::sett.datExt("samples_"+ext+"_",".txt"),
-		  std::ios_base::out);
-  }
-
-  // likelihood
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.ll,"\n",""),
-  	      njm::sett.datExt("ll_"+ext+"_",".txt"));
-
-  // likelihood at mean
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.llPt,"\n"),
-  	      njm::sett.datExt("llPt_"+ext+"_",".txt"));
-
-  // pD
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.pD,"\n"),
-  	      njm::sett.datExt("pD_"+ext+"_",".txt"));
-
-  // Dbar
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.Dbar,"\n"),
-  	      njm::sett.datExt("Dbar_"+ext+"_",".txt"));
-
-  // DIC
-  njm::toFile(njm::toString(s.modelGen_r.mcmc.samples.DIC,"\n"),
-  	      njm::sett.datExt("DIC_"+ext+"_",".txt"));
-
-  sObs.modelGen_r.setType(MLE);
-  sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
-  njm::toFile(njm::toString(sObs.modelGen_r.getPar()," ","\n"),
-	      njm::sett.datExt("MLE_"+ext+"_",".txt"));
-}
-
-
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  typedef ModelTimeExpCavesGDistTrendPowCon M;
+  {
+    typedef ModelTimeExpCavesGDistTrendPowCon MG;
 
-  int i;
-  const int I = 7, win = 3, numSamples = 200, numBurn = 100;
-#pragma omp parallel for num_threads(omp_get_num_threads())	\
-  shared(numSamples,numBurn,I,win)					\
-  private(i)
-  for(i = 0; i < I; ++i){
-    std::string file = (njm::toString(i+1,"",2,0,"0")
-			+ "-"
-			+ njm::toString(i+win-1,"",2,0,"0"));
-    fitWindow<M>(file,numSamples,numBurn);
+    typedef MG ME;
+
+    typedef System<MG,ME> S;
+
+    typedef NoTrt<ME> NT;
+    typedef ProximalGDistAgent<ME> PA;
+    typedef MyopicAgent<ME> MA;
+
+    typedef WnsFeatures3<ME> F;
+    typedef RankAgent<F,ME> RA;
+
+    typedef M1SpOptim<S,RA,ME> SPO;
+
+    typedef VanillaRunner<S,NT> R_NT;
+    typedef VanillaRunner<S,PA> R_PA;
+    typedef FitOnlyRunner<S,MA> R_MA;
+    typedef OptimRunner<S,RA,SPO> R_RA;
+
+
+    // S s;
+    S s("obsData.txt");
+    s.modelGen_r.setType(MLES);
+    s.modelEst_r.setType(MLES);
+
+    int numReps = 96;
+    Starts starts("startingLocations.txt");
+
+    NT nt;
+    PA pa;
+    MA ma;
+    RA ra;
+
+    ra.tp.jitterScale = -1;
+
+    SPO spo;
+    spo.tp.fixSample = 1;
+
+    R_NT r_nt;
+    R_PA r_pa;
+    R_MA r_ma;
+    R_RA r_ra;
+
+
+    RunStats rs;
+
+    njm::message(std::string("Gravity Model with time since infected ") +
+		 std::string("and time dependent intercept"));
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+    njm::message("     15: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    s.fD.forecastFlat = true;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+    njm::message("15 flat: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("     25: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    s.fD.forecastFlat = true;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("25 flat: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+  }
+
+
+  {
+    typedef ModelTimeExpCavesGDist MG;
+
+    typedef MG ME;
+
+    typedef System<MG,ME> S;
+
+    typedef NoTrt<ME> NT;
+    typedef ProximalGDistAgent<ME> PA;
+    typedef MyopicAgent<ME> MA;
+
+    typedef WnsFeatures3<ME> F;
+    typedef RankAgent<F,ME> RA;
+
+    typedef M1SpOptim<S,RA,ME> SPO;
+
+    typedef VanillaRunner<S,NT> R_NT;
+    typedef VanillaRunner<S,PA> R_PA;
+    typedef FitOnlyRunner<S,MA> R_MA;
+    typedef OptimRunner<S,RA,SPO> R_RA;
+
+
+    // S s;
+    S s("obsData.txt");
+    s.modelGen_r.setType(MLES);
+    s.modelEst_r.setType(MLES);
+
+    int numReps = 96;
+    Starts starts("startingLocations.txt");
+
+    NT nt;
+    PA pa;
+    MA ma;
+    RA ra;
+
+    ra.tp.jitterScale = -1;
+
+    SPO spo;
+    spo.tp.fixSample = 1;
+
+    R_NT r_nt;
+    R_PA r_pa;
+    R_MA r_ma;
+    R_RA r_ra;
+
+
+    RunStats rs;
+
+    njm::message("Gravity Model with time since infected");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+    njm::message("     15: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("     25: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  }
+
+
+  {
+    typedef ModelGravityGDist MG;
+
+    typedef MG ME;
+
+    typedef System<MG,ME> S;
+
+    typedef NoTrt<ME> NT;
+    typedef ProximalGDistAgent<ME> PA;
+    typedef MyopicAgent<ME> MA;
+
+    typedef WnsFeatures3<ME> F;
+    typedef RankAgent<F,ME> RA;
+
+    typedef M1SpOptim<S,RA,ME> SPO;
+
+    typedef VanillaRunner<S,NT> R_NT;
+    typedef VanillaRunner<S,PA> R_PA;
+    typedef FitOnlyRunner<S,MA> R_MA;
+    typedef OptimRunner<S,RA,SPO> R_RA;
+
+
+    // S s;
+    S s("obsData.txt");
+    s.modelGen_r.setType(MLES);
+    s.modelEst_r.setType(MLES);
+
+    int numReps = 96;
+    Starts starts("startingLocations.txt");
+
+    NT nt;
+    PA pa;
+    MA ma;
+    RA ra;
+
+    ra.tp.jitterScale = -1;
+
+    SPO spo;
+    spo.tp.fixSample = 1;
+
+    R_NT r_nt;
+    R_PA r_pa;
+    R_MA r_ma;
+    R_RA r_ra;
+
+
+    RunStats rs;
+
+
+    njm::message("Gravity Model");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+    njm::message("     15: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("     25: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
   }
 
   njm::sett.clean();
