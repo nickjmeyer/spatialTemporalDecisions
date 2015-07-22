@@ -22,6 +22,11 @@ void fitWindow(const std::string & ext,
 
   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
 
+  // posterior mode
+  sObs.modelGen_r.mcmc.samples.setMode();
+  njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
+  	      njm::sett.datExt(name + "_postMode_"+ext+"_",".txt"));
+
 
 
   // mcmc samples
