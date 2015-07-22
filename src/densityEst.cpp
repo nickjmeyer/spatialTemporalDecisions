@@ -66,15 +66,6 @@ std::pair<double,double> DensityEst::max(){
   std::vector<double> xiSorted = xi;
   std::sort(xiSorted.begin(),xiSorted.end());
 
-  std::cout << (*std::max_element(xiSorted.begin(),
-				 xiSorted.end())) << std::endl; << std::endl;
-
-  std::cout << (*std::max_element(xi.begin(),
-				 xi.end())) << std::endl;
-
-  std::cout << xiSorted.at(0) << std::endl
-	    << xiSorted.at(xiSorted.size()-1) << std::endl;
-
   std::priority_queue<std::pair<double,double> > ps;
 
   const int nLen = int(xi.size());
@@ -83,11 +74,9 @@ std::pair<double,double> DensityEst::max(){
   for(n = 0; n < nTry; ++n){
     size_t iter = 0;
     int status;
-    gsl_vector *x,*ss;
-    int i, dim = 1;
+    gsl_vector *x;
+    int dim = 1;
     x = gsl_vector_alloc(dim);
-    std::cout << n*nLen/nTry << std::endl;
-    std::cout << xiSorted.at(n*nLen/nTry) << std::endl;
     gsl_vector_set(x,0,xiSorted.at(n*nLen/nTry));
     gsl_multimin_function_fdf minex_func;
 
@@ -104,23 +93,17 @@ std::pair<double,double> DensityEst::max(){
 
     gsl_multimin_fdfminimizer_set(s,&minex_func, x, 0.01, 1e-6);
 
-    printf("iter: % 4d -> f(%08.5f) = %08.5f\n",
-	   iter,gsl_vector_get(s->x,0),-s->f);
 
     do {
       ++iter;
       status = gsl_multimin_fdfminimizer_iterate(s);
 
       if(status){
-	printf("iter: % 4d -> f(%08.5f) = %08.5f\n",
-	       iter,gsl_vector_get(s->x,0),-s->f);
 	break;
       }
 
       status = gsl_multimin_test_gradient(s->gradient,1e-6);
 
-      printf("iter: % 4d -> f(%08.5f) = %08.5f\n",
-	     iter,gsl_vector_get(s->x,0),-s->f);
 
     } while(status == GSL_CONTINUE && iter < 100);
 
