@@ -3,6 +3,17 @@
 
 enum parInd{INTCP_=0,RADIUS_=1,TRTP_=2,TRTA_=3};
 
+
+
+void RadiusSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  radiusSet = DensityEst(radius).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+}
+
+
+
 void RadiusSamples::setMean(){
   intcpSet = radiusSet = trtPreSet = trtActSet = 0.0;
 

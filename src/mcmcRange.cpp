@@ -3,6 +3,18 @@
 
 enum parInd{INTCP_=0,ALPHA_=1,RANGE_=2,TRTP_=3,TRTA_=4};
 
+
+
+void RangeSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  rangeSet = DensityEst(range).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+}
+
+
+
 void RangeSamples::setMean(){
   intcpSet = rangeSet = alphaSet = trtPreSet = trtActSet = 0.0;
 

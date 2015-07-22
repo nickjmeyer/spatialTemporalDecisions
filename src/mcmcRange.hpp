@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "rand.hpp"
 #include "data.hpp"
+#include "densityEst.hpp"
 
 
 class RangeSamples{
@@ -27,6 +28,7 @@ std::vector<double> llBurn;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
+  void setMode();
   void setRand();
 
   std::vector<double> getPar() const;

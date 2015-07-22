@@ -3,6 +3,29 @@
 
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
 
+
+
+void GravitySamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  powerSet = DensityEst(power).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+
+
+  int j,k;
+  betaSet.clear();
+  for(j = 0; j < numCovar; ++j){
+    std::vector<double> betaJ;
+    for(k = 0; k < numSamples; ++k){
+      betaJ.push_back(beta.at(k*numCovar + j));
+    }
+    betaSet.push_back(DensityEst(betaJ).max().second);
+  }
+}
+
+
+
 void GravitySamples::setMean(){
   intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
@@ -477,10 +500,6 @@ beta_cur.end());
       samples.ll.push_back(ll_cur);
     }
   }
-
-  std::cout << std::endl;
-
-  std::cout << "diagnostics" << std::endl;
 
   // get likelihood evaluated at posterior mean
   samples.setMean();

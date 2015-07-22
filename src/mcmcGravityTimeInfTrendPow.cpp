@@ -4,6 +4,32 @@
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TREND_=3,TRENDPOW_=4,XI_=5,
 	    TRTP_=6,TRTA_=7};
 
+
+
+void GravityTimeInfTrendPowSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  powerSet = DensityEst(power).max().second;
+  trendSet = DensityEst(trend).max().second;
+  trendPowSet = DensityEst(trendPow).max().second;
+  xiSet = DensityEst(xi).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+
+
+  int j,k;
+  betaSet.clear();
+  for(j = 0; j < numCovar; ++j){
+    std::vector<double> betaJ;
+    for(k = 0; k < numSamples; ++k){
+      betaJ.push_back(beta.at(k*numCovar + j));
+    }
+    betaSet.push_back(DensityEst(betaJ).max().second);
+  }
+}
+
+
+
 void GravityTimeInfTrendPowSamples::setMean(){
   intcpSet = alphaSet = powerSet = trendSet = trendPowSet = xiSet =
     trtPreSet = trtActSet = 0.0;

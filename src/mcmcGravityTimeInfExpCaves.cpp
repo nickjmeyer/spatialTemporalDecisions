@@ -3,6 +3,30 @@
 
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,XI_=3,TRTP_=4,TRTA_=5};
 
+
+
+void GravityTimeInfExpCavesSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  powerSet = DensityEst(power).max().second;
+  xiSet = DensityEst(xi).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+
+
+  int j,k;
+  betaSet.clear();
+  for(j = 0; j < numCovar; ++j){
+    std::vector<double> betaJ;
+    for(k = 0; k < numSamples; ++k){
+      betaJ.push_back(beta.at(k*numCovar + j));
+    }
+    betaSet.push_back(DensityEst(betaJ).max().second);
+  }
+}
+
+
+
 void GravityTimeInfExpCavesSamples::setMean(){
   intcpSet = alphaSet = powerSet = xiSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);

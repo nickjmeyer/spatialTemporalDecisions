@@ -3,6 +3,28 @@
 
 enum parInd{INTCP_=0,ALPHA_=1,TRTP_=2,TRTA_=3};
 
+
+
+void GDistSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+
+
+  int j,k;
+  betaSet.clear();
+  for(j = 0; j < numCovar; ++j){
+    std::vector<double> betaJ;
+    for(k = 0; k < numSamples; ++k){
+      betaJ.push_back(beta.at(k*numCovar + j));
+    }
+    betaSet.push_back(DensityEst(betaJ).max().second);
+  }
+}
+
+
+
 void GDistSamples::setMean(){
   intcpSet = alphaSet = trtPreSet = trtActSet = 0.0;
 

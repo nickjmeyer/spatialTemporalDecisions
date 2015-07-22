@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "rand.hpp"
 #include "data.hpp"
+#include "densityEst.hpp"
 
 
 class GravitySamples{
@@ -28,6 +29,7 @@ std::vector<double> llBurn;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
+  void setMode();
   void setRand();
 
   void setPar(const int i,const bool fromBurn = false);

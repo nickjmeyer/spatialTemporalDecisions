@@ -3,6 +3,18 @@
 
 enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
 
+
+
+void GDistPowSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  alphaSet = DensityEst(alpha).max().second;
+  powerSet = DensityEst(power).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+}
+
+
+
 void GDistPowSamples::setMean(){
   intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
 

@@ -3,6 +3,17 @@
 
 enum parInd{INTCP_=0,CAVE_=1,TRTP_=2,TRTA_=3};
 
+
+
+void CaveSamples::setMode(){
+  intcpSet = DensityEst(intcp).max().second;
+  caveSet = DensityEst(cave).max().second;
+  trtPreSet = DensityEst(trtPre).max().second;
+  trtActSet = DensityEst(trtAct).max().second;
+}
+
+
+
 void CaveSamples::setMean(){
   intcpSet = caveSet = trtPreSet = trtActSet = 0.0;
 
