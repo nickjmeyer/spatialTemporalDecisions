@@ -56,27 +56,79 @@ int main(int argc, char ** argv){
     njm::message(std::string("Gravity Model with time since infected ") +
 		 std::string("and time dependent intercept"));
 
+    // 15
+    njm::message("15 years");
+
     s.fD.forecastFlat = false;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("     15: "
+    njm::message("  No Trt: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    // 15 flat
+    njm::message("15 years flat");
 
     s.fD.forecastFlat = true;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("15 flat: "
+    njm::message("  No Trt: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    // 25
+    njm::message("25 years");
 
     s.fD.forecastFlat = false;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("     25: "
+    njm::message("  No Trt: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    // 25 flat
+    njm::message("25 years flat");
+
     s.fD.forecastFlat = true;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("25 flat: "
+    njm::message("  No Trt: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+    njm::message("  Myopic: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
@@ -133,17 +185,44 @@ int main(int argc, char ** argv){
 
     njm::message("Gravity Model with time since infected");
 
+    // 15
+    njm::message("15 years");
+
     s.fD.forecastFlat = false;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("     15: "
+    njm::message("  No Trt: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("     25: "
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+    njm::message("Proximal: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    // 25
+    njm::message("25 years");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("  No Trt: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
   }
 
 
@@ -198,17 +277,44 @@ int main(int argc, char ** argv){
 
     njm::message("Gravity Model");
 
+    // 15
+    njm::message("15 years");
+
     s.fD.forecastFlat = false;
     rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("     15: "
+    njm::message("  No Trt: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("     25: "
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+    njm::message("Proximal: "
 		 + njm::toString(rs.smean(),"")
 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    // 25
+    njm::message("25 years");
+
+    s.fD.forecastFlat = false;
+    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+    njm::message("  No Trt: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+    njm::message("Proximal: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+    njm::message("  Myopic: "
+		 + njm::toString(rs.smean(),"")
+		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
   }
 
   njm::sett.clean();

@@ -594,6 +594,10 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 				    ModelTimeExpCavesGDist>,
 			     MyopicAgent<ModelTimeExpCavesGDist> >;
 
+template class FitOnlyRunner<System<ModelGravityGDist,
+				    ModelGravityGDist>,
+			     MyopicAgent<ModelGravityGDist> >;
+
 template class FitOnlyRunner<System<ModelTimeGDistTrendPow,
 				    ModelTimeGDistTrendPow>,
 			     MyopicAgent<ModelTimeGDistTrendPow> >;
