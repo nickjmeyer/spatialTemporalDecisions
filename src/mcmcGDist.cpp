@@ -10,17 +10,6 @@ void GDistSamples::setMode(){
   alphaSet = DensityEst(alpha).max().second;
   trtPreSet = DensityEst(trtPre).max().second;
   trtActSet = DensityEst(trtAct).max().second;
-
-
-  int j,k;
-  betaSet.clear();
-  for(j = 0; j < numCovar; ++j){
-    std::vector<double> betaJ;
-    for(k = 0; k < numSamples; ++k){
-      betaJ.push_back(beta.at(k*numCovar + j));
-    }
-    betaSet.push_back(DensityEst(betaJ).max().second);
-  }
 }
 
 

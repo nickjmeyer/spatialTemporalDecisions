@@ -14,11 +14,10 @@ class GDistSamples{
 int numBurn;
   int numCovar;
   
-  std::vector<double> intcp,beta,alpha,trtPre,trtAct;
-std::vector<double> intcpBurn,betaBurn,alphaBurn,trtPreBurn,trtActBurn;
+  std::vector<double> intcp,alpha,trtPre,trtAct;
+std::vector<double> intcpBurn,alphaBurn,trtPreBurn,trtActBurn;
 
   double intcpSet;
-  std::vector<double> betaSet;
   double alphaSet;
   double trtPreSet;
   double trtActSet;
