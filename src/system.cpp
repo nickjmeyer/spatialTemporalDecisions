@@ -3,6 +3,9 @@
 template class System<ModelGravityGDist,
 		      ModelGravityGDist>;
 
+template class System<Model2GravityGDist,
+		      Model2GravityGDist>;
+
 template class System<ModelGravityGDistTrend,
 		      ModelGravityGDistTrend>;
 

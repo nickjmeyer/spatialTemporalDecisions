@@ -324,6 +324,13 @@ int main(int argc, char ** argv){
 
 #pragma omp section
     {
+      runBayesP<Model2GravityGDist
+		>("gravity2",0,
+		  numSamples,numBurn,numStats);
+    }
+
+#pragma omp section
+    {
       runBayesP<ModelGravityGDistTrend
 		>("gravityTrend",0,
 		  numSamples,numBurn,numStats);

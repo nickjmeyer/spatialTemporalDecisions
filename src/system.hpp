@@ -9,6 +9,7 @@
 #include "data.hpp"
 #include "model.hpp"
 #include "modelGravityGDist.hpp"
+#include "model2GravityGDist.hpp"
 #include "modelGravityGDistTrend.hpp"
 #include "modelGravityGDistTrendPow.hpp"
 #include "modelGravityGDistTrendPowCon.hpp"

@@ -43,6 +43,7 @@ OBJECTS += utilities.o \
 	param.o \
 	paramIntercept.o \
 	paramBeta.o \
+	paramBeta2.o \
 	paramGravityGDist.o \
 	paramGravPowGDist.o \
 	paramGravityEDist.o \
@@ -60,6 +61,7 @@ OBJECTS += utilities.o \
 	paramTrt.o \
 	model.o \
 	modelGravityGDist.o \
+	model2GravityGDist.o \
 	modelGravityGDistTrend.o \
 	modelGravityGDistTrendPow.o \
 	modelGravityGDistTrendPowCon.o \
@@ -85,6 +87,7 @@ OBJECTS += utilities.o \
 	modelCovar.o \
 	modelRad.o \
 	mcmcGravity.o \
+	mcmcGravity2.o \
 	mcmcGravityTrend.o \
 	mcmcGravityTrendPow.o \
 	mcmcGravityTrendPowCon.o \
@@ -111,6 +114,8 @@ DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 
 ifeq ("${HOST}","nick-laptop")
+
+CC = g++-4.9
 
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
