@@ -575,6 +575,8 @@ void Gravity2Mcmc::sample(int const numSamples, int const numBurn,
       // save the samples
       samples.intcp.push_back(intcp_cur);
       samples.beta.insert(samples.beta.end(),beta_cur.begin(),beta_cur.end());
+      samples.betaInf.insert(samples.betaInf.end(),
+			     betaInf_cur.begin(),betaInf_cur.end());
       samples.alpha.push_back(alpha_cur);
       samples.power.push_back(power_cur);
       samples.trtPre.push_back(trtPre_cur);
@@ -588,12 +590,14 @@ void Gravity2Mcmc::sample(int const numSamples, int const numBurn,
   samples.setMean();
   intcp_can = samples.intcpSet;
   beta_can = samples.betaSet;
+  betaInf_can = samples.betaInfSet;
   alpha_can = samples.alphaSet;
   power_can = samples.powerSet;
   trtPre_can = samples.trtPreSet;
   trtAct_can = samples.trtActSet;
 
   updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
+  updateCovarBeta(covarBetaInf_can,covar,betaInf_can,numNodes,numCovar);
   updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
   samples.llPt = ll();
