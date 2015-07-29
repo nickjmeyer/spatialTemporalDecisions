@@ -565,6 +565,9 @@ void Gravity2Mcmc::sample(int const numSamples, int const numBurn,
 	samples.betaBurn.insert(samples.betaBurn.end(),
 				beta_cur.begin(),
 				beta_cur.end());
+	samples.betaInfBurn.insert(samples.betaInfBurn.end(),
+				   betaInf_cur.begin(),
+				   betaInf_cur.end());
 	samples.alphaBurn.push_back(alpha_cur);
 	samples.powerBurn.push_back(power_cur);
 	samples.trtPreBurn.push_back(trtPre_cur);
