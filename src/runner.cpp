@@ -481,6 +481,10 @@ template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       NoTrt<ModelGravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       NoTrt<Model2GravityGDist> >;
+
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       ProximalGDistAgent<ModelGravityGDist> >;
