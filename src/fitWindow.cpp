@@ -104,6 +104,8 @@ int main(int argc, char ** argv){
 
   omp_set_nested(1);
 
+  const int numSamples = 1000000, numBurn = 25000;
+
 #pragma omp parallel sections
   {
 #pragma omp section
@@ -112,7 +114,7 @@ int main(int argc, char ** argv){
 
       int i;
       // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+      const int I = 6, win = 3;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
   private(i)
       for(i = 0; i < I; ++i){
@@ -129,7 +131,7 @@ int main(int argc, char ** argv){
 
       int i;
       // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+      const int I = 6, win = 3;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
   private(i)
       for(i = 0; i < I; ++i){
@@ -140,108 +142,108 @@ int main(int argc, char ** argv){
       }
     }
 
-#pragma omp section
-    {
-      typedef ModelTimeExpCavesGDistTrendPowCon M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeExpCavesGDistTrendPowCon M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
 
-#pragma omp section
-    {
-      typedef ModelTimeExpGDistTrendPow M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeExpGDistTrendPow M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
 
 
-#pragma omp section
-    {
-      typedef ModelTimeGDistTrendPow M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeGDistTrendPow M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
 
-#pragma omp section
-    {
-      typedef ModelTimeExpCavesGDistTrend M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeExpCavesGDistTrend M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
 
-#pragma omp section
-    {
-      typedef ModelTimeExpGDistTrend M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeExpGDistTrend M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
 
-#pragma omp section
-    {
-      typedef ModelTimeGDistTrend M;
+// #pragma omp section
+//     {
+//       typedef ModelTimeGDistTrend M;
 
-      int i;
-      // note can't put const variables in shared
-      const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
-#pragma omp parallel for num_threads(omp_get_max_threads())	\
-  private(i)
-      for(i = 0; i < I; ++i){
-	std::string file = (njm::toString(i,"",0,0)
-			    + "-"
-			    + njm::toString(i+win-1,"",0,0));
-	fitWindow<M>(file,numSamples,numBurn);
-      }
-    }
+//       int i;
+//       // note can't put const variables in shared
+//       const int I = 6, win = 3, numSamples = 20000, numBurn = 10000;
+// #pragma omp parallel for num_threads(omp_get_max_threads())	\
+//   private(i)
+//       for(i = 0; i < I; ++i){
+// 	std::string file = (njm::toString(i,"",0,0)
+// 			    + "-"
+// 			    + njm::toString(i+win-1,"",0,0));
+// 	fitWindow<M>(file,numSamples,numBurn);
+//       }
+//     }
   }
   return 0;
 }

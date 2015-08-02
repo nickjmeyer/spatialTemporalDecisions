@@ -135,7 +135,7 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.mcmc.samples.setMean();
     std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
     sObs.modelGen_r.putPar(par.begin());
-    sObs.modelGen_r.save();
+    // sObs.modelGen_r.save();
 
     std::vector< std::vector<double> > stats;
 
@@ -308,7 +308,7 @@ void runBayesP(const std::string & file, const int obs,
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  int numSamples = 100000, numBurn = 50000, numStats = 50000;
+  int numSamples = 1000000, numBurn = 25000, numStats = 50000;
   // int numSamples = 50000, numBurn = 25000, numStats = 10000;
   // int numSamples = 100, numBurn = 50, numStats = 50;
   // int numSamples = 10, numBurn = 5, numStats = 5;
@@ -330,131 +330,131 @@ int main(int argc, char ** argv){
 		  numSamples,numBurn,numStats);
     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrend
-		>("gravityTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrend
+// 		>("gravityTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrendPow
-		>("gravityTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrendPow
+// 		>("gravityTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGravityGDistTrendPowCon
-		>("gravityTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGravityGDistTrendPowCon
+// 		>("gravityTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDist
-		>("timeInf",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDist
+// 		>("timeInf",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrend
-		>("timeInfTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrend
+// 		>("timeInfTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrendPow
-		>("timeInfTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrendPow
+// 		>("timeInfTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeGDistTrendPowCon
-		>("timeInfTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeGDistTrendPowCon
+// 		>("timeInfTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDist
-		>("timeInfExp",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDist
+// 		>("timeInfExp",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrend
-		>("timeInfExpTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrend
+// 		>("timeInfExpTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrendPow
-		>("timeInfExpTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrendPow
+// 		>("timeInfExpTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpGDistTrendPowCon
-		>("timeInfExpTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpGDistTrendPowCon
+// 		>("timeInfExpTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDist
-		>("timeInfExpCaves",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDist
+// 		>("timeInfExpCaves",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrend
-		>("timeInfExpCavesTrend",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrend
+// 		>("timeInfExpCavesTrend",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrendPow
-		>("timeInfExpCavesTrendPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrendPow
+// 		>("timeInfExpCavesTrendPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelTimeExpCavesGDistTrendPowCon
-		>("timeInfExpCavesTrendPowCon",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelTimeExpCavesGDistTrendPowCon
+// 		>("timeInfExpCavesTrendPowCon",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelRad
-		>("rad",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelRad
+// 		>("rad",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGDist
-		>("gDist",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGDist
+// 		>("gDist",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
-#pragma omp section
-    {
-      runBayesP<ModelGDistPow
-		>("gDistPow",0,
-		  numSamples,numBurn,numStats);
-    }
+// #pragma omp section
+//     {
+//       runBayesP<ModelGDistPow
+// 		>("gDistPow",0,
+// 		  numSamples,numBurn,numStats);
+//     }
 
   }
 
