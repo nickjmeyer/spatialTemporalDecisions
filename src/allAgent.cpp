@@ -2,6 +2,8 @@
 
 template class AllAgent<ModelGravityGDist>;
 
+template class AllAgent<Model2GravityGDist>;
+
 template class AllAgent<ModelTimeExpCavesGDist>;
 
 template class AllAgent<ModelTimeGDistTrendPow>;

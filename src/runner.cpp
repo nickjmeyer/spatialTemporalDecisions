@@ -499,13 +499,25 @@ template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       NoTrt<Model2GravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       AllAgent<Model2GravityGDist> >;
+
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       ProximalGDistAgent<ModelGravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       ProximalGDistAgent<Model2GravityGDist> >;
+
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       MyopicAgent<ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       MyopicAgent<Model2GravityGDist> >;
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
@@ -549,6 +561,11 @@ template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       RankAgent<WnsFeatures3<ModelGravityGDist>,
 					 ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       RankAgent<WnsFeatures3<Model2GravityGDist>,
+					 Model2GravityGDist> >;
 
 template class VanillaRunnerNS<System<ModelTimeExpCavesGDist,
 				      ModelTimeExpCavesGDist>,
