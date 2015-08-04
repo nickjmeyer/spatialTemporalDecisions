@@ -15,6 +15,8 @@ void ToyFeatures5TuneParam::putPar(const std::vector<double> & par){
 
 template class ToyFeatures5<ModelGravityGDist>;
 
+template class ToyFeatures5<Model2GravityGDist>;
+
 template class ToyFeatures5<ModelTimeGDist>;
 
 template class ToyFeatures5<ModelTimeExpCavesGDist>;

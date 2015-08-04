@@ -16,6 +16,8 @@ void WnsFeatures3TuneParam::putPar(const std::vector<double> & par){
 
 template class WnsFeatures3<ModelGravityGDist>;
 
+template class WnsFeatures3<Model2GravityGDist>;
+
 template class WnsFeatures3<ModelGravityEDist>;
 
 template class WnsFeatures3<ModelTimeGDist>;

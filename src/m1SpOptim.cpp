@@ -231,6 +231,12 @@ template class M1SpOptim<System<ModelGravityGDist,
 				   ModelGravityGDist>,
 			 ModelGravityGDist>;
 
+template class M1SpOptim<System<Model2GravityGDist,
+				Model2GravityGDist>,
+			 RankAgent<WnsFeatures3<Model2GravityGDist>,
+				   Model2GravityGDist>,
+			 Model2GravityGDist>;
+
 template class M1SpOptim<System<ModelGravityEDist,
 				ModelGravityEDist>,
 			 RankAgent<WnsFeatures3<ModelGravityEDist>,

@@ -5,317 +5,334 @@
 int main(int argc, char ** argv){
   njm::sett.set(argc,argv);
 
-  {
-    typedef ModelTimeExpCavesGDistTrendPowCon MG;
+  typedef Model2GravityGDist M;
+  typedef System<M,M> S;
 
-    typedef MG ME;
+  S s;
+  M m(s.fD);
 
-    typedef System<MG,ME> S;
+  std::vector<double> par;
+  std::string fileName = "../data/wns/2015-07-30-01-02-17/";
+  fileName += "sampStats_gravity2_paramMean_.txt";
+  njm::fromFile(par,fileName);
 
-    typedef NoTrt<ME> NT;
-    typedef ProximalGDistAgent<ME> PA;
-    typedef MyopicAgent<ME> MA;
+  njm::message(par);
+  m.putPar(par.begin());
+  njm::message(m.getPar());
 
-    typedef WnsFeatures3<ME> F;
-    typedef RankAgent<F,ME> RA;
+  m.save();
 
-    typedef M1SpOptim<S,RA,ME> SPO;
+  // {
+  //   typedef ModelTimeExpCavesGDistTrendPowCon MG;
 
-    typedef VanillaRunner<S,NT> R_NT;
-    typedef VanillaRunner<S,PA> R_PA;
-    typedef FitOnlyRunner<S,MA> R_MA;
-    typedef OptimRunner<S,RA,SPO> R_RA;
+  //   typedef MG ME;
 
+  //   typedef System<MG,ME> S;
 
-    // S s;
-    S s("obsData.txt");
-    s.modelGen_r.setType(MLES);
-    s.modelEst_r.setType(MLES);
+  //   typedef NoTrt<ME> NT;
+  //   typedef ProximalGDistAgent<ME> PA;
+  //   typedef MyopicAgent<ME> MA;
 
-    int numReps = 96;
-    Starts starts("startingLocations.txt");
+  //   typedef WnsFeatures3<ME> F;
+  //   typedef RankAgent<F,ME> RA;
 
-    NT nt;
-    PA pa;
-    MA ma;
-    RA ra;
+  //   typedef M1SpOptim<S,RA,ME> SPO;
 
-    ra.tp.jitterScale = -1;
+  //   typedef VanillaRunner<S,NT> R_NT;
+  //   typedef VanillaRunner<S,PA> R_PA;
+  //   typedef FitOnlyRunner<S,MA> R_MA;
+  //   typedef OptimRunner<S,RA,SPO> R_RA;
 
-    SPO spo;
-    spo.tp.fixSample = 1;
 
-    R_NT r_nt;
-    R_PA r_pa;
-    R_MA r_ma;
-    R_RA r_ra;
+  //   // S s;
+  //   S s("obsData.txt");
+  //   s.modelGen_r.setType(MLES);
+  //   s.modelEst_r.setType(MLES);
 
+  //   int numReps = 96;
+  //   Starts starts("startingLocations.txt");
 
-    RunStats rs;
+  //   NT nt;
+  //   PA pa;
+  //   MA ma;
+  //   RA ra;
 
-    njm::message(std::string("Gravity Model with time since infected ") +
-		 std::string("and time dependent intercept"));
+  //   ra.tp.jitterScale = -1;
 
-    // 15
-    njm::message("15 years");
+  //   SPO spo;
+  //   spo.tp.fixSample = 1;
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   R_NT r_nt;
+  //   R_PA r_pa;
+  //   R_MA r_ma;
+  //   R_RA r_ra;
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   RunStats rs;
 
-    // 15 flat
-    njm::message("15 years flat");
+  //   njm::message(std::string("Gravity Model with time since infected ") +
+  // 		 std::string("and time dependent intercept"));
 
-    s.fD.forecastFlat = true;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   // 15
+  //   njm::message("15 years");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    // 25
-    njm::message("25 years");
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   // 15 flat
+  //   njm::message("15 years flat");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   s.fD.forecastFlat = true;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    // 25 flat
-    njm::message("25 years flat");
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    s.fD.forecastFlat = true;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   // 25
+  //   njm::message("25 years");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  }
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
+  //   // 25 flat
+  //   njm::message("25 years flat");
 
-  {
-    typedef ModelTimeExpCavesGDist MG;
+  //   s.fD.forecastFlat = true;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef MG ME;
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef System<MG,ME> S;
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef NoTrt<ME> NT;
-    typedef ProximalGDistAgent<ME> PA;
-    typedef MyopicAgent<ME> MA;
+  // }
 
-    typedef WnsFeatures3<ME> F;
-    typedef RankAgent<F,ME> RA;
 
-    typedef M1SpOptim<S,RA,ME> SPO;
+  // {
+  //   typedef ModelTimeExpCavesGDist MG;
 
-    typedef VanillaRunner<S,NT> R_NT;
-    typedef VanillaRunner<S,PA> R_PA;
-    typedef FitOnlyRunner<S,MA> R_MA;
-    typedef OptimRunner<S,RA,SPO> R_RA;
+  //   typedef MG ME;
 
+  //   typedef System<MG,ME> S;
 
-    // S s;
-    S s("obsData.txt");
-    s.modelGen_r.setType(MLES);
-    s.modelEst_r.setType(MLES);
+  //   typedef NoTrt<ME> NT;
+  //   typedef ProximalGDistAgent<ME> PA;
+  //   typedef MyopicAgent<ME> MA;
 
-    int numReps = 96;
-    Starts starts("startingLocations.txt");
+  //   typedef WnsFeatures3<ME> F;
+  //   typedef RankAgent<F,ME> RA;
 
-    NT nt;
-    PA pa;
-    MA ma;
-    RA ra;
+  //   typedef M1SpOptim<S,RA,ME> SPO;
 
-    ra.tp.jitterScale = -1;
+  //   typedef VanillaRunner<S,NT> R_NT;
+  //   typedef VanillaRunner<S,PA> R_PA;
+  //   typedef FitOnlyRunner<S,MA> R_MA;
+  //   typedef OptimRunner<S,RA,SPO> R_RA;
 
-    SPO spo;
-    spo.tp.fixSample = 1;
 
-    R_NT r_nt;
-    R_PA r_pa;
-    R_MA r_ma;
-    R_RA r_ra;
+  //   // S s;
+  //   S s("obsData.txt");
+  //   s.modelGen_r.setType(MLES);
+  //   s.modelEst_r.setType(MLES);
 
+  //   int numReps = 96;
+  //   Starts starts("startingLocations.txt");
 
-    RunStats rs;
+  //   NT nt;
+  //   PA pa;
+  //   MA ma;
+  //   RA ra;
 
-    njm::message("Gravity Model with time since infected");
+  //   ra.tp.jitterScale = -1;
 
-    // 15
-    njm::message("15 years");
+  //   SPO spo;
+  //   spo.tp.fixSample = 1;
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   R_NT r_nt;
+  //   R_PA r_pa;
+  //   R_MA r_ma;
+  //   R_RA r_ra;
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   RunStats rs;
 
-    // 25
-    njm::message("25 years");
+  //   njm::message("Gravity Model with time since infected");
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   // 15
+  //   njm::message("15 years");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  }
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
+  //   // 25
+  //   njm::message("25 years");
 
-  {
-    typedef ModelGravityGDist MG;
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef MG ME;
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef System<MG,ME> S;
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    typedef NoTrt<ME> NT;
-    typedef ProximalGDistAgent<ME> PA;
-    typedef MyopicAgent<ME> MA;
+  // }
 
-    typedef WnsFeatures3<ME> F;
-    typedef RankAgent<F,ME> RA;
 
-    typedef M1SpOptim<S,RA,ME> SPO;
+  // {
+  //   typedef ModelGravityGDist MG;
 
-    typedef VanillaRunner<S,NT> R_NT;
-    typedef VanillaRunner<S,PA> R_PA;
-    typedef FitOnlyRunner<S,MA> R_MA;
-    typedef OptimRunner<S,RA,SPO> R_RA;
+  //   typedef MG ME;
 
+  //   typedef System<MG,ME> S;
 
-    // S s;
-    S s("obsData.txt");
-    s.modelGen_r.setType(MLES);
-    s.modelEst_r.setType(MLES);
+  //   typedef NoTrt<ME> NT;
+  //   typedef ProximalGDistAgent<ME> PA;
+  //   typedef MyopicAgent<ME> MA;
 
-    int numReps = 96;
-    Starts starts("startingLocations.txt");
+  //   typedef WnsFeatures3<ME> F;
+  //   typedef RankAgent<F,ME> RA;
 
-    NT nt;
-    PA pa;
-    MA ma;
-    RA ra;
+  //   typedef M1SpOptim<S,RA,ME> SPO;
 
-    ra.tp.jitterScale = -1;
+  //   typedef VanillaRunner<S,NT> R_NT;
+  //   typedef VanillaRunner<S,PA> R_PA;
+  //   typedef FitOnlyRunner<S,MA> R_MA;
+  //   typedef OptimRunner<S,RA,SPO> R_RA;
 
-    SPO spo;
-    spo.tp.fixSample = 1;
 
-    R_NT r_nt;
-    R_PA r_pa;
-    R_MA r_ma;
-    R_RA r_ra;
+  //   // S s;
+  //   S s("obsData.txt");
+  //   s.modelGen_r.setType(MLES);
+  //   s.modelEst_r.setType(MLES);
 
+  //   int numReps = 96;
+  //   Starts starts("startingLocations.txt");
 
-    RunStats rs;
+  //   NT nt;
+  //   PA pa;
+  //   MA ma;
+  //   RA ra;
 
+  //   ra.tp.jitterScale = -1;
 
-    njm::message("Gravity Model");
+  //   SPO spo;
+  //   spo.tp.fixSample = 1;
 
-    // 15
-    njm::message("15 years");
+  //   R_NT r_nt;
+  //   R_PA r_pa;
+  //   R_MA r_ma;
+  //   R_RA r_ra;
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   RunStats rs;
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    // 25
-    njm::message("25 years");
+  //   njm::message("Gravity Model");
 
-    s.fD.forecastFlat = false;
-    rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
-    njm::message("  No Trt: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   // 15
+  //   njm::message("15 years");
 
-    rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
-    njm::message("Proximal: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-    rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
-    njm::message("  Myopic: "
-		 + njm::toString(rs.smean(),"")
-		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
-  }
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+15,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+  //   // 25
+  //   njm::message("25 years");
+
+  //   s.fD.forecastFlat = false;
+  //   rs = r_nt.run(s,nt,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  No Trt: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+  //   rs = r_pa.run(s,pa,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("Proximal: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+  //   rs = r_ma.run(s,ma,numReps,s.fD.trtStart+25,starts);
+  //   njm::message("  Myopic: "
+  // 		 + njm::toString(rs.smean(),"")
+  // 		 + "  (" + njm::toString(rs.seMean(),"") + ")");
+
+  // }
 
   njm::sett.clean();
   return 0;

@@ -194,6 +194,12 @@ template class PlainRunner<System<ModelGravityGDist,
 				     ModelGravityGDist> >;
 
 
+template class PlainRunner<System<Model2GravityGDist,
+				  Model2GravityGDist>,
+			   RankAgent<WnsFeatures3<Model2GravityGDist>,
+				     Model2GravityGDist> >;
+
+
 template class PlainRunner<System<ModelGravityEDist,
 				  ModelGravityEDist>,
 			   RankAgent<WnsFeatures3<ModelGravityEDist>,
@@ -316,9 +322,17 @@ template class VanillaRunner<System<ModelGravityGDist,
 				    ModelGravityGDist>,
 			     NoTrt<ModelGravityGDist> >;
 
+template class VanillaRunner<System<Model2GravityGDist,
+				    Model2GravityGDist>,
+			     NoTrt<Model2GravityGDist> >;
+
 template class VanillaRunner<System<ModelGravityGDist,
 				    ModelGravityGDist>,
 			     ProximalGDistAgent<ModelGravityGDist> >;
+
+template class VanillaRunner<System<Model2GravityGDist,
+				    Model2GravityGDist>,
+			     ProximalGDistAgent<Model2GravityGDist> >;
 
 template class VanillaRunner<System<ModelTimeExpCavesGDist,
 				    ModelRadius>,
@@ -601,6 +615,10 @@ template class FitOnlyRunner<System<ModelTimeExpCavesGDist,
 template class FitOnlyRunner<System<ModelGravityGDist,
 				    ModelGravityGDist>,
 			     MyopicAgent<ModelGravityGDist> >;
+
+template class FitOnlyRunner<System<Model2GravityGDist,
+				    Model2GravityGDist>,
+			     MyopicAgent<Model2GravityGDist> >;
 
 template class FitOnlyRunner<System<ModelTimeGDistTrendPow,
 				    ModelTimeGDistTrendPow>,
@@ -1057,6 +1075,18 @@ OptimRunner<System<ModelTimeExpCavesGDist,
 		      RankAgent<WnsFeatures3<ModelTimeExpCavesGDist>,
 				ModelTimeExpCavesGDist>,
 		      ModelTimeExpCavesGDist> >;
+
+
+template class
+OptimRunner<System<Model2GravityGDist,
+		   Model2GravityGDist>,
+	    RankAgent<WnsFeatures3<Model2GravityGDist>,
+		      Model2GravityGDist>,
+	    M1SpOptim<System<Model2GravityGDist,
+			     Model2GravityGDist>,
+		      RankAgent<WnsFeatures3<Model2GravityGDist>,
+				Model2GravityGDist>,
+		      Model2GravityGDist> >;
 
 template class
 OptimRunner<System<ModelTimeExpCavesGDist,
@@ -1815,6 +1845,18 @@ TuneRunner<System<ModelGravityGDist,
 		     RankAgent<WnsFeatures3<ModelGravityGDist>,
 			       ModelGravityGDist>,
 		     ModelGravityGDist> >;
+
+
+template class
+TuneRunner<System<Model2GravityGDist,
+		  Model2GravityGDist>,
+	   RankAgent<WnsFeatures3<Model2GravityGDist>,
+		     Model2GravityGDist>,
+	   M1SpOptim<System<Model2GravityGDist,
+			    Model2GravityGDist>,
+		     RankAgent<WnsFeatures3<Model2GravityGDist>,
+			       Model2GravityGDist>,
+		     Model2GravityGDist> >;
 
 
 template class
