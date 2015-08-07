@@ -554,7 +554,7 @@ getDist<-function(net,preAlloc=0){
 }
 
 
-getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=5,fast=TRUE){
+getCov<-function(n,nodes,rho=10,tau=log(10),eta=log(4),p=4,fast=TRUE){
   ## tau is set so that a distance of one results in correlation of
   ## 0.1 and eta is set so that a covariate difference of one results
   ## in correaltion of 0.25
