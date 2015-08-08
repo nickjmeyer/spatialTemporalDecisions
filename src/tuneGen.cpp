@@ -179,7 +179,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   int iter = 0;
 
 
-  printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+  printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
 	 ++iter, val, trt);
 
   while(std::abs(val - goal) > tol){
