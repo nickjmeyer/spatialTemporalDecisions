@@ -272,8 +272,6 @@ int main(int argc, char ** argv){
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    omp_set_num_threads(1);
-
     int numReps = 500;
     Starts starts(numReps,s.fD.numNodes);
 
