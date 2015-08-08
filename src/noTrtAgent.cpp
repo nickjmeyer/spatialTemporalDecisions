@@ -5,6 +5,10 @@ template class NoTrt<ModelGravityGDist>;
 
 template class NoTrt<Model2GravityGDist>;
 
+template class NoTrt<Model2GPowGDist>;
+
+template class NoTrt<ModelGDist>;
+
 template class NoTrt<ModelTimeExpGDist>;
 
 template class NoTrt<ModelTimeExpGDistTrend>;

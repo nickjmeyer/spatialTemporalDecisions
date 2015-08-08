@@ -10,11 +10,11 @@
 
 class ParamBase {
  protected:
-  
+
   std::vector<double> pars;
   std::vector<double>::iterator beg,end;
   unsigned int parsSize;
-  
+
   std::vector<std::string> names;
 
   std::vector<bool> toScale;
@@ -25,10 +25,10 @@ class ParamBase {
   virtual std::vector<std::string> initNames() = 0;
 
   virtual std::vector<bool> initToScale();
-  
+
   // initialize the internal book-keeping data
   virtual void initInternal(const FixedData & fD) = 0;
-  
+
   // update the internal book-keeping data
   // called inside of putPar() to guarantee up-to-date book-keeping data
   virtual void updateBefore() = 0;
@@ -48,12 +48,12 @@ class ParamBase {
   // initializes pars = {0,...}, beg = pars.begin(), end = pars.end()
   // calls initInternal, initParsSize
   virtual void init(const FixedData & fD);
-  
-  
+
+
   // retrieve pars
   std::vector<double> getPar() const;
   std::vector<double> getPar(const std::vector<std::string> & name) const;
-  
+
   // change pars
   // requires that newParInt has at least parsSize elements left
   // requires that beg,end point to begin() and end() of pars
@@ -61,8 +61,8 @@ class ParamBase {
   putPar(std::vector<double>::const_iterator newParIt);
 
   // set par by name
-  void setPar(const std::string & name, const double & val);
-  void setPar(const std::vector<std::string> & name, const double & val);
+  bool setPar(const std::string & name, const double & val);
+  bool setPar(const std::vector<std::string> & name, const double & val);
 
   // set the probs matrix
   // adds in the corresponding term
@@ -81,7 +81,7 @@ class ParamBase {
 		       const DynamicData & dD) = 0;
 
   virtual unsigned int size() const;
-  
+
   virtual std::vector<double> partial(const int notNode,
 				      const int infNode,
 				      const SimData & sD,

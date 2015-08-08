@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
 
   // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-  typedef Model2GravityGDist MG;
+  typedef Model2GPowGDist MG;
 
   typedef ModelGDist ME;
 

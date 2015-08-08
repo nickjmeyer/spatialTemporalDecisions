@@ -6,6 +6,12 @@ template class System<ModelGravityGDist,
 template class System<Model2GravityGDist,
 		      Model2GravityGDist>;
 
+template class System<Model2GPowGDist,
+		      Model2GPowGDist>;
+
+template class System<Model2GPowGDist,
+		      ModelGDist>;
+
 template class System<Model2GravityGDist,
 		      ModelGDist>;
 

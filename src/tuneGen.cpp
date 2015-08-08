@@ -211,7 +211,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
+    printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
 	   ++iter, val, trt);
     fflush(stdout);
   }
@@ -248,7 +248,7 @@ int main(int argc, char ** argv){
   {
     // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-    typedef Model2GravityGDist MG;
+    typedef Model2GPowGDist MG;
     typedef MG ME;
 
     typedef System<MG,ME> S;
@@ -272,7 +272,9 @@ int main(int argc, char ** argv){
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
-    int numReps = 500;
+    omp_set_num_threads(1);
+
+    int numReps = 10;
     Starts starts(numReps,s.fD.numNodes);
 
     MA ma;

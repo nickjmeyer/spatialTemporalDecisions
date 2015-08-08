@@ -62,6 +62,7 @@ OBJECTS += utilities.o \
 	model.o \
 	modelGravityGDist.o \
 	model2GravityGDist.o \
+	model2GPowGDist.o \
 	modelGravityGDistTrend.o \
 	modelGravityGDistTrendPow.o \
 	modelGravityGDistTrendPowCon.o \

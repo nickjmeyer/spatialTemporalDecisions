@@ -5,7 +5,7 @@ ModelBase::ModelBase(const std::string & str,
 		     const std::vector<ParamBase *> & newPars,
 		     const FixedData & fD){
   name = str;
-  
+
   set = 0;
   ready = 0;
   pars = newPars;
@@ -98,7 +98,7 @@ void ModelBase::infProbs(const SimData & sD,
 	prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
       expitInfProbs[i] = 1.0-prob;
     }
-  }    
+  }
 }
 
 
@@ -252,16 +252,29 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
 void ModelBase::setPar(const std::string & name,
 		       const double & val){
   int i,numPars = pars.size();
-  for(i = 0; i < numPars; ++i)
-    pars[i]->setPar(name,val);
+  bool found = false;
+  for(i = 0; i < numPars; ++i){
+    found |= pars[i]->setPar(name,val);
+  }
+
+  if(!found){
+    std::cout << "name " + name + " not found in setPar()" << std::endl;
+    throw(1);
+  }
 }
 
 
 void ModelBase::setPar(const std::vector<std::string> & name,
 		       const double & val){
   int i,numPars = pars.size();
+  bool found = false;
   for(i = 0; i < numPars; ++i)
-    pars[i]->setPar(name,val);
+    found |= pars[i]->setPar(name,val);
+
+  if(!found){
+    std::cout << "name not found in setPar()" << std::endl;
+    throw(1);
+  }
 }
 
 
@@ -313,9 +326,9 @@ std::vector<double> ModelBase::partial2(const int notNode,
 	p[k*totLen + j] = pi[(k-n)*D + (j-n)];
       }
     }
-    
+
   }
-  
+
   return p;
 }
 
@@ -326,9 +339,9 @@ void ModelBase::setFisher(const SimData & sD,
 			  const DynamicData & dD){
   fisher.resize(numPars * numPars);
   std::fill(fisher.begin(),fisher.end(),0);
-  
-  
-  
+
+
+
   std::vector<std::vector<int> > hist = sD.history;
   hist.push_back(sD.status);
   std::vector<DataBundle> db = historyToData(hist);
@@ -347,7 +360,7 @@ void ModelBase::setFisher(const SimData & sD,
     for(nN = 0; nN < sDi.numNotInfec; ++nN){
       std::vector<double> dbl(numPars*numPars,0);
       std::vector<double> sqr(numPars,0);
-      
+
       for(iN = 0; iN < sDi.numInfected; ++iN){
 	int ind = nN*sDi.numInfected + iN;
 	std::vector<double> p = partial(sDi.notInfec[nN],
@@ -356,11 +369,11 @@ void ModelBase::setFisher(const SimData & sD,
 	std::vector<double> p2 = partial2(sDi.notInfec[nN],
 					  sDi.infected[iN],
 					  sDi,tDi,fD,dDi);
-	
+
 	double quickInd = std::max(1e-10,quick[ind]);
 	for(pi = 0; pi < numPars; ++pi){
 	  sqr[pi] += quickInd*p[pi];
-	  
+
 	  int piInd = pi*numPars;
 	  for(pj = pi; pj < numPars; ++pj){
 	    dbl[piInd + pj] += quickInd*p2[piInd + pj];
@@ -386,7 +399,7 @@ void ModelBase::setFisher(const SimData & sD,
 	    fisher[pj*numPars + pi] +=
 	      (double(next)/prob - 1.0)*dbl[pj*numPars + pi];
 	  }
-	  
+
 
 	  if(next == 1){
 	    fisher[pi*numPars + pj] -=
@@ -432,7 +445,7 @@ void ModelBase::setFisher(const SimData & sD,
     // std::cout << "L: " << std::endl
     // 	      << L << std::endl
     // 	      << std::endl;
-    L.transposeInPlace();    
+    L.transposeInPlace();
     Eigen::VectorXd D = ldlt.vectorD();
     // std::cout << "D: " << std::endl
     // 	      << D << std::endl

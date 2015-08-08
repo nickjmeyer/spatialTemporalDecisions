@@ -20,10 +20,12 @@ M1SpOptimTunePar::M1SpOptimTunePar(){
   fixSample = 0;
 }
 
+
 std::vector<double> M1SpOptimTunePar::getPar() const{
   std::vector<double> par = {A,B};
   return par;
 }
+
 
 void M1SpOptimTunePar::putPar(const std::vector<double> & par){
   std::vector<double>::const_iterator it;
@@ -248,6 +250,18 @@ template class M1SpOptim<System<Model2GravityGDist,
 			 RankAgent<ToyFeatures5<Model2GravityGDist>,
 				   Model2GravityGDist>,
 			 Model2GravityGDist>;
+
+template class M1SpOptim<System<Model2GPowGDist,
+				Model2GPowGDist>,
+			 RankAgent<ToyFeatures5<Model2GPowGDist>,
+				   Model2GPowGDist>,
+			 Model2GPowGDist>;
+
+template class M1SpOptim<System<Model2GPowGDist,
+				ModelGDist>,
+			 RankAgent<ToyFeatures5<ModelGDist>,
+				   ModelGDist>,
+			 ModelGDist>;
 
 template class M1SpOptim<System<Model2GravityGDist,
 				ModelGDist>,

@@ -91,23 +91,30 @@ ParamBase::putPar(std::vector<double>::const_iterator newParIt){
 }
 
 
-void ParamBase::setPar(const std::string & name, const double & val){
+bool ParamBase::setPar(const std::string & name, const double & val){
   std::vector<std::string> nameV = {name};
-  setPar(nameV,val);
+  return setPar(nameV,val);
 }
 
 
-void ParamBase::setPar(const std::vector<std::string> & name,
+bool ParamBase::setPar(const std::vector<std::string> & name,
 		       const double & val){
   std::vector<double> vals = pars;
   unsigned int i,j;
-  for(i = 0; i < parsSize; ++i){
-    for(j = 0; j < name.size(); ++j){
-      if(names[i] == name[j])
+  bool found = false, foundAll = true;
+  for(j = 0; j < name.size(); ++j){
+    found = false;
+    for(i = 0; i < parsSize; ++i){
+      if(names[i] == name[j]){
 	vals[i] = val;
+	found = true;
+      }
     }
+    foundAll &= found;
   }
   putPar(vals.begin());
+
+  return foundAll;
 }
 
 
@@ -124,7 +131,7 @@ std::vector<double> ParamBase::partial2(const int notNode,
 					const DynamicData & dD){
   return std::vector<double>(parsSize*parsSize,0);
 }
-  
+
 
 void ParamBase::linScale(const double & scale){
   std::vector<double> vals = pars;
