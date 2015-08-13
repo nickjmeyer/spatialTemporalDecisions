@@ -160,7 +160,7 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
   // weighted half plane data depth
   notFeat.col(featNum) = notFeat.col(0) % hpddNotInfec;
 
-  infFeat.col(featNum) = (1.0 - weightMat) * notFeat.col(0);
+  infFeat.col(featNum) = (1.0 - weightMat) * hpddNotInfec;
 
 
   featNum++;

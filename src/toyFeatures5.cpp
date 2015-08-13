@@ -167,7 +167,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
 
-  infFeat.col(featNum) = (1.0 - weightMat) * notFeat.col(0);
+  infFeat.col(featNum) = (1.0 - weightMat) * subGraphNotInfec;
 
 
   featNum++;
