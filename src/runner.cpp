@@ -533,6 +533,10 @@ template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       NoTrt<Model2GravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2GravityGDist,
+				      Model2GravityGDist>,
+			       AllAgent<Model2GravityGDist> >;
+
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,
 			       NoTrt<Model2GPowGDist> >;
