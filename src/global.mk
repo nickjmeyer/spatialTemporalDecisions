@@ -123,6 +123,8 @@ CPPFLAGS += -DNJM_USE_MKL
 
 else ifeq ("${HOST}","nick-office")
 
+CC = g++-4.9
+
 MKLROOT = /opt/intel/composer_xe_2015/mkl
 CPPFLAGS += -DNJM_USE_MKL
 
