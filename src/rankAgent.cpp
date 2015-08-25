@@ -113,6 +113,8 @@ RankAgent<F,M>::RankAgent(){
 
   tp.jitterScale = 4.0;
 
+  tp.shuffle = false;
+
   name="rank";
 }
 
@@ -211,14 +213,26 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // randomly select from the top nodes
     std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
     for(j = 0; j < (numAct - cI); j++){
-      selInfected.push(std::pair<double,int>(njm::runif01(),
-					     sortInfected.top().second));
+      if(tp.shuffle){
+	selInfected.push(std::pair<double,int>(njm::runif01(),
+					       sortInfected.top().second));
+      }
+      else{
+	selInfected.push(std::pair<double,int>(sortInfected.top().first,
+					       sortInfected.top().second));
+      }
       sortInfected.pop();
     }
 
     for(j = 0; j < (numPre - cN); j++){
-      selNotInfec.push(std::pair<double,int>(njm::runif01(),
-					     sortNotInfec.top().second));
+      if(tp.shuffle){
+	selNotInfec.push(std::pair<double,int>(njm::runif01(),
+					       sortNotInfec.top().second));
+      }
+      else{
+	selNotInfec.push(std::pair<double,int>(sortNotInfec.top().first,
+					       sortNotInfec.top().second));
+      }
       sortNotInfec.pop();
     }
 

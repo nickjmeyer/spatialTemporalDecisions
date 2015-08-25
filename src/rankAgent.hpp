@@ -31,6 +31,8 @@ class RankTuneParam : public TuneParam {
   arma::colvec weights;
 
   double jitterScale;
+
+  bool shuffle;
 };
 
 
