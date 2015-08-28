@@ -15,7 +15,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
   double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
-  double tol = 0.01;
+  double tol = 1e-4;
 
   std::vector<double> par;
   double trt = 1.0;
