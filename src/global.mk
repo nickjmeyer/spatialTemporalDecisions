@@ -19,26 +19,12 @@ OBJECTS += utilities.o \
 	randomAgent.o \
 	myopicAgent.o \
 	proximalGDistAgent.o \
-	proxStocGDistAgent.o \
-	proximalEDistAgent.o \
 	rankAgent.o \
-	osspAgent.o \
-	incremAgent.o \
 	nullOptim.o \
 	allAgent.o \
 	m1SpOptim.o \
-	m1OsspOptim.o \
-	psOsspOptim.o \
-	m2QOptim.o \
-	features.o featuresInt.o \
-	toyFeatures0.o \
-	toyFeatures2.o \
-	toyFeatures3.o \
-	toyFeatures4.o \
+	features.o \
 	toyFeatures5.o \
-	toyFeatures6.o \
-	toyFeatures7.o \
-	wnsFeatures0.o \
 	wnsFeatures3.o \
 	param.o \
 	paramIntercept.o \
@@ -46,70 +32,19 @@ OBJECTS += utilities.o \
 	paramBeta2.o \
 	paramGravityGDist.o \
 	paramGravPowGDist.o \
-	paramGravityEDist.o \
-	paramTrend.o \
-	paramTrendPow.o \
-	paramTrendPowCon.o \
-	paramTime.o \
-	paramTimeExp.o \
-	paramTimeExpCaves.o \
 	paramGDist.o \
-	paramGDistPow.o \
-	paramGDistKern.o \
-	paramRadius.o \
-	paramRad.o \
 	paramTrt.o \
 	model.o \
 	modelGravityGDist.o \
 	model2GravityGDist.o \
 	model2GPowGDist.o \
-	modelGravityGDistTrend.o \
-	modelGravityGDistTrendPow.o \
-	modelGravityGDistTrendPowCon.o \
-	modelGravityEDist.o \
-	modelTimeGDist.o \
-	modelTimeGDistTrend.o\
-	modelTimeGDistTrendPow.o \
-	modelTimeGDistTrendPowCon.o \
-	modelTimeExpGDist.o \
-	modelTimeExpGDistTrend.o\
-	modelTimeExpGDistTrendPow.o \
-	modelTimeExpGDistTrendPowCon.o \
-	modelTimeExpCavesGDist.o \
-	modelTimeExpCavesGDistTrend.o\
-	modelTimeExpCavesGDistTrendPow.o \
-	modelTimeExpCavesGDistTrendPowCon.o \
-	modelTimeExpCavesGPowGDistTrendPowCon.o \
-	modelTimeExpCavesEDist.o \
 	modelGDist.o \
-	modelGDistPow.o \
-	modelGDistKern.o \
-	modelRadius.o \
-	modelCovar.o \
-	modelRad.o \
 	mcmcGravity.o \
 	mcmcGravity2.o \
-	mcmcGravityTrend.o \
-	mcmcGravityTrendPow.o \
-	mcmcGravityTrendPowCon.o \
-	mcmcGravityTimeInf.o \
-	mcmcGravityTimeInfTrend.o \
-	mcmcGravityTimeInfTrendPow.o \
-	mcmcGravityTimeInfTrendPowCon.o \
-	mcmcGravityTimeInfExp.o \
-	mcmcGravityTimeInfExpTrend.o \
-	mcmcGravityTimeInfExpTrendPow.o \
-	mcmcGravityTimeInfExpTrendPowCon.o \
-	mcmcGravityTimeInfExpCaves.o \
-	mcmcGravityTimeInfExpCavesTrend.o \
-	mcmcGravityTimeInfExpCavesTrendPow.o \
-	mcmcGravityTimeInfExpCavesTrendPowCon.o \
-	mcmcRad.o \
-	mcmcGDist.o \
-	mcmcGDistPow.o \
-	pardisoSymWrap.o \
 	runner.o dataDepth.o calcCentrality.o \
 	sortMerge.o settings.o timer.o
+
+
 DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
 
 
