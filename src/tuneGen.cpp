@@ -31,7 +31,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   njm::message("Goal: " + njm::toString(goal,""));
 
   int numYears = s.fD.finalT;
-  double tol = 0.01;
+  double tol = 1e-4;
 
   // std::vector<double> scaleD;
   // njm::fromFile(scaleD, njm::sett.srcExt("gDistRaw.txt"));
