@@ -18,7 +18,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   double tol = 0.01;
 
   std::vector<double> par;
-  double trt = s.modelGen_r.getPar({"trtAct"})[0];
+  double trt = 1.0;
 
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
   s.modelGen_r.save();
