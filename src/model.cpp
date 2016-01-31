@@ -377,7 +377,7 @@ void ModelBase::setFisher(const SimData & sD,
 	  int piInd = pi*numPars;
 	  for(pj = pi; pj < numPars; ++pj){
 	    dbl[piInd + pj] += quickInd*p2[piInd + pj];
-	    dbl[piInd + pj] += quickInd*p[pj]*p[pi];
+	    dbl[piInd + pj] += quickInd*(1.0-quickInd)*p[pj]*p[pi];
 	    if(pj != pi){
 	      dbl[pj*numPars + pi] += quickInd*p2[pj*numPars + pi];
 	      dbl[pj*numPars + pi] += quickInd*p[pi]*p[pj];
