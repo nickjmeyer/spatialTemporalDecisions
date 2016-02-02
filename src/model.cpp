@@ -370,7 +370,8 @@ void ModelBase::setFisher(const SimData & sD,
 					  sDi.infected[iN],
 					  sDi,tDi,fD,dDi);
 
-	double quickInd = std::max(1e-10,quick[ind]);
+	// double quickInd = std::max(1e-10,quick[ind]);
+	double quickInd = 1.0 - quick[ind];
 	for(pi = 0; pi < numPars; ++pi){
 	  sqr[pi] += quickInd*p[pi];
 
@@ -380,7 +381,7 @@ void ModelBase::setFisher(const SimData & sD,
 	    dbl[piInd + pj] += quickInd*(1.0-quickInd)*p[pj]*p[pi];
 	    if(pj != pi){
 	      dbl[pj*numPars + pi] += quickInd*p2[pj*numPars + pi];
-	      dbl[pj*numPars + pi] += quickInd*p[pi]*p[pj];
+	      dbl[pj*numPars + pi] += quickInd*(1.0-quickInd)*p[pi]*p[pj];
 	    }
 	  }
 	}
