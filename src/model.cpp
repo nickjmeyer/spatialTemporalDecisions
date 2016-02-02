@@ -292,7 +292,6 @@ std::vector<double> ModelBase::partial(const int notNode,
     p.insert(p.end(),pi.begin(),pi.end());
   }
 
-  // std::cout << "p: " << njm::toString(p) << std::endl;
   return p;
 }
 
@@ -332,14 +331,6 @@ std::vector<double> ModelBase::partial2(const int notNode,
 
   }
 
-  // std::cout << totLen << std::endl;
-  // std::cout << p[9*totLen + 9] << ", "
-  // 	    << p[9*totLen + 10] << ", " << p[9*totLen + 11] << std::endl;
-  // std::cout << p[10*totLen + 9] << ", "
-  // 	    << p[10*totLen + 10] << ", " << p[10*totLen + 11] << std::endl;
-  // std::cout << p[11*totLen + 9] << ", "
-  // 	    << p[11*totLen + 10] << ", " << p[11*totLen + 11] << std::endl;
-
   return p;
 }
 
@@ -348,12 +339,8 @@ void ModelBase::setFisher(const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD){
-  std::cout << "=========== fisher ============" << std::endl;
   fisher.resize(numPars * numPars);
   std::fill(fisher.begin(),fisher.end(),0);
-
-  std::cout << njm::toString(getPar()) << std::endl;
-  std::cout << "power: " << getPar({"power"})[0] << std::endl;
 
   std::vector<std::vector<int> > hist = sD.history;
   hist.push_back(sD.status);
@@ -366,38 +353,9 @@ void ModelBase::setFisher(const SimData & sD,
     TrtData tDi= std::get<1>(db[t]);
     DynamicData dDi = std::get<2>(db[t]);
 
-    std::cout << "t = " << t << std::endl;
-
-    std::cout << "fill" << std::endl;
     setFill(sDi,tDi,fD,dDi);
-    std::cout << "end fill" << std::endl;
     setQuick(sDi,tDi,fD,dDi);
     infProbs(sDi,tDi,fD,dDi);
-
-    if(t == 0){
-      std::cout << "infected: " << std::endl;
-      std::cout << sDi.numInfected << std::endl;
-      std::cout << njm::toString(sDi.infected) << std::endl;
-
-      std::cout << "quick: " << std::endl;
-      std::cout << njm::toString(quick) << std::endl;
-
-      std::cout << "infProbs: " << std::endl;
-      std::cout << njm::toString(expitInfProbs) << std::endl;
-
-      std::cout << "neighbors of " << sDi.infected.at(0) << ": " << std::endl;
-      for(int i = 0; i < fD.numNodes; ++i){
-	if(fD.network.at(i*fD.numNodes + sDi.infected.at(0)) == 1){
-	  std::cout << i << ": " << probs[i*fD.numNodes + sDi.infected.at(0)]
-		    << " ++ " << fD.gDist[i*fD.numNodes + sDi.infected.at(0)]
-		    << std::endl;
-	}
-      }
-      std::cout << std::endl;
-
-      // std::cout << "probs: " << std::endl;
-      // std::cout << njm::toString(probs) << std::endl;
-    }
 
     for(nN = 0; nN < sDi.numNotInfec; ++nN){
       std::vector<double> dbl(numPars*numPars,0);
@@ -614,10 +572,6 @@ void ModelBase::estimateMle(const std::vector<double> startingVals,
 
     status = gsl_multimin_test_gradient(s->gradient,1e-3);
 
-
-    if(status == GSL_SUCCESS){
-      std::cout << "Min found" << std::endl;
-    }
   }while(status == GSL_CONTINUE && iter < 100);
 
 
@@ -626,8 +580,6 @@ void ModelBase::estimateMle(const std::vector<double> startingVals,
     mle.push_back(gsl_vector_get(s->x,pi));
   }
 
-  std::cout << "mle: " << njm::toString(mle) << std::endl;
-  std::cout << "par: " << njm::toString(getPar()) << std::endl;
   this->putPar(mle.begin());
 
 
@@ -788,8 +740,8 @@ void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
     // GSL minimizes the function, need to adjust the gradient too
     gsl_vector_set(g,pi,-llGrad.at(pi));
   }
-
 }
+
 
 void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
   *f = objFn(x,params);
