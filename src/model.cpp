@@ -602,3 +602,56 @@ double ModelBase::logll(const SimData & sD,
   }
   return logllVal;
 }
+std::vector<double> ModelBase::logllGrad(const SimData & sD,
+					 const TrtData & tD,
+					 const FixedData & fD,
+					 const DynamicData & dD){
+  std::vector<std::vector<int> > hist = sD.history;
+  hist.push_back(sD.status);
+  std::vector<DataBundle> db = historyToData(hist);
+
+  std::vector<double> logllGradVal(numPars,0.0);
+  std::fill(logllGradVal.begin(),logllGradVal.end(),0.0);
+
+  int t,nN,iN,pi;
+  // loop over time points
+  for(t = 0; t < sD.time; ++t){
+    SimData sDi = std::get<0>(db[t]);
+    TrtData tDi = std::get<1>(db[t]);
+    DynamicData dDi = std::get<2>(db[t]);
+
+    setFill(sDi,tDi,fD,dDi);
+    setQuick(sDi,tDi,fD,dDi);
+    infProbs(sDi,tDi,fD,dDi);
+
+    if(int(expitInfProbs.size()) != sDi.numNotInfec){
+      std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
+		<< " number of uninfected nodes at time t"
+		<< std::endl;
+      throw(1);
+    }
+
+    // loop over uninfected nodes at time t
+    for(nN = 0; nN < sDi.numNotInfec; ++nN){
+      double prob = expitInfProbs.at(nN);
+      int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
+
+      if(prob > 0.0){
+	double beg = double(next)/prob - 1.0;
+	for(iN = 0; iN < sDi.numInfected; ++iN){
+	  // quick stores probabilty of not infefcting need to take
+	  // (1.0 - quick) to get probablity of infecting
+
+	  double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
+	  std::vector<double> grad = partial(sDi.notInfec[nN],
+					     sDi.infected[iN],
+					     sDi,tDi,fD,dDi);
+	  for(pi=0; pi < int(numPars); ++pi){
+	    logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
+	  }
+	}
+      }
+    }
+  }
+  return logllGradVal;
+}
