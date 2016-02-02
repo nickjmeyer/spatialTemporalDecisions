@@ -554,6 +554,89 @@ void ModelBase::revert(){
     throw(1);
   }
 }
+
+
+
+
+void ModelBase::estimateMle(const SimData & sD,
+			    const TrtData & tD,
+			    const FixedData & fD,
+			    const DynamicData & dD){
+  std::vector<double> startingVals = this->getPar();
+  estimateMle(startingVals,sD,tD,fD,dD);
+}
+
+
+void ModelBase::estimateMle(const std::vector<double> startingVals,
+			    const SimData & sD,
+			    const TrtData & tD,
+			    const FixedData & fD,
+			    const DynamicData & dD){
+
+  if(fitType != MLE && fitType != MLES){
+    std::cout << "ModelBase::estimateMLE is called for non MLE or MLES type"
+	      << std::endl;
+    throw(1);
+  }
+
+  ModelBaseFitObj fitObj(this,sD,tD,fD,dD);
+
+  const gsl_multimin_fdfminimizer_type * T;
+  gsl_multimin_fdfminimizer *s;
+
+  gsl_vector * x;
+  x = gsl_vector_alloc(this->numPars);
+  int pi;
+  for(pi = 0; pi < int(this->numPars); ++pi){
+    gsl_vector_set(x,pi,startingVals.at(pi));
+  }
+
+  gsl_multimin_function_fdf my_func;
+  my_func.n = this->numPars;
+  my_func.f = objFn;
+  my_func.df = objFnGrad;
+  my_func.fdf = objFnBoth;
+  my_func.params = &fitObj;
+
+  T = gsl_multimin_fdfminimizer_vector_bfgs2;
+  s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
+
+  gsl_multimin_fdfminimizer_set(s,&my_func,x,0.01,1e-4);
+
+  int iter = 0;
+  int status;
+  do{
+    iter++;
+    status = gsl_multimin_fdfminimizer_iterate(s);
+
+    if(status)
+      break;
+
+    status = gsl_multimin_test_gradient(s->gradient,1e-3);
+
+
+    if(status == GSL_SUCCESS){
+      std::cout << "Min found" << std::endl;
+    }
+  }while(status == GSL_CONTINUE && iter < 100);
+
+
+  std::vector<double> mle;
+  for(pi = 0; pi < int(numPars); ++pi){
+    mle.push_back(gsl_vector_get(s->x,pi));
+  }
+
+  std::cout << "mle: " << njm::toString(mle) << std::endl;
+  std::cout << "par: " << njm::toString(getPar()) << std::endl;
+  this->putPar(mle.begin());
+
+
+  gsl_multimin_fdfminimizer_free(s);
+  gsl_vector_free(x);
+}
+
+
+
 double ModelBase::logll(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
@@ -602,6 +685,8 @@ double ModelBase::logll(const SimData & sD,
   }
   return logllVal;
 }
+
+
 std::vector<double> ModelBase::logllGrad(const SimData & sD,
 					 const TrtData & tD,
 					 const FixedData & fD,
@@ -654,4 +739,59 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     }
   }
   return logllGradVal;
+}
+
+
+
+ModelBaseFitObj::ModelBaseFitObj(ModelBase * const mb,
+				 const SimData sD,
+				 const TrtData tD,
+				 const FixedData fD,
+				 const DynamicData dD){
+  this->mb = mb;
+  this->sD = sD;
+  this->tD = tD;
+  this->fD = fD;
+  this->dD = dD;
+}
+
+
+double objFn(const gsl_vector * x, void * params){
+  ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
+  std::vector<double> par;
+  int pi;
+  for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
+    par.push_back(gsl_vector_get(x,pi));
+  }
+
+  fitObj->mb->putPar(par.begin());
+
+  // return negative since GSL minimizes the function
+  double ll = fitObj->mb->logll(fitObj->sD,fitObj->tD,fitObj->fD,fitObj->dD);
+  return - ll;
+}
+
+void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
+  ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
+  std::vector<double> par;
+  int pi;
+  for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
+    par.push_back(gsl_vector_get(x,pi));
+  }
+
+  fitObj->mb->putPar(par.begin());
+
+  std::vector<double> llGrad = fitObj->mb->logllGrad(fitObj->sD,fitObj->tD,
+						     fitObj->fD,fitObj->dD);
+  for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
+    // assign the negative of the gradient value
+    // GSL minimizes the function, need to adjust the gradient too
+    gsl_vector_set(g,pi,-llGrad.at(pi));
+  }
+
+}
+
+void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
+  *f = objFn(x,params);
+  objFnGrad(x,params,g);
 }
