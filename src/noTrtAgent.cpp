@@ -9,30 +9,6 @@ template class NoTrt<Model2GPowGDist>;
 
 template class NoTrt<ModelGDist>;
 
-template class NoTrt<ModelTimeExpGDist>;
-
-template class NoTrt<ModelTimeExpGDistTrend>;
-
-template class NoTrt<ModelTimeExpGDistTrendPow>;
-
-template class NoTrt<ModelTimeExpCavesGDist>;
-
-template class NoTrt<ModelTimeExpCavesGDistTrend>;
-
-template class NoTrt<ModelTimeExpCavesGDistTrendPow>;
-
-template class NoTrt<ModelTimeGDist>;
-
-template class NoTrt<ModelTimeGDistTrend>;
-
-template class NoTrt<ModelTimeGDistTrendPow>;
-
-template class NoTrt<ModelTimeExpCavesGDistTrendPowCon>;
-
-template class NoTrt<ModelTimeExpCavesGPowGDistTrendPowCon>;
-
-template class NoTrt<ModelRadius>;
-
 template<class M>
 std::string NoTrt<M>::name = "noTrt";
 

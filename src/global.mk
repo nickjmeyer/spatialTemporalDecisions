@@ -20,7 +20,6 @@ OBJECTS += utilities.o \
 	myopicAgent.o \
 	proximalGDistAgent.o \
 	rankAgent.o \
-	nullOptim.o \
 	allAgent.o \
 	m1SpOptim.o \
 	features.o \

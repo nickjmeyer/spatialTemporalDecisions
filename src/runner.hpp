@@ -12,18 +12,11 @@
 #include "noTrtAgent.hpp"
 #include "randomAgent.hpp"
 #include "proximalGDistAgent.hpp"
-#include "proxStocGDistAgent.hpp"
-#include "proximalEDistAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
-#include "osspAgent.hpp"
-#include "incremAgent.hpp"
 #include "allAgent.hpp"
 #include "optim.hpp"
 #include "m1SpOptim.hpp"
-#include "m1OsspOptim.hpp"
-#include "psOsspOptim.hpp"
-#include "m2QOptim.hpp"
 
 
 

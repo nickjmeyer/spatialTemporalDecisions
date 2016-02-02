@@ -6,23 +6,7 @@ template class AllAgent<Model2GravityGDist>;
 
 template class AllAgent<Model2GPowGDist>;
 
-template class AllAgent<ModelTimeExpCavesGDist>;
-
-template class AllAgent<ModelTimeGDistTrendPow>;
-
-template class AllAgent<ModelTimeExpCavesGDistTrendPowCon>;
-
-template class AllAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
-
-template class AllAgent<ModelTimeExpCavesEDist>;
-
-template class AllAgent<ModelRadius>;
-
 template class AllAgent<ModelGDist>;
-
-template class AllAgent<ModelCovar>;
-
-template class AllAgent<ModelGDistKern>;
 
 
 template <class M>

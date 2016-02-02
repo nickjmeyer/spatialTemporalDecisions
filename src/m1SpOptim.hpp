@@ -4,7 +4,6 @@
 
 #include "data.hpp"
 #include "model.hpp"
-#include "modelParam.hpp"
 #include "system.hpp"
 #include "agent.hpp"
 #include "rankAgent.hpp"
@@ -15,7 +14,7 @@
 class M1SpOptimTunePar : public TuneParam{
  public:
   M1SpOptimTunePar();
-  
+
   std::vector<double> getPar() const;
   void putPar(const std::vector<double> & par);
 
@@ -35,12 +34,12 @@ class M1SpOptim : BaseOptim<S,A,M>{
   M1SpOptim();
 
   void reset();
-  
+
   virtual void optim(const S & system,
 		     A & agent);
   virtual void tune(const System<M,M> & system,
 		    A agent);
-  
+
   M1SpOptimTunePar tp;
 
   std::string name;

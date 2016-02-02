@@ -18,22 +18,7 @@ template class WnsFeatures3<ModelGravityGDist>;
 
 template class WnsFeatures3<Model2GravityGDist>;
 
-template class WnsFeatures3<ModelGravityEDist>;
-
-template class WnsFeatures3<ModelTimeGDist>;
-
-template class WnsFeatures3<ModelTimeExpCavesGDist>;
-
-template class WnsFeatures3<ModelTimeExpCavesEDist>;
-
-template class WnsFeatures3<ModelRadius>;
-
 template class WnsFeatures3<ModelGDist>;
-
-template class WnsFeatures3<ModelGDistKern>;
-
-template class WnsFeatures3<ModelTimeExpCavesGDistTrendPowCon>;
-
 
 
 template <class M>

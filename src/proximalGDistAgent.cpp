@@ -6,18 +6,6 @@ template class ProximalGDistAgent<Model2GravityGDist>;
 
 template class ProximalGDistAgent<Model2GPowGDist>;
 
-template class ProximalGDistAgent<ModelTimeGDistTrendPow>;
-
-template class ProximalGDistAgent<ModelTimeExpCavesGDistTrendPowCon>;
-
-template class ProximalGDistAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
-
-template class ProximalGDistAgent<ModelTimeExpCavesGDist>;
-
-template class ProximalGDistAgent<ModelRadius>;
-
-template class ProximalGDistAgent<ModelGDistKern>;
-
 template class ProximalGDistAgent<ModelGDist>;
 
 

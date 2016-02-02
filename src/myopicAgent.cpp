@@ -6,23 +6,7 @@ template class MyopicAgent<Model2GravityGDist>;
 
 template class MyopicAgent<Model2GPowGDist>;
 
-template class MyopicAgent<ModelTimeExpCavesGDist>;
-
-template class MyopicAgent<ModelTimeGDistTrendPow>;
-
-template class MyopicAgent<ModelTimeExpCavesGDistTrendPowCon>;
-
-template class MyopicAgent<ModelTimeExpCavesGPowGDistTrendPowCon>;
-
-template class MyopicAgent<ModelTimeExpCavesEDist>;
-
-template class MyopicAgent<ModelRadius>;
-
 template class MyopicAgent<ModelGDist>;
-
-template class MyopicAgent<ModelCovar>;
-
-template class MyopicAgent<ModelGDistKern>;
 
 
 template <class M>

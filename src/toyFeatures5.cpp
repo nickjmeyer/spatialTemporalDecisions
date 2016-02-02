@@ -19,26 +19,7 @@ template class ToyFeatures5<Model2GravityGDist>;
 
 template class ToyFeatures5<Model2GPowGDist>;
 
-template class ToyFeatures5<ModelTimeGDist>;
-
-template class ToyFeatures5<ModelTimeExpCavesGDist>;
-
-template class ToyFeatures5<ModelTimeGDistTrendPow>;
-
-template class ToyFeatures5<ModelTimeExpCavesGDistTrendPowCon>;
-
-template class ToyFeatures5<ModelTimeExpCavesGPowGDistTrendPowCon>;
-
-template class ToyFeatures5<ModelTimeExpCavesEDist>;
-
-template class ToyFeatures5<ModelRadius>;
-
 template class ToyFeatures5<ModelGDist>;
-
-template class ToyFeatures5<ModelGDistKern>;
-
-template class ToyFeatures5<ModelCovar>;
-
 
 
 template <class M>

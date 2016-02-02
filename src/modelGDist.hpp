@@ -11,7 +11,6 @@
 #include "paramIntercept.hpp"
 #include "paramGDist.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGDist.hpp"
 
 
 class ModelGDist : public ModelBase {
@@ -22,8 +21,6 @@ class ModelGDist : public ModelBase {
   ModelGDist(const ModelGDist & m);
 
   virtual ModelGDist & operator=(const ModelGDist & m);
-
-  GDistMcmc mcmc;
 };
 
 

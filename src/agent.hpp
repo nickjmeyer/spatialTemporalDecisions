@@ -4,7 +4,6 @@
 
 #include "data.hpp"
 #include "model.hpp"
-#include "modelParam.hpp"
 
 template <class M>
 class BaseAgent {
