@@ -20,9 +20,9 @@ std::vector<bool> ParamGravityGDist::initToScale(){
 void ParamGravityGDist::initInternal(const FixedData & fD){
   numNodes = fD.numNodes;
   grav = std::vector<double>(numNodes*numNodes,0.0);
-  
+
   dist = fD.gDist;
-  
+
   cc.clear();
   cc.reserve(numNodes*numNodes);
   int i,j;
@@ -43,7 +43,7 @@ void ParamGravityGDist::updateAfter(){
   double power = pars.at(1);
   int i,I = numNodes * numNodes;
   for(i = 0; i < I; ++i){
-    grav.at(i) = alpha * dist.at(i) / std::pow(cc.at(i),power);
+    grav.at(i) = alpha * dist.at(i) / std::pow(cc.at(i),std::exp(power));
   }
 }
 
@@ -83,12 +83,14 @@ std::vector<double> ParamGravityGDist::partial(const int notNode,
   std::vector<double> p;
   int ind = notNode*numNodes + infNode;
   // the negative is because the term is subtracted in the model
-  p.push_back(-dist[ind]/std::pow(cc[ind],power));
+  p.push_back(-dist[ind]/std::pow(cc[ind],std::exp(power)));
   // remember that this term is subtracted in the model
   // so the negatives cancel
-  p.push_back(alpha*dist[ind]*std::log(cc[ind])/std::pow(cc[ind],power));
+  p.push_back(alpha*dist[ind]*std::log(cc[ind])*std::exp(power)/
+	      std::pow(cc[ind],std::exp(power)));
   return p;
 }
+
 
 
 std::vector<double> ParamGravityGDist::partial2(const int notNode,
@@ -105,10 +107,12 @@ std::vector<double> ParamGravityGDist::partial2(const int notNode,
   p.push_back(0);
   // remember that this term is subtracted in the model
   // so the negatives cancel
-  double val = dist[ind]*std::log(cc[ind])/std::pow(cc[ind],power);
+  double val = dist[ind]*std::log(cc[ind])*std::exp(power)/
+    std::pow(cc[ind],std::exp(power));
+
   p.push_back(val);
   p.push_back(val);
 
-  p.push_back(- alpha * val * std::log(cc[ind]));
+  p.push_back(- alpha * val * (std::exp(power)*std::log(cc[ind]) - 1.0));
   return p;
 }

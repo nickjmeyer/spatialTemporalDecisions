@@ -126,14 +126,14 @@ std::vector<double> ParamGravPowGDist::partial2(const int notNode,
   //(1,1)
   p.push_back(- alpha * val0 * (std::exp(power)*std::log(cc[ind]) - 1.0));
 
-  double val3 = val0 * std::log(dist[ind]);
+  double val3 = alpha * val0 * std::log(dist[ind]);
   p.push_back(val3); // (1,2)
 
   p.push_back(val1); // (2,0)
 
   p.push_back(val3); // (2,1)
 
-  double val4 = val1 * std::log(dist[ind]);
+  double val4 = - alpha * val1 * std::log(dist[ind]);
   p.push_back(val4); // (2,2)
 
 
