@@ -158,7 +158,7 @@ inline void Gravity2Mcmc::updateAlphaW(std::vector<double> & alphaW,
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
       alphaW.at(i*numNodes + j) = alpha * d.at(i*numNodes + j)/
-	std::pow(cc.at(i*numNodes + j),powerNew);
+	std::pow(cc.at(i*numNodes + j),std::exp(powerNew));
 }
 
 inline void Gravity2Mcmc::updateCovarBeta(std::vector<double> & covarBeta,

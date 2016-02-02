@@ -514,10 +514,9 @@ void Gravity2Mcmc::sample(int const numSamples, int const numBurn,
 
 
 
-
     // sample power
     ++att.at(numCovar+POWER_);
-    upd=std::exp(std::log(power_cur)+mh.at(numCovar+POWER_)*njm::rnorm01());
+    upd = power_cur + mh.at(numCovar+POWER_)*njm::rnorm01();
     power_can=upd;
 
     // update alphaW
@@ -527,8 +526,8 @@ void Gravity2Mcmc::sample(int const numSamples, int const numBurn,
     ll_can=ll();
 
 
-    R=ll_can + (-.5/power_var)*std::pow(std::log(power_can) - power_mean,2.0)
-      - ll_cur - (-.5/power_var)*std::pow(std::log(power_cur) - power_mean,2.0);
+    R=ll_can + (-.5/power_var)*std::pow(power_can - power_mean,2.0)
+      - ll_cur - (-.5/power_var)*std::pow(power_cur - power_mean,2.0);
 
 
     // accept?
