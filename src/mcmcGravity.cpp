@@ -76,30 +76,30 @@ void GravitySamples::setPar(const int i,const bool fromBurn){
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
 
-if(fromBurn){
-  intcpSet = intcpBurn.at(i);
-  alphaSet = alphaBurn.at(i);
-  powerSet = powerBurn.at(i);
-  trtPreSet = trtPreBurn.at(i);
-  trtActSet = trtActBurn.at(i);
+  if(fromBurn){
+    intcpSet = intcpBurn.at(i);
+    alphaSet = alphaBurn.at(i);
+    powerSet = powerBurn.at(i);
+    trtPreSet = trtPreBurn.at(i);
+    trtActSet = trtActBurn.at(i);
 
-  int j = 0;
-  std::for_each(betaSet.begin(),betaSet.end(),
-		[this,&i,&j](double & x){
-		  x = betaBurn.at(i*numCovar + j++);});
-}
-else{
-  intcpSet = intcp.at(i);
-  alphaSet = alpha.at(i);
-  powerSet = power.at(i);
-  trtPreSet = trtPre.at(i);
-  trtActSet = trtAct.at(i);
+    int j = 0;
+    std::for_each(betaSet.begin(),betaSet.end(),
+		  [this,&i,&j](double & x){
+		    x = betaBurn.at(i*numCovar + j++);});
+  }
+  else{
+    intcpSet = intcp.at(i);
+    alphaSet = alpha.at(i);
+    powerSet = power.at(i);
+    trtPreSet = trtPre.at(i);
+    trtActSet = trtAct.at(i);
 
-  int j = 0;
-  std::for_each(betaSet.begin(),betaSet.end(),
-		[this,&i,&j](double & x){
-		  x = beta.at(i*numCovar + j++);});
-}
+    int j = 0;
+    std::for_each(betaSet.begin(),betaSet.end(),
+		  [this,&i,&j](double & x){
+		    x = beta.at(i*numCovar + j++);});
+  }
 }
 
 
@@ -174,7 +174,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void GravityMcmc::sample(int const numSamples, int const numBurn,
-const bool saveBurn){
+			 const bool saveBurn){
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
@@ -188,9 +188,9 @@ const bool saveBurn){
 
 void GravityMcmc::sample(int const numSamples, int const numBurn,
 			 const std::vector<double> & par,
-const bool saveBurn){
+			 const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
-samples.numBurn = numBurn;
+  samples.numBurn = numBurn;
 
   // priors
   int thin=1;
@@ -219,40 +219,40 @@ samples.numBurn = numBurn;
 
   // set containers for storing all non-burned samples
   samples.intcp.clear();
-samples.intcpBurn.clear();
+  samples.intcpBurn.clear();
   samples.intcp.reserve(numSamples-numBurn);
-samples.intcpBurn.reserve(numBurn);
+  samples.intcpBurn.reserve(numBurn);
 
   samples.beta.clear();
-samples.betaBurn.clear();
+  samples.betaBurn.clear();
   samples.beta.reserve((numSamples-numBurn)*numCovar);
-samples.betaBurn.reserve((numBurn)*numCovar);
+  samples.betaBurn.reserve((numBurn)*numCovar);
 
   samples.alpha.clear();
-samples.alphaBurn.clear();
+  samples.alphaBurn.clear();
   samples.alpha.reserve(numSamples-numBurn);
-samples.alphaBurn.reserve(numBurn);
+  samples.alphaBurn.reserve(numBurn);
 
   samples.power.clear();
-samples.powerBurn.clear();
+  samples.powerBurn.clear();
   samples.power.reserve(numSamples-numBurn);
-samples.powerBurn.reserve(numBurn);
+  samples.powerBurn.reserve(numBurn);
 
   samples.trtPre.clear();
-samples.trtPreBurn.clear();
+  samples.trtPreBurn.clear();
   samples.trtPre.reserve(numSamples-numBurn);
-samples.trtPreBurn.reserve(numBurn);
+  samples.trtPreBurn.reserve(numBurn);
 
   samples.trtAct.clear();
-samples.trtActBurn.clear();
+  samples.trtActBurn.clear();
   samples.trtAct.reserve(numSamples-numBurn);
-samples.trtActBurn.reserve(numBurn);
+  samples.trtActBurn.reserve(numBurn);
 
 
   samples.ll.clear();
-samples.llBurn.clear();
+  samples.llBurn.clear();
   samples.ll.reserve(numSamples-numBurn);
-samples.llBurn.reserve(numBurn);
+  samples.llBurn.reserve(numBurn);
 
 
   covarBeta_cur.resize(numNodes);
@@ -477,16 +477,16 @@ samples.llBurn.reserve(numBurn);
 	  att.at(j)=0;
 	}
       }
-if(saveBurn){
-      samples.intcpBurn.push_back(intcp_cur);
-      samples.betaBurn.insert(samples.betaBurn.end(),
-beta_cur.begin(),
-beta_cur.end());
-      samples.alphaBurn.push_back(alpha_cur);
-      samples.powerBurn.push_back(power_cur);
-      samples.trtPreBurn.push_back(trtPre_cur);
-      samples.trtActBurn.push_back(trtAct_cur);
-}
+      if(saveBurn){
+	samples.intcpBurn.push_back(intcp_cur);
+	samples.betaBurn.insert(samples.betaBurn.end(),
+				beta_cur.begin(),
+				beta_cur.end());
+	samples.alphaBurn.push_back(alpha_cur);
+	samples.powerBurn.push_back(power_cur);
+	samples.trtPreBurn.push_back(trtPre_cur);
+	samples.trtActBurn.push_back(trtAct_cur);
+      }
     }
     else if(i%thin==0){
       // save the samples

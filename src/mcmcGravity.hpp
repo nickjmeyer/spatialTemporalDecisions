@@ -11,11 +11,12 @@
 class GravitySamples{
  public:
   int numSamples;
-int numBurn;
+  int numBurn;
   int numCovar;
 
   std::vector<double> intcp,beta,alpha,power,trtPre,trtAct;
-std::vector<double> intcpBurn,betaBurn,alphaBurn,powerBurn,trtPreBurn,trtActBurn;
+  std::vector<double> intcpBurn,betaBurn,alphaBurn,powerBurn,
+    trtPreBurn,trtActBurn;
 
   double intcpSet;
   std::vector<double> betaSet;
@@ -25,7 +26,7 @@ std::vector<double> intcpBurn,betaBurn,alphaBurn,powerBurn,trtPreBurn,trtActBurn
   double trtActSet;
 
   std::vector<double> ll;
-std::vector<double> llBurn;
+  std::vector<double> llBurn;
   double llPt,pD,Dbar,DIC;
 
   void setMean();
@@ -100,10 +101,10 @@ class GravityMcmc{
 
   //functions
   void sample(int const numSamples, int const numBurn,
-const bool saveBurn = false);
+	      const bool saveBurn = false);
   void sample(int const numSamples, int const numBurn,
 	      const std::vector<double> & par,
-const bool saveBurn = false);
+	      const bool saveBurn = false);
   double ll();
 
   inline static void updateAlphaW(std::vector<double> & alphaW,
