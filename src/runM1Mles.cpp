@@ -29,10 +29,6 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
-  std::vector<std::string> names = {"power"};
-  double power = std::log(s.modelGen_r.getPar(names)[0]);
-  s.modelGen_r.setPar(names,power);
-
   int numReps = 100;
   Starts starts(numReps,s.fD.numNodes);
 
