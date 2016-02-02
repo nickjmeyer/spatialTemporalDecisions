@@ -497,12 +497,27 @@ void ModelBase::revert(){
 
 
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
+		    const FixedData & fD, const DynamicData & dD,
+		    const bool init){
+  if(init){
+    fit(getPar(),sD,tD,fD,dD);
+  }
+  else{
+    std::vector<double> startingVals(numPars,0.2);
+    startingVals.at(0) = -3.0;
+    fit(startingVals,sD,tD,fD,dD);
+  }
+}
+
+
+void ModelBase::fit(const SimData & sD, const TrtData & tD,
 		    const FixedData & fD, const DynamicData & dD){
 
   std::vector<double> startingVals(numPars,0.2);
   startingVals.at(0) = -3.0;
   fit(startingVals,sD,tD,fD,dD);
 }
+
 
 void ModelBase::fit(const std::vector<double> & startingVals,
 		    const SimData & sD, const TrtData & tD,
@@ -544,17 +559,7 @@ void ModelBase::fit(const std::vector<double> & startingVals,
 
 
 
-void ModelBase::estimateMle(const SimData & sD,
-			    const TrtData & tD,
-			    const FixedData & fD,
-			    const DynamicData & dD){
-  std::vector<double> startingVals(numPars,0.2);
-  startingVals.at(0) = -3.0;
-  estimateMle(startingVals,sD,tD,fD,dD);
-}
-
-
-void ModelBase::estimateMle(const std::vector<double> startingVals,
+void ModelBase::estimateMle(const std::vector<double> & startingVals,
 			    const SimData & sD,
 			    const TrtData & tD,
 			    const FixedData & fD,
