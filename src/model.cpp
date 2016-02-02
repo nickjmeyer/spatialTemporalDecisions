@@ -496,6 +496,53 @@ void ModelBase::revert(){
 
 
 
+void ModelBase::fit(const SimData & sD, const TrtData & tD,
+		    const FixedData & fD, const DynamicData & dD){
+
+  std::vector<double> startingVals(numPars,0.2);
+  startingVals.at(0) = -3.0;
+  fit(startingVals,sD,tD,fD,dD);
+}
+
+void ModelBase::fit(const std::vector<double> & startingVals,
+		    const SimData & sD, const TrtData & tD,
+		    const FixedData & fD, const DynamicData & dD){
+  if(fitType == MLE || fitType == MLES){
+
+    // estimate the MLE
+    estimateMle(startingVals,sD,tD,fD,dD);
+
+
+    if(sD.time <= fD.trtStart){
+      // if before trt starts, set trt values to prior
+      std::vector<std::string> names = {"trtPre","trtAct"};
+      setPar(names,fD.priorTrtMean);
+    }
+
+
+    if(fitType == MLES){
+      // for sampling
+      setFisher(sD,tD,fD,dD);
+    }
+
+    // for probabilities, must do after fisher
+    setFill(sD,tD,fD,dD);
+
+  }
+  else if(fitType == MCMC){
+    std::cout << "Error: ModelBase::fit(): MCMC not setup"
+	      << std::endl;
+    throw(1);
+  }
+  else{
+    std::cout << "Not a valid Estimation of "
+	      << fitType
+	      << std::endl;
+    throw(1);
+  }
+}
+
+
 
 void ModelBase::estimateMle(const SimData & sD,
 			    const TrtData & tD,

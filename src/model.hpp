@@ -23,8 +23,8 @@ class ModelBase {
   std::vector<double> expitRevProbs;
   std::vector<double> quick;
   std::vector<double> fisher;
-  Eigen::VectorXd meanHit;
-  Eigen::MatrixXd varHit;
+  arma::colvec meanHit;
+  arma::mat varHit;
   int ready;
   int numInfected,numNotInfec;
   int fixSample;
@@ -129,12 +129,19 @@ class ModelBase {
   Estimation fitType;
 
 
+  virtual void fit(const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
+
+  virtual void fit(const std::vector<double> & startingVals,
+		   const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
+
   virtual void estimateMle(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
 			   const DynamicData & dD);
 
-  virtual void estimateMle(const std::vector<double> startingVals,
+  virtual void estimateMle(const std::vector<double> & startingVals,
 			   const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,
