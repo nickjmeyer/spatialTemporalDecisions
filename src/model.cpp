@@ -391,24 +391,28 @@ void ModelBase::setFisher(const SimData & sD,
 
       for(pi = 0; pi < numPars; ++pi){
 	for(pj = pi; pj < numPars; ++pj){
+	  // double prob = std::max(1e-10,expitInfProbs[nN]);
 	  double prob = std::max(1e-10,expitInfProbs[nN]);
 
-	  fisher[pi*numPars + pj] +=
-	    (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
-
-	  if(pj != pi){
-	    fisher[pj*numPars + pi] +=
-	      (double(next)/prob - 1.0)*dbl[pj*numPars + pi];
-	  }
-
-
-	  if(next == 1){
-	    fisher[pi*numPars + pj] -=
-	      (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+	  if(prob > 0.0){
+	    fisher[pi*numPars + pj] +=
+	      (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
 
 	    if(pj != pi){
-	      fisher[pj*numPars + pi] -=
-		(1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+	      fisher[pj*numPars + pi] +=
+		(double(next)/prob - 1.0)*dbl[pj*numPars + pi];
+	    }
+	  }
+
+	  if((prob*prob) > 0.0){
+	    if(next == 1){
+	      fisher[pi*numPars + pj] -=
+		(1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+
+	      if(pj != pi){
+		fisher[pj*numPars + pi] -=
+		  (1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+	      }
 	    }
 	  }
 	}
