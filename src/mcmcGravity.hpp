@@ -13,7 +13,7 @@ class GravitySamples{
   int numSamples;
 int numBurn;
   int numCovar;
-  
+
   std::vector<double> intcp,beta,alpha,power,trtPre,trtAct;
 std::vector<double> intcpBurn,betaBurn,alphaBurn,powerBurn,trtPreBurn,trtActBurn;
 
@@ -48,7 +48,7 @@ class GravityMcmc{
 	    const FixedData & fD);
 
   double priorTrtMean;
-  
+
   // MCMC samples
   GravitySamples samples;
 
@@ -64,7 +64,7 @@ class GravityMcmc{
   std::vector<double> cc;
   std::vector<double> covar;
   int numCovar;
-  
+
   std::vector<double> covarBeta_cur;
   std::vector<double> covarBeta_can;
   std::vector<double> alphaW_cur;
@@ -153,7 +153,7 @@ inline void GravityMcmc::updateAlphaW(std::vector<double> & alphaW,
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
       alphaW.at(i*numNodes + j) = alpha * d.at(i*numNodes + j)/
-	std::pow(cc.at(i*numNodes + j),powerNew);
+	std::pow(cc.at(i*numNodes + j),std::exp(powerNew));
 }
 
 inline void GravityMcmc::updateCovarBeta(std::vector<double> & covarBeta,
