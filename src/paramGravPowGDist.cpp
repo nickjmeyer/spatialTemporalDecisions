@@ -44,7 +44,8 @@ void ParamGravPowGDist::updateAfter(){
   double gPow = pars.at(2);
   int i,I = numNodes * numNodes;
   for(i = 0; i < I; ++i){
-    grav.at(i) = alpha * std::pow(dist.at(i),gPow) / std::pow(cc.at(i),power);
+    grav.at(i) = alpha * std::pow(dist.at(i),gPow) / std::pow(cc.at(i),
+							      std::exp(power));
   }
 }
 
@@ -85,14 +86,14 @@ std::vector<double> ParamGravPowGDist::partial(const int notNode,
   std::vector<double> p;
   int ind = notNode*numNodes + infNode;
   // the negative is because the term is subtracted in the model
-  p.push_back(-std::pow(dist[ind],gPow)/std::pow(cc[ind],power));
+  p.push_back(-std::pow(dist[ind],gPow)/std::pow(cc[ind],std::exp(power)));
   // remember that this term is subtracted in the model
   // so the negatives cancel
-  p.push_back(alpha*std::pow(dist[ind],gPow)*std::log(cc[ind])/
-	      std::pow(cc[ind],power));
+  p.push_back(alpha*std::pow(dist[ind],gPow)*std::log(cc[ind])*
+	      std::exp(power)/std::pow(cc[ind],std::exp(power)));
 
   p.push_back(-alpha*std::pow(dist[ind],gPow)*std::log(dist[ind])/
-	      std::pow(cc[ind],power));
+	      std::pow(cc[ind],std::exp(power)));
   return p;
 }
 
@@ -112,17 +113,18 @@ std::vector<double> ParamGravPowGDist::partial2(const int notNode,
   p.push_back(0); // (0,0)
   // remember that this term is subtracted in the model
   // so the negatives cancel
-  double val0 = std::pow(dist[ind],gPow)*std::log(cc[ind])/
-    std::pow(cc[ind],power);
+  double val0 = std::pow(dist[ind],gPow)*std::log(cc[ind])*
+    std::exp(power)/std::pow(cc[ind],std::exp(power));
   p.push_back(val0); // (0,1)
 
   double val1 = -std::log(dist[ind])*std::pow(dist[ind],gPow)/
-    std::pow(cc[ind],power);
+    std::pow(cc[ind],std::exp(power));
   p.push_back(val1); // (0,2)
 
   p.push_back(val0);// (1,0)
 
-  p.push_back(- alpha * val0 * std::log(cc[ind])); // (1,1)
+  //(1,1)
+  p.push_back(- alpha * val0 * (std::exp(power)*std::log(cc[ind]) - 1.0));
 
   double val3 = val0 * std::log(dist[ind]);
   p.push_back(val3); // (1,2)
