@@ -24,34 +24,8 @@ class Model2GravityGDist : public ModelBase {
 
   virtual Model2GravityGDist & operator=(const Model2GravityGDist & m);
 
-  virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD,
-		   const int & useInit);
-
-  virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD,
-		   std::vector<double> pars);
-
   Gravity2Mcmc mcmc;
 };
-
-
-class Model2GravityGDistFitData {
- public:
-  Model2GravityGDistFitData(const Model2GravityGDist & m,
-			    const std::vector<double> & all,
-			    const FixedData & fD,
-			    const std::vector<std::vector<int> > & history);
-
-  Model2GravityGDist m;
-  FixedData fD;
-  std::vector< std::vector<int> > history;
-};
-
-
-double modelGravity2GDistFitObjFn (const gsl_vector * x, void * params);
-
-
 
 
 #endif
