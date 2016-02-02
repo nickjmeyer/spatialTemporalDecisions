@@ -46,14 +46,14 @@ class ModelBase {
 			const DynamicData & dD);
 
   virtual std::vector<double> infProbs();
-  
+
   virtual void revProbs(const SimData & sD,
 			const TrtData & tD,
 			const FixedData & fD,
 			const DynamicData & dD);
 
   virtual std::vector<double> revProbs();
-  
+
   virtual void setFill(const SimData & sD,
 		       const TrtData & tD,
 		       const FixedData & fD,
@@ -70,7 +70,7 @@ class ModelBase {
 			const DynamicData & dD);
 
   virtual std::vector<double> & getQuick();
-  
+
   virtual double oneOnOne(const int notNode, const int infNode,
 			  const int numNodes) const;
 
@@ -94,7 +94,7 @@ class ModelBase {
 			 const DynamicData & dD);
 
   virtual bool sample(const bool force = false);
-  
+
   virtual void revert();
 
   virtual std::vector<double> getFisher() {return fisher;};
@@ -106,12 +106,12 @@ class ModelBase {
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
 		   std::vector<double> pars) = 0;
-  
+
   virtual std::vector<double> getPar() const;
 
   virtual std::vector<double>
   getPar(const std::vector<std::string> & name) const;
-  
+
   virtual std::vector<double>::const_iterator
   putPar(std::vector<double>::const_iterator it);
 
@@ -127,7 +127,54 @@ class ModelBase {
   virtual Estimation & getType();
 
   Estimation fitType;
+
+
+  virtual void estimateMle(const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD);
+
+  virtual void estimateMle(const std::vector<double> startingVals,
+			   const SimData & sD,
+			   const TrtData & tD,
+			   const FixedData & fD,
+			   const DynamicData & dD);
+
+  virtual double logll(const SimData & sD,
+		       const TrtData & tD,
+		       const FixedData & fD,
+		       const DynamicData & dD);
+  virtual std::vector<double> logllGrad(const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD);
 };
+
+
+class ModelBaseFitObj {
+ public:
+
+  ModelBaseFitObj(ModelBase * const mb,
+		  const SimData sD,
+		  const TrtData tD,
+		  const FixedData fD,
+		  const DynamicData dD);
+
+  ModelBase * mb;
+  SimData sD;
+  TrtData tD;
+  FixedData fD;
+  DynamicData dD;
+};
+
+
+double objFn(const gsl_vector * x, void * params);
+
+void objFnGrad(const gsl_vector * x, void * params,gsl_vector * g);
+
+void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g);
+
+
 
 
 
