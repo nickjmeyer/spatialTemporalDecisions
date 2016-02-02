@@ -100,12 +100,16 @@ class ModelBase {
   virtual std::vector<double> getFisher() {return fisher;};
 
   virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD,
-		   const int & useInit) = 0;
+		   const FixedData & fD, const DynamicData & dD);
 
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD,
-		   std::vector<double> pars) = 0;
+		   const bool init);
+
+
+  virtual void fit(const std::vector<double> & startingVals,
+		   const SimData & sD, const TrtData & tD,
+		   const FixedData & fD, const DynamicData & dD);
 
   virtual std::vector<double> getPar() const;
 
@@ -128,18 +132,6 @@ class ModelBase {
 
   Estimation fitType;
 
-
-  virtual void fit(const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD);
-
-  virtual void fit(const std::vector<double> & startingVals,
-		   const SimData & sD, const TrtData & tD,
-		   const FixedData & fD, const DynamicData & dD);
-
-  virtual void estimateMle(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD);
 
   virtual void estimateMle(const std::vector<double> & startingVals,
 			   const SimData & sD,
