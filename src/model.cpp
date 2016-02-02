@@ -348,6 +348,7 @@ void ModelBase::setFisher(const SimData & sD,
 
   int t,iN,nN;
   unsigned int pi,pj;
+  double addVal = 0.0;
   for(t = 0; t < sD.time; ++t){
     SimData sDi= std::get<0>(db[t]);
     TrtData tDi= std::get<1>(db[t]);
@@ -377,11 +378,12 @@ void ModelBase::setFisher(const SimData & sD,
 
 	  int piInd = pi*numPars;
 	  for(pj = pi; pj < numPars; ++pj){
-	    dbl[piInd + pj] += quickInd*p2[piInd + pj];
-	    dbl[piInd + pj] += quickInd*(1.0-quickInd)*p[pj]*p[pi];
+	    addVal = quickInd*p2[piInd + pj];
+	    addVal += quickInd*(1.0-quickInd)*p[pj]*p[pi];
+
+	    dbl[piInd + pj] += addVal;
 	    if(pj != pi){
-	      dbl[pj*numPars + pi] += quickInd*p2[pj*numPars + pi];
-	      dbl[pj*numPars + pi] += quickInd*(1.0-quickInd)*p[pi]*p[pj];
+	      dbl[pj*numPars + pi] += addVal;
 	    }
 	  }
 	}
@@ -395,23 +397,22 @@ void ModelBase::setFisher(const SimData & sD,
 	  double prob = std::max(1e-10,expitInfProbs[nN]);
 
 	  if(prob > 0.0){
-	    fisher[pi*numPars + pj] +=
-	      (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
+	    addVal = (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
+	    fisher[pi*numPars + pj] += addVal;
 
 	    if(pj != pi){
-	      fisher[pj*numPars + pi] +=
-		(double(next)/prob - 1.0)*dbl[pj*numPars + pi];
+	      fisher[pj*numPars + pi] += addVal;
 	    }
 	  }
 
 	  if((prob*prob) > 0.0){
+	    addVal = (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+
 	    if(next == 1){
-	      fisher[pi*numPars + pj] -=
-		(1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+	      fisher[pi*numPars + pj] -= addVal;
 
 	      if(pj != pi){
-		fisher[pj*numPars + pi] -=
-		  (1-prob)*sqr[pj]*sqr[pi]/(prob*prob);
+		fisher[pj*numPars + pi] -= addVal;
 	      }
 	    }
 	  }
@@ -420,77 +421,54 @@ void ModelBase::setFisher(const SimData & sD,
     }
   }
 
-  Eigen::Map<Eigen::MatrixXd> I(fisher.data(),numPars,numPars);
+  arma::mat I(fisher.data(),numPars,numPars);
+
   if(sD.time <= fD.trtStart){
-    I.row(numPars-2).setZero();
-    I.row(numPars-1).setZero();
-    I.col(numPars-2).setZero();
-    I.col(numPars-1).setZero();
+    I.row(numPars-2) = arma::zeros<arma::rowvec>(numPars);
+    I.row(numPars-1) = arma::zeros<arma::rowvec>(numPars);
+    I.col(numPars-2) = arma::zeros<arma::colvec>(numPars);
+    I.col(numPars-1) = arma::zeros<arma::colvec>(numPars);
 
     I(numPars-2,numPars-2) = -2.0;
     I(numPars-1,numPars-1) = -2.0;
   }
-  // std::cout << "I: " << std::endl
-  // 	    << I << std::endl
-  // 	    << std::endl;
-  Eigen::LDLT<Eigen::MatrixXd> ldlt(-I);
 
-  for(int i = 0; i < int(I.rows()); ++i){
-    std::cout << "I row " << i << ": " << I.row(i) << std::endl;
-  }
+  arma::mat eigvec;
+  arma::colvec eigval;
+  arma::eig_sym(eigval,eigvec,I);
 
-  if(ldlt.info() != Eigen::Success){
-    static int badCnt = 0;
-    std::cout << "Error: ModelBase::getFisher(): eigen solver failed"
-	      << std::endl;
-    njm::toFile(fisher,njm::sett.datExt("badFisher" +
-					njm::toString(badCnt++,"",0,0)));
-    throw(1);
-  }
+  std::vector<double> currPar = getPar();
+  meanHit = arma::colvec(currPar.data(),numPars);
 
-  else{
-    std::cout << "here" << std::endl;
-    std::cout << I(0,0) << std::endl;
-    Eigen::Transpositions<Eigen::Dynamic,Eigen::Dynamic> P;
-    P = ldlt.transpositionsP();
-    Eigen::MatrixXd L = ldlt.matrixL();
+  // invert the non-zero eigen values
+  for(pi = 0; pi < numPars; ++pi){
+    if(eigval(pi) < 1e-10)
+      eigval(pi) = 0.0;
+    else{
+      if(eigval(pi) < 0.0){
+	std::cout << "ModelBase::setFisher(): Negative eigen value for "
+		  << "parameter " << pi << std::endl;
+	throw(1);
+      }
 
-    for(int i = 0; i < int(L.rows()); ++i){
-      std::cout << "L row " << i << ": " << L.row(i) << std::endl;
+      eigval(pi) = 1.0/std::sqrt(eigval(pi));
     }
-
-    // std::cout << "L: " << std::endl
-    // 	      << L << std::endl
-    // 	      << std::endl;
-    L.transposeInPlace();
-    Eigen::VectorXd D = ldlt.vectorD();
-
-    std::cout << "D: "  << std::endl << D << std::endl;
-
-    throw(1);
-
-    // std::cout << "D: " << std::endl
-    // 	      << D << std::endl
-    // 	      << std::endl;
-    varHit = P.transpose() *
-      L.inverse() *
-      D.cwiseInverse().cwiseAbs().cwiseSqrt().asDiagonal();
-    std::vector<double> all = getPar();
-    meanHit = Eigen::Map<Eigen::VectorXd>(all.data(),numPars);
   }
+  varHit = eigvec * arma::diagmat(eigval);
 }
 
 
 bool ModelBase::sample(const bool force){
   if(fitType == MLES && (!fixSample || force)){
-    std::vector<double> rand;
+    arma::colvec rand(numPars);
     unsigned int i;
     for(i = 0; i < numPars; ++i){
-      rand.push_back(njm::rnorm01());
+      rand(i) = njm::rnorm01();
     }
-    Eigen::Map<Eigen::VectorXd> randE(rand.data(),rand.size());
-    Eigen::VectorXd sampleE = meanHit + varHit * randE;
-    std::vector<double> sample(sampleE.data(),sampleE.data() + sampleE.size());
+
+    std::vector<double> sample =
+      arma::conv_to<std::vector<double> >::from(meanHit + varHit * rand);
+
     putPar(sample.begin());
 
     return true;
@@ -503,7 +481,10 @@ bool ModelBase::sample(const bool force){
 
 void ModelBase::revert(){
   if(fitType == MLES){
-    std::vector<double> sample(meanHit.data(),meanHit.data() + meanHit.size());
+
+    std::vector<double> sample =
+      arma::conv_to<std::vector<double> >::from(meanHit);
+
     putPar(sample.begin());
   }
   else{
@@ -520,7 +501,8 @@ void ModelBase::estimateMle(const SimData & sD,
 			    const TrtData & tD,
 			    const FixedData & fD,
 			    const DynamicData & dD){
-  std::vector<double> startingVals = this->getPar();
+  std::vector<double> startingVals(numPars,0.2);
+  startingVals.at(0) = -3.0;
   estimateMle(startingVals,sD,tD,fD,dD);
 }
 
