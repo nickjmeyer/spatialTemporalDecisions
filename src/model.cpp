@@ -198,6 +198,7 @@ void ModelBase::setQuick(const SimData & sD,
       quick[k] = 1.0/(1.0 + std::exp(probs[pK + sD.infected[j]]));
     }
   }
+  ready = 1;
 }
 
 
