@@ -29,6 +29,10 @@ int main(int argc, char ** argv){
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
+  std::vector<std::string> names = {"power"};
+  double power = std::log(s.modelGen_r.getPar(names)[0]);
+  s.modelGen_r.setPar(names,power);
+
   int numReps = 100;
   Starts starts(numReps,s.fD.numNodes);
 
@@ -51,8 +55,8 @@ int main(int argc, char ** argv){
 
   rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
   njm::message("   No treatment: "
-	       + njm::toString(rs.smean(),"")
-	       + "  (" + njm::toString(rs.seMean(),"") + ")");
+  	       + njm::toString(rs.smean(),"")
+  	       + "  (" + njm::toString(rs.seMean(),"") + ")");
 
   rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
   njm::message("       Proximal: "
