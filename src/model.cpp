@@ -339,89 +339,9 @@ void ModelBase::setFisher(const SimData & sD,
 			  const TrtData & tD,
 			  const FixedData & fD,
 			  const DynamicData & dD){
-  fisher.resize(numPars * numPars);
-  std::fill(fisher.begin(),fisher.end(),0);
 
-  std::vector<std::vector<int> > hist = sD.history;
-  hist.push_back(sD.status);
-  std::vector<DataBundle> db = historyToData(hist);
-
-  int t,iN,nN;
-  unsigned int pi,pj;
-  double addVal = 0.0;
-  for(t = 0; t < sD.time; ++t){
-    SimData sDi= std::get<0>(db[t]);
-    TrtData tDi= std::get<1>(db[t]);
-    DynamicData dDi = std::get<2>(db[t]);
-
-    setFill(sDi,tDi,fD,dDi);
-    setQuick(sDi,tDi,fD,dDi);
-    infProbs(sDi,tDi,fD,dDi);
-
-    for(nN = 0; nN < sDi.numNotInfec; ++nN){
-      std::vector<double> dbl(numPars*numPars,0);
-      std::vector<double> sqr(numPars,0);
-
-      for(iN = 0; iN < sDi.numInfected; ++iN){
-	int ind = nN*sDi.numInfected + iN;
-	std::vector<double> p = partial(sDi.notInfec[nN],
-					sDi.infected[iN],
-					sDi,tDi,fD,dDi);
-	std::vector<double> p2 = partial2(sDi.notInfec[nN],
-					  sDi.infected[iN],
-					  sDi,tDi,fD,dDi);
-
-	// double quickInd = std::max(1e-10,quick[ind]);
-	double quickInd = 1.0 - quick[ind];
-	for(pi = 0; pi < numPars; ++pi){
-	  sqr[pi] += quickInd*p[pi];
-
-	  int piInd = pi*numPars;
-	  for(pj = pi; pj < numPars; ++pj){
-	    addVal = quickInd*p2[piInd + pj];
-	    addVal += quickInd*(1.0-quickInd)*p[pj]*p[pi];
-
-	    dbl[piInd + pj] += addVal;
-	    if(pj != pi){
-	      dbl[pj*numPars + pi] += addVal;
-	    }
-	  }
-	}
-      }
-
-      int next = (hist[t+1][sDi.notInfec[nN]] < 2 ? 0 : 1);
-
-      for(pi = 0; pi < numPars; ++pi){
-	for(pj = pi; pj < numPars; ++pj){
-	  // double prob = std::max(1e-10,expitInfProbs[nN]);
-	  double prob = std::max(1e-10,expitInfProbs[nN]);
-
-	  if(prob > 0.0){
-	    addVal = (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
-	    fisher[pi*numPars + pj] += addVal;
-
-	    if(pj != pi){
-	      fisher[pj*numPars + pi] += addVal;
-	    }
-	  }
-
-	  if((prob*prob) > 0.0){
-	    addVal = (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
-
-	    if(next == 1){
-	      fisher[pi*numPars + pj] -= addVal;
-
-	      if(pj != pi){
-		fisher[pj*numPars + pi] -= addVal;
-	      }
-	    }
-	  }
-	}
-      }
-    }
-  }
-
-  arma::mat I(fisher.data(),numPars,numPars);
+  std::vector<double> hess = logllHess(sD,tD,fD,dD);
+  arma::mat I(hess.data(),numPars,numPars);
 
   if(sD.time <= fD.trtStart){
     I.row(numPars-2) = arma::zeros<arma::rowvec>(numPars);
@@ -725,6 +645,97 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     }
   }
   return logllGradVal;
+}
+
+
+
+std::vector<double> ModelBase::logllHess(const SimData & sD,
+					 const TrtData & tD,
+					 const FixedData & fD,
+					 const DynamicData & dD){
+  std::vector<double> hess(numPars * numPars);
+  std::fill(hess.begin(),hess.end(),0);
+
+  std::vector<std::vector<int> > hist = sD.history;
+  hist.push_back(sD.status);
+  std::vector<DataBundle> db = historyToData(hist);
+
+  int t,iN,nN;
+  unsigned int pi,pj;
+  double addVal = 0.0;
+  for(t = 0; t < sD.time; ++t){
+    SimData sDi= std::get<0>(db[t]);
+    TrtData tDi= std::get<1>(db[t]);
+    DynamicData dDi = std::get<2>(db[t]);
+
+    setFill(sDi,tDi,fD,dDi);
+    setQuick(sDi,tDi,fD,dDi);
+    infProbs(sDi,tDi,fD,dDi);
+
+    for(nN = 0; nN < sDi.numNotInfec; ++nN){
+      std::vector<double> dbl(numPars*numPars,0);
+      std::vector<double> sqr(numPars,0);
+
+      for(iN = 0; iN < sDi.numInfected; ++iN){
+	int ind = nN*sDi.numInfected + iN;
+	std::vector<double> p = partial(sDi.notInfec[nN],
+					sDi.infected[iN],
+					sDi,tDi,fD,dDi);
+	std::vector<double> p2 = partial2(sDi.notInfec[nN],
+					  sDi.infected[iN],
+					  sDi,tDi,fD,dDi);
+
+	// double quickInd = std::max(1e-10,quick[ind]);
+	double quickInd = 1.0 - quick[ind];
+	for(pi = 0; pi < numPars; ++pi){
+	  sqr[pi] += quickInd*p[pi];
+
+	  int piInd = pi*numPars;
+	  for(pj = pi; pj < numPars; ++pj){
+	    addVal = quickInd*p2[piInd + pj];
+	    addVal += quickInd*(1.0-quickInd)*p[pj]*p[pi];
+
+	    dbl[piInd + pj] += addVal;
+	    if(pj != pi){
+	      dbl[pj*numPars + pi] += addVal;
+	    }
+	  }
+	}
+      }
+
+      int next = (hist[t+1][sDi.notInfec[nN]] < 2 ? 0 : 1);
+
+      for(pi = 0; pi < numPars; ++pi){
+	for(pj = pi; pj < numPars; ++pj){
+	  // double prob = std::max(1e-10,expitInfProbs[nN]);
+	  double prob = std::max(1e-10,expitInfProbs[nN]);
+
+	  if(prob > 0.0){
+	    addVal = (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
+	    hess[pi*numPars + pj] += addVal;
+
+	    if(pj != pi){
+	      hess[pj*numPars + pi] += addVal;
+	    }
+	  }
+
+	  if((prob*prob) > 0.0){
+	    addVal = (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+
+	    if(next == 1){
+	      hess[pi*numPars + pj] -= addVal;
+
+	      if(pj != pi){
+		hess[pj*numPars + pi] -= addVal;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+
+  return hess;
 }
 
 

@@ -22,7 +22,7 @@ class ModelBase {
   std::vector<double> expitInfProbs;
   std::vector<double> expitRevProbs;
   std::vector<double> quick;
-  std::vector<double> fisher;
+
   arma::colvec meanHit;
   arma::mat varHit;
   int ready;
@@ -143,10 +143,17 @@ class ModelBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD);
+
   virtual std::vector<double> logllGrad(const SimData & sD,
 					const TrtData & tD,
 					const FixedData & fD,
 					const DynamicData & dD);
+
+  virtual std::vector<double> logllHess(const SimData & sD,
+					const TrtData & tD,
+					const FixedData & fD,
+					const DynamicData & dD);
+
 };
 
 
