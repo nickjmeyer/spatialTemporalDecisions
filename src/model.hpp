@@ -97,8 +97,6 @@ class ModelBase {
 
   virtual void revert();
 
-  virtual std::vector<double> getFisher() {return fisher;};
-
   virtual void fit(const SimData & sD, const TrtData & tD,
 		   const FixedData & fD, const DynamicData & dD);
 

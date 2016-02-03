@@ -361,6 +361,7 @@ void ModelBase::setFisher(const SimData & sD,
   meanHit = arma::colvec(currPar.data(),numPars);
 
   // invert the non-zero eigen values
+  unsigned int pi;
   for(pi = 0; pi < numPars; ++pi){
     if(eigval(pi) < 1e-10)
       eigval(pi) = 0.0;
