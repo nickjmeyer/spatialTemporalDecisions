@@ -6,6 +6,8 @@
 #include <iostream>
 #include <numeric>
 #include <tuple>
+#include <omp.h>
+#include <iomanip>
 #include "utilities.hpp"
 #include "timer.hpp"
 #include "rand.hpp"
@@ -17,22 +19,9 @@
 #include "noTrtAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
-#include "osspAgent.hpp"
 #include "features.hpp"
-#include "toyFeatures2.hpp"
-#include "featuresInt.hpp"
 #include "runner.hpp"
 #include "settings.hpp"
-#include "m1SgdOptim.hpp"
-#include "m1OsspOptim.hpp"
-#include "m2QOptim.hpp"
-#include "pardisoSymWrap.hpp"
-#include "mcmcGravity.hpp"
-#include "mcmcGravityTimeInf.hpp"
-#include "mcmcGravityTimeInfExp.hpp"
-#include "mcmcGravityTimeInfExpCaves.hpp"
-#include "proxStocGDistAgent.hpp"
-
 
 
 #endif
