@@ -227,14 +227,14 @@ void runBayesP(const std::string & file, const int obs,
     S s;
     Starts starts("startingLocations.txt");
     s.modelGen_r = sObs.modelGen_r;
+    s.modelGen_r.setFisher(sObs.sD,sObs.tD,sObs.fD,sObs.dD);
     s.modelEst_r = s.modelGen_r;
     int r,t,R,T;
     R = numStats;
     T = sObs.sD.time;
     for(r = 0; r < R; ++r){
-      s.modelGen_r.mcmc.samples.setRand();
-      par = s.modelGen_r.mcmc.samples.getPar();
-      s.modelGen_r.putPar(par.begin());
+      s.modelGen_r.sample(true);
+      std::vector<double> par = s.modelGen_r.getPar();
       s.modelEst_r.putPar(par.begin());
 
       s.reset(starts[r]);
