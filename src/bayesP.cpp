@@ -101,7 +101,8 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
 template <class M>
 void runBayesP(const std::string & file, const int obs,
 	       const int numSamples,const int numBurn,
-	       const int numStats){
+	       const int numStats,
+	       const bool save){
   njm::resetSeed(0);
 
   typedef System<M,M> S;
@@ -135,7 +136,9 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.mcmc.samples.setMean();
     std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
     sObs.modelGen_r.putPar(par.begin());
-    sObs.modelGen_r.save();
+
+    if(save)
+      sObs.modelGen_r.save();
 
     std::vector< std::vector<double> > stats;
 
@@ -314,6 +317,14 @@ int main(int argc, char ** argv){
   // int numSamples = 100, numBurn = 50, numStats = 50;
   // int numSamples = 10, numBurn = 5, numStats = 5;
 
+  bool save = false;
+  if(save){
+    std::cout << "Setup to SAVE parameters." << std::endl;
+  }
+  else{
+    std::cout << "Setup to NOT SAVE parameters." << std::endl;
+  }
+
 #pragma omp parallel sections			\
   shared(numSamples,numBurn,numStats)
   {
@@ -321,14 +332,14 @@ int main(int argc, char ** argv){
     {
       runBayesP<ModelGravityGDist
 		>("gravity",1,
-		  numSamples,numBurn,numStats);
+		  numSamples,numBurn,numStats,save);
     }
 
 #pragma omp section
     {
       runBayesP<Model2GravityGDist
 		>("gravity2",0,
-		  numSamples,numBurn,numStats);
+		  numSamples,numBurn,numStats,save);
     }
 
 // #pragma omp section
