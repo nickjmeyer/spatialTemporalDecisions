@@ -172,45 +172,45 @@ void runBayesP(const std::string & file, const int obs,
   }
 
 
-  { // mode
-    sObs.modelGen_r.mcmc.samples.setMode();
-    std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
-    sObs.modelGen_r.putPar(par.begin());
+  // { // mode
+  //   sObs.modelGen_r.mcmc.samples.setMode();
+  //   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+  //   sObs.modelGen_r.putPar(par.begin());
 
-    /////////////
-    // don't save mode to file (only save mean above)
-    /////////////
+  //   /////////////
+  //   // don't save mode to file (only save mean above)
+  //   /////////////
 
-    std::vector< std::vector<double> > stats;
+  //   std::vector< std::vector<double> > stats;
 
-    S s;
-    Starts starts("startingLocations.txt");
-    s.modelGen_r = sObs.modelGen_r;
-    s.modelEst_r = s.modelGen_r;
-    int r,t,R,T;
-    R = numStats;
-    T = sObs.sD.time;
-    for(r = 0; r < R; ++r){
-      s.modelGen_r.mcmc.samples.setRand();
-      par = s.modelGen_r.mcmc.samples.getPar();
-      s.modelGen_r.putPar(par.begin());
-      s.modelEst_r.putPar(par.begin());
+  //   S s;
+  //   Starts starts("startingLocations.txt");
+  //   s.modelGen_r = sObs.modelGen_r;
+  //   s.modelEst_r = s.modelGen_r;
+  //   int r,t,R,T;
+  //   R = numStats;
+  //   T = sObs.sD.time;
+  //   for(r = 0; r < R; ++r){
+  //     s.modelGen_r.mcmc.samples.setRand();
+  //     par = s.modelGen_r.mcmc.samples.getPar();
+  //     s.modelGen_r.putPar(par.begin());
+  //     s.modelEst_r.putPar(par.begin());
 
-      s.reset(starts[r]);
+  //     s.reset(starts[r]);
 
-      for(t = 0; t < T; ++t)
-	s.nextPoint();
-      h = s.sD.history;
-      h.push_back(s.sD.status);
+  //     for(t = 0; t < T; ++t)
+  // 	s.nextPoint();
+  //     h = s.sD.history;
+  //     h.push_back(s.sD.status);
 
-      stats.push_back(getStats(h,s.sD,s.fD));
-    }
+  //     stats.push_back(getStats(h,s.sD,s.fD));
+  //   }
 
-    njm::toFile(names,njm::sett.datExt("sampStats_mode_"+file+"_",".txt"),
-		std::ios_base::out);
-    njm::toFile(njm::toString(stats,"\n",""),
-		njm::sett.datExt("sampStats_mode_"+file+"_",".txt"));
-  }
+  //   njm::toFile(names,njm::sett.datExt("sampStats_mode_"+file+"_",".txt"),
+  // 		std::ios_base::out);
+  //   njm::toFile(njm::toString(stats,"\n",""),
+  // 		njm::sett.datExt("sampStats_mode_"+file+"_",".txt"));
+  // }
 
 
   { // mle
