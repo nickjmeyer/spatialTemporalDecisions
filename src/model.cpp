@@ -344,14 +344,20 @@ void ModelBase::setFisher(const SimData & sD,
   arma::mat I(hess.data(),numPars,numPars);
 
   if(sD.time <= fD.trtStart){
+    // if no treatments, then can't estimate asymptotic distribution
+    // set asymptotic variance as 1.0
+    // assign -1.0 since I gets scaled by -1.0 later
     I.row(numPars-2) = arma::zeros<arma::rowvec>(numPars);
     I.row(numPars-1) = arma::zeros<arma::rowvec>(numPars);
     I.col(numPars-2) = arma::zeros<arma::colvec>(numPars);
     I.col(numPars-1) = arma::zeros<arma::colvec>(numPars);
 
-    I(numPars-2,numPars-2) = -2.0;
-    I(numPars-1,numPars-1) = -2.0;
+    I(numPars-2,numPars-2) = -1.0;
+    I(numPars-1,numPars-1) = -1.0;
   }
+
+  // information matrix is - E[ d^2/(d\theta)^2 log L(\theta) ]
+  I *= -1.0;
 
   arma::mat eigvec;
   arma::colvec eigval;
@@ -360,18 +366,14 @@ void ModelBase::setFisher(const SimData & sD,
   std::vector<double> currPar = getPar();
   meanHit = arma::colvec(currPar.data(),numPars);
 
+
   // invert the non-zero eigen values
   unsigned int pi;
   for(pi = 0; pi < numPars; ++pi){
     if(eigval(pi) < 1e-10)
+      // stable non-negative definite matrix
       eigval(pi) = 0.0;
     else{
-      if(eigval(pi) < 0.0){
-	std::cout << "ModelBase::setFisher(): Negative eigen value for "
-		  << "parameter " << pi << std::endl;
-	throw(1);
-      }
-
       eigval(pi) = 1.0/std::sqrt(eigval(pi));
     }
   }
