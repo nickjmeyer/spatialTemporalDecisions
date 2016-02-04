@@ -5,7 +5,8 @@ double getDPow(const double & power, const double & alpha,
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
   meanCaves /= double(caves.size());
 
-  double dPow = std::log(2.0)*std::pow(meanCaves,2.0*power)/alpha + 1.0;
+  double dPow = std::log(2.0)*std::pow(meanCaves,2.0*std::exp(power))/alpha;
+  dPow += 1.0;
   dPow = std::log(dPow);
   dPow /= std::log(2.0);
 
