@@ -178,7 +178,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
 			     0.1, // alpha
-			     std::log(0.1), // power
+			     0.0, // power
 			     0.0, // trtAct
 			     0.0}; // trtPre
   par.insert(par.begin()+1,beta.begin(),beta.end());
@@ -212,8 +212,7 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
 
   alpha_cur=alpha_can= (*it < 0.00001 ? 0.01 : *it);
   ++it;
-  power_cur=power_can= (*it < std::log(0.00001) ? std::log(0.01) : *it);
-  ++it;
+  power_cur=power_can= *it++;
   trtAct_cur=trtAct_can= *it++;
   trtPre_cur=trtPre_can= *it++;
 
