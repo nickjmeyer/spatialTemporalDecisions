@@ -317,7 +317,7 @@ int main(int argc, char ** argv){
   // int numSamples = 100, numBurn = 50, numStats = 50;
   // int numSamples = 10, numBurn = 5, numStats = 5;
 
-  bool save = false;
+  bool save = true;
   if(save){
     std::cout << "Setup to SAVE parameters." << std::endl;
   }
