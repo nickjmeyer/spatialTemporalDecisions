@@ -218,7 +218,7 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
 
     njm::toFile(njm::toString(sObs.modelGen_r.getPar()," ","\n"),
-    	      njm::sett.datExt("sampSats_"+file+"_MLE_",".txt"));
+    	      njm::sett.datExt("sampStats_"+file+"_MLE_",".txt"));
 
     std::vector<double> par;
 
