@@ -5,3 +5,6 @@ all: $(mkfiles)
 
 %.mk:
 	cd src && make -f $@ $(MAKECMDGOALS)
+
+test:
+	cd src/test && g++ -lgtest test_rankAgent.cpp
