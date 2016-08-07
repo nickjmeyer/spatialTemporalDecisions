@@ -5,9 +5,9 @@ cd ../bin
 NETS=("grid" "rand" "scalefree")
 SIZE=("100" "500" "1000")
 
-for i in ${NETS[@]}
+for j in ${SIZE[@]}
 do
-    for j in ${SIZE[@]}
+    for i in ${NETS[@]}
     do
 	submit ./runM1MlesMiss "../data/toy/${i}${j}" y;
     done

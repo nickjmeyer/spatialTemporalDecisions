@@ -5,9 +5,9 @@ cd ../bin
 NETS=("rand")
 SIZE=("100" "500" "1000")
 
-for i in ${NETS[@]}
+for j in ${SIZE[@]}
 do
-    for j in ${SIZE[@]}
+    for i in ${NETS[@]}
     do
 	./tuneGen "../data/toy/${i}${j}" y;
 	submit ./runM1Mles "../data/toy/${i}${j}" y;
