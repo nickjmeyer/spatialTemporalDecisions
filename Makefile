@@ -1,33 +1,46 @@
-BUILDDIR=./build
+BUILDDIR=build/
 
-BLACKLIST:=bayesP obsDataStats test3 test bayesPsamplesBR test2 tuneSp
+BLACKLIST:=bayesP obsDataStats test3 test bayesPsamplesBR test2 tuneSp \
+toyFeatures2Multi getCov getDist isConnected mergeClusters sample \
+toyFeatures0 toyFeatures1 toyFeatures2 toyFeatures3 toyFeatures4 \
+toyFeatures6 toyFeatures7 wnsFeatures0 wnsFeatures1 wnsFeatures2
 
 PROGS:=$(shell find ./src/ -maxdepth 1 -name "*.cpp" -exec grep -l "int main" {} \;)
 PROGS:=$(notdir $(basename $(PROGS)))
 PROGS:=$(filter-out $(BLACKLIST),$(PROGS))
-PROGS:=$(PROGS:=.bin)
 
 CPP_SRC:=$(wildcard src/*.cpp)
+CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
 CPP_SRC:=$(filter-out $(PROGS) $(BLACKLIST),$(CPP_SRC))
 
-CPP_OBJ:=$(CPP_SRC:./src/%.cpp=./$(BUILDDIR)/%.o)
+PROGS:=$(PROGS:=.bin)
+PROGS:=$(PROGS:%=$(BUILDDIR)%)
 
-LIB=spatialDecisionMaking.so
+CPP_SRC:=$(CPP_SRC:%=src/%.cpp)
+CPP_OBJ:=$(CPP_SRC:src/%.cpp=$(BUILDDIR)%.o)
+
+LIB=$(BUILDDIR)libspatialDecisionMaking.so
 
 CC=g++
 
-all: $(PROGS)
+CPP_FLAGS=-std=c++11 -fopenmp
+LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -shared -fPIC
 
-%.bin: $(LIB) %.o
+all: $(LIB) $(PROGS)
 
-$(LIB): $(CPP_SRC:.cpp=.o)
-	$(CC) $(LDFLAGS) -o $@ $^
+test: $(LIB) $(CPP_SRC_TEST)
 
-%.o: %.cpp %.d
-	$(CC) -o $@
+$(BUILDDIR)%.bin: src/%.cpp $(LIB)
+	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -l$(LIB:$(BUILDDIR)lib%.so=%) -o $@ $^
+	ln -rs $@ $(@:%.bin=%)
 
-# %.mk:
-# 	cd src && make -f $@ $(MAKECMDGOALS)
+$(LIB): $(CPP_OBJ)
+	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -o $@ $^
 
-# test:
-# 	cd src/test && g++ -lgtest test_rankAgent.cpp
+$(BUILDDIR)%.o: src/%.cpp
+	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -c $< -o $@
+
+$(BUILDDIR)%.d: src/%.cpp
+	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@
+
+-include $(CPP_OBJ:%.o=%.d)
