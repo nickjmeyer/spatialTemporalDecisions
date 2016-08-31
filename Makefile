@@ -1,10 +1,33 @@
-mkfiles=runM1Mles.mk runM1MlesMiss.mk runM1MlesWns.mk runM1MlesWnsMiss.mk
+BUILDDIR=./build
 
-all: $(mkfiles)
+BLACKLIST:=bayesP obsDataStats test3 test bayesPsamplesBR test2 tuneSp
 
+PROGS:=$(shell find ./src/ -maxdepth 1 -name "*.cpp" -exec grep -l "int main" {} \;)
+PROGS:=$(notdir $(basename $(PROGS)))
+PROGS:=$(filter-out $(BLACKLIST),$(PROGS))
+PROGS:=$(PROGS:=.bin)
 
-%.mk:
-	cd src && make -f $@ $(MAKECMDGOALS)
+CPP_SRC:=$(wildcard src/*.cpp)
+CPP_SRC:=$(filter-out $(PROGS) $(BLACKLIST),$(CPP_SRC))
 
-test:
-	cd src/test && g++ -lgtest test_rankAgent.cpp
+CPP_OBJ:=$(CPP_SRC:./src/%.cpp=./$(BUILDDIR)/%.o)
+
+LIB=spatialDecisionMaking.so
+
+CC=g++
+
+all: $(PROGS)
+
+%.bin: $(LIB) %.o
+
+$(LIB): $(CPP_SRC:.cpp=.o)
+	$(CC) $(LDFLAGS) -o $@ $^
+
+%.o: %.cpp %.d
+	$(CC) -o $@
+
+# %.mk:
+# 	cd src && make -f $@ $(MAKECMDGOALS)
+
+# test:
+# 	cd src/test && g++ -lgtest test_rankAgent.cpp
