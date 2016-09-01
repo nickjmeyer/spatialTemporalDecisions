@@ -22,10 +22,10 @@ CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
 CPP_SRC:=$(filter-out $(PROGS) $(BLACKLIST),$(CPP_SRC))
 
 PROGS:=$(PROGS:=.bin)
-PROGS:=$(PROGS:%=$(BUILDDIR)/%)
+PROGS:=$(PROGS:%=$(BUILDDIR)/main/%)
 
 CPP_SRC:=$(CPP_SRC:%=src/%.cpp)
-CPP_OBJ:=$(CPP_SRC:src/%.cpp=$(BUILDDIR)/%.o)
+CPP_OBJ:=$(CPP_SRC:src/%.cpp=$(BUILDDIR)/main/%.o)
 
 LIB=$(BUILDDIR)/libspatialDecisionMaking.so
 
@@ -54,34 +54,45 @@ LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
 
 ## rules
 
-all: | build $(BUILDDIR) $(LIB) $(PROGS)
+all: | build $(BUILDDIR)/main $(LIB) $(PROGS)
 
 test: | build $(BUILDDIR)/test $(LIB) $(PROGS_TEST)
 
-build: $(BUILDDIR) $(BUILDDIR)/test
+build: $(BUILDDIR)/main $(BUILDDIR)/test
 	ln -rfs $(BUILDDIR) build
 
 $(BUILDDIR)/test:
 	mkdir -p $(BUILDDIR)/test
 
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+$(BUILDDIR)/main:
+	mkdir -p $(BUILDDIR)/main
 
-$(BUILDDIR)/%.bin: src/%.cpp $(LIB) | build
+$(BUILDDIR)/main/%.bin: src/%.cpp $(LIB) | build
 	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS) -l$(LIB:$(BUILDDIR)/lib%.so=%)
+	ln -rfs $@ $(@:%.bin=%)
+
+$(BUILDDIR)/test/%.bin: src/test/%.cpp $(LIB) | build
+	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS) -l$(LIB:$(BUILDDIR)/lib%.so=%) -lgtest
 	ln -rfs $@ $(@:%.bin=%)
 
 $(LIB): $(CPP_OBJ)
 	$(CC) $(CPP_FLAGS) -o $@ $^ $(LD_FLAGS) -shared
 
-$(BUILDDIR)/%.o: src/%.cpp $(BUILDDIR)/%.d | build
+$(BUILDDIR)/main/%.o: src/%.cpp $(BUILDDIR)/main/%.d | build
 	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
 
-$(BUILDDIR)/%.d: src/%.cpp | build
+$(BUILDDIR)/test/%.o: src/%.cpp $(BUILDDIR)/test/%.d | build
+	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
+
+$(BUILDDIR)/main/%.d: src/%.cpp | build
+	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
+
+$(BUILDDIR)/test/%.d: src/%.cpp | build
 	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
 
 ifneq ($(MAKECMDGOALS),clean)
 -include $(CPP_OBJ:%.o=%.d)
+-include $(CPP_OBJ_TEST:%.o=%.d)
 endif
 
 clean:
