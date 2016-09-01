@@ -1,6 +1,10 @@
 ## setup
 
-BUILDDIR=build/
+ifdef DEBUG
+BUILDDIR=.build_debug
+else
+BUILDDIR=.build_release
+endif
 
 BLACKLIST:=bayesP obsDataStats test3 test bayesPsamplesBR test2 tuneSp \
 toyFeatures2Multi getCov getDist isConnected mergeClusters sample \
@@ -18,12 +22,12 @@ CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
 CPP_SRC:=$(filter-out $(PROGS) $(BLACKLIST),$(CPP_SRC))
 
 PROGS:=$(PROGS:=.bin)
-PROGS:=$(PROGS:%=$(BUILDDIR)%)
+PROGS:=$(PROGS:%=$(BUILDDIR)/%)
 
 CPP_SRC:=$(CPP_SRC:%=src/%.cpp)
-CPP_OBJ:=$(CPP_SRC:src/%.cpp=$(BUILDDIR)%.o)
+CPP_OBJ:=$(CPP_SRC:src/%.cpp=$(BUILDDIR)/%.o)
 
-LIB=$(BUILDDIR)libspatialDecisionMaking.so
+LIB=$(BUILDDIR)/libspatialDecisionMaking.so
 
 ## test code
 
@@ -31,42 +35,59 @@ CPP_SRC_TEST:=$(wildcard src/test/*.cpp)
 CPP_SRC_TEST:=$(notdir $(basename $(CPP_SRC_TEST)))
 CPP_SRC_TEST:=$(filter-out $(BLACKLIST),$(CPP_SRC_TEST))
 
-PROGS_TEST:=$(CPP_SRC_TEST:%=$(BUILDDIR)test/%.bin)
+PROGS_TEST:=$(CPP_SRC_TEST:%=$(BUILDDIR)/test/%.bin)
 
-CPP_OBJ_TEST:=$(CPP_SRC_TEST:%=$(BUILDDIR)test/%.o)
+CPP_OBJ_TEST:=$(CPP_SRC_TEST:%=$(BUILDDIR)/test/%.o)
 
 CPP_SRC_TEST:=$(CPP_SRC_TEST:%=src/test/%)
-
-
 
 ## options
 
 CC=g++-4.9
 
-CPP_FLAGS=-std=c++11 -fopenmp -g3
-LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -shared -fPIC
+ifdef DEBUG
+CPP_FLAGS=-std=c++11 -ggdb
+else
+CPP_FLAGS=-std=c++11 -O3
+endif
+LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
 
 ## rules
 
-all: $(BUILDDIR) $(LIB) $(PROGS)
+all: | $(BUILDDIR) $(LIB) $(PROGS) build
 
-test: $(BUILDDIR)test $(LIB) $(PROGS_TEST)
+test: | $(BUILDDIR)/test $(LIB) $(PROGS_TEST) build
 
-$(BUILDDIR)%.bin: src/%.cpp $(LIB)
-	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -l$(LIB:$(BUILDDIR)lib%.so=%) -o $@ $^
+build: $(BUILDDIR)
+	ln -rfs $(BUILDDIR) build
+
+$(BUILDDIR)/test: $(BUILDDIR)
+	mkdir $(BUILDDIR)/test
+
+$(BUILDDIR):
+	mkdir $(BUILDDIR)
+
+$(BUILDDIR)/%.bin: src/%.cpp $(LIB)
+	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS) -l$(LIB:$(BUILDDIR)/lib%.so=%)
 	ln -rfs $@ $(@:%.bin=%)
 
 $(LIB): $(CPP_OBJ)
-	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -o $@ $^
+	$(CC) $(CPP_FLAGS) -o $@ $^ $(LD_FLAGS) -shared
 
-$(BUILDDIR)%.o: src/%.cpp $(BUILDDIR)%.d
-	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -c $< -o $@
+$(BUILDDIR)/%.o: src/%.cpp $(BUILDDIR)/%.d
+	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
 
-$(BUILDDIR)%.d: src/%.cpp
-	$(CC) $(LD_FLAGS) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@
+$(BUILDDIR)/%.d: src/%.cpp
+	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
 
+%.cpp:
+
+%.hpp:
+
+
+ifneq ($(MAKECMDGOALS),clean)
 -include $(CPP_OBJ:%.o=%.d)
+endif
 
 clean:
 	rm -rf $(BUILDDIR)
-	mkdir -p $(BUILDDIR)test
