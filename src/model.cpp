@@ -6,6 +6,8 @@ ModelBase::ModelBase(const std::string & str,
 		     const FixedData & fD){
   name = str;
 
+  edgeToEdge = false;
+
   set = 0;
   ready = 0;
   pars = newPars;
@@ -69,6 +71,14 @@ Estimation ModelBase::getType() const{
 
 Estimation & ModelBase::getType() {
   return fitType;
+}
+
+void ModelBase::setEdgeToEdge(const bool edgeToEdge){
+  this->edgeToEdge = edgeToEdge;
+}
+
+bool ModelBase::getEdgeToEdge() const {
+  return this->edgeToEdge;
 }
 
 

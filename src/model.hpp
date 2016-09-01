@@ -29,6 +29,8 @@ class ModelBase {
   int numInfected,numNotInfec;
   int fixSample;
 
+  bool edgeToEdge;
+
  public:
   ModelBase(){ };
   ModelBase(const std::string & str,
@@ -130,6 +132,8 @@ class ModelBase {
 
   Estimation fitType;
 
+  virtual void setEdgeToEdge(const bool edgeToEdge);
+  virtual bool getEdgeToEdge() const;
 
   virtual void estimateMle(const std::vector<double> & startingVals,
 			   const SimData & sD,
@@ -150,7 +154,7 @@ class ModelBase {
   virtual std::vector<double> logllHess(const SimData & sD,
 					const TrtData & tD,
 					const FixedData & fD,
-					const DynamicData & dD);
+                                        const DynamicData & dD);
 
 };
 
