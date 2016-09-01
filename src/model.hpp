@@ -29,6 +29,7 @@ class ModelBase {
   int numInfected,numNotInfec;
   int fixSample;
 
+  // defaults to false
   bool edgeToEdge;
 
  public:
