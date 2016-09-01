@@ -54,40 +54,36 @@ LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
 
 ## rules
 
-all: | $(BUILDDIR) $(LIB) $(PROGS) build
+all: | build $(BUILDDIR) $(LIB) $(PROGS)
 
-test: | $(BUILDDIR)/test $(LIB) $(PROGS_TEST) build
+test: | build $(BUILDDIR)/test $(LIB) $(PROGS_TEST)b
 
-build: $(BUILDDIR)
+build: $(BUILDDIR) $(BUILDDIR)/test
 	ln -rfs $(BUILDDIR) build
 
-$(BUILDDIR)/test: $(BUILDDIR)
-	mkdir $(BUILDDIR)/test
+$(BUILDDIR)/test:
+	mkdir -p $(BUILDDIR)/test
 
 $(BUILDDIR):
-	mkdir $(BUILDDIR)
+	mkdir -p $(BUILDDIR)
 
-$(BUILDDIR)/%.bin: src/%.cpp $(LIB)
+$(BUILDDIR)/%.bin: src/%.cpp $(LIB) | build
 	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS) -l$(LIB:$(BUILDDIR)/lib%.so=%)
 	ln -rfs $@ $(@:%.bin=%)
 
 $(LIB): $(CPP_OBJ)
 	$(CC) $(CPP_FLAGS) -o $@ $^ $(LD_FLAGS) -shared
 
-$(BUILDDIR)/%.o: src/%.cpp $(BUILDDIR)/%.d
+$(BUILDDIR)/%.o: src/%.cpp $(BUILDDIR)/%.d | build
 	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
 
-$(BUILDDIR)/%.d: src/%.cpp
+$(BUILDDIR)/%.d: src/%.cpp | build
 	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
-
-%.cpp:
-
-%.hpp:
-
 
 ifneq ($(MAKECMDGOALS),clean)
 -include $(CPP_OBJ:%.o=%.d)
 endif
 
 clean:
+	rm -f build
 	rm -rf $(BUILDDIR)
