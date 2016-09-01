@@ -34,6 +34,7 @@ Model2GPowGDist::Model2GPowGDist(const Model2GPowGDist & m){
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   fixSample = m.fixSample;
+  setEdgeToEdge(m.getEdgeToEdge());
 }
 
 

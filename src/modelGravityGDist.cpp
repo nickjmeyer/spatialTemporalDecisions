@@ -35,6 +35,7 @@ ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
   fitType = m.fitType;
   mcmc = m.mcmc;
   fixSample = m.fixSample;
+  setEdgeToEdge(m.getEdgeToEdge());
 }
 
 

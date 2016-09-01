@@ -34,6 +34,7 @@ ModelGDist::ModelGDist(const ModelGDist & m){
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   fixSample = m.fixSample;
+  setEdgeToEdge(m.getEdgeToEdge());
 }
 
 
