@@ -2,8 +2,8 @@
 
 
 ModelBase::ModelBase(const std::string & str,
-		     const std::vector<ParamBase *> & newPars,
-		     const FixedData & fD){
+                     const std::vector<ParamBase *> & newPars,
+                     const FixedData & fD){
   name = str;
 
   edgeToEdge = false;
@@ -12,14 +12,14 @@ ModelBase::ModelBase(const std::string & str,
   ready = 0;
   pars = newPars;
   std::for_each(pars.begin(),pars.end(),
-		[&fD](ParamBase * p){
-		  p->init(fD);
-		});
+                [&fD](ParamBase * p){
+                  p->init(fD);
+                });
   numPars = 0;
   std::for_each(pars.begin(),pars.end(),
-		[this](ParamBase * p){
-		  numPars += p->size();
-		});
+                [this](ParamBase * p){
+                  numPars += p->size();
+                });
 }
 
 
@@ -83,9 +83,9 @@ bool ModelBase::getEdgeToEdge() const {
 
 
 void ModelBase::infProbs(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD){
+                         const TrtData & tD,
+                         const FixedData & fD,
+                         const DynamicData & dD){
   if(ready == 1){
     expitInfProbs.resize(sD.numNotInfec);
     int i,j,k;
@@ -93,7 +93,7 @@ void ModelBase::infProbs(const SimData & sD,
     for(i = 0, k = 0; i < sD.numNotInfec; ++i){
       prob=1.0;
       for(j = 0; j < sD.numInfected; ++j,++k)
-	prob *= quick[k];
+        prob *= quick[k];
       expitInfProbs[i] = 1.0-prob;
     }
   }
@@ -108,6 +108,7 @@ void ModelBase::infProbs(const SimData & sD,
         if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
           prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
         }
+      }
       expitInfProbs[i] = 1.0-prob;
     }
   }
@@ -120,9 +121,9 @@ std::vector<double> ModelBase::infProbs(){
 
 
 void ModelBase::revProbs(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD){
+                         const TrtData & tD,
+                         const FixedData & fD,
+                         const DynamicData & dD){
   if(ready == 1){
     expitRevProbs.resize(sD.numInfected);
     int i,j,k;
@@ -130,7 +131,7 @@ void ModelBase::revProbs(const SimData & sD,
     for(i = 0,k = 0; i < sD.numInfected; ++i){
       prob=1.0;
       for(j = 0; j < sD.numNotInfec; ++j,++k)
-	prob *= quick[k];
+        prob *= quick[k];
       expitRevProbs[i] = 1.0-prob;
     }
   }
@@ -162,9 +163,9 @@ std::vector<double> ModelBase::revProbs(){
 
 
 void ModelBase::setFill(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD){
+                        const TrtData & tD,
+                        const FixedData & fD,
+                        const DynamicData & dD){
   // njm::message("setFill");
   int i,numPars = pars.size();
   probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
@@ -180,9 +181,9 @@ void ModelBase::setFill(const SimData & sD,
 
 
 void ModelBase::modFill(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD){
+                        const TrtData & tD,
+                        const FixedData & fD,
+                        const DynamicData & dD){
   if(set == 1){
     // njm::message("modFill");
     int i,numPars = pars.size();
@@ -202,9 +203,9 @@ void ModelBase::modFill(const SimData & sD,
 
 
 void ModelBase::setQuick(const SimData & sD,
-			 const TrtData & tD,
-			 const FixedData & fD,
-			 const DynamicData & dD){
+                         const TrtData & tD,
+                         const FixedData & fD,
+                         const DynamicData & dD){
   int i,j,k,pK;
   quick.resize(sD.numNotInfec * sD.numInfected);
   for(i = 0,k = 0; i < sD.numNotInfec; ++i){
@@ -224,8 +225,8 @@ std::vector<double> & ModelBase::getQuick() {
 
 
 double ModelBase::oneOnOne(const int notNode,
-			   const int infNode,
-			   const int numNodes) const {
+                           const int infNode,
+                           const int numNodes) const {
   return probs[notNode * numNodes + infNode];
 }
 
@@ -266,7 +267,7 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
 
 
 void ModelBase::setPar(const std::string & name,
-		       const double & val){
+                       const double & val){
   int i,numPars = pars.size();
   bool found = false;
   for(i = 0; i < numPars; ++i){
@@ -281,7 +282,7 @@ void ModelBase::setPar(const std::string & name,
 
 
 void ModelBase::setPar(const std::vector<std::string> & name,
-		       const double & val){
+                       const double & val){
   int i,numPars = pars.size();
   bool found = false;
   for(i = 0; i < numPars; ++i)
@@ -295,11 +296,11 @@ void ModelBase::setPar(const std::vector<std::string> & name,
 
 
 std::vector<double> ModelBase::partial(const int notNode,
-				       const int infNode,
-				       const SimData & sD,
-				       const TrtData & tD,
-				       const FixedData & fD,
-				       const DynamicData & dD){
+                                       const int infNode,
+                                       const SimData & sD,
+                                       const TrtData & tD,
+                                       const FixedData & fD,
+                                       const DynamicData & dD){
   std::vector<double> p,pi;
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
@@ -312,11 +313,11 @@ std::vector<double> ModelBase::partial(const int notNode,
 
 
 std::vector<double> ModelBase::partial2(const int notNode,
-					const int infNode,
-					const SimData & sD,
-					const TrtData & tD,
-					const FixedData & fD,
-					const DynamicData & dD){
+                                        const int infNode,
+                                        const SimData & sD,
+                                        const TrtData & tD,
+                                        const FixedData & fD,
+                                        const DynamicData & dD){
   std::vector<double> p,pi;
   std::vector<int> parsLen;
   int i,numPars = pars.size(),totLen = 0;
@@ -339,8 +340,8 @@ std::vector<double> ModelBase::partial2(const int notNode,
     D = N - n;
     for(j = n; j < N; ++j){
       for(k = j; k < N; ++k){
-	p[j*totLen + k] = pi[(j-n)*D + (k-n)];
-	p[k*totLen + j] = pi[(k-n)*D + (j-n)];
+        p[j*totLen + k] = pi[(j-n)*D + (k-n)];
+        p[k*totLen + j] = pi[(k-n)*D + (j-n)];
       }
     }
 
@@ -351,9 +352,9 @@ std::vector<double> ModelBase::partial2(const int notNode,
 
 
 void ModelBase::setFisher(const SimData & sD,
-			  const TrtData & tD,
-			  const FixedData & fD,
-			  const DynamicData & dD){
+                          const TrtData & tD,
+                          const FixedData & fD,
+                          const DynamicData & dD){
 
   std::vector<double> hess = logllHess(sD,tD,fD,dD);
   arma::mat I(hess.data(),numPars,numPars);
@@ -427,7 +428,7 @@ void ModelBase::revert(){
   }
   else{
     std::cout << "ModelBase::revert(): not implemented for fytType of "
-	      << fitType << std::endl;
+              << fitType << std::endl;
     throw(1);
   }
 }
@@ -435,8 +436,8 @@ void ModelBase::revert(){
 
 
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
-		    const FixedData & fD, const DynamicData & dD,
-		    const bool init){
+                    const FixedData & fD, const DynamicData & dD,
+                    const bool init){
   if(init){
     fit(getPar(),sD,tD,fD,dD);
   }
@@ -449,7 +450,7 @@ void ModelBase::fit(const SimData & sD, const TrtData & tD,
 
 
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
-		    const FixedData & fD, const DynamicData & dD){
+                    const FixedData & fD, const DynamicData & dD){
 
   std::vector<double> startingVals(numPars,0.2);
   startingVals.at(0) = -3.0;
@@ -458,8 +459,8 @@ void ModelBase::fit(const SimData & sD, const TrtData & tD,
 
 
 void ModelBase::fit(const std::vector<double> & startingVals,
-		    const SimData & sD, const TrtData & tD,
-		    const FixedData & fD, const DynamicData & dD){
+                    const SimData & sD, const TrtData & tD,
+                    const FixedData & fD, const DynamicData & dD){
   if(fitType == MLE || fitType == MLES){
 
     // estimate the MLE
@@ -484,13 +485,13 @@ void ModelBase::fit(const std::vector<double> & startingVals,
   }
   else if(fitType == MCMC){
     std::cout << "Error: ModelBase::fit(): MCMC not setup"
-	      << std::endl;
+              << std::endl;
     throw(1);
   }
   else{
     std::cout << "Not a valid Estimation of "
-	      << fitType
-	      << std::endl;
+              << fitType
+              << std::endl;
     throw(1);
   }
 }
@@ -498,14 +499,14 @@ void ModelBase::fit(const std::vector<double> & startingVals,
 
 
 void ModelBase::estimateMle(const std::vector<double> & startingVals,
-			    const SimData & sD,
-			    const TrtData & tD,
-			    const FixedData & fD,
-			    const DynamicData & dD){
+                            const SimData & sD,
+                            const TrtData & tD,
+                            const FixedData & fD,
+                            const DynamicData & dD){
 
   if(fitType != MLE && fitType != MLES){
     std::cout << "ModelBase::estimateMLE is called for non MLE or MLES type"
-	      << std::endl;
+              << std::endl;
     throw(1);
   }
 
@@ -562,9 +563,9 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 
 
 double ModelBase::logll(const SimData & sD,
-			const TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD){
+                        const TrtData & tD,
+                        const FixedData & fD,
+                        const DynamicData & dD){
 
   std::vector<std::vector<int> > hist = sD.history;
   hist.push_back(sD.status);
@@ -584,8 +585,8 @@ double ModelBase::logll(const SimData & sD,
 
     if(int(expitInfProbs.size()) != sDi.numNotInfec){
       std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
-		<< " number of uninfected nodes at time t"
-		<< std::endl;
+                << " number of uninfected nodes at time t"
+                << std::endl;
       throw(1);
     }
 
@@ -594,16 +595,16 @@ double ModelBase::logll(const SimData & sD,
       double prob = expitInfProbs.at(nN);
       int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
       if(next == 1){
-	if(prob < 1e-44)
-	  logllVal += -100.0;
-	else
-	  logllVal += std::log(prob);
+        if(prob < 1e-44)
+          logllVal += -100.0;
+        else
+          logllVal += std::log(prob);
       }
       else{
-	if((1.0-prob) < 1e-44)
-	  logllVal += -100.0;
-	else
-	  logllVal += std::log(1.0 - prob);
+        if((1.0-prob) < 1e-44)
+          logllVal += -100.0;
+        else
+          logllVal += std::log(1.0 - prob);
       }
     }
   }
@@ -612,9 +613,9 @@ double ModelBase::logll(const SimData & sD,
 
 
 std::vector<double> ModelBase::logllGrad(const SimData & sD,
-					 const TrtData & tD,
-					 const FixedData & fD,
-					 const DynamicData & dD){
+                                         const TrtData & tD,
+                                         const FixedData & fD,
+                                         const DynamicData & dD){
   std::vector<std::vector<int> > hist = sD.history;
   hist.push_back(sD.status);
   std::vector<DataBundle> db = historyToData(hist);
@@ -635,8 +636,8 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
     if(int(expitInfProbs.size()) != sDi.numNotInfec){
       std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
-		<< " number of uninfected nodes at time t"
-		<< std::endl;
+                << " number of uninfected nodes at time t"
+                << std::endl;
       throw(1);
     }
 
@@ -646,9 +647,9 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
       int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
 
       if(prob > 0.0){
-	double beg = double(next)/prob - 1.0;
+        double beg = double(next)/prob - 1.0;
         for(iN = 0; iN < sDi.numInfected; ++iN){
-          if(this->getEdgeToEdge() && fD.network(nN*fD.numNodes + iN)) {
+          if(this->getEdgeToEdge() && fD.network.at(nN*fD.numNodes + iN)) {
             // quick stores probabilty of not infefcting need to take
             // (1.0 - quick) to get probablity of infecting
 
@@ -670,9 +671,9 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
 
 std::vector<double> ModelBase::logllHess(const SimData & sD,
-					 const TrtData & tD,
-					 const FixedData & fD,
-					 const DynamicData & dD){
+                                         const TrtData & tD,
+                                         const FixedData & fD,
+                                         const DynamicData & dD){
   std::vector<double> hess(numPars * numPars);
   std::fill(hess.begin(),hess.end(),0);
 
@@ -697,7 +698,7 @@ std::vector<double> ModelBase::logllHess(const SimData & sD,
       std::vector<double> sqr(numPars,0);
 
       for(iN = 0; iN < sDi.numInfected; ++iN){
-        if(this->getEdgeToEdge() && fD.network(nN*fD.numNodes + iN)) {
+        if(this->getEdgeToEdge() && fD.network.at(nN*fD.numNodes + iN)) {
           int ind = nN*sDi.numInfected + iN;
           std::vector<double> p = partial(sDi.notInfec[nN],
                                           sDi.infected[iN],
@@ -728,31 +729,31 @@ std::vector<double> ModelBase::logllHess(const SimData & sD,
       int next = (hist[t+1][sDi.notInfec[nN]] < 2 ? 0 : 1);
 
       for(pi = 0; pi < numPars; ++pi){
-	for(pj = pi; pj < numPars; ++pj){
-	  // double prob = std::max(1e-10,expitInfProbs[nN]);
-	  double prob = std::max(1e-10,expitInfProbs[nN]);
+        for(pj = pi; pj < numPars; ++pj){
+          // double prob = std::max(1e-10,expitInfProbs[nN]);
+          double prob = std::max(1e-10,expitInfProbs[nN]);
 
-	  if(prob > 0.0){
-	    addVal = (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
-	    hess[pi*numPars + pj] += addVal;
+          if(prob > 0.0){
+            addVal = (double(next)/prob - 1.0)*dbl[pi*numPars + pj];
+            hess[pi*numPars + pj] += addVal;
 
-	    if(pj != pi){
-	      hess[pj*numPars + pi] += addVal;
-	    }
-	  }
+            if(pj != pi){
+              hess[pj*numPars + pi] += addVal;
+            }
+          }
 
-	  if((prob*prob) > 0.0){
-	    addVal = (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
+          if((prob*prob) > 0.0){
+            addVal = (1-prob)*sqr[pi]*sqr[pj]/(prob*prob);
 
-	    if(next == 1){
-	      hess[pi*numPars + pj] -= addVal;
+            if(next == 1){
+              hess[pi*numPars + pj] -= addVal;
 
-	      if(pj != pi){
-		hess[pj*numPars + pi] -= addVal;
-	      }
-	    }
-	  }
-	}
+              if(pj != pi){
+                hess[pj*numPars + pi] -= addVal;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -763,10 +764,10 @@ std::vector<double> ModelBase::logllHess(const SimData & sD,
 
 
 ModelBaseFitObj::ModelBaseFitObj(ModelBase * const mb,
-				 const SimData sD,
-				 const TrtData tD,
-				 const FixedData fD,
-				 const DynamicData dD){
+                                 const SimData sD,
+                                 const TrtData tD,
+                                 const FixedData fD,
+                                 const DynamicData dD){
   this->mb = mb;
   this->sD = sD;
   this->tD = tD;
@@ -801,7 +802,7 @@ void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
   fitObj->mb->putPar(par.begin());
 
   std::vector<double> llGrad = fitObj->mb->logllGrad(fitObj->sD,fitObj->tD,
-						     fitObj->fD,fitObj->dD);
+                                                     fitObj->fD,fitObj->dD);
   for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
     // assign the negative of the gradient value
     // GSL minimizes the function, need to adjust the gradient too
