@@ -104,8 +104,10 @@ void ModelBase::infProbs(const SimData & sD,
     for(i = 0; i < sD.numNotInfec; ++i){
       k = sD.notInfec[i] * fD.numNodes;
       prob=1.0;
-      for(j = 0; j < sD.numInfected; ++j)
-	prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
+      for(j = 0; j < sD.numInfected; ++j){
+        if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
+          prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
+        }
       expitInfProbs[i] = 1.0-prob;
     }
   }
@@ -139,8 +141,11 @@ void ModelBase::revProbs(const SimData & sD,
     for(i = 0; i < sD.numInfected; ++i){
       k = sD.infected[i];
       prob=1.0;
-      for(j = 0; j < sD.numNotInfec; ++j)
-	prob *= 1.0 / (1.0 + std::exp(probs[k + sD.notInfec[j]*fD.numNodes]));
+      for(j = 0; j < sD.numNotInfec; ++j) {
+        if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
+          prob *= 1.0 / (1.0 + std::exp(probs[k + sD.notInfec[j]*fD.numNodes]));
+        }
+      }
       expitRevProbs[i] = 1.0-prob;
     }
   }
@@ -642,18 +647,20 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
       if(prob > 0.0){
 	double beg = double(next)/prob - 1.0;
-	for(iN = 0; iN < sDi.numInfected; ++iN){
-	  // quick stores probabilty of not infefcting need to take
-	  // (1.0 - quick) to get probablity of infecting
+        for(iN = 0; iN < sDi.numInfected; ++iN){
+          if(this->getEdgeToEdge() && fD.network(nN*fD.numNodes + iN)) {
+            // quick stores probabilty of not infefcting need to take
+            // (1.0 - quick) to get probablity of infecting
 
-	  double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-	  std::vector<double> grad = partial(sDi.notInfec[nN],
-					     sDi.infected[iN],
-					     sDi,tDi,fD,dDi);
-	  for(pi=0; pi < int(numPars); ++pi){
-	    logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
-	  }
-	}
+            double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
+            std::vector<double> grad = partial(sDi.notInfec[nN],
+                                               sDi.infected[iN],
+                                               sDi,tDi,fD,dDi);
+            for(pi=0; pi < int(numPars); ++pi){
+              logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
+            }
+          }
+        }
       }
     }
   }
@@ -690,30 +697,32 @@ std::vector<double> ModelBase::logllHess(const SimData & sD,
       std::vector<double> sqr(numPars,0);
 
       for(iN = 0; iN < sDi.numInfected; ++iN){
-	int ind = nN*sDi.numInfected + iN;
-	std::vector<double> p = partial(sDi.notInfec[nN],
-					sDi.infected[iN],
-					sDi,tDi,fD,dDi);
-	std::vector<double> p2 = partial2(sDi.notInfec[nN],
-					  sDi.infected[iN],
-					  sDi,tDi,fD,dDi);
+        if(this->getEdgeToEdge() && fD.network(nN*fD.numNodes + iN)) {
+          int ind = nN*sDi.numInfected + iN;
+          std::vector<double> p = partial(sDi.notInfec[nN],
+                                          sDi.infected[iN],
+                                          sDi,tDi,fD,dDi);
+          std::vector<double> p2 = partial2(sDi.notInfec[nN],
+                                            sDi.infected[iN],
+                                            sDi,tDi,fD,dDi);
 
-	// double quickInd = std::max(1e-10,quick[ind]);
-	double quickInd = 1.0 - quick[ind];
-	for(pi = 0; pi < numPars; ++pi){
-	  sqr[pi] += quickInd*p[pi];
+          // double quickInd = std::max(1e-10,quick[ind]);
+          double quickInd = 1.0 - quick[ind];
+          for(pi = 0; pi < numPars; ++pi){
+            sqr[pi] += quickInd*p[pi];
 
-	  int piInd = pi*numPars;
-	  for(pj = pi; pj < numPars; ++pj){
-	    addVal = quickInd*p2[piInd + pj];
-	    addVal += quickInd*(1.0-quickInd)*p[pj]*p[pi];
+            int piInd = pi*numPars;
+            for(pj = pi; pj < numPars; ++pj){
+              addVal = quickInd*p2[piInd + pj];
+              addVal += quickInd*(1.0-quickInd)*p[pj]*p[pi];
 
-	    dbl[piInd + pj] += addVal;
-	    if(pj != pi){
-	      dbl[pj*numPars + pi] += addVal;
-	    }
-	  }
-	}
+              dbl[piInd + pj] += addVal;
+              if(pj != pi){
+                dbl[pj*numPars + pi] += addVal;
+              }
+            }
+          }
+        }
       }
 
       int next = (hist[t+1][sDi.notInfec[nN]] < 2 ? 0 : 1);
