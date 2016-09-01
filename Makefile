@@ -56,7 +56,7 @@ LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
 
 all: | build $(BUILDDIR) $(LIB) $(PROGS)
 
-test: | build $(BUILDDIR)/test $(LIB) $(PROGS_TEST)b
+test: | build $(BUILDDIR)/test $(LIB) $(PROGS_TEST)
 
 build: $(BUILDDIR) $(BUILDDIR)/test
 	ln -rfs $(BUILDDIR) build
