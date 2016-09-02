@@ -50,7 +50,7 @@ CPP_FLAGS=-std=c++11 -ggdb
 else
 CPP_FLAGS=-std=c++11 -O3
 endif
-LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
+LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp -lboost_filesystem -lboost_system
 LD_FLAGS_TEST=$(LD_FLAGS) -lgtest -lpthread
 
 ## rules
