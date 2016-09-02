@@ -43,7 +43,7 @@ CPP_SRC_TEST:=$(CPP_SRC_TEST:%=src/test/%)
 
 ## options
 
-CC=g++-4.9
+CC=g++
 
 ifdef DEBUG
 CPP_FLAGS=-std=c++11 -ggdb
@@ -51,6 +51,7 @@ else
 CPP_FLAGS=-std=c++11 -O3
 endif
 LD_FLAGS=-Isrc -L$(BUILDDIR) -lgsl -larmadillo -fPIC -fopenmp
+LD_FLAGS_TEST=$(LD_FLAGS) -lgtest -lpthread
 
 ## rules
 
@@ -72,7 +73,7 @@ $(BUILDDIR)/main/%.bin: src/%.cpp $(LIB) | build
 	ln -rfs $@ $(@:%.bin=%)
 
 $(BUILDDIR)/test/%.bin: src/test/%.cpp $(LIB) | build
-	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS) -l$(LIB:$(BUILDDIR)/lib%.so=%) -lgtest
+	$(CC) $(CPP_FLAGS) -o $@ $< $(LD_FLAGS_TEST) -l$(LIB:$(BUILDDIR)/lib%.so=%)
 	ln -rfs $@ $(@:%.bin=%)
 
 $(LIB): $(CPP_OBJ)
@@ -82,13 +83,13 @@ $(BUILDDIR)/main/%.o: src/%.cpp $(BUILDDIR)/main/%.d | build
 	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
 
 $(BUILDDIR)/test/%.o: src/%.cpp $(BUILDDIR)/test/%.d | build
-	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS)
+	$(CC) $(CPP_FLAGS) -c $< -o $@ $(LD_FLAGS_TEST)
 
 $(BUILDDIR)/main/%.d: src/%.cpp | build
-	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
+	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) $(LD_FLAGS) > $@
 
 $(BUILDDIR)/test/%.d: src/%.cpp | build
-	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) > $@ $(LD_FLAGS)
+	$(CC) $(CPP_FLAGS) -MM $< -MT $(@:%.d=%.o) $(LD_FLAGS_TEST) > $@
 
 ifneq ($(MAKECMDGOALS),clean)
 -include $(CPP_OBJ:%.o=%.d)
