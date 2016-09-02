@@ -43,7 +43,7 @@ CPP_SRC_TEST:=$(CPP_SRC_TEST:%=src/test/%)
 
 ## options
 
-CC=g++
+CC=g++-5
 
 ifdef DEBUG
 CPP_FLAGS=-std=c++11 -ggdb
