@@ -46,9 +46,13 @@ PROG_TEST_LINKS:=$(PROGS_TEST:%.bin=%)
 
 ## options
 
+REPO_ROOT_DIRECTORY:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+
 CC=g++-5
 
-CPP_FLAGS:= -std=c++11 -Isrc/main -fPIC -fopenmp
+CPP_FLAGS:= -std=c++11 -Isrc/main -fPIC -fopenmp \
+-DREPO_ROOT_DIRECTORY=$(REPO_ROOT_DIRECTORY)
 
 ifdef DEBUG
 CPP_FLAGS+= -ggdb
