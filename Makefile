@@ -60,8 +60,8 @@ else
 CPP_FLAGS+= -O3
 endif
 
-LD_FLAGS:= -L$(BUILDDIR) -lgsl -larmadillo -lgtest -lpthread \
--lboost_system -lboost_filesystem
+LD_FLAGS:= -L$(BUILDDIR) -lgsl -larmadillo -lgtest -lglog -lpthread \
+-lboost_system -lboost_filesystem -lgit2
 
 ## rules
 
