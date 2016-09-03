@@ -73,7 +73,7 @@ test: | $(PROGS_TEST) $(PROG_TEST_LINKS) build
 
 .PHONY: build
 build:
-	ln -srf $(BUILDDIR) $@
+	ln -srfn $(BUILDDIR) $@
 
 
 %/.:
