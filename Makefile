@@ -87,7 +87,7 @@ $(BUILDDIR)/main/. $(BUILDDIR)/test/.: | $(BUILDDIR)/.
 
 
 $(PROG_TEST_LINKS) $(PROG_LINKS): %: | %.bin
-	ln -sr $| $@
+	ln -srf $| $@
 
 
 $(BUILDDIR)/%.bin: src/%.cpp $(LIB) Makefile | $$(@D)/.
