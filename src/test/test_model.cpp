@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include <glog/logging.h>
+#include <boost/filesystem.hpp>
+#include "settings.hpp"
 
 TEST(TestModel,TestInit) {
 }
@@ -76,5 +78,17 @@ TEST(TestModel,TestFit) {
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
+  char fileName[32] = "test_model";
+  boost::filesystem::path temp = boost::filesystem::unique_path();
+  char srcDir[32];
+  std::strcpy(srcDir,temp.native().c_str());
+
+  char check[32] = "Y";
+
+  char* pseudoArgv[3];
+  pseudoArgv[0] = fileName;
+  pseudoArgv[1] = srcDir;
+  pseudoArgv[2] = check;
+  njm::sett.set(3,pseudoArgv);
   return RUN_ALL_TESTS();
 }

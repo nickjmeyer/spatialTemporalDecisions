@@ -58,7 +58,7 @@ CPP_FLAGS+= -O3
 endif
 
 LD_FLAGS:= -L$(BUILDDIR) -lgsl -larmadillo
-LD_FLAGS_TEST:=$(LD_FLAGS) -lgtest -lpthread
+LD_FLAGS_TEST:=$(LD_FLAGS) -lgtest -lpthread -lboost_filesystem -lboost_system
 
 ## rules
 

@@ -12,7 +12,7 @@ Settings::Settings(){
 
 Settings::~Settings(){
   timeElapsed();
-  
+
   // compress data directory
   if(!cleaned){
     int junk;
@@ -25,7 +25,7 @@ Settings::~Settings(){
 
 void Settings::timeElapsed(){
   tock = std::time(NULL);
-  
+
   std::stringstream timeInfo;
   timeInfo.str("");
   timeInfo.clear();
@@ -35,19 +35,19 @@ void Settings::timeElapsed(){
 	   << " hours"
 	   << std::endl;
   std::cout << timeInfo.str();
-  
+
   if(!cleaned){
     njm::toFile("\n\n\n",datDir + "/README.org");
     njm::toFile("* Time Elapsed",datDir + "/README.org");
     njm::toFile(timeInfo.str(),datDir + "/README.org");
   }
-}  
+}
 
 
 void Settings::set(int numInitVals, char ** initVals){
-  
+
   timeStamp();
-  
+
   // check input arguments
   if(numInitVals!=numVals && numInitVals!=(numVals+1)){
     std::cout << "In Settings::Settings, "
@@ -55,7 +55,7 @@ void Settings::set(int numInitVals, char ** initVals){
 	      << "Program requires " << numVals << " values.  "
 	      << "User provided " << numInitVals << " values.\n"
 	      << "Did you forget to count the executable as an argument?\n"
-	      << "Terminating program...\n"; 
+        << "Terminating program...\n";
     clean();
     exit(1);
   }
@@ -69,14 +69,14 @@ void Settings::set(int numInitVals, char ** initVals){
   hostName[127] = '\0';
   gethostname(hostName,127);
   info << "hostName: " << hostName << "\n";
-  
+
   info << "fileName: " << fileName << "\n";
 
   srcDir=initVals[arg++];
   info << "srcDir: " << srcDir << "\n";
 
   datDir = srcDir + "/" + datDir;
-  
+
   info << "datDir: " << datDir << "\n";
 
   int junk;
@@ -85,7 +85,7 @@ void Settings::set(int numInitVals, char ** initVals){
   dirSS.clear();
   dirSS << "mkdir -p " << datDir;
   junk=system(dirSS.str().c_str());
-  if(junk);// dummy statement to get -Wall off my back  
+  if(junk);// dummy statement to get -Wall off my back
 
   // ask permission to proceed with program
   std::string check;
@@ -121,7 +121,7 @@ void Settings::set(int numInitVals, char ** initVals){
 
 
 void Settings::clean(){
-  
+
   int junk;
   std::string rm = "rm -rf " + datDir + " " + datDir + date + ".tar.bz2";
   junk=system(rm.c_str());
@@ -129,7 +129,7 @@ void Settings::clean(){
   cleaned = 1;
 }
 
-  
+
 
 void Settings::timeStamp(){
   time_t t=time(NULL);
@@ -137,7 +137,7 @@ void Settings::timeStamp(){
   lct=localtime(&t);
 
   std::stringstream dirSS;
-  
+
   dirSS << lct->tm_year+1900 << "-";
 
   if(lct->tm_mon+1 < 10)
@@ -161,7 +161,7 @@ void Settings::timeStamp(){
   dirSS << lct->tm_sec;
 
   date = dirSS.str();
-  
+
   datDir="./" + dirSS.str();
   seconds=(int)t;
 }
@@ -211,8 +211,8 @@ std::string Settings::datExt(int inDir) const{
 std::string Settings::datExt() const{
   return datExt(1,"","");
 }
-  
-  
+
+
 std::string Settings::srcExt(const std::string file){
   return srcDir + "/" + file;
 }
