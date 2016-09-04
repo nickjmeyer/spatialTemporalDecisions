@@ -7,14 +7,27 @@
 #include "paramIntercept.hpp"
 #include "modelGravityGDist.hpp"
 
+const float eps = 1e-8;
+
 class TestModel : public ::testing::Test {
 public:
+  static const double intcp;
+  static const double beta0;
+  static const double beta1;
+  static const double alpha;
+  static const double power;
+  static const double trtAct;
+  static const double trtPre;
+
   ModelGravityGDist * m;
 
   System<ModelGravityGDist,ModelGravityGDist> * system;
 
   TestModel() {
     system = new System<ModelGravityGDist,ModelGravityGDist>();
+    system->reset({0});
+    std::vector<double> mockProbs = {1.0,0.0,0.0};
+    system->nextPoint(mockProbs);
 
     m = new ModelGravityGDist(system->fD);
   }
@@ -25,34 +38,165 @@ public:
   }
 };
 
+
+const double TestModel::intcp = 1.0;
+const double TestModel::beta0 = 0.1;
+const double TestModel::beta1 = -1.0;
+const double TestModel::alpha = 0.15;
+const double TestModel::power = 1.5;
+const double TestModel::trtAct = 0.5;
+const double TestModel::trtPre = 0.25;
+
+
 TEST_F(TestModel,TestInit) {
+  EXPECT_EQ(this->m->numPars,7);
+  EXPECT_EQ(this->m->name,"GravityGDist");
+  for (int i = 0; i < this->m->numPars; ++i) {
+    EXPECT_NEAR(this->m->getPar().at(i),0.0,eps);
+  }
 }
 
 TEST_F(TestModel,TestRead) {
+  this->m->read();
+  std::vector<double> par = this->m->getPar();
+  EXPECT_NEAR(par.at(0),this->intcp,eps);
+  EXPECT_NEAR(par.at(1),this->beta0,eps);
+  EXPECT_NEAR(par.at(2),this->beta1,eps);
+  EXPECT_NEAR(par.at(3),this->alpha,eps);
+  EXPECT_NEAR(par.at(4),this->power,eps);
+  EXPECT_NEAR(par.at(5),this->trtAct,eps);
+  EXPECT_NEAR(par.at(6),this->trtPre,eps);
 }
 
-TEST_F(TestModel,TestSave) {
-}
+// TEST_F(TestModel,TestSave) {
+// }
 
 TEST_F(TestModel,TestLinScale) {
+  {
+    // unchanged
+    const double scale = 1.0;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
+
+  {
+    // double
+    const double scale = 2.0;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
+
+  {
+    // half
+    const double scale = 0.5;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
+
+  {
+    // negative
+    const double scale = -1.0;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
+
+  {
+    // negative double
+    const double scale = -2.0;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
+
+  {
+    // negative half
+    const double scale = -0.5;
+    this->m->read();
+    this->m->linScale(scale);
+    std::vector<double> par = this->m->getPar();
+    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
+    EXPECT_NEAR(par.at(1),scale*this->beta0,eps);
+    EXPECT_NEAR(par.at(2),scale*this->beta1,eps);
+    EXPECT_NEAR(par.at(3),scale*this->alpha,eps);
+    EXPECT_NEAR(par.at(4),this->power,eps);
+    EXPECT_NEAR(par.at(5),scale*this->trtAct,eps);
+    EXPECT_NEAR(par.at(6),scale*this->trtPre,eps);
+  }
 }
 
-TEST_F(TestModel,TestSetType) {
+TEST_F(TestModel,TestType) {
+  EXPECT_EQ(this->m->getType(),INVALID);
+  this->m->setType(MLE);
+  EXPECT_EQ(this->m->getType(),MLE);
+  this->m->setType(MCMC);
+  EXPECT_EQ(this->m->getType(),MCMC);
+  this->m->setType(MLES);
+  EXPECT_EQ(this->m->getType(),MLES);
 }
 
 TEST_F(TestModel,TestSetFixSample) {
+  EXPECT_EQ(this->m->getFixSample(),0);
+  this->m->setFixSample(1);
+  EXPECT_EQ(this->m->getFixSample(),1);
 }
 
-TEST_F(TestModel,TestGetType) {
-}
-
-TEST_F(TestModel,TestSetEdgeToEdge) {
-}
-
-TEST_F(TestModel,TestGetEdgeToEdge) {
+TEST_F(TestModel,TestEdgeToEdge) {
+  EXPECT_FALSE(this->m->getEdgeToEdge());
+  this->m->setEdgeToEdge(false);
+  EXPECT_FALSE(this->m->getEdgeToEdge());
+  this->m->setEdgeToEdge(true);
+  EXPECT_TRUE(this->m->getEdgeToEdge());
+  this->m->setEdgeToEdge(true);
+  EXPECT_TRUE(this->m->getEdgeToEdge());
 }
 
 TEST_F(TestModel,TestInfProbs) {
+  this->m->setFill(this->system->sD,this->system->tD,
+    this->system->fD,this->system->dD);
+  this->m->infProbs(this->system->sD,this->system->tD,
+    this->system->fD,this->system->dD);
+  std::vector<double> infProbs = this->m->infProbs();
+
+  ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
 }
 
 TEST_F(TestModel,TestRevProbs) {
@@ -218,13 +362,15 @@ void fakeNetworkSetup() {
   njm::toFile(finalT,njm::sett.srcExt("finalT.txt"));
 
   boost::filesystem::create_directories(njm::sett.srcExt("ParamGravityGDist"));
-  njm::toFile(1.0,njm::sett.srcExt("ParamGravityGDist/intcp.txt"));
-  njm::toFile(0.1,njm::sett.srcExt("ParamGravityGDist/beta0.txt"));
-  njm::toFile(-0.1,njm::sett.srcExt("ParamGravityGDist/beta1.txt"));
-  njm::toFile(0.1,njm::sett.srcExt("ParamGravityGDist/alpha.txt"));
-  njm::toFile(0.1,njm::sett.srcExt("ParamGravityGDist/power.txt"));
-  njm::toFile(0.5,njm::sett.srcExt("ParamGravityGDist/trtAct.txt"));
-  njm::toFile(0.25,njm::sett.srcExt("ParamGravityGDist/trtPre.txt"));
+  njm::toFile(TestModel::intcp,njm::sett.srcExt("ParamGravityGDist/intcp.txt"));
+  njm::toFile(TestModel::beta0,njm::sett.srcExt("ParamGravityGDist/beta0.txt"));
+  njm::toFile(TestModel::beta1,njm::sett.srcExt("ParamGravityGDist/beta1.txt"));
+  njm::toFile(TestModel::alpha,njm::sett.srcExt("ParamGravityGDist/alpha.txt"));
+  njm::toFile(TestModel::power,njm::sett.srcExt("ParamGravityGDist/power.txt"));
+  njm::toFile(TestModel::trtAct,
+    njm::sett.srcExt("ParamGravityGDist/trtAct.txt"));
+  njm::toFile(TestModel::trtPre,
+    njm::sett.srcExt("ParamGravityGDist/trtPre.txt"));
 }
 
 
@@ -251,5 +397,7 @@ int main(int argc, char **argv) {
   fakeNetworkSetup();
 
   int ret = RUN_ALL_TESTS();
+  njm::sett.clean();
+  boost::filesystem::remove_all(temp);
   return ret;
 }
