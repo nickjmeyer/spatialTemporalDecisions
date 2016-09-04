@@ -110,11 +110,14 @@ void ModelBase::infProbs(const SimData & sD,
     int i,j,k;
     double prob;
     for(i = 0; i < sD.numNotInfec; ++i){
+      const int iNode = sD.notInfec[i];
       k = sD.notInfec[i] * fD.numNodes;
       prob=1.0;
       for(j = 0; j < sD.numInfected; ++j){
-        if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
-          prob *= 1.0 / (1.0 + std::exp(probs[k + sD.infected[j]]));
+        const int jNode = sD.infected[j];
+        if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+          || !this->getEdgeToEdge()) {
+          prob *= 1.0 / (1.0 + std::exp(probs[k + jNode]));
         }
       }
       expitInfProbs[i] = 1.0-prob;
@@ -148,11 +151,14 @@ void ModelBase::revProbs(const SimData & sD,
     int i,j,k;
     double prob;
     for(i = 0; i < sD.numInfected; ++i){
+      const int iNode = sD.infected[i];
       k = sD.infected[i];
       prob=1.0;
       for(j = 0; j < sD.numNotInfec; ++j) {
-        if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
-          prob *= 1.0 / (1.0 + std::exp(probs[k + sD.notInfec[j]*fD.numNodes]));
+        const int jNode = sD.notInfec[j];
+        if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+          || !this->getEdgeToEdge()){
+          prob *= 1.0 / (1.0 + std::exp(probs[k + jNode*fD.numNodes]));
         }
       }
       expitRevProbs[i] = 1.0-prob;
@@ -217,12 +223,15 @@ void ModelBase::setQuick(const SimData & sD,
   int i,j,k,pK;
   quick.resize(sD.numNotInfec * sD.numInfected);
   for(i = 0,k = 0; i < sD.numNotInfec; ++i){
-    pK = sD.notInfec[i]*fD.numNodes;
+    const int iNode = sD.notInfec[i];
+    pK = iNode*fD.numNodes;
     for(j = 0; j < sD.numInfected; ++j,++k){
-      if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
-        quick[k] = 1.0/(1.0 + std::exp(probs[pK + sD.infected[j]]));
+      const int jNode = sD.infected[j];
+      if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+        || !this->getEdgeToEdge()){
+        quick[k] = 1.0/(1.0 + std::exp(probs[pK + jNode]));
       } else {
-        quick[k] = 0.0;
+        quick[k] = 1.0;
       }
     }
   }
@@ -655,19 +664,21 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
     // loop over uninfected nodes at time t
     for(nN = 0; nN < sDi.numNotInfec; ++nN){
+      const int nNode = sDi.notInfec[nN];
       double prob = expitInfProbs.at(nN);
-      int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
+      int next = (hist[t+1][nNode] < 2) ? 0 : 1;
 
       if(prob > 0.0){
         double beg = double(next)/prob - 1.0;
         for(iN = 0; iN < sDi.numInfected; ++iN){
-          if(this->getEdgeToEdge() && fD.network.at(nN*fD.numNodes + iN)) {
+          const int iNode = sDi.infected[iN];
+          if((this->getEdgeToEdge() && fD.network.at(nNode*fD.numNodes + iNode))
+            || !this->getEdgeToEdge()){
             // quick stores probabilty of not infefcting need to take
             // (1.0 - quick) to get probablity of infecting
 
             double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-            std::vector<double> grad = partial(sDi.notInfec[nN],
-                                               sDi.infected[iN],
+            std::vector<double> grad = partial(nNode,iNode,
                                                sDi,tDi,fD,dDi);
             for(pi=0; pi < int(numPars); ++pi){
               logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
@@ -706,17 +717,18 @@ std::vector<double> ModelBase::logllHess(const SimData & sD,
     infProbs(sDi,tDi,fD,dDi);
 
     for(nN = 0; nN < sDi.numNotInfec; ++nN){
+      const int nNode = sDi.notInfec[nN];
       std::vector<double> dbl(numPars*numPars,0);
       std::vector<double> sqr(numPars,0);
 
       for(iN = 0; iN < sDi.numInfected; ++iN){
-        if(this->getEdgeToEdge() && fD.network.at(nN*fD.numNodes + iN)) {
+        const int iNode = sDi.infected[iN];
+        if((this->getEdgeToEdge() && fD.network.at(nNode*fD.numNodes + iNode))
+          || !this->getEdgeToEdge()){
           int ind = nN*sDi.numInfected + iN;
-          std::vector<double> p = partial(sDi.notInfec[nN],
-                                          sDi.infected[iN],
+          std::vector<double> p = partial(nNode,iNode,
                                           sDi,tDi,fD,dDi);
-          std::vector<double> p2 = partial2(sDi.notInfec[nN],
-                                            sDi.infected[iN],
+          std::vector<double> p2 = partial2(nNode,iNode,
                                             sDi,tDi,fD,dDi);
 
           // double quickInd = std::max(1e-10,quick[ind]);
