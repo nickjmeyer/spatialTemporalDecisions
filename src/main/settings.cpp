@@ -1,4 +1,10 @@
+#include <git2.h>
+#include <git2/common.h>
+#include <glog/logging.h>
 #include "settings.hpp"
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
 Settings njm::sett;
 
@@ -45,6 +51,36 @@ void Settings::timeElapsed(){
 
 
 void Settings::set(int numInitVals, char ** initVals){
+  git_libgit2_init();
+  git_repository * repo;
+#ifdef REPO_ROOT_DIRECTORY
+  CHECK_EQ(git_repository_open_ext(&repo, TOSTRING(REPO_ROOT_DIRECTORY),
+      0, NULL),0)
+    << "failed to open repository";
+#else
+  CHECK_EQ(git_repository_open_ext(&repo, ".", 0, NULL),0)
+    << "failed to open repository";
+#endif
+  git_describe_options opts;
+  memset(&opts,0,sizeof(opts));
+  CHECK_EQ(git_describe_init_options(&opts,GIT_DESCRIBE_OPTIONS_VERSION),0)
+    << "failed to init options";
+  git_describe_format_options fmt_opts;
+  CHECK_EQ(git_describe_init_format_options(&fmt_opts,
+      GIT_DESCRIBE_FORMAT_OPTIONS_VERSION),0)
+    << "failed to init format options";
+  fmt_opts.abbreviated_size = 16;
+  fmt_opts.dirty_suffix = "-dirty";
+  fmt_opts.always_use_long_format = 1;
+
+  git_describe_result * describe_result;
+  CHECK_EQ(git_describe_workdir(&describe_result,repo,&opts),0)
+    << "failed to describe workdir";
+
+  git_buf buf = {0};
+  CHECK_EQ(git_describe_format(&buf,describe_result,&fmt_opts),0)
+    << "failed to format describe";
+
 
   timeStamp();
 
@@ -78,6 +114,7 @@ void Settings::set(int numInitVals, char ** initVals){
   datDir = srcDir + "/" + datDir;
 
   info << "datDir: " << datDir << "\n";
+  info << "git-describe: " << buf.ptr << "\n";
 
   int junk;
   std::stringstream dirSS;
