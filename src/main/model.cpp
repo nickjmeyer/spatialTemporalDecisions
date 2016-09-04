@@ -55,6 +55,8 @@ void ModelBase::linScale(const double & scale){
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i)
     pars.at(i)->linScale(scale);
+  set = 0;
+  ready = 0;
 }
 
 
@@ -82,6 +84,8 @@ Estimation & ModelBase::getType() {
 }
 
 void ModelBase::setEdgeToEdge(const bool edgeToEdge){
+  this->set = 0;
+  this->ready = 0;
   this->edgeToEdge = edgeToEdge;
 }
 
