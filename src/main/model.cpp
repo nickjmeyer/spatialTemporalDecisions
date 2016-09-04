@@ -67,6 +67,10 @@ void ModelBase::setFixSample(const int & fix){
   fixSample = fix;
 }
 
+int ModelBase::getFixSample() {
+  return fixSample;
+}
+
 
 Estimation ModelBase::getType() const{
   return fitType;
