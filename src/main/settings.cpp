@@ -144,7 +144,7 @@ void Settings::set(int numInitVals, char ** initVals){
     njm::toFile("\n\n\n",datDir + "/README.org");
     njm::toFile("* Run-time Information",datDir + "/README.org");
     njm::toFile(info.str(),datDir + "/README.org");
-    junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
+    // junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
     if(junk);// dummy statement to get -Wall off my back
   }
   else{
