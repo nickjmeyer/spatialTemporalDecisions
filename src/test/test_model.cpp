@@ -1,13 +1,51 @@
 #include <gtest/gtest.h>
 #include <glog/logging.h>
 #include <boost/filesystem.hpp>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_deriv.h>
 #include "settings.hpp"
 #include "data.hpp"
 #include "system.hpp"
 #include "paramIntercept.hpp"
 #include "modelGravityGDist.hpp"
 
-const float eps = 1e-8;
+const float eps = 1e-6;
+
+
+struct GradientChecker {
+  System<ModelGDist,ModelGDist> * system;
+  ModelGDist * m;
+  int gradientVar;
+};
+
+struct HessianChecker {
+  System<ModelGDist,ModelGDist> * system;
+  ModelGDist * m;
+  int gradientVar;
+  int hessianVar;
+};
+
+
+double f (double x, void * params) {
+  GradientChecker * gc = static_cast<GradientChecker*>(params);
+  std::vector<double> par = gc->m->getPar();
+  par.at(gc->gradientVar) = x;
+  gc->m->putPar(par.begin());
+  return gc->m->logll(gc->system->sD,gc->system->tD,
+    gc->system->fD,gc->system->dD);
+}
+
+double fGrad (double x, void * params) {
+  HessianChecker * hc = static_cast<HessianChecker*>(params);
+  std::vector<double> par = hc->m->getPar();
+  par.at(hc->hessianVar) = x;
+  hc->m->putPar(par.begin());
+  return hc->m->logllGrad(hc->system->sD,hc->system->tD,
+    hc->system->fD,hc->system->dD).at(hc->gradientVar);
+}
+
+
+
 
 class TestModel : public ::testing::Test {
 public:
@@ -291,10 +329,67 @@ TEST_F(TestModel,TestSetQuick) {
 TEST_F(TestModel,TestSetPar) {
 }
 
-TEST_F(TestModel,TestPartial) {
+TEST_F(TestModel,TestLogllGrad) {
+  this->m->read();
+
+  std::vector<double> par = this->m->getPar();
+
+  for (int i = 0; i < this->m->numPars; ++i) {
+    this->m->putPar(par.begin());
+    const double val = this->m->logllGrad(this->system->sD,this->system->tD,
+      this->system->fD,this->system->dD).at(i);
+
+    GradientChecker gc;
+    gc.system = this->system;
+    gc.m = this->m;
+    gc.gradientVar = i;
+
+    gsl_function F;
+    F.function = &f;
+    F.params = &gc;
+
+    double result;
+    double abserr;
+    gsl_deriv_central(&F,par.at(i),1e-8,&result,&abserr);
+
+    EXPECT_NEAR(result,val,eps);
+  }
 }
 
-TEST_F(TestModel,TestPartial2) {
+TEST_F(TestModel,TestLogllHess) {
+  this->m->read();
+
+
+  std::vector<double> par = this->m->getPar();
+
+  for (int i = 0; i < this->m->numPars; ++i) {
+    for (int j = 0; j < this->m->numPars; ++j) {
+      this->m->putPar(par.begin());
+
+      const double val0 = this->m->logllHess(this->system->sD,this->system->tD,
+        this->system->fD,this->system->dD).at(i*this->m->numPars + j);
+      const double val1 = this->m->logllHess(this->system->sD,this->system->tD,
+        this->system->fD,this->system->dD).at(j*this->m->numPars + i);
+      EXPECT_NEAR(val0,val1,eps);
+
+      HessianChecker hc;
+      hc.system = this->system;
+      hc.m = this->m;
+      hc.gradientVar = i;
+      hc.hessianVar = j;
+
+      gsl_function F;
+      F.function = &fGrad;
+      F.params = &hc;
+
+      double result;
+      double abserr;
+      gsl_deriv_central(&F,par.at(j),1e-8,&result,&abserr);
+
+      EXPECT_NEAR(result,val0,eps)
+        << "Gradient var is " << i << " and Hessian var is " << j;
+    }
+  }
 }
 
 TEST_F(TestModel,TestSetFisher) {
