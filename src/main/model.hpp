@@ -128,6 +128,7 @@ class ModelBase {
 
   virtual void setType(const Estimation & est);
   virtual void setFixSample(const int & fix);
+  virtual int getFixSample();
   virtual Estimation getType() const;
   virtual Estimation & getType();
 
