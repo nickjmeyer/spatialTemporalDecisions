@@ -6,7 +6,11 @@ ModelBase::ModelBase(const std::string & str,
                      const FixedData & fD){
   name = str;
 
-  edgeToEdge = false;
+  setType(INVALID);
+
+  setFixSample(0);
+
+  setEdgeToEdge(false);
 
   set = 0;
   ready = 0;
