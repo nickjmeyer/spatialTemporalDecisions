@@ -1,6 +1,7 @@
 #include <git2.h>
 #include <git2/common.h>
 #include <glog/logging.h>
+#include <boost/filesystem.hpp>
 #include "settings.hpp"
 
 #define STRINGIFY(x) #x
@@ -20,12 +21,12 @@ Settings::~Settings(){
   timeElapsed();
 
   // compress data directory
-  if(!cleaned){
-    int junk;
-    junk=system(("cd " + srcDir + "; tar -cjf " + date + ".tar.bz2 "
-		 + date +"/").c_str());
-    if(junk);// dummy statement to get -Wall off my back
-  }
+  // if(!cleaned){
+  //   int junk;
+  //   junk=system(("cd " + srcDir + "; tar -cjf " + date + ".tar.bz2 "
+  // 	 + date +"/").c_str());
+  //   if(junk);// dummy statement to get -Wall off my back
+  // }
 }
 
 
@@ -116,13 +117,7 @@ void Settings::set(int numInitVals, char ** initVals){
   info << "datDir: " << datDir << "\n";
   info << "git-describe: " << buf.ptr << "\n";
 
-  int junk;
-  std::stringstream dirSS;
-  dirSS.str("");
-  dirSS.clear();
-  dirSS << "mkdir -p " << datDir;
-  junk=system(dirSS.str().c_str());
-  if(junk);// dummy statement to get -Wall off my back
+  boost::filesystem::create_directories(datDir);
 
   // ask permission to proceed with program
   std::string check;
@@ -145,7 +140,7 @@ void Settings::set(int numInitVals, char ** initVals){
     njm::toFile("* Run-time Information",datDir + "/README.org");
     njm::toFile(info.str(),datDir + "/README.org");
     // junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
-    if(junk);// dummy statement to get -Wall off my back
+    // if(junk);// dummy statement to get -Wall off my back
   }
   else{
     std::cout << "Settings were not declared as correct.  "
@@ -159,10 +154,11 @@ void Settings::set(int numInitVals, char ** initVals){
 
 void Settings::clean(){
 
-  int junk;
-  std::string rm = "rm -rf " + datDir + " " + datDir + date + ".tar.bz2";
-  junk=system(rm.c_str());
-  if(junk);// dummy statement to get -Wall off my back
+  // int junk;
+  // std::string rm = "rm -rf " + datDir + " " + datDir + date + ".tar.bz2";
+  // junk=system(rm.c_str());
+  // if(junk);// dummy statement to get -Wall off my back
+  boost::filesystem::remove_all(datDir);
   cleaned = 1;
 }
 
