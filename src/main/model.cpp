@@ -219,7 +219,11 @@ void ModelBase::setQuick(const SimData & sD,
   for(i = 0,k = 0; i < sD.numNotInfec; ++i){
     pK = sD.notInfec[i]*fD.numNodes;
     for(j = 0; j < sD.numInfected; ++j,++k){
-      quick[k] = 1.0/(1.0 + std::exp(probs[pK + sD.infected[j]]));
+      if(this->getEdgeToEdge() && fD.network.at(i*fD.numNodes + j)) {
+        quick[k] = 1.0/(1.0 + std::exp(probs[pK + sD.infected[j]]));
+      } else {
+        quick[k] = 0.0;
+      }
     }
   }
   ready = 1;
