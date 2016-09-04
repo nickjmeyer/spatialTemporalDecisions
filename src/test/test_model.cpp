@@ -79,7 +79,9 @@ TEST(TestModel,TestFit) {
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   char fileName[32] = "test_model";
-  boost::filesystem::path temp = boost::filesystem::unique_path();
+  boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();
+  tempModel += "/%%%%-%%%%-%%%%-%%%%";
+  boost::filesystem::path temp = boost::filesystem::unique_path(tempModel);
   char srcDir[32];
   std::strcpy(srcDir,temp.native().c_str());
 
