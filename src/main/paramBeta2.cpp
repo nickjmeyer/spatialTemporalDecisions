@@ -10,7 +10,7 @@ std::vector<std::string> ParamBeta2::initNames(){
   std::vector<std::string> str;
   unsigned int i;
   for(i = 0; i < parsSize; ++i)
-    str.push_back("beta2"+njm::toString(i,"",0,0));
+    str.push_back("beta"+njm::toString(i,"",0,0));
   return str;
 }
 
