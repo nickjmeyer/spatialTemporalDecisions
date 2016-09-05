@@ -162,7 +162,7 @@ void ModelBase::revProbs(const SimData & sD,
         const int jNode = sD.notInfec[j];
         if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
           || !this->getEdgeToEdge()){
-          prob *= 1.0 / (1.0 + std::exp(probs[k + jNode*fD.numNodes]));
+          prob *= 1.0 / (1.0 + std::exp(probs[iNode*fD.numNodes + jNode]));
         }
       }
       expitRevProbs[i] = 1.0-prob;
