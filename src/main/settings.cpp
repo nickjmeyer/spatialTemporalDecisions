@@ -82,6 +82,7 @@ void Settings::set(int numInitVals, char ** initVals){
   CHECK_EQ(git_describe_format(&buf,describe_result,&fmt_opts),0)
     << "failed to format describe";
 
+  git_libgit2_shutdown();
 
   timeStamp();
 
