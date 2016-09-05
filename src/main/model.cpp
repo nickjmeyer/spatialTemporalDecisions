@@ -111,17 +111,16 @@ void ModelBase::infProbs(const SimData & sD,
   }
   else if(ready == 0){
     expitInfProbs.resize(sD.numNotInfec);
-    int i,j,k;
+    int i,j;
     double prob;
     for(i = 0; i < sD.numNotInfec; ++i){
       const int iNode = sD.notInfec[i];
-      k = sD.notInfec[i] * fD.numNodes;
       prob=1.0;
       for(j = 0; j < sD.numInfected; ++j){
         const int jNode = sD.infected[j];
         if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
           || !this->getEdgeToEdge()) {
-          prob *= 1.0 / (1.0 + std::exp(probs[k + jNode]));
+          prob *= 1.0 / (1.0 + std::exp(probs[iNode*fD.numNodes + jNode]));
         }
       }
       expitInfProbs[i] = 1.0-prob;
@@ -152,11 +151,10 @@ void ModelBase::revProbs(const SimData & sD,
   }
   else if(ready == 0){
     expitRevProbs.resize(sD.numInfected);
-    int i,j,k;
+    int i,j;
     double prob;
     for(i = 0; i < sD.numInfected; ++i){
       const int iNode = sD.infected[i];
-      k = sD.infected[i];
       prob=1.0;
       for(j = 0; j < sD.numNotInfec; ++j) {
         const int jNode = sD.notInfec[j];
