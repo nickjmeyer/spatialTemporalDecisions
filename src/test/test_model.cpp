@@ -11,28 +11,41 @@
 
 const float eps = 1e-6;
 
-std::vector<std::string> mods = {"2GPowDist",
-                                 "2GravityGDist",
-                                 "GDist",
-                                 "GravityGDist"};
+const std::vector<std::string> modNames = {"2GPowGDist",
+                                           "2GravityGDist",
+                                           "GDist",
+                                           "GravityGDist"};
+const std::vector<std::string> parNames = {"intcp",
+                                           "beta0",
+                                           "beta1",
+                                           "beta2",
+                                           "beta3",
+                                           "alpha",
+                                           "power",
+                                           "gPow",
+                                           "trtAct",
+                                           "trtPre"};
 
-
-struct GradientChecker {
-  System<ModelGDist,ModelGDist> * system;
-  ModelGDist * m;
+template <typename T>
+class GradientChecker {
+public:
+  System<T,T> * system;
+  T * m;
   int gradientVar;
 };
 
-struct HessianChecker {
-  System<ModelGDist,ModelGDist> * system;
-  ModelGDist * m;
+template <typename T>
+class HessianChecker {
+public:
+  System<T,T> * system;
+  T * m;
   int gradientVar;
   int hessianVar;
 };
 
-
+template <typename T>
 double f (double x, void * params) {
-  GradientChecker * gc = static_cast<GradientChecker*>(params);
+  GradientChecker<T> * gc = static_cast<GradientChecker<T>*>(params);
   std::vector<double> par = gc->m->getPar();
   par.at(gc->gradientVar) = x;
   gc->m->putPar(par.begin());
@@ -40,8 +53,9 @@ double f (double x, void * params) {
     gc->system->fD,gc->system->dD);
 }
 
+template <typename T>
 double fGrad (double x, void * params) {
-  HessianChecker * hc = static_cast<HessianChecker*>(params);
+  HessianChecker<T> * hc = static_cast<HessianChecker<T>*>(params);
   std::vector<double> par = hc->m->getPar();
   par.at(hc->hessianVar) = x;
   hc->m->putPar(par.begin());
@@ -51,25 +65,20 @@ double fGrad (double x, void * params) {
 
 
 
-
+template <typename T>
 class TestModel : public ::testing::Test {
 public:
-  static const double intcp;
-  static const double alpha;
-  static const double trtAct;
-  static const double trtPre;
+  T * m;
 
-  ModelGDist * m;
-
-  System<ModelGDist,ModelGDist> * system;
+  System<T,T> * system;
 
   TestModel() {
-    system = new System<ModelGDist,ModelGDist>();
+    system = new System<T,T>();
     system->reset({0});
     std::vector<double> mockProbs = {1.0,0.0,0.0};
     system->nextPoint(mockProbs);
 
-    m = new ModelGDist(system->fD);
+    m = new T(system->fD);
   }
 
   ~TestModel() {
@@ -79,107 +88,76 @@ public:
 };
 
 
-const double TestModel::intcp = 1.0;
-const double TestModel::alpha = 0.15;
-const double TestModel::trtAct = 0.5;
-const double TestModel::trtPre = 0.25;
+typedef ::testing::Types<ModelGDist,
+                         ModelGravityGDist,
+                         Model2GPowGDist,
+                         Model2GravityGDist
+                         > MyTypes;
+TYPED_TEST_CASE(TestModel,MyTypes);
 
-
-TEST_F(TestModel,TestInit) {
-  EXPECT_EQ(this->m->numPars,4);
-  EXPECT_EQ(this->m->name,"GDist");
+TYPED_TEST(TestModel,TestInit) {
   for (int i = 0; i < this->m->numPars; ++i) {
     EXPECT_NEAR(this->m->getPar().at(i),0.0,eps);
   }
 }
 
-TEST_F(TestModel,TestRead) {
+TYPED_TEST(TestModel,TestReadSave) {
   this->m->read();
-  std::vector<double> par = this->m->getPar();
-  EXPECT_NEAR(par.at(0),this->intcp,eps);
-  EXPECT_NEAR(par.at(1),this->alpha,eps);
-  EXPECT_NEAR(par.at(2),this->trtAct,eps);
-  EXPECT_NEAR(par.at(3),this->trtPre,eps);
-}
 
-// TEST_F(TestModel,TestSave) {
-// }
+  std::vector<double> oldPar = this->m->getPar();
+  std::vector<double> newPar(this->m->numPars,0);
+  for (int i = 0; i < this->m->numPars; ++i) {
+    newPar.at(i) = njm::runif(-0.5,0.5);
+  }
+  this->m->putPar(newPar.begin());
+  this->m->save();
 
-TEST_F(TestModel,TestLinScale) {
-  {
-    // unchanged
-    const double scale = 1.0;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
+  std::vector<double> zeroPar(this->m->numPars,0);
+  this->m->putPar(zeroPar.begin());
+  for (int i = 0; i < this->m->numPars; ++i) {
+    EXPECT_EQ(this->m->getPar().at(i),0.);
   }
 
-  {
-    // double
-    const double scale = 2.0;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
+  this->m->read();
+  for (int i = 0; i < this->m->numPars; ++i) {
+    EXPECT_NEAR(this->m->getPar().at(i),newPar.at(i),eps);
   }
 
-  {
-    // half
-    const double scale = 0.5;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
+  // now make sure the old parameters write properly because other
+  // test cases might depend on it
+  this->m->putPar(oldPar.begin());
+  this->m->save();
+  this->m->putPar(zeroPar.begin());
+  for (int i = 0; i < this->m->numPars; ++i) {
+    EXPECT_EQ(this->m->getPar().at(i),0.);
   }
-
-  {
-    // negative
-    const double scale = -1.0;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
-  }
-
-  {
-    // negative double
-    const double scale = -2.0;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
-  }
-
-  {
-    // negative half
-    const double scale = -0.5;
-    this->m->read();
-    this->m->linScale(scale);
-    std::vector<double> par = this->m->getPar();
-    EXPECT_NEAR(par.at(0),scale*this->intcp,eps);
-    EXPECT_NEAR(par.at(1),scale*this->alpha,eps);
-    EXPECT_NEAR(par.at(2),scale*this->trtAct,eps);
-    EXPECT_NEAR(par.at(3),scale*this->trtPre,eps);
+  this->m->read();
+  for (int i = 0; i < this->m->numPars; ++i) {
+    EXPECT_NEAR(this->m->getPar().at(i),oldPar.at(i),eps);
   }
 }
 
-TEST_F(TestModel,TestType) {
+TYPED_TEST(TestModel,TestLinScale) {
+  this->m->setFill(this->system->sD,this->system->tD,
+    this->system->fD,this->system->dD);
+  const std::vector<double> probs = this->m->probs;
+  EXPECT_EQ(probs.size(),this->system->fD.numNodes*this->system->fD.numNodes);
+
+  const std::vector<double> scaleVals = {1.0,0.5,2.0,
+                                         -1.0,-0.5,-2.0};
+  for (int i = 0; i < scaleVals.size(); ++i) {
+    const double scale = scaleVals.at(i);
+    this->m->linScale(scale);
+
+    const std::vector<double> scaleProbs = this->m->probs;
+    EXPECT_EQ(scaleProbs.size(),probs.size());
+    for (int j = 0; j < scaleProbs.size(); ++j) {
+      EXPECT_NEAR(scaleProbs.at(j),probs.at(j)*scale,eps);
+    }
+  }
+}
+
+TYPED_TEST(TestModel,TestType) {
   EXPECT_EQ(this->m->getType(),INVALID);
   this->m->setType(MLE);
   EXPECT_EQ(this->m->getType(),MLE);
@@ -189,13 +167,13 @@ TEST_F(TestModel,TestType) {
   EXPECT_EQ(this->m->getType(),MLES);
 }
 
-TEST_F(TestModel,TestSetFixSample) {
+TYPED_TEST(TestModel,TestSetFixSample) {
   EXPECT_EQ(this->m->getFixSample(),0);
   this->m->setFixSample(1);
   EXPECT_EQ(this->m->getFixSample(),1);
 }
 
-TEST_F(TestModel,TestEdgeToEdge) {
+TYPED_TEST(TestModel,TestEdgeToEdge) {
   EXPECT_FALSE(this->m->getEdgeToEdge());
   this->m->setEdgeToEdge(false);
   EXPECT_FALSE(this->m->getEdgeToEdge());
@@ -205,7 +183,7 @@ TEST_F(TestModel,TestEdgeToEdge) {
   EXPECT_TRUE(this->m->getEdgeToEdge());
 }
 
-TEST_F(TestModel,TestInfProbs) {
+TYPED_TEST(TestModel,TestInfProbs) {
   this->m->read();
   this->m->setFill(this->system->sD,this->system->tD,
     this->system->fD,this->system->dD);
@@ -215,12 +193,27 @@ TEST_F(TestModel,TestInfProbs) {
   std::vector<double> infProbs = this->m->infProbs();
 
   ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
+  ASSERT_EQ(this->system->sD.numNotInfec,2);
+  ASSERT_EQ(this->system->sD.infected.size(),2);
+  ASSERT_EQ(this->system->sD.numInfected,2);
+  ASSERT_EQ(this->system->sD.notInfec.size(),2);
+  ASSERT_EQ(this->system->sD.infected.at(0),0);
+  ASSERT_EQ(this->system->sD.infected.at(1),1);
+  ASSERT_EQ(this->system->sD.notInfec.at(0),2);
+  ASSERT_EQ(this->system->sD.notInfec.at(1),3);
 
-  const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
+  const double prob0To2 = 1.0/(1.0 +
+    std::exp(this->m->probs[2*this->system->fD.numNodes + 0]));
+  const double prob0To3 = 1.0/(1.0 +
+    std::exp(this->m->probs[3*this->system->fD.numNodes + 0]));
 
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
+  const double prob1To2 = 1.0/(1.0 +
+    std::exp(this->m->probs[2*this->system->fD.numNodes + 1]));
+  const double prob1To3 = 1.0/(1.0 +
+    std::exp(this->m->probs[3*this->system->fD.numNodes + 1]));
+
+  EXPECT_NEAR(1.0 - prob0To2*prob1To2, infProbs.at(0),eps);
+  EXPECT_NEAR(1.0 - prob0To3*prob1To3, infProbs.at(1),eps);
 
   this->m->setEdgeToEdge(true);
   this->m->setFill(this->system->sD,this->system->tD,
@@ -230,11 +223,11 @@ TEST_F(TestModel,TestInfProbs) {
 
   infProbs = this->m->infProbs();
 
-  EXPECT_NEAR(1.0 - oneNot, infProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot, infProbs.at(1),eps);
+  EXPECT_NEAR(1.0 - prob0To2, infProbs.at(0),eps);
+  EXPECT_NEAR(1.0 - prob1To3, infProbs.at(1),eps);
 }
 
-TEST_F(TestModel,TestRevProbs) {
+TYPED_TEST(TestModel,TestRevProbs) {
   this->m->read();
   this->m->setFill(this->system->sD,this->system->tD,
     this->system->fD,this->system->dD);
@@ -243,13 +236,28 @@ TEST_F(TestModel,TestRevProbs) {
 
   std::vector<double> revProbs = this->m->revProbs();
 
-  ASSERT_EQ(revProbs.size(),this->system->sD.numInfected);
+  ASSERT_EQ(revProbs.size(),this->system->sD.numNotInfec);
+  ASSERT_EQ(this->system->sD.numNotInfec,2);
+  ASSERT_EQ(this->system->sD.infected.size(),2);
+  ASSERT_EQ(this->system->sD.numInfected,2);
+  ASSERT_EQ(this->system->sD.notInfec.size(),2);
+  ASSERT_EQ(this->system->sD.infected.at(0),0);
+  ASSERT_EQ(this->system->sD.infected.at(1),1);
+  ASSERT_EQ(this->system->sD.notInfec.at(0),2);
+  ASSERT_EQ(this->system->sD.notInfec.at(1),3);
 
-  const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
+  const double prob2To0 = 1.0/(1.0 +
+    std::exp(this->m->probs[0*this->system->fD.numNodes + 2]));
+  const double prob3To0 = 1.0/(1.0 +
+    std::exp(this->m->probs[0*this->system->fD.numNodes + 3]));
 
-  EXPECT_NEAR(1.0 - oneNot*twoNot, revProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot*twoNot, revProbs.at(1),eps);
+  const double prob2To1 = 1.0/(1.0 +
+    std::exp(this->m->probs[1*this->system->fD.numNodes + 2]));
+  const double prob3To1 = 1.0/(1.0 +
+    std::exp(this->m->probs[1*this->system->fD.numNodes + 3]));
+
+  EXPECT_NEAR(1.0 - prob2To0*prob3To0, revProbs.at(0),eps);
+  EXPECT_NEAR(1.0 - prob2To1*prob3To1, revProbs.at(1),eps);
 
   this->m->setEdgeToEdge(true);
   this->m->setFill(this->system->sD,this->system->tD,
@@ -259,82 +267,82 @@ TEST_F(TestModel,TestRevProbs) {
 
   revProbs = this->m->revProbs();
 
-  EXPECT_NEAR(1.0 - oneNot, revProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot, revProbs.at(1),eps);
+  EXPECT_NEAR(1.0 - prob2To0, revProbs.at(0),eps);
+  EXPECT_NEAR(1.0 - prob3To1, revProbs.at(1),eps);
 }
 
-TEST_F(TestModel,TestModFill) {
-  this->m->read();
-  this->m->setFill(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->infProbs(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
+TYPED_TEST(TestModel,TestModFill) {
+  // this->m->read();
+  // this->m->setFill(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->infProbs(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
 
-  std::vector<double> infProbs = this->m->infProbs();
+  // std::vector<double> infProbs = this->m->infProbs();
 
-  ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
+  // ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
 
-  const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
+  // const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
+  // const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
 
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
+  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
+  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
 
-  this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
+  // this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
 
-  this->m->modFill(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->infProbs(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
+  // this->m->modFill(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->infProbs(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
 
-  infProbs = this->m->infProbs();
+  // infProbs = this->m->infProbs();
 
-  const double oneNotTrt = 1.0/(1.0 + std::exp(this->intcp
-        - this->alpha*1.0 - this->trtAct));
-  const double twoNotTrt = 1.0/(1.0 + std::exp(this->intcp
-        - this->alpha*2.0 - this->trtAct));
+  // const double oneNotTrt = 1.0/(1.0 + std::exp(this->intcp
+  //       - this->alpha*1.0 - this->trtAct));
+  // const double twoNotTrt = 1.0/(1.0 + std::exp(this->intcp
+  //       - this->alpha*2.0 - this->trtAct));
 
-    EXPECT_NEAR(1.0 - oneNotTrt*twoNot, infProbs.at(0),eps);
-    EXPECT_NEAR(1.0 - oneNot*twoNotTrt, infProbs.at(1),eps);
+  //   EXPECT_NEAR(1.0 - oneNotTrt*twoNot, infProbs.at(0),eps);
+  //   EXPECT_NEAR(1.0 - oneNot*twoNotTrt, infProbs.at(1),eps);
 }
 
-TEST_F(TestModel,TestSetQuick) {
-  this->m->read();
-  this->m->setFill(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->setQuick(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->infProbs(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
+TYPED_TEST(TestModel,TestSetQuick) {
+  // this->m->read();
+  // this->m->setFill(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->setQuick(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->infProbs(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
 
-  std::vector<double> infProbs = this->m->infProbs();
+  // std::vector<double> infProbs = this->m->infProbs();
 
-  ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
+  // ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
 
-  const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
+  // const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
+  // const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
 
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
+  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
+  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
 
-  this->m->setEdgeToEdge(true);
-  this->m->setFill(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->setQuick(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
-  this->m->infProbs(this->system->sD,this->system->tD,
-    this->system->fD,this->system->dD);
+  // this->m->setEdgeToEdge(true);
+  // this->m->setFill(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->setQuick(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
+  // this->m->infProbs(this->system->sD,this->system->tD,
+  //   this->system->fD,this->system->dD);
 
-  infProbs = this->m->infProbs();
+  // infProbs = this->m->infProbs();
 
-  EXPECT_NEAR(1.0 - oneNot, infProbs.at(0),eps);
-  EXPECT_NEAR(1.0 - oneNot, infProbs.at(1),eps);
+  // EXPECT_NEAR(1.0 - oneNot, infProbs.at(0),eps);
+  // EXPECT_NEAR(1.0 - oneNot, infProbs.at(1),eps);
 }
 
-TEST_F(TestModel,TestSetPar) {
+TYPED_TEST(TestModel,TestSetPar) {
 }
 
-TEST_F(TestModel,TestLogllGrad) {
+TYPED_TEST(TestModel,TestLogllGrad) {
   this->m->read();
 
   std::vector<double> par = this->m->getPar();
@@ -344,13 +352,13 @@ TEST_F(TestModel,TestLogllGrad) {
     const double val = this->m->logllGrad(this->system->sD,this->system->tD,
       this->system->fD,this->system->dD).at(i);
 
-    GradientChecker gc;
+    GradientChecker<TypeParam> gc;
     gc.system = this->system;
     gc.m = this->m;
     gc.gradientVar = i;
 
     gsl_function F;
-    F.function = &f;
+    F.function = &f<TypeParam>;
     F.params = &gc;
 
     double result;
@@ -361,7 +369,7 @@ TEST_F(TestModel,TestLogllGrad) {
   }
 }
 
-TEST_F(TestModel,TestLogllHess) {
+TYPED_TEST(TestModel,TestLogllHess) {
   this->m->read();
 
 
@@ -377,14 +385,14 @@ TEST_F(TestModel,TestLogllHess) {
         this->system->fD,this->system->dD).at(j*this->m->numPars + i);
       EXPECT_NEAR(val0,val1,eps);
 
-      HessianChecker hc;
+      HessianChecker<TypeParam> hc;
       hc.system = this->system;
       hc.m = this->m;
       hc.gradientVar = i;
       hc.hessianVar = j;
 
       gsl_function F;
-      F.function = &fGrad;
+      F.function = &fGrad<TypeParam>;
       F.params = &hc;
 
       double result;
@@ -397,16 +405,16 @@ TEST_F(TestModel,TestLogllHess) {
   }
 }
 
-TEST_F(TestModel,TestSetFisher) {
+TYPED_TEST(TestModel,TestSetFisher) {
 }
 
-TEST_F(TestModel,TestSample) {
+TYPED_TEST(TestModel,TestSample) {
 }
 
-TEST_F(TestModel,TestRevert) {
+TYPED_TEST(TestModel,TestRevert) {
 }
 
-TEST_F(TestModel,TestFit) {
+TYPED_TEST(TestModel,TestFit) {
 }
 
 
@@ -529,11 +537,19 @@ void fakeNetworkSetup() {
   int finalT = 6;
   njm::toFile(finalT,njm::sett.srcExt("finalT.txt"));
 
-  boost::filesystem::create_directories(njm::sett.srcExt("ParamGDist"));
-  njm::toFile(TestModel::intcp,njm::sett.srcExt("ParamGDist/intcp.txt"));
-  njm::toFile(TestModel::alpha,njm::sett.srcExt("ParamGDist/alpha.txt"));
-  njm::toFile(TestModel::trtAct,njm::sett.srcExt("ParamGDist/trtAct.txt"));
-  njm::toFile(TestModel::trtPre,njm::sett.srcExt("ParamGDist/trtPre.txt"));
+  for(int i = 0; i < modNames.size(); ++i) {
+    const std::string modName = modNames.at(i);
+    boost::filesystem::create_directories(njm::sett.srcExt("Param"+modName));
+    // some pars aren't used in every model, but its cheap just to
+    // write all parameters for all models rather than listing them
+    // separately for each model
+    for (int j = 0; j < parNames.size(); ++j) {
+      const std::string parName = parNames.at(j);
+      njm::toFile(njm::runif(-0.5,0.5),njm::sett.srcExt("Param"+modName+
+          "/"+parName+".txt"));
+    }
+
+  }
 }
 
 
