@@ -10,7 +10,7 @@ static std::vector<ParamBase *> genPars(){
 }
 
 Model2GPowGDist::Model2GPowGDist(const FixedData & fD)
-  : ModelBase("2GravityGDist",genPars(),fD){
+  : ModelBase("2GPowGDist",genPars(),fD){
 }
 
 
