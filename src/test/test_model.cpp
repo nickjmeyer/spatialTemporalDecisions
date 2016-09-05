@@ -11,6 +11,11 @@
 
 const float eps = 1e-6;
 
+std::vector<std::string> mods = {"2GPowDist",
+                                 "2GravityGDist",
+                                 "GDist",
+                                 "GravityGDist"};
+
 
 struct GradientChecker {
   System<ModelGDist,ModelGDist> * system;
