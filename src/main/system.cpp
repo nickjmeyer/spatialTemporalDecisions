@@ -34,7 +34,7 @@ double expDistEval(double c, void * params) {
   for (int i = 0; i < size; ++i) {
     const double weight = std::exp(-edd->dist.at(i)*c);
     if(i < edd->cutoff) {
-      ret += (1.0 - edd->proprotion) * weight;
+      ret += (1.0 - edd->proportion) * weight;
     } else {
       ret += -edd->proportion * weight;
     }
@@ -49,9 +49,9 @@ double expDistGrad(double c, void * params) {
   for (int i = 0; i < size; ++i) {
     const double grad = -edd->dist.at(i) * std::exp(-edd->dist.at(i)*c);
     if(i < edd->cutoff) {
-      ret += (1.0 - edd->proportion) * weight;
+      ret += (1.0 - edd->proportion) * grad;
     } else {
-      ret += -edd->proportion * weight;
+      ret += -edd->proportion * grad;
     }
   }
   return ret;
@@ -481,10 +481,13 @@ void System<MG,
 
 
   // weighted distance
+  double minDist = *std::min_element(fD.gDist.begin(),fD.gDist.end());
   std::vector<double> distValsForExp;
   for (i = 0; i < fD.numNodes; ++i) {
     for (j = (i+1); j < fD.numNodes; ++j) {
-      distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j));
+      // subtract minDist for stability (min because of the negative
+      // coefficient in the objective function
+      distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j) - minDist);
     }
   }
 
@@ -504,7 +507,8 @@ void System<MG,
   solver_type = gsl_root_fdfsolver_newton;
   gsl_root_fdfsolver * solver;
   solver = gsl_root_fdfsolver_alloc(solver_type);
-  double root0 = root = 1.0;
+  double root0 = 1.0;
+  double root = root0;
 
   gsl_root_fdfsolver_set(solver,&fdf,root);
   int status = GSL_CONTINUE;
@@ -523,7 +527,7 @@ void System<MG,
   if (status == GSL_CONTINUE) {
     njm::message("too many iterations for exp dist weights");
     throw(1);
-  } else if (status != SUCCESS) {
+  } else if (status != GSL_SUCCESS) {
     njm::message("not successful for exp dist weights");
     throw(1);
   }
@@ -531,7 +535,7 @@ void System<MG,
   fD.expDistWeight.clear();
   for (i = 0, k = 0; i < fD.numNodes; ++i) {
     for (j = 0; j < fD.numNodes; ++j,++k) {
-      fD.expDistWeight.push_back(- (fD.gDist.at(k) - maxDist) * root);
+      fD.expDistWeight.push_back(- (fD.gDist.at(k) - minDist) * root);
     }
   }
 }
