@@ -1,5 +1,8 @@
 #include "system.hpp"
 
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_roots.h>
+
 template class System<ModelGravityGDist,
 		      ModelGravityGDist>;
 
@@ -16,7 +19,48 @@ template class System<Model2GravityGDist,
 		      ModelGDist>;
 
 template class System<ModelGDist,
-		      ModelGDist>;
+          ModelGDist>;
+
+struct ExpDistData {
+  std::vector<double> dist;
+  int cutoff;
+  double proportion;
+};
+
+double expDistEval(double c, void * params) {
+  ExpDistData * edd = static_cast<ExpDistData*>(params);
+  const int size = edd->dist.size();
+  double ret = 0.0;
+  for (int i = 0; i < size; ++i) {
+    const double weight = std::exp(-edd->dist.at(i)*c);
+    if(i < edd->cutoff) {
+      ret += (1.0 - edd->proprotion) * weight;
+    } else {
+      ret += -edd->proportion * weight;
+    }
+  }
+  return ret;
+}
+
+double expDistGrad(double c, void * params) {
+  ExpDistData * edd = static_cast<ExpDistData*>(params);
+  const int size = edd->dist.size();
+  double ret = 0.0;
+  for (int i = 0; i < size; ++i) {
+    const double grad = -edd->dist.at(i) * std::exp(-edd->dist.at(i)*c);
+    if(i < edd->cutoff) {
+      ret += (1.0 - edd->proportion) * weight;
+    } else {
+      ret += -edd->proportion * weight;
+    }
+  }
+  return ret;
+}
+
+void expDistEvalGrad(double c, void *params, double *eval, double *grad) {
+  *eval = expDistEval(c,params);
+  *grad = expDistGrad(c,params);
+}
 
 
 
@@ -433,6 +477,62 @@ void System<MG,
 				     fD.numNodes,
 				     fD.centroidsLong,
 				     fD.centroidsLat));
+  }
+
+
+  // weighted distance
+  std::vector<double> distValsForExp;
+  for (i = 0; i < fD.numNodes; ++i) {
+    for (j = (i+1); j < fD.numNodes; ++j) {
+      distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j));
+    }
+  }
+
+  ExpDistData edd;
+  edd.dist = distValsForExp;
+  edd.proportion = 0.8;
+  edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
+  edd.cutoff = std::max(edd.cutoff,1);
+  gsl_function_fdf fdf;
+  fdf.params = &edd;
+  fdf.f = &expDistEval;
+  fdf.df = &expDistGrad;
+  fdf.fdf = &expDistEvalGrad;
+
+
+  const gsl_root_fdfsolver_type * solver_type;
+  solver_type = gsl_root_fdfsolver_newton;
+  gsl_root_fdfsolver * solver;
+  solver = gsl_root_fdfsolver_alloc(solver_type);
+  double root0 = root = 1.0;
+
+  gsl_root_fdfsolver_set(solver,&fdf,root);
+  int status = GSL_CONTINUE;
+  for (i = 0; i < 100 && status == GSL_CONTINUE; ++i) {
+    status = gsl_root_fdfsolver_iterate(solver);
+    if (status != GSL_CONTINUE)
+      break;
+
+    root0 = root;
+    root = gsl_root_fdfsolver_root(solver);
+
+    status = gsl_root_test_delta(root,root0,0,0.001);
+  }
+  gsl_root_fdfsolver_free(solver);
+
+  if (status == GSL_CONTINUE) {
+    njm::message("too many iterations for exp dist weights");
+    throw(1);
+  } else if (status != SUCCESS) {
+    njm::message("not successful for exp dist weights");
+    throw(1);
+  }
+
+  fD.expDistWeight.clear();
+  for (i = 0, k = 0; i < fD.numNodes; ++i) {
+    for (j = 0; j < fD.numNodes; ++j,++k) {
+      fD.expDistWeight.push_back(- (fD.gDist.at(k) - maxDist) * root);
+    }
   }
 }
 
