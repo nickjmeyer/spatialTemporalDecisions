@@ -7,6 +7,7 @@ library(igraph)
 library(RColorBrewer)
 library(Rcpp)
 library(RcppArmadillo)
+library(truncnorm)
 registerDoMC(detectCores())
 
 
@@ -208,6 +209,72 @@ genGridNet<-function(n1,n2){
   return(net)
 }
 
+
+
+genCrpNet<-function(n,b) {
+  theta = 2
+  alpha = 0.1
+
+  expNumTables<-function(parTheta) {
+    numer = lgamma(parTheta+n+alpha) + gamma(parTheta+1)
+    denom = alpha + lgamma(parTheta+n) + lgamma(parTheta+alpha)
+    return((exp(numer - denom) - parTheta/alpha - log(n)^2)^2)
+  }
+
+  out = optim(par=theta,expNumTables,lower=0.1,method="L-BFGS-B")
+
+  stopifnot(out$convergence == 0)
+
+  theta = out$par[1]
+
+  nodes = matrix(0,nrow=n,ncol=2)
+  groupId = rep(0,n)
+
+  groups = list()
+  ngroups = 0
+  for(i in 1:n) {
+    newProb = (theta + ngroups*alpha)/(theta + i -1)
+    draw = runif(1)
+    if(draw <= newProb || ngroups == 0) {
+      ngroups = ngroups + 1
+      groups[[ngroups]] = c(i)
+      groupId[i] = ngroups
+
+      nodes[i,] = runif(2)
+    } else {
+      joinProbs = c()
+      for(j in 1:ngroups) {
+        joinProbs = c(joinProbs,(length(groups[[j]]) - alpha)/
+                                (theta + i - 1))
+      }
+      joinProbs = joinProbs/sum(joinProbs)
+      g = sample(1:ngroups,1,prob=joinProbs)
+      groups[[g]] = c(groups[[g]],i)
+
+      meanX = nodes[groups[[g]][1],1]
+      meanY = nodes[groups[[g]][1],2]
+
+      x = rtruncnorm(1,a=0.0,b=1.0,mean=meanX,sd=0.05)
+      y = rtruncnorm(1,a=0.0,b=1.0,mean=meanY,sd=0.05)
+      nodes[i,] = c(x,y)
+      groupId[i] = g
+    }
+  }
+
+  ## qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  ## col_vector = unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
+  ## cols = sample(col_vector,ngroups)
+  ## plot(nodes,col=cols[groupId],pch=17,xlim=c(0,1),ylim=c(0,1))
+
+
+  cov=getCov(n,nodes)
+  net=list(n=n,neigh=neigh,nodes=nodes,fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
+  net$d=getDist(net)
+  meanCaves=mean(net$caves)
+  net$start=getStart(net$n)
+  net$name="crp"
+  return(list(nodes=nodes,groups=groups))
+}
 
 
 genAlleyNet<-function(nodes){
