@@ -125,7 +125,8 @@ void Settings::setup(const std::string fileName, const std::string srcDir) {
 
   // ask permission to proceed with program
   // std::string check;
-  // std::cout << info.str() << "\nAre these settings correct? (y,n): ";
+  std::cout << info.str() << std::endl;
+  // std::cout << "Are these settings correct? (y,n): ";
 
   // if(numInitVals==numVals) // did not pre specify the check?
   //   std::cin >> check;
