@@ -1,4 +1,7 @@
+#include <gflags/gflags.h>
 #include "tuneGenWNS.hpp"
+
+DEFINE_string(srcDir,"","Path to source directory");
 
 template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S & s, const int numReps, const Starts & starts){
@@ -96,7 +99,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
 int main(int argc, char ** argv){
-  njm::sett.set(argc,argv);
+  gflags::ParseCommandLineFlags(&argc,&argv,true);
+  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   {
     // typedef ModelTimeExpCavesGDistTrendPowCon MG;

@@ -51,7 +51,10 @@ void Settings::timeElapsed(){
 }
 
 
-void Settings::set(int numInitVals, char ** initVals){
+void Settings::setup(const std::string fileName, const std::string srcDir) {
+  this->fileName = fileName;
+  this->srcDir = srcDir;
+
   git_libgit2_init();
   git_repository * repo;
 #ifdef REPO_ROOT_DIRECTORY
@@ -87,21 +90,21 @@ void Settings::set(int numInitVals, char ** initVals){
   timeStamp();
 
   // check input arguments
-  if(numInitVals!=numVals && numInitVals!=(numVals+1)){
-    std::cout << "In Settings::Settings, "
-	      << "not the correct number of initial values.\n"
-	      << "Program requires " << numVals << " values.  "
-	      << "User provided " << numInitVals << " values.\n"
-	      << "Did you forget to count the executable as an argument?\n"
-        << "Terminating program...\n";
-    clean();
-    exit(1);
-  }
+  // if(numInitVals!=numVals && numInitVals!=(numVals+1)){
+  //   std::cout << "In Settings::Settings, "
+  //       << "not the correct number of initial values.\n"
+  //       << "Program requires " << numVals << " values.  "
+  //       << "User provided " << numInitVals << " values.\n"
+  //       << "Did you forget to count the executable as an argument?\n"
+  //       << "Terminating program...\n";
+  //   clean();
+  //   exit(1);
+  // }
 
 
   int arg=0;
   std::stringstream info;
-  fileName = initVals[arg++];
+  // fileName = initVals[arg++];
 
   char hostName[128];
   hostName[127] = '\0';
@@ -110,7 +113,7 @@ void Settings::set(int numInitVals, char ** initVals){
 
   info << "fileName: " << fileName << "\n";
 
-  srcDir=initVals[arg++];
+  // srcDir=initVals[arg++];
   info << "srcDir: " << srcDir << "\n";
 
   datDir = srcDir + "/" + datDir;
@@ -121,34 +124,34 @@ void Settings::set(int numInitVals, char ** initVals){
   boost::filesystem::create_directories(datDir);
 
   // ask permission to proceed with program
-  std::string check;
-  std::cout << info.str() << "\nAre these settings correct? (y,n): ";
+  // std::string check;
+  // std::cout << info.str() << "\nAre these settings correct? (y,n): ";
 
-  if(numInitVals==numVals) // did not pre specify the check?
-    std::cin >> check;
-  else{
-    check.assign(initVals[numVals]);
-    std::cout << check << "\n";
-  }
+  // if(numInitVals==numVals) // did not pre specify the check?
+  //   std::cin >> check;
+  // else{
+  //   check.assign(initVals[numVals]);
+  //   std::cout << check << "\n";
+  // }
 
-  if(check.compare("y")==0 || check.compare("Y")==0){
-    std::cout << "Check complete.  "
-	      << "Proceeding with program...\n\n";
-    njm::toFile("#+title: " + fileName,datDir + "/README.org");
-    njm::toFile("#+author: Nick Meyer",datDir + "/README.org");
-    njm::toFile("#+date: " + date,datDir + "/README.org");
-    njm::toFile("\n\n\n",datDir + "/README.org");
-    njm::toFile("* Run-time Information",datDir + "/README.org");
-    njm::toFile(info.str(),datDir + "/README.org");
-    // junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
-    // if(junk);// dummy statement to get -Wall off my back
-  }
-  else{
-    std::cout << "Settings were not declared as correct.  "
-	      << "Terminating program...\n";
-    clean();
-    exit(0);
-  }
+  // if(check.compare("y")==0 || check.compare("Y")==0){
+  std::cout << "Check complete.  "
+            << "Proceeding with program...\n\n";
+  njm::toFile("#+title: " + fileName,datDir + "/README.org");
+  njm::toFile("#+author: Nick Meyer",datDir + "/README.org");
+  njm::toFile("#+date: " + date,datDir + "/README.org");
+  njm::toFile("\n\n\n",datDir + "/README.org");
+  njm::toFile("* Run-time Information",datDir + "/README.org");
+  njm::toFile(info.str(),datDir + "/README.org");
+  //   // junk=system(("cp " + fileName + ".tar.bz2 " + datDir).c_str());
+  //   // if(junk);// dummy statement to get -Wall off my back
+  // }
+  // else{
+  //   std::cout << "Settings were not declared as correct.  "
+  //       << "Terminating program...\n";
+  //   clean();
+  //   exit(0);
+  // }
 
 }
 

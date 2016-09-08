@@ -1,8 +1,11 @@
+#include <gflags/gflags.h>
 #include "runM1Mles.hpp"
 
+DEFINE_string(srcDir,"","Path to source directory");
 
 int main(int argc, char ** argv){
-  njm::sett.set(argc,argv);
+  gflags::ParseCommandLineFlags(&argc,&argv,true);
+  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
   typedef Model2GPowGDist MG;

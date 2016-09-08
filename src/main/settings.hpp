@@ -17,8 +17,9 @@ class Settings {
   ~Settings();
 
   void timeElapsed();
-  
-  void set(int numInitVals, char ** initVals);
+
+  // void set(int numInitVals, char ** initVals);
+  void setup(const std::string fileName, const std::string srcDir);
 
   void clean();
   int cleaned;
@@ -29,7 +30,7 @@ class Settings {
   std::string date;
 
   const static int numVals;
-  
+
   int tick,tock,seconds;
   void timeStamp();
 

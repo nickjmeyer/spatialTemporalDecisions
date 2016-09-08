@@ -1,3 +1,4 @@
+#include <gflags/gflags.h>
 #include <gtest/gtest.h>
 #include <glog/logging.h>
 #include <boost/filesystem.hpp>
@@ -557,21 +558,15 @@ void fakeNetworkSetup() {
 
 
 int main(int argc, char **argv) {
+  gflags::ParseCommandLineFlags(&argc,&argv,true);
   ::testing::InitGoogleTest(&argc, argv);
-  char fileName[32] = "test_model";
+  const std::string fileName = "test_model";
   boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();
   tempModel += "/%%%%-%%%%-%%%%-%%%%";
   boost::filesystem::path temp = boost::filesystem::unique_path(tempModel);
-  char srcDir[32];
-  std::strcpy(srcDir,temp.native().c_str());
+  const std::string srcDir(temp.native());
 
-  char check[32] = "Y";
-
-  char* pseudoArgv[3];
-  pseudoArgv[0] = fileName;
-  pseudoArgv[1] = srcDir;
-  pseudoArgv[2] = check;
-  njm::sett.set(3,pseudoArgv);
+  njm::sett.setup(fileName,srcDir);
 
   fakeNetworkSetup();
 

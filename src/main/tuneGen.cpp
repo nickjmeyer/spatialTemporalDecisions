@@ -1,4 +1,7 @@
+#include <gflags/gflags.h>
 #include "tuneGen.hpp"
+
+DEFINE_string(srcDir,"","Path to source directory");
 
 double getDPow(const double & power, const double & alpha,
 	       const std::vector<double> & caves){
@@ -185,7 +188,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
 int main(int argc, char ** argv){
-  njm::sett.set(argc,argv);
+  gflags::ParseCommandLineFlags(&argc,&argv,true);
+  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   {
     // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
