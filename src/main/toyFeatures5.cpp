@@ -24,10 +24,10 @@ template class ToyFeatures5<ModelGDist>;
 
 template <class M>
 void ToyFeatures5<M>::preCompData(const SimData & sD,
-				  const TrtData & tD,
-				  const FixedData & fD,
-				  const DynamicData & dD,
-				  M & m){
+  const TrtData & tD,
+  const FixedData & fD,
+  const DynamicData & dD,
+  M & m){
   // pre compute stuff
 
   // load estimated probabilities of infection
@@ -45,9 +45,9 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   notNeigh.resize(sD.numNotInfec);
   notNeighOf.resize(sD.numNotInfec);
   std::fill(notNeigh.begin(),notNeigh.end(),
-	    std::vector<std::pair<int,double> >(0));
+    std::vector<std::pair<int,double> >(0));
   std::fill(notNeighOf.begin(),notNeighOf.end(),
-	    std::vector<std::pair<int,int> >(0));
+    std::vector<std::pair<int,int> >(0));
 
   notNeighNum.resize(sD.numNotInfec);
   notNeighOfNum.resize(sD.numNotInfec);
@@ -61,16 +61,16 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
     for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
       if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
-	// neighbors of i
-	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
+        // neighbors of i
+        notNeigh.at(i).push_back(std::pair<int,double>
+          (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
 
-	// i is a neighbor of j
-	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
+        // i is a neighbor of j
+        notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
 
-	// increment totals
-	notNeighNum.at(i)++;
-	notNeighOfNum.at(j)++;
+        // increment totals
+        notNeighNum.at(i)++;
+        notNeighOfNum.at(j)++;
       }
     }
   }
@@ -80,10 +80,10 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
 
 template <class M>
 void ToyFeatures5<M>::getFeatures(const SimData & sD,
-				  const TrtData & tD,
-				  const FixedData & fD,
-				  const DynamicData & dD,
-				  M & m){
+  const TrtData & tD,
+  const FixedData & fD,
+  const DynamicData & dD,
+  M & m){
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -174,7 +174,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 #ifndef NJM_NO_DEBUG
   if(featNum != numFeatures){
     std::cout << "Error: in getFeatures: featNum != numFeatures"
-	      << std::endl;
+              << std::endl;
     throw 1;
   }
 #endif
@@ -184,10 +184,10 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 template <class M>
 void ToyFeatures5<M>::updateFeatures(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     M & m){
+  const TrtData & tD,
+  const FixedData & fD,
+  const DynamicData & dD,
+  M & m){
   int i,j,num;
   std::pair<int,int> neighOf;
 
@@ -201,8 +201,8 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
       neighOf = notNeighOf.at(i).at(j);
 
       notNeigh.at(neighOf.first).at(neighOf.second).second =
-	m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
-		   fD.numNodes);
+        m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
+          fD.numNodes);
     }
   }
 
