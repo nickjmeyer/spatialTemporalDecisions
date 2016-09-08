@@ -351,121 +351,121 @@ void System<MG,
     }
   }
 
-  // circle mass
-  fD.cm.clear();
-  fD.cm.reserve(fD.numNodes*fD.numNodes);
-  for(i = 0; i < fD.numNodes; ++i){
-    for(j = 0; j < fD.numNodes; ++j){
-      double numCaves = 0;
-      double d = fD.gDist[i*fD.numNodes + j];
-      for(k = 0; k < fD.numNodes; ++k){
-        if(fD.gDist[i*fD.numNodes + k] <= d){
-          numCaves += fD.caves[k];
-        }
-      }
-      fD.cm.push_back(numCaves);
-    }
-  }
+  // // circle mass
+  // fD.cm.clear();
+  // fD.cm.reserve(fD.numNodes*fD.numNodes);
+  // for(i = 0; i < fD.numNodes; ++i){
+  //   for(j = 0; j < fD.numNodes; ++j){
+  //     double numCaves = 0;
+  //     double d = fD.gDist[i*fD.numNodes + j];
+  //     for(k = 0; k < fD.numNodes; ++k){
+  //       if(fD.gDist[i*fD.numNodes + k] <= d){
+  //         numCaves += fD.caves[k];
+  //       }
+  //     }
+  //     fD.cm.push_back(numCaves);
+  //   }
+  // }
 
   double maxVal = std::numeric_limits<double>::lowest();
 
-  // proportion of caves, (caves[i] + 1)/(max(caves) + 1)
-  for(i = 0 ; i < fD.numNodes; ++i){
-    if(fD.caves.at(i) > maxVal)
-      maxVal = fD.caves.at(i);
-  }
-  fD.propCaves = fD.caves;
-  std::for_each(fD.propCaves.begin(),fD.propCaves.end(),
-		[&maxVal](double & x){
-		  x=(x+1.0)/(maxVal+1.0);
-		});
+  // // proportion of caves, (caves[i] + 1)/(max(caves) + 1)
+  // for(i = 0 ; i < fD.numNodes; ++i){
+  //   if(fD.caves.at(i) > maxVal)
+  //     maxVal = fD.caves.at(i);
+  // }
+  // fD.propCaves = fD.caves;
+  // std::for_each(fD.propCaves.begin(),fD.propCaves.end(),
+  // 	[&maxVal](double & x){
+  // 	  x=(x+1.0)/(maxVal+1.0);
+  // 	});
 
-  // proprtion of log caves, (log(caves[i]+1)+1)/(log(max(caves)+1)+1)
-  fD.logPropCaves = fD.caves;
-  std::for_each(fD.logPropCaves.begin(),fD.logPropCaves.end(),
-		[&maxVal](double & x){
-		  x=(std::log(x+1.0)+1.0)/(std::log(maxVal+1.0)+1.0);
-		});
+  // // proprtion of log caves, (log(caves[i]+1)+1)/(log(max(caves)+1)+1)
+  // fD.logPropCaves = fD.caves;
+  // std::for_each(fD.logPropCaves.begin(),fD.logPropCaves.end(),
+  // 	[&maxVal](double & x){
+  // 	  x=(std::log(x+1.0)+1.0)/(std::log(maxVal+1.0)+1.0);
+  // 	});
 
-  // rank of caves
-  int numGt;
-  double curCaves;
-  fD.rankCaves = std::vector<double> (fD.numNodes,0);
-  for(i = 0; i < fD.numNodes; ++i){
-    curCaves = fD.caves.at(i);
-    numGt = 0;
-    for(j = 0; j < fD.numNodes; ++j)
-      if(fD.caves.at(j) >= curCaves)
-        ++numGt;
-    fD.rankCaves.at(i) = ((double)numGt)/((double)fD.numNodes);
-  }
+  // // rank of caves
+  // int numGt;
+  // double curCaves;
+  // fD.rankCaves = std::vector<double> (fD.numNodes,0);
+  // for(i = 0; i < fD.numNodes; ++i){
+  //   curCaves = fD.caves.at(i);
+  //   numGt = 0;
+  //   for(j = 0; j < fD.numNodes; ++j)
+  //     if(fD.caves.at(j) >= curCaves)
+  //       ++numGt;
+  //   fD.rankCaves.at(i) = ((double)numGt)/((double)fD.numNodes);
+  // }
 
-  // subGraph only K steps out
-  fD.subGraphKval = 4;
-  getSubGraph(fD.numNodes,&fD.network,&fD.subGraphK,fD.subGraphKval);
-  fD.subGraphKmax = 0;
-  for(i=0; i<fD.numNodes; i++)
-    if(fD.subGraphKmax < fD.subGraphK.at(i))
-      fD.subGraphKmax = fD.subGraphK.at(i);
+  // // subGraph only K steps out
+  // fD.subGraphKval = 4;
+  // getSubGraph(fD.numNodes,&fD.network,&fD.subGraphK,fD.subGraphKval);
+  // fD.subGraphKmax = 0;
+  // for(i=0; i<fD.numNodes; i++)
+  //   if(fD.subGraphKmax < fD.subGraphK.at(i))
+  //     fD.subGraphKmax = fD.subGraphK.at(i);
 
-  // invGDistSD
-  double mn=0,mnSq=0,d;
-  tot=0;
-  for(i=0; i<fD.numNodes; i++){
-    for(j=(i+1); j<fD.numNodes; j++){
-      d=1.0/(1.0+fD.gDist.at(i*fD.numNodes + j));
-      mn+=d;
-      mnSq+=d*d;
-      tot++;
-    }
-  }
-  mn/=(double)(tot);
-  mnSq/=(double)(tot);
-  fD.invGDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
+  // // invGDistSD
+  // double mn=0,mnSq=0,d;
+  // tot=0;
+  // for(i=0; i<fD.numNodes; i++){
+  //   for(j=(i+1); j<fD.numNodes; j++){
+  //     d=1.0/(1.0+fD.gDist.at(i*fD.numNodes + j));
+  //     mn+=d;
+  //     mnSq+=d*d;
+  //     tot++;
+  //   }
+  // }
+  // mn/=(double)(tot);
+  // mnSq/=(double)(tot);
+  // fD.invGDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
 
-  // expInvGDistSD
-  fD.expInvGDistSD.clear();
-  fD.expInvGDistSD.reserve(fD.numNodes*fD.numNodes);
-  for(i=0; i<fD.numNodes; i++){
-    for(j=0; j<fD.numNodes; j++){
-      d=fD.gDist.at(i*fD.numNodes+j);
-      fD.expInvGDistSD.push_back(std::exp((1.0/(1.0+d))/fD.invGDistSD));
-    }
-  }
+  // // expInvGDistSD
+  // fD.expInvGDistSD.clear();
+  // fD.expInvGDistSD.reserve(fD.numNodes*fD.numNodes);
+  // for(i=0; i<fD.numNodes; i++){
+  //   for(j=0; j<fD.numNodes; j++){
+  //     d=fD.gDist.at(i*fD.numNodes+j);
+  //     fD.expInvGDistSD.push_back(std::exp((1.0/(1.0+d))/fD.invGDistSD));
+  //   }
+  // }
 
-  // gDistSD
-  tot = 0;
-  for(i = 0; i < fD.numNodes; ++i){
-    for(j = (i+1); j < fD.numNodes; ++j){
-      d = fD.gDist.at(i*fD.numNodes + j);
-      mn += d;
-      mnSq += d*d;
-      ++tot;
-    }
-  }
-  mn /= (double)(tot);
-  mnSq /= (double)(tot);
-  fD.gDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
+  // // gDistSD
+  // tot = 0;
+  // for(i = 0; i < fD.numNodes; ++i){
+  //   for(j = (i+1); j < fD.numNodes; ++j){
+  //     d = fD.gDist.at(i*fD.numNodes + j);
+  //     mn += d;
+  //     mnSq += d*d;
+  //     ++tot;
+  //   }
+  // }
+  // mn /= (double)(tot);
+  // mnSq /= (double)(tot);
+  // fD.gDistSD = std::sqrt(((double)(tot/(tot-1)))*(mnSq-mn*mn));
 
-  // expGDistSD
-  fD.expGDistSD.clear();
-  fD.expGDistSD.reserve(fD.numNodes*fD.numNodes);
-  for(i=0; i<fD.numNodes; i++){
-    for(j=0; j<fD.numNodes; j++){
-      d=fD.gDist.at(i*fD.numNodes+j);
-      fD.expGDistSD.push_back(std::exp(-d*d/(2*fD.gDistSD*fD.gDistSD)));
-    }
-  }
+  // // expGDistSD
+  // fD.expGDistSD.clear();
+  // fD.expGDistSD.reserve(fD.numNodes*fD.numNodes);
+  // for(i=0; i<fD.numNodes; i++){
+  //   for(j=0; j<fD.numNodes; j++){
+  //     d=fD.gDist.at(i*fD.numNodes+j);
+  //     fD.expGDistSD.push_back(std::exp(-d*d/(2*fD.gDistSD*fD.gDistSD)));
+  //   }
+  // }
 
-  // logGDist
-  fD.logGDist.clear();
-  fD.logGDist.reserve(fD.numNodes*fD.numNodes);
-  for(i=0; i<fD.numNodes; i++){
-    for(j=0; j<fD.numNodes; j++){
-      d=fD.gDist.at(i*fD.numNodes+j);
-      fD.logGDist.push_back(std::log(2.0+d));
-    }
-  }
+  // // logGDist
+  // fD.logGDist.clear();
+  // fD.logGDist.reserve(fD.numNodes*fD.numNodes);
+  // for(i=0; i<fD.numNodes; i++){
+  //   for(j=0; j<fD.numNodes; j++){
+  //     d=fD.gDist.at(i*fD.numNodes+j);
+  //     fD.logGDist.push_back(std::log(2.0+d));
+  //   }
+  // }
 
 
   // half plane data depth
@@ -481,61 +481,63 @@ void System<MG,
 
 
   // weighted distance
-  double minDist = *std::min_element(fD.gDist.begin(),fD.gDist.end());
-  std::vector<double> distValsForExp;
-  for (i = 0; i < fD.numNodes; ++i) {
-    for (j = (i+1); j < fD.numNodes; ++j) {
-      // subtract minDist for stability (min because of the negative
-      // coefficient in the objective function
-      distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j) - minDist);
+  {
+    double minDist = *std::min_element(fD.gDist.begin(),fD.gDist.end());
+    std::vector<double> distValsForExp;
+    for (i = 0; i < fD.numNodes; ++i) {
+      for (j = (i+1); j < fD.numNodes; ++j) {
+        // subtract minDist for stability (min because of the negative
+        // coefficient in the objective function)
+        distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j) - minDist);
+      }
     }
-  }
 
-  ExpDistData edd;
-  edd.dist = distValsForExp;
-  edd.proportion = 0.8;
-  edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
-  edd.cutoff = std::max(edd.cutoff,1);
-  gsl_function_fdf fdf;
-  fdf.params = &edd;
-  fdf.f = &expDistEval;
-  fdf.df = &expDistGrad;
-  fdf.fdf = &expDistEvalGrad;
+    ExpDistData edd;
+    edd.dist = distValsForExp;
+    edd.proportion = 0.8;
+    edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
+    edd.cutoff = std::max(edd.cutoff,1);
+    gsl_function_fdf fdf;
+    fdf.params = &edd;
+    fdf.f = &expDistEval;
+    fdf.df = &expDistGrad;
+    fdf.fdf = &expDistEvalGrad;
 
 
-  const gsl_root_fdfsolver_type * solver_type;
-  solver_type = gsl_root_fdfsolver_newton;
-  gsl_root_fdfsolver * solver;
-  solver = gsl_root_fdfsolver_alloc(solver_type);
-  double root0 = 1.0;
-  double root = root0;
+    const gsl_root_fdfsolver_type * solver_type;
+    solver_type = gsl_root_fdfsolver_newton;
+    gsl_root_fdfsolver * solver;
+    solver = gsl_root_fdfsolver_alloc(solver_type);
+    double root0 = 1.0;
+    double root = root0;
 
-  gsl_root_fdfsolver_set(solver,&fdf,root);
-  int status = GSL_CONTINUE;
-  for (i = 0; i < 100 && status == GSL_CONTINUE; ++i) {
-    status = gsl_root_fdfsolver_iterate(solver);
-    if (status != GSL_CONTINUE)
-      break;
+    gsl_root_fdfsolver_set(solver,&fdf,root);
+    int status = GSL_CONTINUE;
+    for (i = 0; i < 100 && status == GSL_CONTINUE; ++i) {
+      status = gsl_root_fdfsolver_iterate(solver);
+      if (status != GSL_CONTINUE)
+        break;
 
-    root0 = root;
-    root = gsl_root_fdfsolver_root(solver);
+      root0 = root;
+      root = gsl_root_fdfsolver_root(solver);
 
-    status = gsl_root_test_delta(root,root0,0,0.001);
-  }
-  gsl_root_fdfsolver_free(solver);
+      status = gsl_root_test_delta(root,root0,0,0.001);
+    }
+    gsl_root_fdfsolver_free(solver);
 
-  if (status == GSL_CONTINUE) {
-    njm::message("too many iterations for exp dist weights");
-    throw(1);
-  } else if (status != GSL_SUCCESS) {
-    njm::message("not successful for exp dist weights");
-    throw(1);
-  }
+    if (status == GSL_CONTINUE) {
+      njm::message("too many iterations for exp dist weights");
+      throw(1);
+    } else if (status != GSL_SUCCESS) {
+      njm::message("not successful for exp dist weights");
+      throw(1);
+    }
 
-  fD.expDistWeight.clear();
-  for (i = 0, k = 0; i < fD.numNodes; ++i) {
-    for (j = 0; j < fD.numNodes; ++j,++k) {
-      fD.expDistWeight.push_back(- (fD.gDist.at(k) - minDist) * root);
+    fD.expDistWeight.clear();
+    for (i = 0, k = 0; i < fD.numNodes; ++i) {
+      for (j = 0; j < fD.numNodes; ++j,++k) {
+        fD.expDistWeight.push_back(- (fD.gDist.at(k) - minDist) * root);
+      }
     }
   }
 }

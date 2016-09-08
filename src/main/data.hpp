@@ -109,23 +109,23 @@ struct FixedData {
 
 
   // pre-computed data
-  std::vector<double> propCaves;
-  std::vector<double> logPropCaves;
-  std::vector<double> rankCaves;
+  // std::vector<double> propCaves;
+  // std::vector<double> logPropCaves;
+  // std::vector<double> rankCaves;
 
-  std::vector<double> cm; // circle mass, number of caves within d_{ij} of i
+  // std::vector<double> cm; // circle mass, number of caves within d_{ij} of i
 
-  std::vector<double> subGraphK;
-  int subGraphKval;
-  double subGraphKmax;
+  // std::vector<double> subGraphK;
+  // int subGraphKval;
+  // double subGraphKmax;
 
-  double invGDistSD;
-  std::vector<double> expInvGDistSD; // e^{[1/(1+gDist)]/[sd(1+gDist)]}
+  // double invGDistSD;
+  // std::vector<double> expInvGDistSD; // e^{[1/(1+gDist)]/[sd(1+gDist)]}
 
-  double gDistSD;
-  std::vector<double> expGDistSD; // e^{-gDist^2/(2*sd(gDist)^2)}
+  // double gDistSD;
+  // std::vector<double> expGDistSD; // e^{-gDist^2/(2*sd(gDist)^2)}
 
-  std::vector<double> logGDist; // log(2+gDist)
+  // std::vector<double> logGDist; // log(2+gDist)
 
   std::vector<double> hpdd;
 
