@@ -4,22 +4,22 @@
 #include <gsl/gsl_roots.h>
 
 template class System<ModelGravityGDist,
-		      ModelGravityGDist>;
+                      ModelGravityGDist>;
 
 template class System<Model2GravityGDist,
-		      Model2GravityGDist>;
+                      Model2GravityGDist>;
 
 template class System<Model2GPowGDist,
-		      Model2GPowGDist>;
+                      Model2GPowGDist>;
 
 template class System<Model2GPowGDist,
-		      ModelGDist>;
+                      ModelGDist>;
 
 template class System<Model2GravityGDist,
-		      ModelGDist>;
+                      ModelGDist>;
 
 template class System<ModelGDist,
-          ModelGDist>;
+                      ModelGDist>;
 
 struct ExpDistData {
   std::vector<double> dist;
@@ -65,7 +65,7 @@ void expDistEvalGrad(double c, void *params, double *eval, double *grad) {
 
 
 template <class MG,
-	  class ME>
+          class ME>
 System<MG,
        ME>::System(){
   specialInit = 0;
@@ -75,14 +75,14 @@ System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 System<MG,
        ME>::System(const SimData & sD,
-		   const TrtData & tD,
-		   const FixedData & fD,
-		   const DynamicData & dD,
-		   const MG & modelGen,
-		   const ME & modelEst){
+         const TrtData & tD,
+         const FixedData & fD,
+         const DynamicData & dD,
+         const MG & modelGen,
+         const ME & modelEst){
   specialInit = 1;
 
   this->sD_r = sD;
@@ -96,7 +96,7 @@ System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 System<MG,
        ME>::System(const std::string file){
   specialInit = 1;
@@ -147,9 +147,9 @@ System<MG,
     for(j = 0; j < fD.numNodes; j++){
       tD_r.aPast.at(j) = tD_r.pPast.at(j) = 0;
       if(sD_r.history.at(numPoints - 2).at(j) == 1)
-	tD_r.pPast.at(j) = 1;
+        tD_r.pPast.at(j) = 1;
       else if(sD_r.history.at(numPoints - 2).at(j) == 3)
-	tD_r.aPast.at(j) = 1;
+        tD_r.aPast.at(j) = 1;
     }
   else{
     std::fill(tD_r.pPast.begin(),tD_r.pPast.end(),0);
@@ -172,7 +172,7 @@ System<MG,
   if(numPoints > 1){
     for(j = 0; j < fD.numNodes; j++)
       if(sD_r.status.at(j) >= 2 && sD_r.history.at(numPoints - 2).at(j) < 2)
-	sD_r.newInfec.push_back(j);
+        sD_r.newInfec.push_back(j);
   }
   else{
     sD_r.newInfec = sD_r.infected;
@@ -185,7 +185,7 @@ System<MG,
   for(i = 0; i < (numPoints - 1); i++)
     for(j = 0; j < fD.numNodes; j++)
       if(sD_r.history.at(i).at(j) >= 2)
-	sD_r.timeInf.at(j)++;
+        sD_r.timeInf.at(j)++;
   for(j = 0; j < fD.numNodes; j++)
     if(sD_r.status.at(j) >= 2)
       sD_r.timeInf.at(j)++;
@@ -201,9 +201,9 @@ System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::reset(const std::vector<int> & ind){
+            ME>::reset(const std::vector<int> & ind){
   if(!specialInit){
     // reset SimData
     sD_r.time = 0;
@@ -215,9 +215,9 @@ void System<MG,
     sD_r.notInfec.clear();
     for(i = 0,j = 0; i < fD.numNodes; ++i){
       if(j < sD_r.numInfected && i == sD_r.infected.at(j))
-	++j;
+        ++j;
       else
-	sD_r.notInfec.push_back(i);
+        sD_r.notInfec.push_back(i);
     }
 
     sD_r.newInfec = sD_r.infected;
@@ -260,9 +260,9 @@ void System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::revert(){
+            ME>::revert(){
   sD = sD_r;
   tD = tD_r;
   dD = dD_r;
@@ -273,9 +273,9 @@ void System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::checkPoint(){
+            ME>::checkPoint(){
   sD_r = sD;
   tD_r = tD;
   dD_r = dD;
@@ -286,9 +286,9 @@ void System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::initialize(){
+            ME>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
@@ -331,9 +331,9 @@ void System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::preCompData(){
+            ME>::preCompData(){
   int i,j,k,tot;
 
   // eDist
@@ -347,7 +347,7 @@ void System<MG,
       jLat = fD.centroidsLat.at(j);
       jLong = fD.centroidsLong.at(j);
       fD.eDist.push_back(std::sqrt((iLat - jLat)*(iLat - jLat)
-				   + (iLong - jLong)*(iLong - jLong)));
+          + (iLong - jLong)*(iLong - jLong)));
     }
   }
 
@@ -359,9 +359,9 @@ void System<MG,
       double numCaves = 0;
       double d = fD.gDist[i*fD.numNodes + j];
       for(k = 0; k < fD.numNodes; ++k){
-	if(fD.gDist[i*fD.numNodes + k] <= d){
-	  numCaves += fD.caves[k];
-	}
+        if(fD.gDist[i*fD.numNodes + k] <= d){
+          numCaves += fD.caves[k];
+        }
       }
       fD.cm.push_back(numCaves);
     }
@@ -396,7 +396,7 @@ void System<MG,
     numGt = 0;
     for(j = 0; j < fD.numNodes; ++j)
       if(fD.caves.at(j) >= curCaves)
-	++numGt;
+        ++numGt;
     fD.rankCaves.at(i) = ((double)numGt)/((double)fD.numNodes);
   }
 
@@ -473,10 +473,10 @@ void System<MG,
   fD.hpdd.reserve(fD.numNodes);
   for(i = 0; i < fD.numNodes; ++i){
     fD.hpdd.push_back(halfPlaneDepth(fD.centroidsLong.at(i),
-				     fD.centroidsLat.at(i),
-				     fD.numNodes,
-				     fD.centroidsLong,
-				     fD.centroidsLat));
+        fD.centroidsLat.at(i),
+        fD.numNodes,
+        fD.centroidsLong,
+        fD.centroidsLat));
   }
 
 
@@ -542,9 +542,9 @@ void System<MG,
 
 
 template <class MG,
-	  class ME>
+          class ME>
 void System<MG,
-	    ME>::nextPoint(){
+            ME>::nextPoint(){
   modelGen.modFill(sD,tD,fD,dD);
   modelGen.infProbs(sD,tD,fD,dD);
 
@@ -630,9 +630,9 @@ void System<MG,
 
 
 template<class MG,
-	 class ME>
+         class ME>
 void System<MG,
-	    ME>
+            ME>
 ::nextPoint(const std::vector<double> & infProbs){
   int i;
   int node,numNewInf=0;
@@ -688,9 +688,9 @@ void System<MG,
 
 
 template<class MG,
-	 class ME>
+         class ME>
 void System<MG,
-	    ME>::updateStatus(){
+            ME>::updateStatus(){
   int i,j,k,isInf;
   for(i=0,j=0,k=0; i<fD.numNodes; i++){
     if(j == sD.numInfected)
@@ -705,24 +705,24 @@ void System<MG,
     if(isInf){
       j++;
       if(tD.a.at(i))
-	sD.status.at(i) = 3;
+        sD.status.at(i) = 3;
       else
-	sD.status.at(i) = 2;
+        sD.status.at(i) = 2;
     }
     else{
       k++;
       if(tD.p.at(i))
-	sD.status.at(i) = 1;
+        sD.status.at(i) = 1;
       else
-	sD.status.at(i) = 0;
+        sD.status.at(i) = 0;
     }
   }
 }
 
 
 template<class MG,
-	 class ME>
+         class ME>
 double System<MG,
-	      ME>::value(){
+              ME>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
