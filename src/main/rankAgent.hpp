@@ -33,6 +33,8 @@ class RankTuneParam : public TuneParam {
   double jitterScale;
 
   bool shuffle;
+
+  bool edgeToEdge;
 };
 
 
@@ -50,6 +52,8 @@ class RankAgent : public BaseAgent<M> {
 			M & m);
 
   virtual double calcJitter();
+
+  void setEdgeToEdge(const bool edgeToEdge);
 
   F f;
 

@@ -35,9 +35,16 @@ RankAgent<F,M>::RankAgent(){
 
   tp.shuffle = false;
 
+	setEdgeToEdge(false);
+
   name="rank";
 }
 
+template <class F, class M>
+void RankAgent<F,M>::setEdgeToEdge(const bool edgeToEdge) {
+	this->tp.edgeToEdge = edgeToEdge;
+	this->f.tp.edgeToEdge = edgeToEdge;
+}
 
 template <class F, class M>
 void RankAgent<F,M>::reset(){

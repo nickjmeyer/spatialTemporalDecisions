@@ -11,6 +11,8 @@ class ToyFeatures5TuneParam : public TuneParam {
  public:
   virtual std::vector<double> getPar() const ;
   virtual void putPar(const std::vector<double> & par);
+
+  bool edgeToEdge;
 };
 
 template<class M>
@@ -27,19 +29,19 @@ class ToyFeatures5 : public BaseFeatures<M> {
 			   const FixedData & fD,
 			   const DynamicData & dD,
 			   M & m);
-			   
+
   virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
 			      M & m);
-  
+
   // neighbors of not infected
   std::vector<std::vector<std::pair<int,double> > > notNeigh;
   std::vector<int> notNeighNum;
 
   // not infected are neighbors of
-  std::vector<std::vector<std::pair<int,int> > > notNeighOf; 
+  std::vector<std::vector<std::pair<int,int> > > notNeighOf;
   std::vector<int> notNeighOfNum;
 
   // sub graph of not infec
