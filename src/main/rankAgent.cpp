@@ -2,26 +2,26 @@
 
 
 template class RankAgent<ToyFeatures5<ModelGravityGDist>,
-			 ModelGravityGDist>;
+												 ModelGravityGDist>;
 
 template class RankAgent<ToyFeatures5<Model2GravityGDist>,
-			 Model2GravityGDist>;
+												 Model2GravityGDist>;
 
 template class RankAgent<ToyFeatures5<Model2GPowGDist>,
-			 Model2GPowGDist>;
+												 Model2GPowGDist>;
 
 template class RankAgent<ToyFeatures5<ModelGDist>,
-			 ModelGDist>;
+												 ModelGDist>;
 
 
 template class RankAgent<WnsFeatures3<ModelGDist>,
-			 ModelGDist>;
+												 ModelGDist>;
 
 template class RankAgent<WnsFeatures3<ModelGravityGDist>,
-			 ModelGravityGDist>;
+												 ModelGravityGDist>;
 
 template class RankAgent<WnsFeatures3<Model2GravityGDist>,
-			 Model2GravityGDist>;
+												 Model2GravityGDist>;
 
 
 
@@ -54,10 +54,10 @@ void RankAgent<F,M>::reset(){
 
 template <class F, class M>
 void RankAgent<F,M>::applyTrt(const SimData & sD,
-			      TrtData & tD,
-			      const FixedData & fD,
-			      const DynamicData & dD,
-			      M & m){
+	TrtData & tD,
+	const FixedData & fD,
+	const DynamicData & dD,
+	M & m){
   if(sD.notInfec.empty())
     return;
 
@@ -88,11 +88,11 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     featStddev.zeros(0,f.numFeatures);
     for(j = 0; j < sD.numNotInfec; ++j){
       if(tD.p.at(sD.notInfec.at(j)) == 0)
-	featStddev.insert_rows(0,f.notFeat.row(j));
+				featStddev.insert_rows(0,f.notFeat.row(j));
     }
     for(j = 0; j < sD.numInfected; ++j){
       if(tD.a.at(sD.infected.at(j)) == 0)
-	featStddev.insert_rows(0,f.infFeat.row(j));
+				featStddev.insert_rows(0,f.infFeat.row(j));
     }
     featStddev = arma::cov(featStddev);
     jitter = arma::sqrt(featStddev.diag())*calcJitter();
@@ -119,10 +119,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       node0 = shufInfected.top().second;
       shufInfected.pop();
       if(tD.a.at(sD.infected.at(node0)))
-	sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
+				sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
       else
-	sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
+				sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
     }
 
 
@@ -130,10 +130,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       node0 = shufNotInfec.top().second;
       shufNotInfec.pop();
       if(tD.p.at(sD.notInfec.at(node0)))
-	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
+				sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
       else
-	sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
+				sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
     }
 
 
@@ -141,24 +141,24 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
     for(j = 0; j < (numAct - cI); j++){
       if(tp.shuffle){
-	selInfected.push(std::pair<double,int>(njm::runif01(),
-					       sortInfected.top().second));
+				selInfected.push(std::pair<double,int>(njm::runif01(),
+						sortInfected.top().second));
       }
       else{
-	selInfected.push(std::pair<double,int>(sortInfected.top().first,
-					       sortInfected.top().second));
+				selInfected.push(std::pair<double,int>(sortInfected.top().first,
+						sortInfected.top().second));
       }
       sortInfected.pop();
     }
 
     for(j = 0; j < (numPre - cN); j++){
       if(tp.shuffle){
-	selNotInfec.push(std::pair<double,int>(njm::runif01(),
-					       sortNotInfec.top().second));
+				selNotInfec.push(std::pair<double,int>(njm::runif01(),
+						sortNotInfec.top().second));
       }
       else{
-	selNotInfec.push(std::pair<double,int>(sortNotInfec.top().first,
-					       sortNotInfec.top().second));
+				selNotInfec.push(std::pair<double,int>(sortNotInfec.top().first,
+						sortNotInfec.top().second));
       }
       sortNotInfec.pop();
     }
@@ -167,12 +167,12 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     addPre = 0;
     if(numPre > 0)
       addPre = (int)((i+1)*numPre/std::min(numChunks,numPre)) -
-	(int)(i*numPre/std::min(numChunks,numPre));
+				(int)(i*numPre/std::min(numChunks,numPre));
 
     addAct = 0;
     if(numAct > 0)
       addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
-	(int)(i*numAct/std::min(numChunks,numAct));
+				(int)(i*numAct/std::min(numChunks,numAct));
 
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
@@ -201,23 +201,23 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   for(i = 0; i < fD.numNodes; i++){
     if(tD.p.at(i) != 1 && tD.p.at(i) != 0){
       std::cout << "Prevenative treatment not 1 or 0"
-		<< ": " << tD.p.at(i)
-		<< std::endl;
+								<< ": " << tD.p.at(i)
+								<< std::endl;
       throw(1);
     }
     else if(tD.a.at(i) != 1 && tD.a.at(i) != 0){
       std::cout << "Active treatment not 1 or 0"
-		<< std::endl;
+								<< std::endl;
       throw(1);
     }
     else if(tD.a.at(i) == 1 && sD.status.at(i) < 2){
       std::cout << "Not infected receiving active treatment"
-		<< std::endl;
+								<< std::endl;
       throw(1);
     }
     else if(tD.p.at(i) == 1 && sD.status.at(i) >= 2){
       std::cout << "Infected receiving preventative treament"
-		<< std::endl;
+								<< std::endl;
       throw(1);
     }
     else if(tD.a.at(i) == 1)
@@ -229,22 +229,22 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   // check if total number of treatments are correct
   if(totAct != numAct){
     std::cout << "Not correct amount of active treatments."
-	      << std::endl
-	      << "Should be " << numAct << " but is " << totAct << "."
-	      << std::endl
-	      << "Number of infected nodes is " << sD.numInfected
-	      << "(" << sD.infected.size() << ")"
-	      << std::endl;
+							<< std::endl
+							<< "Should be " << numAct << " but is " << totAct << "."
+							<< std::endl
+							<< "Number of infected nodes is " << sD.numInfected
+							<< "(" << sD.infected.size() << ")"
+							<< std::endl;
     throw(1);
   }
   else if(totPre != numPre){
     std::cout << "Not correct amount of preventative treatments."
-	      << std::endl
-	      << "Should be " << numPre << " but is " << totPre << "."
-	      << std::endl
-	      << "Number of not infected nodes is " << sD.numNotInfec
-	      << "(" << sD.notInfec.size() << ")"
-	      << std::endl;
+							<< std::endl
+							<< "Should be " << numPre << " but is " << totPre << "."
+							<< std::endl
+							<< "Number of not infected nodes is " << sD.numNotInfec
+							<< "(" << sD.notInfec.size() << ")"
+							<< std::endl;
     throw(1);
   }
 #endif
