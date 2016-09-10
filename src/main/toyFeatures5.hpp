@@ -45,7 +45,7 @@ class ToyFeatures5 : public BaseFeatures<M> {
   std::vector<int> notNeighOfNum;
 
   // sub graph of not infec
-  arma::colvec subGraphNotInfec;
+  arma::colvec centralityNotInfec;
 
   TrtData tDPre;
 

@@ -36,41 +36,48 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
 
   // extract subgraph connectiviy for not infected
   int i;
-  subGraphNotInfec.resize(sD.numNotInfec);
-  for(i=0; i<sD.numNotInfec; i++)
-    subGraphNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+  centralityNotInfec.resize(sD.numNotInfec);
+  if(tp.edgeToEdge) {
+    for(i=0; i<sD.numNotInfec; i++)
+      centralityNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+  } else {
+    for(i=0; i<sD.numNotInfec; i++)
+      centralityNotInfec(i) = fD.hpdd.at(sD.notInfec.at(i));
+  }
 
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
-  notNeigh.resize(sD.numNotInfec);
-  notNeighOf.resize(sD.numNotInfec);
-  std::fill(notNeigh.begin(),notNeigh.end(),
-    std::vector<std::pair<int,double> >(0));
-  std::fill(notNeighOf.begin(),notNeighOf.end(),
-    std::vector<std::pair<int,int> >(0));
+  if(tp.edgeToEdge) {
+    notNeigh.resize(sD.numNotInfec);
+    notNeighOf.resize(sD.numNotInfec);
+    std::fill(notNeigh.begin(),notNeigh.end(),
+      std::vector<std::pair<int,double> >(0));
+    std::fill(notNeighOf.begin(),notNeighOf.end(),
+      std::vector<std::pair<int,int> >(0));
 
-  notNeighNum.resize(sD.numNotInfec);
-  notNeighOfNum.resize(sD.numNotInfec);
-  std::fill(notNeighNum.begin(),notNeighNum.end(),0);
-  std::fill(notNeighOfNum.begin(),notNeighOfNum.end(),0);
+    notNeighNum.resize(sD.numNotInfec);
+    notNeighOfNum.resize(sD.numNotInfec);
+    std::fill(notNeighNum.begin(),notNeighNum.end(),0);
+    std::fill(notNeighOfNum.begin(),notNeighOfNum.end(),0);
 
 
-  std::vector<int>::const_iterator itD0,itD1,beg;
-  int j;
-  beg=sD.notInfec.begin();
-  for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
-    for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
-      if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
-        // neighbors of i
-        notNeigh.at(i).push_back(std::pair<int,double>
-          (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
+    std::vector<int>::const_iterator itD0,itD1,beg;
+    int j;
+    beg=sD.notInfec.begin();
+    for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
+      for(j=0,itD1=beg; j<sD.numNotInfec; j++,itD1++){
+        if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
+          // neighbors of i
+          notNeigh.at(i).push_back(std::pair<int,double>
+            (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
 
-        // i is a neighbor of j
-        notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
+          // i is a neighbor of j
+          notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
 
-        // increment totals
-        notNeighNum.at(i)++;
-        notNeighOfNum.at(j)++;
+          // increment totals
+          notNeighNum.at(i)++;
+          notNeighOfNum.at(j)++;
+        }
       }
     }
   }
@@ -115,16 +122,26 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   double modProbTot,modProb;
   std::pair<int,double> neigh;
   for(i = 0; i < sD.numNotInfec; i++){
-    modProbTot = 0;
-    num = notNeighNum.at(i);
-    for(j = 0; j < num; j++){
-      neigh=notNeigh.at(i).at(j);
+    if(tp.edgeToEdge) {
+      modProbTot = 0;
+      num = notNeighNum.at(i);
+      for(j = 0; j < num; j++){
+        neigh=notNeigh.at(i).at(j);
 
-      modProb = 1.0 - notFeat(neigh.first,0);
-      modProb *= 1.0 - 1.0/(1.0 + std::exp(neigh.second));
-      modProbTot += modProb;
+        modProb = 1.0 - notFeat(neigh.first,0);
+        modProb *= 1.0 - 1.0/(1.0 + std::exp(neigh.second));
+        modProbTot += modProb;
+      }
+      notFeat(i,featNum) = modProbTot * notFeat(i,0);
+    } else {
+      distWeighttProb = 0;
+      for (int j = 0; j < sD.numNotInfec; ++j) {
+        // probability i infects j, weighted by distance
+        const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
+        distWeightProb += fD.expDistWeight(index) * m->expitInfProbs(index);
+      }
+      notFeat(i,featNum) = distWeightProb * notFeat(i,0);
     }
-    notFeat(i,featNum) = modProbTot*notFeat(i,0);
   }
 
   // arma::mat weightMat(sD.numInfected,sD.numNotInfec);
@@ -146,10 +163,9 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
   // feature 2
   // weighted subgraph connectivity measures
-  notFeat.col(featNum) = notFeat.col(0) % subGraphNotInfec;
+  notFeat.col(featNum) = notFeat.col(0) % centraliityNotInfec;
 
-  infFeat.col(featNum) = (1.0 - weightMat) * subGraphNotInfec;
-
+  infFeat.col(featNum) = (1.0 - weightMat) * centralityNotInfec;
 
   featNum++;
 
@@ -195,14 +211,16 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
   m.setQuick(sD,tD,fD,dD);
 
   // update neighbor probs
-  for(i = 0; i < sD.numNotInfec; i++){
-    num=notNeighOfNum.at(i);
-    for(j = 0; j < num; j++){
-      neighOf = notNeighOf.at(i).at(j);
+  if(tp.edgeToEdge) {
+    for(i = 0; i < sD.numNotInfec; i++){
+      num=notNeighOfNum.at(i);
+      for(j = 0; j < num; j++){
+        neighOf = notNeighOf.at(i).at(j);
 
-      notNeigh.at(neighOf.first).at(neighOf.second).second =
-        m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
-          fD.numNodes);
+        notNeigh.at(neighOf.first).at(neighOf.second).second =
+          m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
+            fD.numNodes);
+      }
     }
   }
 
