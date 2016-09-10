@@ -7,6 +7,8 @@ template class NoTrt<Model2GravityGDist>;
 
 template class NoTrt<Model2GPowGDist>;
 
+template class NoTrt<Model2EdgeToEdge>;
+
 template class NoTrt<ModelGDist>;
 
 template<class M>

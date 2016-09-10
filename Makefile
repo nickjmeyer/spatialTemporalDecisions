@@ -18,7 +18,8 @@ tuneGenWNS \
 runM1Mles \
 runM1MlesMiss \
 runM1MlesWns \
-runM1MlesWnsMiss
+runM1MlesWnsMiss \
+runM1MlesEdgeToEdge
 
 CPP_SRC:=$(wildcard src/main/*.cpp)
 CPP_SRC:=$(notdir $(basename $(CPP_SRC)))

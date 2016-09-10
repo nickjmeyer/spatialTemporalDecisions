@@ -11,6 +11,7 @@
 #include "modelGravityGDist.hpp"
 #include "model2GravityGDist.hpp"
 #include "model2GPowGDist.hpp"
+#include "model2EdgeToEdge.hpp"
 #include "modelGDist.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"

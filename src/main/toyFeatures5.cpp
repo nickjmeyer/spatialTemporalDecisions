@@ -19,6 +19,8 @@ template class ToyFeatures5<Model2GravityGDist>;
 
 template class ToyFeatures5<Model2GPowGDist>;
 
+template class ToyFeatures5<Model2EdgeToEdge>;
+
 template class ToyFeatures5<ModelGDist>;
 
 

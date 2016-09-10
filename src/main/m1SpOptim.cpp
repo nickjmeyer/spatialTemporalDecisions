@@ -72,6 +72,12 @@ template class M1SpOptim<System<Model2GPowGDist,
 				   Model2GPowGDist>,
 			 Model2GPowGDist>;
 
+template class M1SpOptim<System<Model2EdgeToEdge,
+																Model2EdgeToEdge>,
+												 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+																	 Model2EdgeToEdge>,
+												 Model2EdgeToEdge>;
+
 template class M1SpOptim<System<Model2GPowGDist,
 				ModelGDist>,
 			 RankAgent<ToyFeatures5<ModelGDist>,

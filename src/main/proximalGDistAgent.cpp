@@ -6,6 +6,8 @@ template class ProximalGDistAgent<Model2GravityGDist>;
 
 template class ProximalGDistAgent<Model2GPowGDist>;
 
+template class ProximalGDistAgent<Model2EdgeToEdge>;
+
 template class ProximalGDistAgent<ModelGDist>;
 
 
