@@ -30,7 +30,7 @@ int main(int argc, char ** argv){
   typedef OptimRunner<S,RA,SPO> R_RA;
 
   S s;
-  s.setEdgeToEdge(edgeToEdge);
+  s.setEdgeToEdge(FLAGS_edgeToEdge);
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
@@ -43,7 +43,7 @@ int main(int argc, char ** argv){
   RA ra;
 
   ra.tp.jitterScale = -1;
-  ra.setEdgeToEdge(edgeToEdge);
+  ra.setEdgeToEdge(FLAGS_edgeToEdge);
 
   SPO spo;
   spo.tp.fixSample = 1;

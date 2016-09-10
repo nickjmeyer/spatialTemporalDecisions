@@ -127,7 +127,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s("obsData.txt");
-    s.setEdgeToEdge(edgeToEdge);
+    s.setEdgeToEdge(FLAGS_edgeToEdge);
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
@@ -143,7 +143,7 @@ int main(int argc, char ** argv){
     RA ra;
     RM rm;
     RR rr;
-    ra.setEdgeToEdge(edgeToEdge);
+    ra.setEdgeToEdge(FLAGS_edgeToEdge);
     // ra.reset();
 
     double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();

@@ -216,7 +216,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s;
-    s.setEdgeToEdge(EdgeToEdge);
+    s.setEdgeToEdge(FLAGS_edgeToEdge);
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
@@ -230,7 +230,7 @@ int main(int argc, char ** argv){
     RA ra;
     RM rm;
     RR rr;
-    ra.setEdgeToEdge(edgeToEdge);
+    ra.setEdgeToEdge(FLAGS_edgeToEdge);
     // ra.reset();
 
     njm::message("Tuning Intercept");
