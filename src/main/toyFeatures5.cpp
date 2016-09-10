@@ -134,11 +134,13 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
       }
       notFeat(i,featNum) = modProbTot * notFeat(i,0);
     } else {
-      distWeighttProb = 0;
+      double distWeightProb = 0;
       for (int j = 0; j < sD.numNotInfec; ++j) {
         // probability i infects j, weighted by distance
         const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
-        distWeightProb += fD.expDistWeight(index) * m->expitInfProbs(index);
+        const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
+              fD.numNodes)));
+        distWeightProb += fD.expDistWeight.at(index) * prob;
       }
       notFeat(i,featNum) = distWeightProb * notFeat(i,0);
     }
@@ -163,7 +165,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
   // feature 2
   // weighted subgraph connectivity measures
-  notFeat.col(featNum) = notFeat.col(0) % centraliityNotInfec;
+  notFeat.col(featNum) = notFeat.col(0) % centralityNotInfec;
 
   infFeat.col(featNum) = (1.0 - weightMat) * centralityNotInfec;
 
