@@ -52,6 +52,8 @@ class System {
 
   virtual void initialize();
 
+  virtual void setEdgeToEdge(const bool edgeToEdge);
+
   virtual void preCompData();
 
   virtual void nextPoint();
