@@ -2,6 +2,7 @@
 #include "tuneGenWNS.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
+DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S & s, const int numReps, const Starts & starts){
@@ -126,6 +127,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s("obsData.txt");
+    s.setEdgeToEdge(edgeToEdge);
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
@@ -141,6 +143,7 @@ int main(int argc, char ** argv){
     RA ra;
     RM rm;
     RR rr;
+    ra.setEdgeToEdge(edgeToEdge);
     // ra.reset();
 
     double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();

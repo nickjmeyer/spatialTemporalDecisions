@@ -2,6 +2,7 @@
 #include "tuneGen.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
+DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 double getDPow(const double & power, const double & alpha,
 	       const std::vector<double> & caves){
@@ -215,6 +216,7 @@ int main(int argc, char ** argv){
     typedef VanillaRunnerNS<S,AA> R_AA;
 
     S s;
+    s.setEdgeToEdge(EdgeToEdge);
     s.modelEst_r = s.modelGen_r;
     s.revert();
 
@@ -228,6 +230,7 @@ int main(int argc, char ** argv){
     RA ra;
     RM rm;
     RR rr;
+    ra.setEdgeToEdge(edgeToEdge);
     // ra.reset();
 
     njm::message("Tuning Intercept");

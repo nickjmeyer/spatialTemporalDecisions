@@ -2,7 +2,7 @@
 #include "runM1MlesWns.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
-
+DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 int main(int argc, char ** argv){
   gflags::ParseCommandLineFlags(&argc,&argv,true);
@@ -33,6 +33,7 @@ int main(int argc, char ** argv){
 
   // S s;
   S s("obsData.txt");
+  s.setEdgeToEdge(edgeToEdge);
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
@@ -45,6 +46,7 @@ int main(int argc, char ** argv){
   RA ra;
 
   ra.tp.jitterScale = -1;
+  ra.setEdgeToEdge(edgeToEdge);
 
   SPO spo;
   spo.tp.fixSample = 1;
