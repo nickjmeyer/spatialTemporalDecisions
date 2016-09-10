@@ -333,6 +333,16 @@ void System<MG,
 template <class MG,
           class ME>
 void System<MG,
+            ME>::setEdgeToEdge(const bool edgeToEdge) {
+  modelGen_r.setEdgeToEdge(edgeToEdge);
+  modelGen.setEdgeToEdge(edgeToEdge);
+  modelEst_r.setEdgeToEdge(edgeToEdge);
+  modelEst.setEdgeToEdge(edgeToEdge);
+}
+
+template <class MG,
+          class ME>
+void System<MG,
             ME>::preCompData(){
   int i,j,k,tot;
 
