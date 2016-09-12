@@ -11,8 +11,8 @@ library(truncnorm)
 registerDoMC(detectCores())
 
 
-sourceCpp("getCov.cpp")
-sourceCpp("mergeClusters.cpp")
+sourceCpp("./main/getCov.cpp")
+sourceCpp("./main/mergeClusters.cpp")
 
 genRandNet<-function(n,numNeigh=3){
   set.seed(0)
