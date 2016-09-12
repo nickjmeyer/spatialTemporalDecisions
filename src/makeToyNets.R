@@ -269,9 +269,9 @@ genCrpNet<-function(n) {
 
   cov=getCov(n,nodes)
 
-  net=list(n=n,neigh=neigh,nodes=nodes,fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
+  net=list(n=n,neigh=c(),nodes=nodes,fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
 
-  net$d=getDist(net)
+  net$d=c()
 
   meanCaves=mean(net$caves)
 
@@ -601,7 +601,7 @@ genShrinkNet<-function(n1,n0=2){
 
 getDist<-function(net,preAlloc=0){
   if(!preAlloc){
-    dyn.load("getDist.so")
+    dyn.load("main/getDist.so")
     out=.C("getDist",
            d=as.double(rep(0,net$n*net$n)),
            n=as.integer(net$n),
@@ -609,10 +609,10 @@ getDist<-function(net,preAlloc=0){
            nodesX=as.double(net$nodes[,1]),
            nodesY=as.double(net$nodes[,2]),
            preAlloc=as.integer(preAlloc))
-    dyn.unload("getDist.so")
+    dyn.unload("main/getDist.so")
   }
   else{
-    dyn.load("getDist.so")
+    dyn.load("main/getDist.so")
     out=.C("getDist",
            d=as.double(net$d),
            n=as.integer(net$n),
@@ -620,7 +620,7 @@ getDist<-function(net,preAlloc=0){
            nodesX=as.double(net$nodes[,1]),
            nodesY=as.double(net$nodes[,2]),
            preAlloc=as.integer(preAlloc))
-    dyn.unload("getDist.so")
+    dyn.unload("main/getDist.so")
   }
 
   return(matrix(out$d,nrow=net$n))
@@ -935,8 +935,8 @@ scaleFreeNetArgs <- function(n){
 
 generateNets <- function(n,display=TRUE){
   nets = c("alleyNet","bowTieNet","gridNet","randNet",
-           "scaleFreeNet")
-  nets = foreach(net = nets)%dopar%{
+           "scaleFreeNet","crpNet")
+  nets = foreach(net = nets)%do%{
     argGen = get(paste(net,"Args",sep=""))
     netGen = get(paste("gen",
                        paste(toupper(substring(net,1,1)),
@@ -968,18 +968,19 @@ generateAndSaveNets <- function(nVals){
   nets = c("alleyNet","bowTieNet","gridNet","randNet",
            "scaleFreeNet","crpNet")
   foreach(n = nVals)%:%
-      foreach(net = nets)%dopar%{
-        argGen = get(paste(net,"Args",sep=""))
-        netGen = get(paste("gen",
-                           paste(toupper(substring(net,1,1)),
-                                 substring(net,2),sep=""),sep=""))
+    foreach(net = nets)%do%{
+      cat(paste(net,"\n"))
+      argGen = get(paste(net,"Args",sep=""))
+      netGen = get(paste("gen",
+                         paste(toupper(substring(net,1,1)),
+                               substring(net,2),sep=""),sep=""))
 
-        netRes = do.call(netGen,argGen(n))
+      netRes = do.call(netGen,argGen(n))
 
-        saveNet(netRes)
+      saveNet(netRes)
 
-        cat(paste(net," of size ", n, " is done","\n"))
-      }
+      cat(paste(net," of size ", n, " is done","\n"))
+    }
 }
 
 
