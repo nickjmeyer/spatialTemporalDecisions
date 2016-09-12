@@ -162,28 +162,28 @@ template class VanillaRunner<System<Model2GPowGDist,
 
 template class VanillaRunner<System<ModelGravityGDist,
 				    ModelGravityGDist>,
-			     ProximalGDistAgent<ModelGravityGDist> >;
+			     ProximalAgent<ModelGravityGDist> >;
 
 template class VanillaRunner<System<Model2GravityGDist,
 				    Model2GravityGDist>,
-			     ProximalGDistAgent<Model2GravityGDist> >;
+			     ProximalAgent<Model2GravityGDist> >;
 
 
 template class VanillaRunner<System<Model2GravityEDist,
 																		Model2GravityEDist>,
-														 ProximalGDistAgent<Model2GravityEDist> >;
+														 ProximalAgent<Model2GravityEDist> >;
 
 template class VanillaRunner<System<Model2GPowGDist,
 				    Model2GPowGDist>,
-			     ProximalGDistAgent<Model2GPowGDist> >;
+			     ProximalAgent<Model2GPowGDist> >;
 
 template class VanillaRunner<System<Model2EdgeToEdge,
 																		Model2EdgeToEdge>,
-														 ProximalGDistAgent<Model2EdgeToEdge> >;
+														 ProximalAgent<Model2EdgeToEdge> >;
 
 template class VanillaRunner<System<Model2GPowGDist,
 				    ModelGDist>,
-			     ProximalGDistAgent<ModelGDist> >;
+			     ProximalAgent<ModelGDist> >;
 
 
 template<class S, class A>
@@ -269,15 +269,15 @@ template class VanillaRunnerNS<System<Model2GPowGDist,
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
-			       ProximalGDistAgent<ModelGravityGDist> >;
+			       ProximalAgent<ModelGravityGDist> >;
 
 template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
-			       ProximalGDistAgent<Model2GravityGDist> >;
+			       ProximalAgent<Model2GravityGDist> >;
 
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,
-			       ProximalGDistAgent<Model2GPowGDist> >;
+			       ProximalAgent<Model2GPowGDist> >;
 
 template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,

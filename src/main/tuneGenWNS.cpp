@@ -113,7 +113,7 @@ int main(int argc, char ** argv){
 
     typedef System<MG,ME> S;
     typedef NoTrt<ME> NT;
-    typedef ProximalGDistAgent<ME> PA;
+    typedef ProximalAgent<ME> PA;
     typedef MyopicAgent<ME> MA;
 
     typedef AllAgent<ME> AA;
