@@ -11,7 +11,7 @@
 #include "agent.hpp"
 #include "noTrtAgent.hpp"
 #include "randomAgent.hpp"
-#include "proximalGDistAgent.hpp"
+#include "proximalAgent.hpp"
 #include "myopicAgent.hpp"
 #include "rankAgent.hpp"
 #include "allAgent.hpp"
