@@ -1,11 +1,13 @@
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 #include "runM1MlesWnsMiss.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 int main(int argc, char ** argv){
-  gflags::ParseCommandLineFlags(&argc,&argv,true);
+  ::google::InitGoogleLogging(argv[0]);
+  ::google::ParseCommandLineFlags(&argc,&argv,true);
   njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   // typedef ModelTimeExpCavesGDistTrendPowCon MG;

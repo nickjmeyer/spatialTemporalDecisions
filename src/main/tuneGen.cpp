@@ -1,4 +1,5 @@
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 #include "tuneGen.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
@@ -189,7 +190,8 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
 int main(int argc, char ** argv){
-  gflags::ParseCommandLineFlags(&argc,&argv,true);
+  ::google::InitGoogleLogging(argv[0]);
+  ::google::ParseCommandLineFlags(&argc,&argv,true);
   njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   {
