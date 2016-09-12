@@ -2,6 +2,7 @@
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_roots.h>
+#include <glog/logging.h>
 
 template class System<ModelGravityGDist,
                       ModelGravityGDist>;
@@ -337,6 +338,10 @@ template <class MG,
           class ME>
 void System<MG,
             ME>::setEdgeToEdge(const bool edgeToEdge) {
+  if(edgeToEdge) {
+    CHECK_EQ(fD.network.size(), fD.numNodes*fD.numNodes);
+  }
+
   modelGen_r.setEdgeToEdge(edgeToEdge);
   modelGen.setEdgeToEdge(edgeToEdge);
   modelEst_r.setEdgeToEdge(edgeToEdge);
