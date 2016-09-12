@@ -1,29 +1,46 @@
-#include "proximalGDistAgent.hpp"
+#include "proximalAgent.hpp"
 
-template class ProximalGDistAgent<ModelGravityGDist>;
+template class ProximalAgent<ModelGravityGDist>;
 
-template class ProximalGDistAgent<Model2GravityGDist>;
+template class ProximalAgent<Model2GravityGDist>;
 
-template class ProximalGDistAgent<Model2GravityEDist>;
+template class ProximalAgent<Model2GravityEDist>;
 
-template class ProximalGDistAgent<Model2GPowGDist>;
+template class ProximalAgent<Model2GPowGDist>;
 
-template class ProximalGDistAgent<Model2EdgeToEdge>;
+template class ProximalAgent<Model2EdgeToEdge>;
 
-template class ProximalGDistAgent<ModelGDist>;
+template class ProximalAgent<ModelGDist>;
 
 
 template<class M>
-std::string ProximalGDistAgent<M>::name = "proximal";
+std::string ProximalAgent<M>::name = "proximal";
+
+template<class M>
+ProximalAgent<M>::ProximalAgent()
+  : edgeToEdge(false) {
+}
 
 template <class M>
-void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
+void ProximalAgent<M>::setEdgeToEdge(const bool edgeToEdge) {
+  this->edgeToEdge = edgeToEdge;
+}
+
+template <class M>
+void ProximalAgent<M>::applyTrt(const SimData & sD,
 				TrtData & tD,
 				const FixedData & fD,
 				const DynamicData & dD,
 				M & m){
   numPre = getNumPre(sD,tD,fD,dD);
   numAct = getNumAct(sD,tD,fD,dD);
+
+  const std::vector<double> * dist;
+  if(this->edgeToEdge) {
+    dist = &fD.gDist;
+  } else {
+    dist = &fD.eDist;
+  }
 
   int i,j,node0,node1;
   double minDist,curDist,maxDist;
@@ -46,9 +63,9 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     minDist=maxDist;
     for(j=0; j<sD.numInfected; j++){
       node1=sD.infected.at(j);
-      curDist=fD.gDist.at(node0*fD.numNodes + node1);
+      curDist=dist->at(node0*fD.numNodes + node1);
       if(minDist > curDist)
-	minDist = curDist;
+        minDist = curDist;
     }
 
     sortNotInfec.push(std::pair<double,int>(-minDist,node0));
@@ -63,9 +80,9 @@ void ProximalGDistAgent<M>::applyTrt(const SimData & sD,
     minDist=maxDist;
     for(j=0; j<sD.numNotInfec; j++){
       node1=sD.notInfec.at(j);
-      curDist=fD.gDist.at(node0*fD.numNodes + node1);
+      curDist=dist->at(node0*fD.numNodes + node1);
       if(minDist > curDist)
-	minDist = curDist;
+        minDist = curDist;
     }
 
     sortInfected.push(std::pair<double,int>(-minDist,node0));
