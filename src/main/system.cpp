@@ -10,6 +10,9 @@ template class System<ModelGravityGDist,
 template class System<Model2GravityGDist,
                       Model2GravityGDist>;
 
+template class System<Model2GravityEDist,
+                      Model2GravityEDist>;
+
 template class System<Model2GPowGDist,
                       Model2GPowGDist>;
 
@@ -295,6 +298,7 @@ void System<MG,
             ME>::initialize(){
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
+  njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
   njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
   njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
@@ -354,20 +358,21 @@ void System<MG,
             ME>::preCompData(){
   int i,j,k,tot;
 
-  // eDist
-  double iLat,iLong,jLat,jLong;
-  fD.eDist.clear();
-  fD.eDist.reserve(fD.numNodes);
-  for(i = 0; i < fD.numNodes; ++i){
-    iLat = fD.centroidsLat.at(i);
-    iLong = fD.centroidsLong.at(i);
-    for(j = 0; j < fD.numNodes; ++j){
-      jLat = fD.centroidsLat.at(j);
-      jLong = fD.centroidsLong.at(j);
-      fD.eDist.push_back(std::sqrt((iLat - jLat)*(iLat - jLat)
-          + (iLong - jLong)*(iLong - jLong)));
-    }
-  }
+  // ** eDist is not read from a file **
+  // // eDist
+  // double iLat,iLong,jLat,jLong;
+  // fD.eDist.clear();
+  // fD.eDist.reserve(fD.numNodes);
+  // for(i = 0; i < fD.numNodes; ++i){
+  //   iLat = fD.centroidsLat.at(i);
+  //   iLong = fD.centroidsLong.at(i);
+  //   for(j = 0; j < fD.numNodes; ++j){
+  //     jLat = fD.centroidsLat.at(j);
+  //     jLong = fD.centroidsLong.at(j);
+  //     fD.eDist.push_back(std::sqrt((iLat - jLat)*(iLat - jLat)
+  //         + (iLong - jLong)*(iLong - jLong)));
+  //   }
+  // }
 
   // // circle mass
   // fD.cm.clear();
@@ -385,7 +390,7 @@ void System<MG,
   //   }
   // }
 
-  double maxVal = std::numeric_limits<double>::lowest();
+  // double maxVal = std::numeric_limits<double>::lowest();
 
   // // proportion of caves, (caves[i] + 1)/(max(caves) + 1)
   // for(i = 0 ; i < fD.numNodes; ++i){
@@ -500,13 +505,13 @@ void System<MG,
 
   // weighted distance
   {
-    double minDist = *std::min_element(fD.gDist.begin(),fD.gDist.end());
+    double minDist = *std::min_element(fD.eDist.begin(),fD.eDist.end());
     std::vector<double> distValsForExp;
     for (i = 0; i < fD.numNodes; ++i) {
       for (j = (i+1); j < fD.numNodes; ++j) {
         // subtract minDist for stability (min because of the negative
         // coefficient in the objective function)
-        distValsForExp.push_back(fD.gDist.at(i*fD.numNodes + j) - minDist);
+        distValsForExp.push_back(fD.eDist.at(i*fD.numNodes + j) - minDist);
       }
     }
 
@@ -554,7 +559,7 @@ void System<MG,
     fD.expDistWeight.clear();
     for (i = 0, k = 0; i < fD.numNodes; ++i) {
       for (j = 0; j < fD.numNodes; ++j,++k) {
-        fD.expDistWeight.push_back(- (fD.gDist.at(k) - minDist) * root);
+        fD.expDistWeight.push_back(- (fD.eDist.at(k) - minDist) * root);
       }
     }
   }

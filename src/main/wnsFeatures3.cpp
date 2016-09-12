@@ -18,6 +18,8 @@ template class WnsFeatures3<ModelGravityGDist>;
 
 template class WnsFeatures3<Model2GravityGDist>;
 
+template class WnsFeatures3<Model2GravityEDist>;
+
 template class WnsFeatures3<ModelGDist>;
 
 

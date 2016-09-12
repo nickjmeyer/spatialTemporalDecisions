@@ -10,6 +10,7 @@
 #include "model.hpp"
 #include "modelGravityGDist.hpp"
 #include "model2GravityGDist.hpp"
+#include "model2GravityEDist.hpp"
 #include "model2GPowGDist.hpp"
 #include "model2EdgeToEdge.hpp"
 #include "modelGDist.hpp"

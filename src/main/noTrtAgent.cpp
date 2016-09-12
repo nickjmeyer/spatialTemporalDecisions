@@ -5,6 +5,8 @@ template class NoTrt<ModelGravityGDist>;
 
 template class NoTrt<Model2GravityGDist>;
 
+template class NoTrt<Model2GravityEDist>;
+
 template class NoTrt<Model2GPowGDist>;
 
 template class NoTrt<Model2EdgeToEdge>;

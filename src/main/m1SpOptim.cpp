@@ -54,6 +54,12 @@ template class M1SpOptim<System<Model2GravityGDist,
 				   Model2GravityGDist>,
 			 Model2GravityGDist>;
 
+template class M1SpOptim<System<Model2GravityEDist,
+																Model2GravityEDist>,
+												 RankAgent<WnsFeatures3<Model2GravityEDist>,
+																	 Model2GravityEDist>,
+												 Model2GravityEDist>;
+
 template class M1SpOptim<System<Model2GravityGDist,
 				ModelGDist>,
 			 RankAgent<WnsFeatures3<ModelGDist>,
@@ -65,6 +71,12 @@ template class M1SpOptim<System<Model2GravityGDist,
 			 RankAgent<ToyFeatures5<Model2GravityGDist>,
 				   Model2GravityGDist>,
 			 Model2GravityGDist>;
+
+template class M1SpOptim<System<Model2GravityEDist,
+																Model2GravityEDist>,
+												 RankAgent<ToyFeatures5<Model2GravityEDist>,
+																	 Model2GravityEDist>,
+												 Model2GravityEDist>;
 
 template class M1SpOptim<System<Model2GPowGDist,
 				Model2GPowGDist>,

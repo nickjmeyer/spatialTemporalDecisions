@@ -54,10 +54,22 @@ template class PlainRunner<System<Model2GravityGDist,
 				     Model2GravityGDist> >;
 
 
+template class PlainRunner<System<Model2GravityEDist,
+																	Model2GravityEDist>,
+													 RankAgent<WnsFeatures3<Model2GravityEDist>,
+																		 Model2GravityEDist> >;
+
+
 template class PlainRunner<System<Model2GravityGDist,
 				  Model2GravityGDist>,
 			   RankAgent<ToyFeatures5<Model2GravityGDist>,
 				     Model2GravityGDist> >;
+
+
+template class PlainRunner<System<Model2GravityEDist,
+																	Model2GravityEDist>,
+													 RankAgent<ToyFeatures5<Model2GravityEDist>,
+																		 Model2GravityEDist> >;
 
 
 template class PlainRunner<System<Model2GPowGDist,
@@ -132,6 +144,10 @@ template class VanillaRunner<System<Model2GravityGDist,
 				    Model2GravityGDist>,
 			     NoTrt<Model2GravityGDist> >;
 
+template class VanillaRunner<System<Model2GravityEDist,
+																		Model2GravityEDist>,
+														 NoTrt<Model2GravityEDist> >;
+
 template class VanillaRunner<System<Model2GPowGDist,
 				    Model2GPowGDist>,
 			     NoTrt<Model2GPowGDist> >;
@@ -151,6 +167,11 @@ template class VanillaRunner<System<ModelGravityGDist,
 template class VanillaRunner<System<Model2GravityGDist,
 				    Model2GravityGDist>,
 			     ProximalGDistAgent<Model2GravityGDist> >;
+
+
+template class VanillaRunner<System<Model2GravityEDist,
+																		Model2GravityEDist>,
+														 ProximalGDistAgent<Model2GravityEDist> >;
 
 template class VanillaRunner<System<Model2GPowGDist,
 				    Model2GPowGDist>,
@@ -350,6 +371,10 @@ template class FitOnlyRunner<System<Model2GravityGDist,
 				    Model2GravityGDist>,
 			     MyopicAgent<Model2GravityGDist> >;
 
+template class FitOnlyRunner<System<Model2GravityEDist,
+																		Model2GravityEDist>,
+														 MyopicAgent<Model2GravityEDist> >;
+
 template class FitOnlyRunner<System<Model2GPowGDist,
 				    Model2GPowGDist>,
 			     MyopicAgent<Model2GPowGDist> >;
@@ -433,14 +458,25 @@ FitOnlyRunner<S,A>
 
 template class
 OptimRunner<System<Model2GravityGDist,
-		   Model2GravityGDist>,
-	    RankAgent<ToyFeatures5<Model2GravityGDist>,
-		      Model2GravityGDist>,
-	    M1SpOptim<System<Model2GravityGDist,
-			     Model2GravityGDist>,
-		      RankAgent<ToyFeatures5<Model2GravityGDist>,
-				Model2GravityGDist>,
-		      Model2GravityGDist> >;
+									 Model2GravityGDist>,
+						RankAgent<ToyFeatures5<Model2GravityGDist>,
+											Model2GravityGDist>,
+						M1SpOptim<System<Model2GravityGDist,
+														 Model2GravityGDist>,
+											RankAgent<ToyFeatures5<Model2GravityGDist>,
+																Model2GravityGDist>,
+											Model2GravityGDist> >;
+
+template class
+OptimRunner<System<Model2GravityEDist,
+		   Model2GravityEDist>,
+	    RankAgent<ToyFeatures5<Model2GravityEDist>,
+		      Model2GravityEDist>,
+	    M1SpOptim<System<Model2GravityEDist,
+			     Model2GravityEDist>,
+		      RankAgent<ToyFeatures5<Model2GravityEDist>,
+				Model2GravityEDist>,
+		      Model2GravityEDist> >;
 
 
 template class
@@ -501,6 +537,17 @@ OptimRunner<System<Model2GravityGDist,
 		      RankAgent<WnsFeatures3<Model2GravityGDist>,
 				Model2GravityGDist>,
 		      Model2GravityGDist> >;
+
+template class
+OptimRunner<System<Model2GravityEDist,
+									 Model2GravityEDist>,
+						RankAgent<WnsFeatures3<Model2GravityEDist>,
+											Model2GravityEDist>,
+						M1SpOptim<System<Model2GravityEDist,
+														 Model2GravityEDist>,
+											RankAgent<WnsFeatures3<Model2GravityEDist>,
+																Model2GravityEDist>,
+											Model2GravityEDist> >;
 
 template class
 OptimRunner<System<Model2GravityGDist,
@@ -755,6 +802,18 @@ TuneRunner<System<Model2GravityGDist,
 
 
 template class
+TuneRunner<System<Model2GravityEDist,
+									Model2GravityEDist>,
+					 RankAgent<WnsFeatures3<Model2GravityEDist>,
+										 Model2GravityEDist>,
+					 M1SpOptim<System<Model2GravityEDist,
+														Model2GravityEDist>,
+										 RankAgent<WnsFeatures3<Model2GravityEDist>,
+															 Model2GravityEDist>,
+										 Model2GravityEDist> >;
+
+
+template class
 TuneRunner<System<Model2GravityGDist,
 		  Model2GravityGDist>,
 	   RankAgent<ToyFeatures5<Model2GravityGDist>,
@@ -764,6 +823,18 @@ TuneRunner<System<Model2GravityGDist,
 		     RankAgent<ToyFeatures5<Model2GravityGDist>,
 			       Model2GravityGDist>,
 		     Model2GravityGDist> >;
+
+
+template class
+TuneRunner<System<Model2GravityEDist,
+									Model2GravityEDist>,
+					 RankAgent<ToyFeatures5<Model2GravityEDist>,
+										 Model2GravityEDist>,
+					 M1SpOptim<System<Model2GravityEDist,
+														Model2GravityEDist>,
+										 RankAgent<ToyFeatures5<Model2GravityEDist>,
+															 Model2GravityEDist>,
+										 Model2GravityEDist> >;
 
 
 template class

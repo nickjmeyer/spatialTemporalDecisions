@@ -4,6 +4,8 @@ template class MyopicAgent<ModelGravityGDist>;
 
 template class MyopicAgent<Model2GravityGDist>;
 
+template class MyopicAgent<Model2GravityEDist>;
+
 template class MyopicAgent<Model2GPowGDist>;
 
 template class MyopicAgent<Model2EdgeToEdge>;

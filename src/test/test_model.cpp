@@ -8,14 +8,14 @@
 #include "data.hpp"
 #include "system.hpp"
 #include "paramIntercept.hpp"
-#include "modelGravityGDist.hpp"
 
 const float eps = 1e-6;
 
 const std::vector<std::string> modNames = {"2GPowGDist",
                                            "2GravityGDist",
                                            "GDist",
-                                           "GravityGDist"};
+                                           "GravityGDist",
+                                           "GravityEDist"};
 const std::vector<std::string> parNames = {"intcp",
                                            "beta0",
                                            "beta1",
@@ -92,7 +92,8 @@ public:
 typedef ::testing::Types<ModelGDist,
                          ModelGravityGDist,
                          Model2GPowGDist,
-                         Model2GravityGDist
+                         Model2GravityGDist,
+                         Model2GravityEDist
                          > MyTypes;
 TYPED_TEST_CASE(TestModel,MyTypes);
 

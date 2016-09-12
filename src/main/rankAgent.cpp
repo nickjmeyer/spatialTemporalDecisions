@@ -7,6 +7,9 @@ template class RankAgent<ToyFeatures5<ModelGravityGDist>,
 template class RankAgent<ToyFeatures5<Model2GravityGDist>,
 												 Model2GravityGDist>;
 
+template class RankAgent<ToyFeatures5<Model2GravityEDist>,
+												 Model2GravityEDist>;
+
 template class RankAgent<ToyFeatures5<Model2GPowGDist>,
 												 Model2GPowGDist>;
 
@@ -25,6 +28,9 @@ template class RankAgent<WnsFeatures3<ModelGravityGDist>,
 
 template class RankAgent<WnsFeatures3<Model2GravityGDist>,
 												 Model2GravityGDist>;
+
+template class RankAgent<WnsFeatures3<Model2GravityEDist>,
+												 Model2GravityEDist>;
 
 
 
