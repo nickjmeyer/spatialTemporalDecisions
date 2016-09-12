@@ -211,9 +211,9 @@ genGridNet<-function(n1,n2){
 
 
 
-genCrpNet<-function(n,b) {
+genCrpNet<-function(n) {
   theta = 2
-  alpha = 0.1
+  alpha = 0.5
 
   expNumTables<-function(parTheta) {
     numer = lgamma(parTheta+n+alpha) + gamma(parTheta+1)
@@ -261,19 +261,25 @@ genCrpNet<-function(n,b) {
     }
   }
 
-  ## qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-  ## col_vector = unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
-  ## cols = sample(col_vector,ngroups)
-  ## plot(nodes,col=cols[groupId],pch=17,xlim=c(0,1),ylim=c(0,1))
+  qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  col_vector = unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
+  cols = sample(col_vector,ngroups)
+  plot(nodes,col=cols[groupId],pch=17,xlim=c(0,1),ylim=c(0,1))
 
 
   cov=getCov(n,nodes)
+
   net=list(n=n,neigh=neigh,nodes=nodes,fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
+
   net$d=getDist(net)
+
   meanCaves=mean(net$caves)
+
   net$start=getStart(net$n)
+
   net$name="crp"
-  return(list(nodes=nodes,groups=groups))
+
+  return(net)
 }
 
 
@@ -953,10 +959,14 @@ generateNets <- function(n,display=TRUE){
 }
 
 
+crpNetArgs <- function(n) {
+  return(list(n))
+}
+
 
 generateAndSaveNets <- function(nVals){
   nets = c("alleyNet","bowTieNet","gridNet","randNet",
-           "scaleFreeNet")
+           "scaleFreeNet","crpNet")
   foreach(n = nVals)%:%
       foreach(net = nets)%dopar%{
         argGen = get(paste(net,"Args",sep=""))
