@@ -38,7 +38,7 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   m.modFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
 
-  // extract subgraph connectiviy for not infected
+  // extract centrality for not infected
   int i;
   centralityNotInfec.resize(sD.numNotInfec);
   if(tp.edgeToEdge) {
