@@ -11,21 +11,24 @@
 
 const float eps = 1e-6;
 
-const std::vector<std::string> modNames = {"2GPowGDist",
-                                           "2GravityGDist",
-                                           "GDist",
-                                           "GravityGDist",
-                                           "GravityEDist"};
-const std::vector<std::string> parNames = {"intcp",
-                                           "beta0",
-                                           "beta1",
-                                           "beta2",
-                                           "beta3",
-                                           "alpha",
-                                           "power",
-                                           "gPow",
-                                           "trtAct",
-                                           "trtPre"};
+const std::vector<std::string> modNames = {
+  "2GPowGDist",
+  "2GravityGDist",
+  "2GravityEDist",
+  "GDist",
+  "GravityGDist"};
+
+const std::vector<std::string> parNames = {
+  "intcp",
+  "beta0",
+  "beta1",
+  "beta2",
+  "beta3",
+  "alpha",
+  "power",
+  "gPow",
+  "trtAct",
+  "trtPre"};
 
 template <typename T>
 class GradientChecker {
@@ -429,27 +432,28 @@ void fakeNetworkSetup() {
   fips.push_back(3);
   njm::toFile(fips,njm::sett.srcExt("fips.txt"));
 
-  std::vector<double> gDist;
-  gDist.push_back(0.);
-  gDist.push_back(1.);
-  gDist.push_back(1.);
-  gDist.push_back(2.);
+  std::vector<double> dist;
+  dist.push_back(0.);
+  dist.push_back(1.);
+  dist.push_back(1.);
+  dist.push_back(2.);
 
-  gDist.push_back(1.);
-  gDist.push_back(0.);
-  gDist.push_back(2.);
-  gDist.push_back(1.);
+  dist.push_back(1.);
+  dist.push_back(0.);
+  dist.push_back(2.);
+  dist.push_back(1.);
 
-  gDist.push_back(1.);
-  gDist.push_back(2.);
-  gDist.push_back(0.);
-  gDist.push_back(1.);
+  dist.push_back(1.);
+  dist.push_back(2.);
+  dist.push_back(0.);
+  dist.push_back(1.);
 
-  gDist.push_back(2.);
-  gDist.push_back(1.);
-  gDist.push_back(1.);
-  gDist.push_back(0.);
-  njm::toFile(gDist,njm::sett.srcExt("gDist.txt"));
+  dist.push_back(2.);
+  dist.push_back(1.);
+  dist.push_back(1.);
+  dist.push_back(0.);
+  njm::toFile(dist,njm::sett.srcExt("gDist.txt"));
+  njm::toFile(dist,njm::sett.srcExt("eDist.txt"));
 
   std::vector<int> caves;
   caves.push_back(1);
