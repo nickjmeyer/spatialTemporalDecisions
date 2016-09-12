@@ -11,14 +11,14 @@ int main(int argc, char ** argv){
   njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
   // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
-  typedef Model2GPowGDist MG;
+  typedef Model2GravityEDist MG;
 
   typedef MG ME;
 
   typedef System<MG,ME> S;
 
   typedef NoTrt<ME> NT;
-  typedef ProximalGDistAgent<ME> PA;
+  typedef ProximalAgent<ME> PA;
   typedef MyopicAgent<ME> MA;
 
   typedef ToyFeatures5<ME> F;
@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
   typedef FitOnlyRunner<S,MA> R_MA;
   typedef OptimRunner<S,RA,SPO> R_RA;
 
-  const bool edgeToEdge = true;
+  const bool edgeToEdge = false;
 
   S s;
   s.setEdgeToEdge(edgeToEdge);
@@ -45,6 +45,8 @@ int main(int argc, char ** argv){
   PA pa;
   MA ma;
   RA ra;
+
+  pa.setEdgeToEdge(edgeToEdge);
 
   ra.tp.jitterScale = -1;
   ra.setEdgeToEdge(edgeToEdge);

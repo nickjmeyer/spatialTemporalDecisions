@@ -3,7 +3,7 @@
 #include "runM1MlesWnsMiss.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
-DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
+// DEFINE_bool(edgeToEdge,false;,"Edge to edge transmission");
 
 int main(int argc, char ** argv){
   ::google::InitGoogleLogging(argv[0]);
@@ -28,10 +28,11 @@ int main(int argc, char ** argv){
   typedef FitOnlyRunner<S,MA> R_MA;
   typedef OptimRunner<S,RA,SPO> R_RA;
 
+  const bool edgeToEdge = false;
 
   // S s;
   S s("obsData.txt");
-  s.setEdgeToEdge(FLAGS_edgeToEdge);
+  s.setEdgeToEdge(edgeToEdge);
   s.modelGen_r.setType(MLES);
   s.modelEst_r.setType(MLES);
 
@@ -42,7 +43,7 @@ int main(int argc, char ** argv){
   RA ra;
 
   ra.tp.jitterScale = -1;
-  ra.setEdgeToEdge(FLAGS_edgeToEdge);
+  ra.setEdgeToEdge(edgeToEdge);
 
   SPO spo;
   spo.tp.fixSample = 1;
