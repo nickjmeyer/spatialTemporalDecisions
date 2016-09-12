@@ -53,6 +53,8 @@ genRandNet<-function(n,numNeigh=3){
 
   net$name = "rand"
 
+  net$hasNetwork = TRUE;
+
   return(net)
 }
 
@@ -103,6 +105,8 @@ genAlleyNetBreak<-function(nodes){
   net$Xcov[,1]=scale(caves)
 
   net$start = getStart(net$n)
+
+  net$hasNetwork = TRUE;
 
   return(net)
 }
@@ -166,6 +170,8 @@ genRingNet<-function(n1,n2){
 
   net$name="ring"
 
+  net$hasNetwork = TRUE;
+
   return(net)
 }
 
@@ -205,6 +211,8 @@ genGridNet<-function(n1,n2){
   net$start = getStart(net$n)
 
   net$name="grid"
+
+  net$hasNetwork = TRUE;
 
   return(net)
 }
@@ -279,6 +287,8 @@ genCrpNet<-function(n) {
 
   net$name="crp"
 
+  net$hasNetwork = FALSE;
+
   return(net)
 }
 
@@ -333,6 +343,8 @@ genAlleyNet<-function(nodes){
   net$start = getStart(net$n)
 
   net$name="alley"
+
+  net$hasNetwork = TRUE;
 
   return(net)
 
@@ -515,6 +527,8 @@ genBowTieNet<-function(grid1N,grid2N,midN){
 
   net$name="bowtie"
 
+  net$hasNetwork = TRUE;
+
   return(net)
 }
 
@@ -546,6 +560,8 @@ genScaleFreeNet<-function(n){
   net$start = getStart(net$n)
 
   net$name="scalefree"
+
+  net$hasNetwork = TRUE;
 
   return(net)
 }
@@ -593,6 +609,8 @@ genShrinkNet<-function(n1,n0=2){
   net$start = getStart(net$n)
 
   net$name="shrink"
+
+  net$hasNetwork = TRUE;
 
   return(net)
 }
@@ -730,13 +748,13 @@ saveNet<-function(net,dir=NULL){
   file=paste(dir,"network.txt",sep="")
   write.table(net$neigh,file,col.names=FALSE,row.names=FALSE)
 
-  ## d raw
-  file=paste(dir,"gDistRaw.txt",sep="")
-  write.table(net$d,file,col.names=FALSE,row.names=FALSE)
-
-  ## d
+  ## gDist
   file=paste(dir,"gDist.txt",sep="")
-  write.table(net$d,file,col.names=FALSE,row.names=FALSE)
+  write.table(net$gDist,file,col.names=FALSE,row.names=FALSE)
+
+  ## eDist
+  file=paste(dir,"eDist.txt",sep="")
+  write.table(as.matrix(dist(net$nodes)),file,col.names=FALSE,row.names=FALSE)
 
   ## caves
   file=paste(dir,"caves.txt",sep="")
@@ -758,19 +776,6 @@ saveNet<-function(net,dir=NULL){
   file=paste(dir,"centroidsLat.txt",sep="")
   write.table(net$nodes[,2],file,col.names=FALSE,row.names=FALSE)
 
-  ## centroidsMds
-  centroidsMds = cmdscale(net$d,k=2)
-  file=paste(dir,"centroidsMds.txt",sep="")
-  write.table(centroidsMds,file,col.names=FALSE,row.names=FALSE)
-
-  ## centroidsMdsLong
-  file=paste(dir,"centroidsMdsLong.txt",sep="")
-  write.table(centroidsMds[,1],file,col.names=FALSE,row.names=FALSE)
-
-  ## centroidsMdsLat
-  file=paste(dir,"centroidsMdsLat.txt",sep="")
-  write.table(centroidsMds[,2],file,col.names=FALSE,row.names=FALSE)
-
   ## starting locations
   file=paste(dir,"startingLocations.txt",sep="")
   write.table(net$start,file,col.names=FALSE,row.names=FALSE)
@@ -787,15 +792,50 @@ saveNet<-function(net,dir=NULL){
   file=paste(dir,"finalT.txt",sep="")
   write.table(15,file,col.names=FALSE,row.names=FALSE)
 
-  ## get betweenness connectivity
-  betweenness = betweenness(graph.adjacency(net$neigh),nobigint=FALSE)
-  file = paste(dir,"betweenness.txt",sep="")
-  write.table(betweenness,file,col.names=FALSE,row.names=FALSE)
+  if(net$hasNetwork) {
+    ## get betweenness connectivity
+    betweenness = betweenness(graph.adjacency(net$neigh),nobigint=FALSE)
+    file = paste(dir,"betweenness.txt",sep="")
+    write.table(betweenness,file,col.names=FALSE,row.names=FALSE)
 
-  ## get subGraph centrality
-  subGraph = subgraph.centrality(graph.adjacency(net$neigh),diag=TRUE)
-  file = paste(dir,"subGraph.txt",sep="")
-  write.table(subGraph,file,col.names=FALSE,row.names=FALSE)
+    ## get subGraph centrality
+    subGraph = subgraph.centrality(graph.adjacency(net$neigh),diag=TRUE)
+    file = paste(dir,"subGraph.txt",sep="")
+    write.table(subGraph,file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMds
+    centroidsMds = cmdscale(net$d,k=2)
+    file=paste(dir,"centroidsMds.txt",sep="")
+    write.table(centroidsMds,file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMdsLong
+    file=paste(dir,"centroidsMdsLong.txt",sep="")
+    write.table(centroidsMds[,1],file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMdsLat
+    file=paste(dir,"centroidsMdsLat.txt",sep="")
+    write.table(centroidsMds[,2],file,col.names=FALSE,row.names=FALSE)
+  } else {
+    ## get betweenness connectivity
+    file = paste(dir,"betweenness.txt",sep="")
+    write.table(c(),file,col.names=FALSE,row.names=FALSE)
+
+    ## get subGraph centrality
+    file = paste(dir,"subGraph.txt",sep="")
+    write.table(c(),file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMds
+    file=paste(dir,"centroidsMds.txt",sep="")
+    write.table(c(),file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMdsLong
+    file=paste(dir,"centroidsMdsLong.txt",sep="")
+    write.table(c(),file,col.names=FALSE,row.names=FALSE)
+
+    ## centroidsMdsLat
+    file=paste(dir,"centroidsMdsLat.txt",sep="")
+    write.table(c(),file,col.names=FALSE,row.names=FALSE)
+  }
 
   ## prior treatment mean
   file = paste(dir,"priorTrtMean.txt",sep="")
@@ -969,7 +1009,6 @@ generateAndSaveNets <- function(nVals){
            "scaleFreeNet","crpNet")
   foreach(n = nVals)%:%
     foreach(net = nets)%do%{
-      cat(paste(net,"\n"))
       argGen = get(paste(net,"Args",sep=""))
       netGen = get(paste("gen",
                          paste(toupper(substring(net,1,1)),
