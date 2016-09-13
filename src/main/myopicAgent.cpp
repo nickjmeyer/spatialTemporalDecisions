@@ -12,6 +12,10 @@ template class MyopicAgent<Model2EdgeToEdge>;
 
 template class MyopicAgent<ModelGDist>;
 
+template class MyopicAgent<ModelEDist>;
+
+template class MyopicAgent<ModelIntercept>;
+
 
 template <class M>
 std::string MyopicAgent<M>::name = "myopic";

@@ -25,6 +25,10 @@ template class ToyFeatures5<Model2EdgeToEdge>;
 
 template class ToyFeatures5<ModelGDist>;
 
+template class ToyFeatures5<ModelEDist>;
+
+template class ToyFeatures5<ModelIntercept>;
+
 
 template <class M>
 void ToyFeatures5<M>::preCompData(const SimData & sD,

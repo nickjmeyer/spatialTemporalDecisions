@@ -13,11 +13,17 @@ template class System<Model2GravityGDist,
 template class System<Model2GravityEDist,
                       Model2GravityEDist>;
 
+template class System<Model2GravityEDist,
+                      ModelEDist>;
+
 template class System<Model2GPowGDist,
                       Model2GPowGDist>;
 
 template class System<Model2EdgeToEdge,
                       Model2EdgeToEdge>;
+
+template class System<Model2EdgeToEdge,
+                      ModelIntercept>;
 
 template class System<Model2GPowGDist,
                       ModelGDist>;
@@ -27,6 +33,12 @@ template class System<Model2GravityGDist,
 
 template class System<ModelGDist,
                       ModelGDist>;
+
+template class System<ModelEDist,
+                      ModelEDist>;
+
+template class System<ModelIntercept,
+                      ModelIntercept>;
 
 struct ExpDistData {
   std::vector<double> dist;

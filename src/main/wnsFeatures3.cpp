@@ -22,6 +22,10 @@ template class WnsFeatures3<Model2GravityEDist>;
 
 template class WnsFeatures3<ModelGDist>;
 
+template class WnsFeatures3<ModelEDist>;
+
+template class WnsFeatures3<ModelIntercept>;
+
 
 template <class M>
 void WnsFeatures3<M>::preCompData(const SimData & sD,

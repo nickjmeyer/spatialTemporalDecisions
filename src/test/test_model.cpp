@@ -16,7 +16,9 @@ const std::vector<std::string> modNames = {
   "2GravityGDist",
   "2GravityEDist",
   "GDist",
-  "GravityGDist"};
+  "EDist",
+  "GravityGDist",
+  "Intercept"};
 
 const std::vector<std::string> parNames = {
   "intcp",
@@ -92,11 +94,14 @@ public:
 };
 
 
-typedef ::testing::Types<ModelGDist,
-                         ModelGravityGDist,
-                         Model2GPowGDist,
-                         Model2GravityGDist,
-                         Model2GravityEDist
+typedef ::testing::Types<
+  ModelIntercept,
+  ModelGDist,
+  ModelEDist,
+  ModelGravityGDist,
+  Model2GPowGDist,
+  Model2GravityGDist,
+  Model2GravityEDist
                          > MyTypes;
 TYPED_TEST_CASE(TestModel,MyTypes);
 

@@ -19,9 +19,21 @@ template class RankAgent<ToyFeatures5<Model2EdgeToEdge>,
 template class RankAgent<ToyFeatures5<ModelGDist>,
 												 ModelGDist>;
 
+template class RankAgent<ToyFeatures5<ModelEDist>,
+												 ModelEDist>;
+
+template class RankAgent<ToyFeatures5<ModelIntercept>,
+												 ModelIntercept>;
+
 
 template class RankAgent<WnsFeatures3<ModelGDist>,
 												 ModelGDist>;
+
+template class RankAgent<WnsFeatures3<ModelEDist>,
+												 ModelEDist>;
+
+template class RankAgent<WnsFeatures3<ModelIntercept>,
+												 ModelIntercept>;
 
 template class RankAgent<WnsFeatures3<ModelGravityGDist>,
 												 ModelGravityGDist>;

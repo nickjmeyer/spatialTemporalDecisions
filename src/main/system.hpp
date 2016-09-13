@@ -14,6 +14,8 @@
 #include "model2GPowGDist.hpp"
 #include "model2EdgeToEdge.hpp"
 #include "modelGDist.hpp"
+#include "modelEDist.hpp"
+#include "modelIntercept.hpp"
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 

@@ -60,6 +60,12 @@ template class PlainRunner<System<Model2GravityEDist,
 																		 Model2GravityEDist> >;
 
 
+template class PlainRunner<System<ModelEDist,
+																	ModelEDist>,
+													 RankAgent<WnsFeatures3<ModelEDist>,
+																		 ModelEDist> >;
+
+
 template class PlainRunner<System<Model2GravityGDist,
 				  Model2GravityGDist>,
 			   RankAgent<ToyFeatures5<Model2GravityGDist>,
@@ -72,6 +78,12 @@ template class PlainRunner<System<Model2GravityEDist,
 																		 Model2GravityEDist> >;
 
 
+template class PlainRunner<System<ModelEDist,
+																	ModelEDist>,
+													 RankAgent<ToyFeatures5<ModelEDist>,
+																		 ModelEDist> >;
+
+
 template class PlainRunner<System<Model2GPowGDist,
 				  Model2GPowGDist>,
 			   RankAgent<ToyFeatures5<Model2GPowGDist>,
@@ -82,6 +94,12 @@ template class PlainRunner<System<Model2EdgeToEdge,
 																	Model2EdgeToEdge>,
 													 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
 																		 Model2EdgeToEdge> >;
+
+
+template class PlainRunner<System<ModelIntercept,
+																	ModelIntercept>,
+													 RankAgent<ToyFeatures5<ModelIntercept>,
+																		 ModelIntercept> >;
 
 
 template class PlainRunner<System<Model2GPowGDist,
@@ -375,6 +393,10 @@ template class FitOnlyRunner<System<Model2GravityEDist,
 																		Model2GravityEDist>,
 														 MyopicAgent<Model2GravityEDist> >;
 
+template class FitOnlyRunner<System<Model2GravityEDist,
+																		ModelEDist>,
+														 MyopicAgent<ModelEDist> >;
+
 template class FitOnlyRunner<System<Model2GPowGDist,
 				    Model2GPowGDist>,
 			     MyopicAgent<Model2GPowGDist> >;
@@ -382,6 +404,10 @@ template class FitOnlyRunner<System<Model2GPowGDist,
 template class FitOnlyRunner<System<Model2EdgeToEdge,
 																		Model2EdgeToEdge>,
 														 MyopicAgent<Model2EdgeToEdge> >;
+
+template class FitOnlyRunner<System<Model2EdgeToEdge,
+																		ModelIntercept>,
+														 MyopicAgent<ModelIntercept> >;
 
 template class FitOnlyRunner<System<Model2GPowGDist,
 				    ModelGDist>,
@@ -480,6 +506,18 @@ OptimRunner<System<Model2GravityEDist,
 
 
 template class
+OptimRunner<System<Model2GravityEDist,
+									 ModelEDist>,
+						RankAgent<ToyFeatures5<ModelEDist>,
+											ModelEDist>,
+						M1SpOptim<System<Model2GravityEDist,
+														 ModelEDist>,
+											RankAgent<ToyFeatures5<ModelEDist>,
+																ModelEDist>,
+											ModelEDist> >;
+
+
+template class
 OptimRunner<System<Model2GPowGDist,
 		   Model2GPowGDist>,
 	    RankAgent<ToyFeatures5<Model2GPowGDist>,
@@ -501,6 +539,18 @@ OptimRunner<System<Model2EdgeToEdge,
 											RankAgent<ToyFeatures5<Model2EdgeToEdge>,
 																Model2EdgeToEdge>,
 											Model2EdgeToEdge> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+									 ModelIntercept>,
+						RankAgent<ToyFeatures5<ModelIntercept>,
+											ModelIntercept>,
+						M1SpOptim<System<Model2EdgeToEdge,
+														 ModelIntercept>,
+											RankAgent<ToyFeatures5<ModelIntercept>,
+																ModelIntercept>,
+											ModelIntercept> >;
 
 
 template class
@@ -814,6 +864,18 @@ TuneRunner<System<Model2GravityEDist,
 
 
 template class
+TuneRunner<System<ModelEDist,
+									ModelEDist>,
+					 RankAgent<WnsFeatures3<ModelEDist>,
+										 ModelEDist>,
+					 M1SpOptim<System<ModelEDist,
+														ModelEDist>,
+										 RankAgent<WnsFeatures3<ModelEDist>,
+															 ModelEDist>,
+										 ModelEDist> >;
+
+
+template class
 TuneRunner<System<Model2GravityGDist,
 		  Model2GravityGDist>,
 	   RankAgent<ToyFeatures5<Model2GravityGDist>,
@@ -838,6 +900,18 @@ TuneRunner<System<Model2GravityEDist,
 
 
 template class
+TuneRunner<System<ModelEDist,
+									ModelEDist>,
+					 RankAgent<ToyFeatures5<ModelEDist>,
+										 ModelEDist>,
+					 M1SpOptim<System<ModelEDist,
+														ModelEDist>,
+										 RankAgent<ToyFeatures5<ModelEDist>,
+															 ModelEDist>,
+										 ModelEDist> >;
+
+
+template class
 TuneRunner<System<Model2GPowGDist,
 		  Model2GPowGDist>,
 	   RankAgent<ToyFeatures5<Model2GPowGDist>,
@@ -859,6 +933,18 @@ TuneRunner<System<Model2EdgeToEdge,
 										 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
 															 Model2EdgeToEdge>,
 										 Model2EdgeToEdge> >;
+
+
+template class
+TuneRunner<System<ModelIntercept,
+									ModelIntercept>,
+					 RankAgent<ToyFeatures5<ModelIntercept>,
+										 ModelIntercept>,
+					 M1SpOptim<System<ModelIntercept,
+														ModelIntercept>,
+										 RankAgent<ToyFeatures5<ModelIntercept>,
+															 ModelIntercept>,
+										 ModelIntercept> >;
 
 
 template class

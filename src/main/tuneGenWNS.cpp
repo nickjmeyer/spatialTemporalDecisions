@@ -36,12 +36,12 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
   printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
-	 ++iter, val, trt);
+    ++iter, val, trt);
 
   while(std::abs(val - goal) > tol){
     if(val > goal){
       if(!above)
-	scale*=shrink;
+        scale*=shrink;
 
       trt *= 1.0 + scale;
 
@@ -49,7 +49,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     }
     else{
       if(above)
-	scale*=shrink;
+        scale*=shrink;
 
       trt *= 1.0/(1.0 + scale);
 
@@ -68,7 +68,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
     printf("Iter: %05d  >>>  Current value: %08.6f  ===  Current Trt: %08.6f\r",
-	   ++iter, val, trt);
+      ++iter, val, trt);
     fflush(stdout);
   }
 
@@ -161,25 +161,25 @@ int main(int argc, char ** argv){
     double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
     njm::message(" valNT: " + njm::toString(valNT,"") +
-		 "\n" +
-		 " valPA: " + njm::toString(valPA,"") +
-		 "\n" +
-		 " valMA: " + njm::toString(valMA,"") +
-		 "\n" +
-		 " valRA: " + njm::toString(valRA,"") +
-		 "\n" +
-		 " valAA: " + njm::toString(valAA,""));
+      "\n" +
+      " valPA: " + njm::toString(valPA,"") +
+      "\n" +
+      " valMA: " + njm::toString(valMA,"") +
+      "\n" +
+      " valRA: " + njm::toString(valRA,"") +
+      "\n" +
+      " valAA: " + njm::toString(valAA,""));
 
 
     std::vector<double> par = s.modelGen_r.getPar();
 
     double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-			   + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+      + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
     priorMeanTrt *= 4.0;
 
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-		std::ios_base::out);
+      std::ios_base::out);
   }
 
   njm::sett.clean();
