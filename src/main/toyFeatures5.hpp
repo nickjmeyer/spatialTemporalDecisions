@@ -11,8 +11,6 @@ class ToyFeatures5TuneParam : public TuneParam {
  public:
   virtual std::vector<double> getPar() const ;
   virtual void putPar(const std::vector<double> & par);
-
-  bool edgeToEdge;
 };
 
 template<class M>

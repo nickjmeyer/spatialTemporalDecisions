@@ -28,8 +28,6 @@ class RankTuneParam : public TuneParam {
   double jitterScale;
 
   bool shuffle;
-
-  bool edgeToEdge;
 };
 
 
@@ -48,8 +46,6 @@ class RankAgent : public BaseAgent<M> {
 
   virtual double calcJitter();
 
-  void setEdgeToEdge(const bool edgeToEdge);
-
   F f;
 
   arma::colvec infRanks;
@@ -61,6 +57,9 @@ class RankAgent : public BaseAgent<M> {
   RankTuneParam tp;
 
   std::string name;
+
+  void setEdgeToEdge(const bool edgeToEdge);
+  bool getEdgeToEdge() const;
 };
 
 

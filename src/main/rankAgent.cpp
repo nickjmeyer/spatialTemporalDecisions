@@ -1,3 +1,4 @@
+#include <glog/logging.h>
 #include "rankAgent.hpp"
 
 
@@ -63,8 +64,13 @@ RankAgent<F,M>::RankAgent(){
 
 template <class F, class M>
 void RankAgent<F,M>::setEdgeToEdge(const bool edgeToEdge) {
-	this->tp.edgeToEdge = edgeToEdge;
-	this->f.tp.edgeToEdge = edgeToEdge;
+	this->tp.setEdgeToEdge(edgeToEdge);
+	this->f.tp.setEdgeToEdge(edgeToEdge);
+}
+
+template <class F, class M>
+bool RankAgent<F,M>::getEdgeToEdge() const {
+	return this->tp.getEdgeToEdge();
 }
 
 template <class F, class M>
@@ -81,6 +87,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 	M & m){
   if(sD.notInfec.empty())
     return;
+
+	CHECK_EQ(getEdgeToEdge(),f.tp.getEdgeToEdge());
 
   // number of each type of treatment to give
   numPre = getNumPre(sD,tD,fD,dD);

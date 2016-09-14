@@ -1,3 +1,4 @@
+#include <glog/logging.h>
 #include "wnsFeatures3.hpp"
 
 std::vector<double> WnsFeatures3TuneParam::getPar() const{
@@ -33,48 +34,57 @@ void WnsFeatures3<M>::preCompData(const SimData & sD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
 				  M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   // pre compute stuff
 
   // load estimated probabilities of infection
-  m.modFill(sD,tD,fD,dD);
+  m.setFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
 
   // extract  connectiviy for not infected
   int i;
-  hpddNotInfec.resize(sD.numNotInfec);
-  for(i=0; i<sD.numNotInfec; i++)
-    hpddNotInfec(i) = fD.hpdd.at(sD.notInfec.at(i));
+  centralityNotInfec.resize(sD.numNotInfec);
+  if(tp.getEdgeToEdge()) {
+    for(i=0; i<sD.numNotInfec; i++)
+      centralityNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+  } else {
+    for(i=0; i<sD.numNotInfec; i++)
+      centralityNotInfec(i) = fD.hpdd.at(sD.notInfec.at(i));
+  }
 
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
-  notNeigh.resize(sD.numNotInfec);
-  notNeighOf.resize(sD.numNotInfec);
-  std::fill(notNeigh.begin(),notNeigh.end(),
+  if(tp.getEdgeToEdge()) {
+    notNeigh.resize(sD.numNotInfec);
+    notNeighOf.resize(sD.numNotInfec);
+    std::fill(notNeigh.begin(),notNeigh.end(),
 	    std::vector<std::pair<int,double> >(0));
-  std::fill(notNeighOf.begin(),notNeighOf.end(),
+    std::fill(notNeighOf.begin(),notNeighOf.end(),
 	    std::vector<std::pair<int,int> >(0));
 
-  notNeighNum.resize(sD.numNotInfec);
-  notNeighOfNum.resize(sD.numNotInfec);
-  std::fill(notNeighNum.begin(),notNeighNum.end(),0);
-  std::fill(notNeighOfNum.begin(),notNeighOfNum.end(),0);
+    notNeighNum.resize(sD.numNotInfec);
+    notNeighOfNum.resize(sD.numNotInfec);
+    std::fill(notNeighNum.begin(),notNeighNum.end(),0);
+    std::fill(notNeighOfNum.begin(),notNeighOfNum.end(),0);
 
 
-  std::vector<int>::const_iterator itD0,itD1,beg;
-  int j;
-  beg=sD.notInfec.begin();
-  for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
-    for(j = 0,itD1=beg; j <sD.numNotInfec; ++j,++itD1){
-      if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
-	// neighbors of i
-	notNeigh.at(i).push_back(std::pair<int,double>
-				 (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
+    std::vector<int>::const_iterator itD0,itD1,beg;
+    int j;
+    beg=sD.notInfec.begin();
+    for(i=0,itD0=beg; i<sD.numNotInfec; i++,itD0++){
+      for(j = 0,itD1=beg; j <sD.numNotInfec; ++j,++itD1){
+        if(i!=j && fD.network.at((*itD0)*fD.numNodes + (*itD1))){
+          // neighbors of i
+          notNeigh.at(i).push_back(std::pair<int,double>
+            (j,m.oneOnOne(*itD1,*itD0,fD.numNodes)));
 
-	// i is a neighbor of j
-	notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
+          // i is a neighbor of j
+          notNeighOf.at(j).push_back(std::pair<int,int>(i,notNeighNum.at(i)));
 
-	++notNeighNum.at(i);
-	++notNeighOfNum.at(j);
+          ++notNeighNum.at(i);
+          ++notNeighOfNum.at(j);
+        }
       }
     }
   }
@@ -87,7 +97,9 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
 				  const TrtData & tD,
 				  const FixedData & fD,
 				  const DynamicData & dD,
-				  M & m){
+          M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -118,16 +130,28 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
   double modProbTot,modProb;
   std::pair<int,double> neigh;
   for(i = 0; i < sD.numNotInfec; i++){
-    modProbTot = 0;
-    num = notNeighNum.at(i);
-    for(j = 0; j < num; j++){
-      neigh=notNeigh.at(i).at(j);
+    if(tp.getEdgeToEdge()) {
+      modProbTot = 0;
+      num = notNeighNum.at(i);
+      for(j = 0; j < num; j++){
+        neigh=notNeigh.at(i).at(j);
 
-      modProb = 1.0 - notFeat(neigh.first,0);
-      modProb *= 1.0 - 1.0/(1.0 + std::exp(neigh.second));
-      modProbTot += modProb;
+        modProb = 1.0 - notFeat(neigh.first,0);
+        modProb *= 1.0 - 1.0/(1.0 + std::exp(neigh.second));
+        modProbTot += modProb;
+      }
+      notFeat(i,featNum) = modProbTot*notFeat(i,0);
+    } else {
+      double distWeightProb = 0;
+      for (int j = 0; j < sD.numNotInfec; ++j) {
+        // probability i infects j, weighted by distance
+        const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
+        const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
+              fD.numNodes)));
+        distWeightProb += fD.expDistWeight.at(index) * prob;
+      }
+      notFeat(i,featNum) = distWeightProb * notFeat(i,0);
     }
-    notFeat(i,featNum) = modProbTot*notFeat(i,0);
   }
 
   // arma::mat weightMat(sD.numInfected,sD.numNotInfec);
@@ -149,9 +173,9 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
 
   // feature 2
   // weighted half plane data depth
-  notFeat.col(featNum) = notFeat.col(0) % hpddNotInfec;
+  notFeat.col(featNum) = notFeat.col(0) % centralityNotInfec;
 
-  infFeat.col(featNum) = (1.0 - weightMat) * hpddNotInfec;
+  infFeat.col(featNum) = (1.0 - weightMat) * centralityNotInfec;
 
 
   featNum++;
@@ -159,10 +183,10 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
   tDPre = tD;
 
 
-  arma::colvec notMx = arma::max(notFeat,0).t();
-  arma::colvec notMn = arma::min(notFeat,0).t();
-  arma::colvec infMx = arma::max(infFeat,0).t();
-  arma::colvec infMn = arma::min(infFeat,0).t();
+  const arma::colvec notMx = arma::max(notFeat,0).t();
+  const arma::colvec notMn = arma::min(notFeat,0).t();
+  const arma::colvec infMx = arma::max(infFeat,0).t();
+  const arma::colvec infMn = arma::min(infFeat,0).t();
 
   for(i = 0; i < numFeatures; ++i){
     if((notMx(i) - notMn(i)) > 1e-15){
@@ -173,24 +197,19 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
     }
   }
 
-
-#ifndef NJM_NO_DEBUG
-  if(featNum != numFeatures){
-    std::cout << "Error: in getFeatures: featNum != numFeatures"
-	      << std::endl;
-    throw 1;
-  }
-#endif
+  CHECK_EQ(featNum,numFeatures);
 }
 
 
 
 template <class M>
 void WnsFeatures3<M>::updateFeatures(const SimData & sD,
-				     const TrtData & tD,
-				     const FixedData & fD,
-				     const DynamicData & dD,
-				     M & m){
+  const TrtData & tD,
+  const FixedData & fD,
+  const DynamicData & dD,
+  M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   int i,j,num;
   std::pair<int,int> neighOf;
 
@@ -198,14 +217,16 @@ void WnsFeatures3<M>::updateFeatures(const SimData & sD,
   m.setQuick(sD,tD,fD,dD);
 
   // update neighbor probs
-  for(i = 0; i < sD.numNotInfec; i++){
-    num=notNeighOfNum.at(i);
-    for(j = 0; j < num; j++){
-      neighOf = notNeighOf.at(i).at(j);
+  if(tp.getEdgeToEdge()) {
+    for(i = 0; i < sD.numNotInfec; i++){
+      num=notNeighOfNum.at(i);
+      for(j = 0; j < num; j++){
+        neighOf = notNeighOf.at(i).at(j);
 
-      notNeigh.at(neighOf.first).at(neighOf.second).second =
-	m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
-		   fD.numNodes);
+        notNeigh.at(neighOf.first).at(neighOf.second).second =
+          m.oneOnOne(sD.notInfec.at(i),sD.notInfec.at(neighOf.first),
+            fD.numNodes);
+      }
     }
   }
 

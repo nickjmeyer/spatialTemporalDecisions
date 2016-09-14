@@ -11,8 +11,6 @@ class WnsFeatures3TuneParam : public TuneParam {
  public:
   virtual std::vector<double> getPar() const ;
   virtual void putPar(const std::vector<double> & par);
-
-  bool edgeToEdge;
 };
 
 template<class M>
@@ -45,7 +43,8 @@ class WnsFeatures3 : public BaseFeatures<M> {
   std::vector<int> notNeighOfNum;
 
   // halfplane data depth of not infec
-  arma::colvec hpddNotInfec;
+  // arma::colvec hpddNotInfec;
+  arma::colvec centralityNotInfec;
 
   TrtData tDPre;
 

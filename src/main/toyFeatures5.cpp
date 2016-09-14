@@ -1,3 +1,4 @@
+#include <glog/logging.h>
 #include "toyFeatures5.hpp"
 
 std::vector<double> ToyFeatures5TuneParam::getPar() const{
@@ -36,16 +37,18 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   // pre compute stuff
 
   // load estimated probabilities of infection
-  m.modFill(sD,tD,fD,dD);
+  m.setFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
 
   // extract centrality for not infected
   int i;
   centralityNotInfec.resize(sD.numNotInfec);
-  if(tp.edgeToEdge) {
+  if(tp.getEdgeToEdge()) {
     for(i=0; i<sD.numNotInfec; i++)
       centralityNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
   } else {
@@ -55,7 +58,7 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
 
   // obtain neighbors and probabilities not infected infects other not infected
   // initialize containers
-  if(tp.edgeToEdge) {
+  if(tp.getEdgeToEdge()) {
     notNeigh.resize(sD.numNotInfec);
     notNeighOf.resize(sD.numNotInfec);
     std::fill(notNeigh.begin(),notNeigh.end(),
@@ -99,6 +102,8 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   // clear containers
   infFeat.zeros(sD.numInfected,numFeatures);
   notFeat.zeros(sD.numNotInfec,numFeatures);
@@ -130,7 +135,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   double modProbTot,modProb;
   std::pair<int,double> neigh;
   for(i = 0; i < sD.numNotInfec; i++){
-    if(tp.edgeToEdge) {
+    if(tp.getEdgeToEdge()) {
       modProbTot = 0;
       num = notNeighNum.at(i);
       for(j = 0; j < num; j++){
@@ -183,10 +188,10 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
   tDPre = tD;
 
-  arma::colvec notMx = arma::max(notFeat,0).t();
-  arma::colvec notMn = arma::min(notFeat,0).t();
-  arma::colvec infMx = arma::max(infFeat,0).t();
-  arma::colvec infMn = arma::min(infFeat,0).t();
+  const arma::colvec notMx = arma::max(notFeat,0).t();
+  const arma::colvec notMn = arma::min(notFeat,0).t();
+  const arma::colvec infMx = arma::max(infFeat,0).t();
+  const arma::colvec infMn = arma::min(infFeat,0).t();
 
   for(i = 0; i < numFeatures; ++i){
     if((notMx(i) - notMn(i)) > 1e-15){
@@ -197,13 +202,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
     }
   }
 
-#ifndef NJM_NO_DEBUG
-  if(featNum != numFeatures){
-    std::cout << "Error: in getFeatures: featNum != numFeatures"
-              << std::endl;
-    throw 1;
-  }
-#endif
+  CHECK_EQ(featNum,numFeatures);
 }
 
 
@@ -214,6 +213,8 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
+
   int i,j,num;
   std::pair<int,int> neighOf;
 
@@ -221,7 +222,7 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
   m.setQuick(sD,tD,fD,dD);
 
   // update neighbor probs
-  if(tp.edgeToEdge) {
+  if(tp.getEdgeToEdge()) {
     for(i = 0; i < sD.numNotInfec; i++){
       num=notNeighOfNum.at(i);
       for(j = 0; j < num; j++){
