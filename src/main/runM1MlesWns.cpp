@@ -12,7 +12,7 @@ int main(int argc, char ** argv){
 
   if(FLAGS_edgeToEdge) {
     // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-    typedef Model2GravityGDist MG;
+    typedef Model2EdgeToEdge MG;
 
     typedef MG ME;
 
