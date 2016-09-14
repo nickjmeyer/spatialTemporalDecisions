@@ -36,6 +36,9 @@ template class RankAgent<WnsFeatures3<ModelEDist>,
 template class RankAgent<WnsFeatures3<ModelIntercept>,
 												 ModelIntercept>;
 
+template class RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+												 Model2EdgeToEdge>;
+
 template class RankAgent<WnsFeatures3<ModelGravityGDist>,
 												 ModelGravityGDist>;
 

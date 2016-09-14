@@ -61,6 +61,22 @@ void ParamBase::read(const std::string & m){
 }
 
 
+void ParamBase::read_from(const std::string & m,
+  const boost::filesystem path){
+  unsigned int i;
+  double val;
+  std::vector<double> vals;
+  vals.reserve(parsSize);
+  for(i = 0; i < parsSize; ++i){
+    const std::string parFileName =
+      path / ("Param" + m + "/" + names.at(i) + ".txt");
+    njm::fromFile(val,parFileName);
+    vals.push_back(val);
+  }
+  putPar(vals.begin());
+}
+
+
 std::vector<double> ParamBase::getPar() const {
   return pars;
 }

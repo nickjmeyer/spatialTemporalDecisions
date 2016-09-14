@@ -3,7 +3,7 @@
 #include "runM1MlesWnsMiss.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
-DEFINE_bool(edgeToEdge,false;,"Edge to edge transmission");
+DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 int main(int argc, char ** argv){
   ::google::InitGoogleLogging(argv[0]);

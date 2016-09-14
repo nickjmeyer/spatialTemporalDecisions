@@ -5,18 +5,18 @@
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
-double getDPow(const double & power, const double & alpha,
-  const std::vector<double> & caves){
-  double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
-  meanCaves /= double(caves.size());
+// double getDPow(const double & power, const double & alpha,
+//   const std::vector<double> & caves){
+//   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+//   meanCaves /= double(caves.size());
 
-  double dPow = std::log(2.0)*std::pow(meanCaves,2.0*std::exp(power))/alpha;
-  dPow += 1.0;
-  dPow = std::log(dPow);
-  dPow /= std::log(2.0);
+//   double dPow = std::log(2.0)*std::pow(meanCaves,2.0*std::exp(power))/alpha;
+//   dPow += 1.0;
+//   dPow = std::log(dPow);
+//   dPow /= std::log(2.0);
 
-  return(dPow);
-}
+//   return(dPow);
+// }
 
 
 
@@ -33,9 +33,9 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   int numYears = s.fD.finalT;
   double tol = 1e-3;
 
-  s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
-      s.modelGen_r.getPar({"alpha"})[0],
-      s.fD.caves));
+  // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+  //     s.modelGen_r.getPar({"alpha"})[0],
+  //     s.fD.caves));
 
   std::vector<double> par = s.modelGen_r.getPar();
   par = s.modelGen_r.getPar();
@@ -76,9 +76,9 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     s.revert();
 
 
-    s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
-        s.modelGen_r.getPar({"alpha"})[0],
-        s.fD.caves));
+    // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+    //     s.modelGen_r.getPar({"alpha"})[0],
+    //     s.fD.caves));
 
 
 

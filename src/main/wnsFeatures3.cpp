@@ -27,6 +27,8 @@ template class WnsFeatures3<ModelEDist>;
 
 template class WnsFeatures3<ModelIntercept>;
 
+template class WnsFeatures3<Model2EdgeToEdge>;
+
 
 template <class M>
 void WnsFeatures3<M>::preCompData(const SimData & sD,

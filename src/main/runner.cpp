@@ -54,6 +54,18 @@ template class PlainRunner<System<Model2GravityGDist,
 				     Model2GravityGDist> >;
 
 
+template class PlainRunner<System<ModelIntercept,
+																	ModelIntercept>,
+													 RankAgent<WnsFeatures3<ModelIntercept>,
+																		 ModelIntercept> >;
+
+
+template class PlainRunner<System<Model2EdgeToEdge,
+																	Model2EdgeToEdge>,
+													 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+																		 Model2EdgeToEdge> >;
+
+
 template class PlainRunner<System<Model2GravityEDist,
 																	Model2GravityEDist>,
 													 RankAgent<WnsFeatures3<Model2GravityEDist>,
@@ -578,6 +590,30 @@ OptimRunner<System<Model2GravityGDist,
 
 
 template class
+OptimRunner<System<Model2EdgeToEdge,
+									 ModelIntercept>,
+						RankAgent<WnsFeatures3<ModelIntercept>,
+											ModelIntercept>,
+						M1SpOptim<System<Model2EdgeToEdge,
+														 ModelIntercept>,
+											RankAgent<WnsFeatures3<ModelIntercept>,
+																ModelIntercept>,
+											ModelIntercept> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+									 Model2EdgeToEdge>,
+						RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+											Model2EdgeToEdge>,
+						M1SpOptim<System<Model2EdgeToEdge,
+														 Model2EdgeToEdge>,
+											RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+																Model2EdgeToEdge>,
+											Model2EdgeToEdge> >;
+
+
+template class
 OptimRunner<System<Model2GravityGDist,
 		   Model2GravityGDist>,
 	    RankAgent<WnsFeatures3<Model2GravityGDist>,
@@ -849,6 +885,29 @@ TuneRunner<System<Model2GravityGDist,
 		     RankAgent<WnsFeatures3<Model2GravityGDist>,
 			       Model2GravityGDist>,
 		     Model2GravityGDist> >;
+
+template class
+TuneRunner<System<ModelIntercept,
+									ModelIntercept>,
+					 RankAgent<WnsFeatures3<ModelIntercept>,
+										 ModelIntercept>,
+					 M1SpOptim<System<ModelIntercept,
+														ModelIntercept>,
+										 RankAgent<WnsFeatures3<ModelIntercept>,
+															 ModelIntercept>,
+										 ModelIntercept> >;
+
+
+template class
+TuneRunner<System<Model2EdgeToEdge,
+									Model2EdgeToEdge>,
+					 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+										 Model2EdgeToEdge>,
+					 M1SpOptim<System<Model2EdgeToEdge,
+														Model2EdgeToEdge>,
+										 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+															 Model2EdgeToEdge>,
+										 Model2EdgeToEdge> >;
 
 
 template class

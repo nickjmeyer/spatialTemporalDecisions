@@ -1,4 +1,5 @@
 #include "model.hpp"
+#include <boost/filesystem>
 
 
 ModelBase::ModelBase(const std::string & str,
@@ -39,6 +40,14 @@ void ModelBase::read(){
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
     pars[i]->read(name);
+  }
+}
+
+
+void ModelBase::read_from(const boost::filesystem path){
+  int i,numPars = pars.size();
+  for(i = 0; i < numPars; ++i){
+    pars[i]->read_from(name,path);
   }
 }
 

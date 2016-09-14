@@ -54,6 +54,18 @@ template class M1SpOptim<System<Model2GravityGDist,
 				   Model2GravityGDist>,
 			 Model2GravityGDist>;
 
+template class M1SpOptim<System<Model2EdgeToEdge,
+																ModelIntercept>,
+												 RankAgent<WnsFeatures3<ModelIntercept>,
+																	 ModelIntercept>,
+												 ModelIntercept>;
+
+template class M1SpOptim<System<Model2EdgeToEdge,
+																Model2EdgeToEdge>,
+												 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+																	 Model2EdgeToEdge>,
+												 Model2EdgeToEdge>;
+
 template class M1SpOptim<System<Model2GravityEDist,
 																Model2GravityEDist>,
 												 RankAgent<WnsFeatures3<Model2GravityEDist>,
