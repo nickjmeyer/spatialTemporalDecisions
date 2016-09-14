@@ -6,7 +6,7 @@ DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 
 double getDPow(const double & power, const double & alpha,
-	       const std::vector<double> & caves){
+  const std::vector<double> & caves){
   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
   meanCaves /= double(caves.size());
 
@@ -34,8 +34,8 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   double tol = 1e-3;
 
   s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
-				     s.modelGen_r.getPar({"alpha"})[0],
-				     s.fD.caves));
+      s.modelGen_r.getPar({"alpha"})[0],
+      s.fD.caves));
 
   std::vector<double> par = s.modelGen_r.getPar();
   par = s.modelGen_r.getPar();
@@ -50,12 +50,12 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
   int iter = 0;
 
   printf("Iter: %05d  >>>  Current value: %08.6f\r",
-	 ++iter, val);
+    ++iter, val);
 
   while(std::abs(val - goal) > tol){
     if(val > goal){
       if(!above)
-	scale*=shrink;
+        scale*=shrink;
 
       s.modelGen_r.linScale(1.0 + scale);
 
@@ -63,7 +63,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
     }
     else{
       if(above)
-	scale*=shrink;
+        scale*=shrink;
 
       s.modelGen_r.linScale(1.0/(1.0 + scale));
 
@@ -77,8 +77,8 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
 
     s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
-				       s.modelGen_r.getPar({"alpha"})[0],
-				       s.fD.caves));
+        s.modelGen_r.getPar({"alpha"})[0],
+        s.fD.caves));
 
 
 
@@ -127,12 +127,12 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 
   printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
-	 ++iter, val, trt);
+    ++iter, val, trt);
 
   while(std::abs(val - goal) > tol){
     if(val > goal){
       if(!above)
-	scale*=shrink;
+        scale*=shrink;
 
       trt *= 1.0 + scale;
 
@@ -140,7 +140,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     }
     else{
       if(above)
-	scale*=shrink;
+        scale*=shrink;
 
       trt *= 1.0/(1.0 + scale);
 
@@ -159,7 +159,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
     val = rm.run(s,ma,numReps,numYears,starts).smean();
     printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
-	   ++iter, val, trt);
+      ++iter, val, trt);
     fflush(stdout);
   }
 
@@ -250,20 +250,20 @@ int main(int argc, char ** argv){
     double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
     njm::message(" valNT: " + njm::toString(valNT,"") +
-		 "\n" +
-		 " valPA: " + njm::toString(valPA,"") +
-		 "\n" +
-		 " valMA: " + njm::toString(valMA,"") +
-		 "\n" +
-		 " valRA: " + njm::toString(valRA,"") +
-		 "\n" +
-		 " valAA: " + njm::toString(valAA,""));
+      "\n" +
+      " valPA: " + njm::toString(valPA,"") +
+      "\n" +
+      " valMA: " + njm::toString(valMA,"") +
+      "\n" +
+      " valRA: " + njm::toString(valRA,"") +
+      "\n" +
+      " valAA: " + njm::toString(valAA,""));
 
 
     std::vector<double> par = s.modelGen_r.getPar();
 
     double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-			   + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+      + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
     priorMeanTrt *= 4.0;
 
     // // write new distance matrix to file
@@ -271,7 +271,7 @@ int main(int argc, char ** argv){
     // 		std::ios_base::out,"\n","");
     // write prior mean of treatment effect
     njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-		std::ios_base::out);
+      std::ios_base::out);
   }
 
   njm::sett.clean();
