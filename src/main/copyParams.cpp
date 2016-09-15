@@ -8,7 +8,7 @@
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 DEFINE_string(outDir,"","Path to save parameters");
-
+DEFINE_bool(dryRun,false,"Do not execute main");
 
 template <typename T>
 void copyParams(const boost::filesystem::path path) {
@@ -21,13 +21,16 @@ void copyParams(const boost::filesystem::path path) {
 int main(int argc, char ** argv) {
   ::google::InitGoogleLogging(argv[0]);
   ::google::ParseCommandLineFlags(&argc,&argv,true);
-  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
+	if(!FLAGS_dryRun) {
+		njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-	const boost::filesystem::path path(FLAGS_outDir);
+		const boost::filesystem::path path(FLAGS_outDir);
 
-	if(FLAGS_edgeToEdge) {
-		copyParams<Model2EdgeToEdge>(path);
-	} else {
-    copyParams<Model2GravityEDist>(path);
+		if(FLAGS_edgeToEdge) {
+			copyParams<Model2EdgeToEdge>(path);
+		} else {
+			copyParams<Model2GravityEDist>(path);
+		}
 	}
+	return 0;
 }

@@ -4,6 +4,7 @@
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
+DEFINE_bool(dryRun,false,"Do not execute main");
 
 // double getDPow(const double & power, const double & alpha,
 //   const std::vector<double> & caves){
@@ -192,89 +193,92 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 int main(int argc, char ** argv){
   ::google::InitGoogleLogging(argv[0]);
   ::google::ParseCommandLineFlags(&argc,&argv,true);
-  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
+  if(!FLAGS_dryRun) {
+    njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-  {
-    // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
+    {
+      // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-    typedef Model2GPowGDist MG;
-    typedef MG ME;
+      typedef Model2GPowGDist MG;
+      typedef MG ME;
 
-    typedef System<MG,ME> S;
-    typedef NoTrt<ME> NT;
-    typedef ProximalAgent<ME> PA;
-    typedef MyopicAgent<ME> MA;
+      typedef System<MG,ME> S;
+      typedef NoTrt<ME> NT;
+      typedef ProximalAgent<ME> PA;
+      typedef MyopicAgent<ME> MA;
 
-    typedef AllAgent<ME> AA;
+      typedef AllAgent<ME> AA;
 
-    typedef ToyFeatures5<ME> F;
-    typedef RankAgent<F,ME> RA;
+      typedef ToyFeatures5<ME> F;
+      typedef RankAgent<F,ME> RA;
 
-    typedef VanillaRunnerNS<S,NT> RN;
-    typedef VanillaRunnerNS<S,PA> RP;
-    typedef VanillaRunnerNS<S,MA> RM;
-    typedef VanillaRunnerNS<S,RA> RR;
+      typedef VanillaRunnerNS<S,NT> RN;
+      typedef VanillaRunnerNS<S,PA> RP;
+      typedef VanillaRunnerNS<S,MA> RM;
+      typedef VanillaRunnerNS<S,RA> RR;
 
-    typedef VanillaRunnerNS<S,AA> R_AA;
+      typedef VanillaRunnerNS<S,AA> R_AA;
 
-    S s;
-    s.setEdgeToEdge(FLAGS_edgeToEdge);
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
+      S s;
+      s.setEdgeToEdge(FLAGS_edgeToEdge);
+      s.modelEst_r = s.modelGen_r;
+      s.revert();
 
-    int numReps = 500;
-    Starts starts(numReps,s.fD.numNodes);
+      int numReps = 500;
+      Starts starts(numReps,s.fD.numNodes);
 
-    MA ma;
-    PA pa;
-    RP rp;
+      MA ma;
+      PA pa;
+      RP rp;
 
-    RA ra;
-    RM rm;
-    RR rr;
-    ra.setEdgeToEdge(FLAGS_edgeToEdge);
-    // ra.reset();
+      RA ra;
+      RM rm;
+      RR rr;
+      ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      // ra.reset();
 
-    njm::message("Tuning Intercept");
+      njm::message("Tuning Intercept");
 
-    double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+      double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
 
-    njm::message("Tuning Treatment");
+      njm::message("Tuning Treatment");
 
-    double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+      double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
-    double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
-    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
-    njm::message(" valNT: " + njm::toString(valNT,"") +
-      "\n" +
-      " valPA: " + njm::toString(valPA,"") +
-      "\n" +
-      " valMA: " + njm::toString(valMA,"") +
-      "\n" +
-      " valRA: " + njm::toString(valRA,"") +
-      "\n" +
-      " valAA: " + njm::toString(valAA,""));
+      njm::message(" valNT: " + njm::toString(valNT,"") +
+        "\n" +
+        " valPA: " + njm::toString(valPA,"") +
+        "\n" +
+        " valMA: " + njm::toString(valMA,"") +
+        "\n" +
+        " valRA: " + njm::toString(valRA,"") +
+        "\n" +
+        " valAA: " + njm::toString(valAA,""));
 
 
-    std::vector<double> par = s.modelGen_r.getPar();
+      std::vector<double> par = s.modelGen_r.getPar();
 
-    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-      + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
-    priorMeanTrt *= 4.0;
+      double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+        + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+      priorMeanTrt *= 4.0;
 
-    // // write new distance matrix to file
-    // njm::toFile(s.fD.gDist,njm::sett.srcExt("gDist.txt"),
-    // 		std::ios_base::out,"\n","");
-    // write prior mean of treatment effect
-    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-      std::ios_base::out);
+      // // write new distance matrix to file
+      // njm::toFile(s.fD.gDist,njm::sett.srcExt("gDist.txt"),
+      // 		std::ios_base::out,"\n","");
+      // write prior mean of treatment effect
+      njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+        std::ios_base::out);
+    }
+
+    njm::sett.clean();
+
   }
-
-  njm::sett.clean();
 
   return 0;
 }

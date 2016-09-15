@@ -4,6 +4,7 @@
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
+DEFINE_bool(dryRun,false,"Do not execute main");
 
 template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S & s, const int numReps, const Starts & starts){
@@ -106,86 +107,88 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 int main(int argc, char ** argv){
   ::google::InitGoogleLogging(argv[0]);
   ::google::ParseCommandLineFlags(&argc,&argv,true);
-  njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
+  if(!FLAGS_dryRun) {
+    njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-  {
-    // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-    typedef Model2GravityGDist MG;
+    {
+      // typedef ModelTimeExpCavesGDistTrendPowCon MG;
+      typedef Model2GravityGDist MG;
 
-    typedef MG ME;
+      typedef MG ME;
 
-    typedef System<MG,ME> S;
-    typedef NoTrt<ME> NT;
-    typedef ProximalAgent<ME> PA;
-    typedef MyopicAgent<ME> MA;
+      typedef System<MG,ME> S;
+      typedef NoTrt<ME> NT;
+      typedef ProximalAgent<ME> PA;
+      typedef MyopicAgent<ME> MA;
 
-    typedef AllAgent<ME> AA;
+      typedef AllAgent<ME> AA;
 
-    typedef WnsFeatures3<ME> F;
-    typedef RankAgent<F,ME> RA;
+      typedef WnsFeatures3<ME> F;
+      typedef RankAgent<F,ME> RA;
 
-    typedef VanillaRunnerNS<S,NT> RN;
-    typedef VanillaRunnerNS<S,PA> RP;
-    typedef VanillaRunnerNS<S,MA> RM;
-    typedef VanillaRunnerNS<S,RA> RR;
+      typedef VanillaRunnerNS<S,NT> RN;
+      typedef VanillaRunnerNS<S,PA> RP;
+      typedef VanillaRunnerNS<S,MA> RM;
+      typedef VanillaRunnerNS<S,RA> RR;
 
-    typedef VanillaRunnerNS<S,AA> R_AA;
+      typedef VanillaRunnerNS<S,AA> R_AA;
 
-    S s("obsData.txt");
-    s.setEdgeToEdge(FLAGS_edgeToEdge);
-    s.modelEst_r = s.modelGen_r;
-    s.revert();
+      S s("obsData.txt");
+      s.setEdgeToEdge(FLAGS_edgeToEdge);
+      s.modelEst_r = s.modelGen_r;
+      s.revert();
 
-    int numReps = 500;
-    Starts starts("startingLocations.txt");
+      int numReps = 500;
+      Starts starts("startingLocations.txt");
 
-    NT nt;
-    MA ma;
-    PA pa;
-    RP rp;
+      NT nt;
+      MA ma;
+      PA pa;
+      RP rp;
 
-    RN rn;
-    RA ra;
-    RM rm;
-    RR rr;
-    ra.setEdgeToEdge(FLAGS_edgeToEdge);
-    // ra.reset();
+      RN rn;
+      RA ra;
+      RM rm;
+      RR rr;
+      ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      // ra.reset();
 
-    double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
+      double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
 
-    njm::message("Tuning Treatment");
+      njm::message("Tuning Treatment");
 
-    double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+      double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
 
-    double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
-    double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
 
-    double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
 
-    njm::message(" valNT: " + njm::toString(valNT,"") +
-      "\n" +
-      " valPA: " + njm::toString(valPA,"") +
-      "\n" +
-      " valMA: " + njm::toString(valMA,"") +
-      "\n" +
-      " valRA: " + njm::toString(valRA,"") +
-      "\n" +
-      " valAA: " + njm::toString(valAA,""));
+      njm::message(" valNT: " + njm::toString(valNT,"") +
+        "\n" +
+        " valPA: " + njm::toString(valPA,"") +
+        "\n" +
+        " valMA: " + njm::toString(valMA,"") +
+        "\n" +
+        " valRA: " + njm::toString(valRA,"") +
+        "\n" +
+        " valAA: " + njm::toString(valAA,""));
 
 
-    std::vector<double> par = s.modelGen_r.getPar();
+      std::vector<double> par = s.modelGen_r.getPar();
 
-    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-      + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
-    priorMeanTrt *= 4.0;
+      double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+        + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+      priorMeanTrt *= 4.0;
 
-    // write prior mean of treatment effect
-    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-      std::ios_base::out);
+      // write prior mean of treatment effect
+      njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+        std::ios_base::out);
+    }
+
+    njm::sett.clean();
   }
-
-  njm::sett.clean();
 
   return 0;
 }

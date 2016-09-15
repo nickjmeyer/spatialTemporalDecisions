@@ -22,6 +22,7 @@ class Settings {
   void setup(const std::string fileName, const std::string srcDir);
 
   void clean();
+  bool isSetup;
   int cleaned;
 
   std::string fileName;

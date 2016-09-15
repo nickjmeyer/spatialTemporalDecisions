@@ -13,12 +13,15 @@ Settings njm::sett;
 const int Settings::numVals=2;
 
 Settings::Settings(){
+  isSetup = false;
   cleaned = 0;
   tick = std::time(NULL);
 }
 
 Settings::~Settings(){
-  timeElapsed();
+  if(isSetup) {
+    timeElapsed();
+  }
 
   // compress data directory
   // if(!cleaned){
@@ -52,6 +55,7 @@ void Settings::timeElapsed(){
 
 
 void Settings::setup(const std::string fileName, const std::string srcDir) {
+  this->isSetup = true;
   this->fileName = fileName;
   this->srcDir = srcDir;
 
