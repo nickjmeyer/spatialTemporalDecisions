@@ -19,7 +19,7 @@ runM1Mles \
 runM1MlesMiss \
 runM1MlesWns \
 runM1MlesWnsMiss \
-runM1MlesEdgeToEdge
+copyParams
 
 CPP_SRC:=$(wildcard src/main/*.cpp)
 CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
