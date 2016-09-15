@@ -1,3 +1,5 @@
+-include Makefile.local
+
 ## setup
 ifdef DEBUG
 BUILDDIR:=.build_debug
@@ -50,7 +52,9 @@ PROG_TEST_LINKS:=$(PROGS_TEST:%.bin=%)
 REPO_ROOT_DIRECTORY:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 
-CC=g++-5
+ifndef CC
+CC=g++
+endif
 
 CPP_FLAGS:= -std=c++11 -Isrc/main -fPIC -fopenmp \
 -DREPO_ROOT_DIRECTORY=$(REPO_ROOT_DIRECTORY)
