@@ -56,7 +56,7 @@ ifndef CC
 CC:=g++
 endif
 
-CPP_FLAGS:= -std=c++11 -Isrc/main -fPIC -fopenmp \
+CPP_FLAGS:=$(CPP_FLAGS) -std=c++11 -Isrc/main -fPIC -fopenmp \
 -DREPO_ROOT_DIRECTORY=$(REPO_ROOT_DIRECTORY)
 
 ifdef DEBUG
