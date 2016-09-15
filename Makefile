@@ -53,7 +53,7 @@ REPO_ROOT_DIRECTORY:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 
 ifndef CC
-CC=g++
+CC:=g++
 endif
 
 CPP_FLAGS:= -std=c++11 -Isrc/main -fPIC -fopenmp \
