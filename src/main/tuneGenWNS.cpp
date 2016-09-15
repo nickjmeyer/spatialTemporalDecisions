@@ -106,7 +106,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
 
 int main(int argc, char ** argv){
   ::google::InitGoogleLogging(argv[0]);
-  ::google::ParseCommandLineFlags(&argc,&argv,true);
+  ::gflags::ParseCommandLineFlags(&argc,&argv,true);
   if(!FLAGS_dryRun) {
     njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
