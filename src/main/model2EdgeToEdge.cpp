@@ -13,6 +13,11 @@ Model2EdgeToEdge::Model2EdgeToEdge(const FixedData & fD)
 }
 
 
+Model2EdgeToEdge::Model2EdgeToEdge()
+  : ModelBase("2EdgeToEdge",genPars()){
+}
+
+
 Model2EdgeToEdge::Model2EdgeToEdge(const Model2EdgeToEdge & m){
   int i, parsSize = m.pars.size();
   pars.clear();

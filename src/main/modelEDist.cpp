@@ -14,6 +14,11 @@ ModelEDist::ModelEDist(const FixedData & fD)
 }
 
 
+ModelEDist::ModelEDist()
+  : ModelBase("EDist",genPars()){
+}
+
+
 ModelEDist::ModelEDist(const ModelEDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();

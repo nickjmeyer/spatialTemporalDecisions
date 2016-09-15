@@ -14,6 +14,11 @@ ModelGDist::ModelGDist(const FixedData & fD)
 }
 
 
+ModelGDist::ModelGDist()
+  : ModelBase("GDist",genPars()){
+}
+
+
 ModelGDist::ModelGDist(const ModelGDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();

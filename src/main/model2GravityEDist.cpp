@@ -14,6 +14,11 @@ Model2GravityEDist::Model2GravityEDist(const FixedData & fD)
 }
 
 
+Model2GravityEDist::Model2GravityEDist()
+  : ModelBase("2GravityEDist",genPars()){
+}
+
+
 Model2GravityEDist::Model2GravityEDist(const Model2GravityEDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();

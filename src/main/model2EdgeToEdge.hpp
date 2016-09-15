@@ -17,7 +17,7 @@
 class Model2EdgeToEdge : public ModelBase {
  protected:
  public:
-  Model2EdgeToEdge(){ };
+  Model2EdgeToEdge();
   Model2EdgeToEdge(const FixedData & fD);
   Model2EdgeToEdge(const Model2EdgeToEdge & m);
 

@@ -38,39 +38,23 @@ std::vector<bool> ParamBase::initToScale(){
 }
 
 
-void ParamBase::save(const std::string & m) const {
+void ParamBase::save(const boost::filesystem::path & path) const {
   unsigned int i;
   for(i = 0; i < parsSize; ++i)
     njm::toFile(pars.at(i),
-		njm::sett.srcExt("./Param"+m+"/"+names.at(i)+".txt"),
-		std::ios_base::out);
+      (path / (names.at(i) + ".txt")).native(),
+      std::ios_base::out);
 }
 
 
-void ParamBase::read(const std::string & m){
+void ParamBase::read(const boost::filesystem::path & path){
   unsigned int i;
   double val;
   std::vector<double> vals;
   vals.reserve(parsSize);
   for(i = 0; i < parsSize; ++i){
     njm::fromFile(val,
-		  njm::sett.srcExt("./Param"+m+"/"+names.at(i)+".txt"));
-    vals.push_back(val);
-  }
-  putPar(vals.begin());
-}
-
-
-void ParamBase::read_from(const std::string & m,
-  const boost::filesystem path){
-  unsigned int i;
-  double val;
-  std::vector<double> vals;
-  vals.reserve(parsSize);
-  for(i = 0; i < parsSize; ++i){
-    const std::string parFileName =
-      path / ("Param" + m + "/" + names.at(i) + ".txt");
-    njm::fromFile(val,parFileName);
+      (path / (names.at(i) + ".txt")).native());
     vals.push_back(val);
   }
   putPar(vals.begin());

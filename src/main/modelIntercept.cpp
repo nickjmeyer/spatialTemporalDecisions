@@ -13,6 +13,11 @@ ModelIntercept::ModelIntercept(const FixedData & fD)
 }
 
 
+ModelIntercept::ModelIntercept()
+  : ModelBase("Intercept",genPars()){
+}
+
+
 ModelIntercept::ModelIntercept(const ModelIntercept & m){
   int i, parsSize = m.pars.size();
   pars.clear();

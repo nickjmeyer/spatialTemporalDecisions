@@ -17,7 +17,7 @@
 class Model2GPowGDist : public ModelBase {
  protected:
  public:
-  Model2GPowGDist(){ };
+  Model2GPowGDist();
   Model2GPowGDist(const FixedData & fD);
   Model2GPowGDist(const Model2GPowGDist & m);
 

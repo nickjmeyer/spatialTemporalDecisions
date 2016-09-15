@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <eigen3/Eigen/Eigen>
 #include <string>
+#include <boost/filesystem.hpp>
 #include "data.hpp"
 
 
@@ -41,9 +42,9 @@ class ParamBase {
 
   virtual ParamBase * clone() const = 0;
 
-  virtual void save(const std::string & m) const;
+  virtual void save(const boost::filesystem::path & path) const;
 
-  virtual void read(const std::string & m);
+  virtual void read(const boost::filesystem::path & path);
 
   // initializes pars = {0,...}, beg = pars.begin(), end = pars.end()
   // calls initInternal, initParsSize

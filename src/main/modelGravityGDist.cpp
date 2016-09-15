@@ -14,6 +14,11 @@ ModelGravityGDist::ModelGravityGDist(const FixedData & fD)
 }
 
 
+ModelGravityGDist::ModelGravityGDist()
+  : ModelBase("GravityGDist",genPars()){
+}
+
+
 ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();

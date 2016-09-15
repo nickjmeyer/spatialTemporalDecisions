@@ -18,7 +18,7 @@
 class Model2GravityEDist : public ModelBase {
  protected:
  public:
-  Model2GravityEDist(){ };
+  Model2GravityEDist();
   Model2GravityEDist(const FixedData & fD);
   Model2GravityEDist(const Model2GravityEDist & m);
 

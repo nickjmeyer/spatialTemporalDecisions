@@ -16,7 +16,7 @@
 class ModelGDist : public ModelBase {
  protected:
  public:
-  ModelGDist(){ };
+  ModelGDist();
   ModelGDist(const FixedData & fD);
   ModelGDist(const ModelGDist & m);
 

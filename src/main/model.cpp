@@ -1,10 +1,16 @@
 #include "model.hpp"
-#include <boost/filesystem>
-
+#include <glog/logging.h>
 
 ModelBase::ModelBase(const std::string & str,
                      const std::vector<ParamBase *> & newPars,
-                     const FixedData & fD){
+                     const FixedData & fD)
+  : ModelBase(str,newPars) {
+  init(fD);
+}
+
+
+ModelBase::ModelBase(const std::string & str,
+  const std::vector<ParamBase *> & newPars) {
   name = str;
 
   setType(INVALID);
@@ -16,15 +22,20 @@ ModelBase::ModelBase(const std::string & str,
   set = 0;
   ready = 0;
   pars = newPars;
-  std::for_each(pars.begin(),pars.end(),
-                [&fD](ParamBase * p){
-                  p->init(fD);
-                });
+
   numPars = 0;
   std::for_each(pars.begin(),pars.end(),
-                [this](ParamBase * p){
-                  numPars += p->size();
-                });
+    [this](ParamBase * p){
+      numPars += p->size();
+    });
+}
+
+
+void ModelBase::init(const FixedData & fD) {
+  std::for_each(pars.begin(),pars.end(),
+    [&fD](ParamBase * p){
+      p->init(fD);
+    });
 }
 
 
@@ -37,26 +48,39 @@ ModelBase::~ModelBase(){
 
 
 void ModelBase::read(){
+  boost::filesystem::path paramDir = njm::sett.srcExt("");
+  read_from(paramDir);
+}
+
+
+void ModelBase::read_from(const boost::filesystem::path path){
+  boost::filesystem::path paramDir = path / ("Param"+name);
+  CHECK(boost::filesystem::exists(paramDir));
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    pars[i]->read(name);
+    pars[i]->read(paramDir);
   }
 }
 
 
-void ModelBase::read_from(const boost::filesystem path){
+void ModelBase::save_to(const boost::filesystem::path path) const{
+  boost::filesystem::path paramDir = path / ("Param"+name);
+  if(!boost::filesystem::exists(paramDir)) {
+    boost::system::error_code error;
+    boost::filesystem::create_directories(paramDir,error);
+    CHECK(error) << "failed to create directory " << paramDir;
+  }
+
   int i,numPars = pars.size();
   for(i = 0; i < numPars; ++i){
-    pars[i]->read_from(name,path);
+    pars[i]->save(paramDir);
   }
 }
 
 
 void ModelBase::save() const{
-  int i,numPars = pars.size();
-  for(i = 0; i < numPars; ++i){
-    pars[i]->save(name);
-  }
+  boost::filesystem::path paramDir = njm::sett.srcExt("");
+  save_to(paramDir);
 }
 
 

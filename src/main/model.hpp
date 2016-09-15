@@ -5,6 +5,7 @@
 #include <armadillo>
 #include <cmath>
 #include <gsl/gsl_multimin.h>
+#include <boost/filesystem.hpp>
 #include "data.hpp"
 #include "settings.hpp"
 #include "param.hpp"
@@ -37,11 +38,17 @@ class ModelBase {
   ModelBase(const std::string & str,
 	    const std::vector<ParamBase *> & newPars,
 	    const FixedData & fD);
+  ModelBase(const std::string & str,
+    const std::vector<ParamBase *> & newPars);
   virtual ~ModelBase();
 
+  virtual void init(const FixedData & fD);
+
   virtual void read();
+  virtual void read_from(const boost::filesystem::path path);
 
   virtual void save() const;
+  virtual void save_to(const boost::filesystem::path path) const;
 
   virtual void infProbs(const SimData & sD,
 			const TrtData & tD,

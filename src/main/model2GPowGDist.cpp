@@ -14,6 +14,11 @@ Model2GPowGDist::Model2GPowGDist(const FixedData & fD)
 }
 
 
+Model2GPowGDist::Model2GPowGDist()
+  : ModelBase("2GPowGDist",genPars()){
+}
+
+
 Model2GPowGDist::Model2GPowGDist(const Model2GPowGDist & m){
   int i, parsSize = m.pars.size();
   pars.clear();

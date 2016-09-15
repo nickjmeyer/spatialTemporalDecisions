@@ -16,7 +16,7 @@
 class ModelEDist : public ModelBase {
  protected:
  public:
-  ModelEDist(){ };
+  ModelEDist();
   ModelEDist(const FixedData & fD);
   ModelEDist(const ModelEDist & m);
 

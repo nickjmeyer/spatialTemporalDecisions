@@ -15,7 +15,7 @@
 class ModelIntercept : public ModelBase {
  protected:
  public:
-  ModelIntercept(){ };
+  ModelIntercept();
   ModelIntercept(const FixedData & fD);
   ModelIntercept(const ModelIntercept & m);
 
