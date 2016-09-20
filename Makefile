@@ -52,8 +52,10 @@ PROG_TEST_LINKS:=$(PROGS_TEST:%.bin=%)
 REPO_ROOT_DIRECTORY:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 
-ifndef CC
+ifndef MYCC
 CC:=g++
+else
+CC:=$(MYCC)
 endif
 
 CPP_FLAGS:=$(CPP_FLAGS) -std=c++11 -Isrc/main -fPIC -fopenmp \
