@@ -4,6 +4,10 @@ template class AllAgent<ModelGravityGDist>;
 
 template class AllAgent<Model2GravityGDist>;
 
+template class AllAgent<Model2EdgeToEdge>;
+
+template class AllAgent<Model2GravityEDist>;
+
 template class AllAgent<Model2GPowGDist>;
 
 template class AllAgent<ModelGDist>;

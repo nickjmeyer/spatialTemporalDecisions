@@ -281,6 +281,14 @@ template class VanillaRunnerNS<System<ModelGravityGDist,
 				      ModelGravityGDist>,
 			       NoTrt<ModelGravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 NoTrt<Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 NoTrt<Model2GravityEDist> >;
+
 template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       NoTrt<Model2GravityGDist> >;
@@ -288,6 +296,14 @@ template class VanillaRunnerNS<System<Model2GravityGDist,
 template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       AllAgent<Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 AllAgent<Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 AllAgent<Model2GravityEDist> >;
 
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,
@@ -305,6 +321,14 @@ template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       ProximalAgent<Model2GravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 ProximalAgent<Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 ProximalAgent<Model2GravityEDist> >;
+
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,
 			       ProximalAgent<Model2GPowGDist> >;
@@ -316,6 +340,14 @@ template class VanillaRunnerNS<System<ModelGravityGDist,
 template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       MyopicAgent<Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 MyopicAgent<Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 MyopicAgent<Model2GravityEDist> >;
 
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,
@@ -336,10 +368,30 @@ template class VanillaRunnerNS<System<Model2GravityGDist,
 			       RankAgent<WnsFeatures3<Model2GravityGDist>,
 					 Model2GravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+																				 Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 RankAgent<WnsFeatures3<Model2GravityEDist>,
+																				 Model2GravityEDist> >;
+
 template class VanillaRunnerNS<System<Model2GravityGDist,
 				      Model2GravityGDist>,
 			       RankAgent<ToyFeatures5<Model2GravityGDist>,
 					 Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+																			Model2EdgeToEdge>,
+															 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+																				 Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+																			Model2GravityEDist>,
+															 RankAgent<ToyFeatures5<Model2GravityEDist>,
+																				 Model2GravityEDist> >;
 
 template class VanillaRunnerNS<System<Model2GPowGDist,
 				      Model2GPowGDist>,

@@ -110,9 +110,84 @@ int main(int argc, char ** argv){
   if(!FLAGS_dryRun) {
     njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-    {
+    if(FLAGS_edgeToEdge) {
       // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-      typedef Model2GravityGDist MG;
+      typedef Model2EdgeToEdge MG;
+
+      typedef MG ME;
+
+      typedef System<MG,ME> S;
+      typedef NoTrt<ME> NT;
+      typedef ProximalAgent<ME> PA;
+      typedef MyopicAgent<ME> MA;
+
+      typedef AllAgent<ME> AA;
+
+      typedef WnsFeatures3<ME> F;
+      typedef RankAgent<F,ME> RA;
+
+      typedef VanillaRunnerNS<S,NT> RN;
+      typedef VanillaRunnerNS<S,PA> RP;
+      typedef VanillaRunnerNS<S,MA> RM;
+      typedef VanillaRunnerNS<S,RA> RR;
+
+      typedef VanillaRunnerNS<S,AA> R_AA;
+
+      S s("obsData.txt");
+      s.setEdgeToEdge(FLAGS_edgeToEdge);
+      s.modelEst_r = s.modelGen_r;
+      s.revert();
+
+      int numReps = 500;
+      Starts starts("startingLocations.txt");
+
+      NT nt;
+      MA ma;
+      PA pa;
+      RP rp;
+
+      RN rn;
+      RA ra;
+      RM rm;
+      RR rr;
+      ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      // ra.reset();
+
+      double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
+
+      njm::message("Tuning Treatment");
+
+      double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+
+      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+
+      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+
+      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+
+      njm::message(" valNT: " + njm::toString(valNT,"") +
+        "\n" +
+        " valPA: " + njm::toString(valPA,"") +
+        "\n" +
+        " valMA: " + njm::toString(valMA,"") +
+        "\n" +
+        " valRA: " + njm::toString(valRA,"") +
+        "\n" +
+        " valAA: " + njm::toString(valAA,""));
+
+
+      std::vector<double> par = s.modelGen_r.getPar();
+
+      double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+        + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+      priorMeanTrt *= 4.0;
+
+      // write prior mean of treatment effect
+      njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+        std::ios_base::out);
+    } else {
+      // typedef ModelTimeExpCavesGDistTrendPowCon MG;
+      typedef Model2GravityEDist MG;
 
       typedef MG ME;
 
