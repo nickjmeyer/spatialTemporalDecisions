@@ -68,7 +68,8 @@ void ModelBase::save_to(const boost::filesystem::path path) const{
   if(!boost::filesystem::exists(paramDir)) {
     boost::system::error_code error;
     boost::filesystem::create_directories(paramDir,error);
-    CHECK_EQ(error,0) << "failed to create directory " << paramDir;
+    CHECK_EQ(error,boost::system::errc::success)
+      << "failed to create directory " << paramDir;
   }
 
   int i,numPars = pars.size();
