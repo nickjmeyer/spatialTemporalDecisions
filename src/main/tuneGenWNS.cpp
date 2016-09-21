@@ -33,6 +33,11 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   s.modelGen_r.save();
   s = S("obsData.txt");
 
+  s.modelGen_r.setType(MLE);
+  s.modelGen_r.fit(s.sD,s.tD,s.fD,s.dD,true);
+  s.modelGen_r.save();
+  s = S("obsData.txt");
+
   double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
