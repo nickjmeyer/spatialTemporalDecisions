@@ -51,95 +51,98 @@ ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree1000 \
 ########################################
 ## tune generative models
 
+## wns
+${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${EDGE_TO_EDGE}
+
 ## spatial spread
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp100 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp500 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp1000 ${SPATIAL}
 
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid100 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid500 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid1000 ${SPATIAL}
 
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand100 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand500 ${SPATIAL}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand1000 ${SPATIAL}
 
 ## network spread
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/scalefree100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/scalefree500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/scalefree1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${WNS} ${SPATIAL}
-
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
 
 ########################################
 ## run sims {correctly specified}
 
 ## wns
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
 
 ## spatial spread
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp500 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp1000 ${SPATIAL}
 
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid100 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid500 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid1000 ${SPATIAL}
 
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand100 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand500 ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${SPATIAL}
 
 ## network spread
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
 
 ########################################
 ## run sims {incorrectly specified}
 
 ## wns
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
 
 ## spatial spread
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp100 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp500 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp1000 ${SPATIAL}
 
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid100 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid500 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid1000 ${SPATIAL}
 
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand100 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand500 ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand1000 ${SPATIAL}
 
 ## network spread
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid1000 ${EDGE_TO_EDGE}
 
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand100 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand500 ${EDGE_TO_EDGE}
+${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
