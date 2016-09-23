@@ -10,7 +10,7 @@ TOY=${PROJ_ROOT}/data/toy
 DRY=--nodryRun
 
 EDGE_TO_EDGE="--edgeToEdge ${DRY}"
-SPATIAL="${SPATIAL} ${DRY}"
+SPATIAL="--noedgeToEdge ${DRY}"
 
 ${EXEC_PATH}/tuneGenWNS --srcDir ${PROJ_ROOT}/data/wns ${SPATIAL} ${DRY}
 ${EXEC_PATH}/tuneGenWNS --srcDir ${PROJ_ROOT}/data/wns --edgeToEdge ${DRY}
