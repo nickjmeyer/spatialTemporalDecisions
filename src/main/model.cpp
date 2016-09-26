@@ -844,14 +844,7 @@ double objFn(const gsl_vector * x, void * params){
     par.push_back(gsl_vector_get(x,pi));
   }
 
-#pragma omp critical
-  {
-    std::cout << "numPars: "
-              << fitObj->mb->numPars
-              << std::endl;
-
-    fitObj->mb->putPar(par.begin());
-  }
+  fitObj->mb->putPar(par.begin());
 
   // return negative since GSL minimizes the function
   double ll = fitObj->mb->logll(fitObj->sD,fitObj->tD,fitObj->fD,fitObj->dD);
