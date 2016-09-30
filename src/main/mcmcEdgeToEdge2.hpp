@@ -14,14 +14,12 @@ public:
   int numBurn;
   int numCovar;
 
-  std::vector<double> intcp,beta,betaInf,alpha,power,trtPre,trtAct;
-  std::vector<double> intcpBurn,betaBurn,betaInfBurn,alphaBurn,
-    powerBurn,trtPreBurn,trtActBurn;
+  std::vector<double> intcp,beta,betaInf,trtPre,trtAct;
+  std::vector<double> intcpBurn,betaBurn,betaInfBurn,
+    trtPreBurn,trtActBurn;
 
   double intcpSet;
   std::vector<double> betaSet,betaInfSet;
-  double alphaSet;
-  double powerSet;
   double trtPreSet;
   double trtActSet;
 
@@ -70,23 +68,17 @@ public:
   std::vector<double> covarBeta_can;
   std::vector<double> covarBetaInf_cur;
   std::vector<double> covarBetaInf_can;
-  std::vector<double> alphaW_cur;
-  std::vector<double> alphaW_can;
 
   // current iteration of the parameters
   double intcp_cur;
   std::vector<double> beta_cur;
   std::vector<double> betaInf_cur;
-  double alpha_cur;
-  double power_cur;
   double trtPre_cur;
   double trtAct_cur;
 
   double intcp_can;
   std::vector<double> beta_can;
   std::vector<double> betaInf_can;
-  double alpha_can;
-  double power_can;
   double trtPre_can;
   double trtAct_can;
 
@@ -111,16 +103,6 @@ public:
     const bool saveBurn = false);
   double ll();
 
-  inline static void updateAlphaW(std::vector<double> & alphaW,
-    const double & alphaOld,
-    const double & alphaNew,
-    const int numNodes);
-  inline static void updateAlphaW(std::vector<double> & alphaW,
-    const std::vector<double> & d,
-    const std::vector<double> & cc,
-    const double & alpha,
-    const double & powerNew,
-    const int numNodes);
   inline static void updateCovarBeta(std::vector<double> & covarBeta,
     const std::vector<double> & covar,
     const std::vector<double> & beta,
@@ -135,31 +117,6 @@ public:
 };
 
 
-
-inline void EdgeToEdge2Mcmc::updateAlphaW(std::vector<double> & alphaW,
-  const double & alphaOld,
-  const double & alphaNew,
-  const int numNodes){
-  double scale = alphaNew/alphaOld;
-  int i,j;
-  for(i = 0; i < numNodes; ++i)
-    for(j = i; j < numNodes; ++j)
-      alphaW.at(i*numNodes + j) *= scale;
-}
-
-
-inline void EdgeToEdge2Mcmc::updateAlphaW(std::vector<double> & alphaW,
-  const std::vector<double> & d,
-  const std::vector<double> & cc,
-  const double & alpha,
-  const double & powerNew,
-  const int numNodes){
-  int i,j;
-  for(i = 0; i < numNodes; ++i)
-    for(j = i; j < numNodes; ++j)
-      alphaW.at(i*numNodes + j) = alpha * d.at(i*numNodes + j)/
-        std::pow(cc.at(i*numNodes + j),std::exp(powerNew));
-}
 
 inline void EdgeToEdge2Mcmc::updateCovarBeta(std::vector<double> & covarBeta,
   const std::vector<double> & covar,

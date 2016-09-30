@@ -1,14 +1,12 @@
 #include "mcmcEdgeToEdge2.hpp"
 
 
-enum parInd{INTCP_=0,ALPHA_=1,POWER_=2,TRTP_=3,TRTA_=4};
+enum parInd{INTCP_=0,TRTP_=1,TRTA_=2};
 
 
 
 void EdgeToEdge2Samples::setMode(){
   intcpSet = DensityEst(intcp).max().second;
-  alphaSet = DensityEst(alpha).max().second;
-  powerSet = DensityEst(power).max().second;
   trtPreSet = DensityEst(trtPre).max().second;
   trtActSet = DensityEst(trtAct).max().second;
 
@@ -30,7 +28,7 @@ void EdgeToEdge2Samples::setMode(){
 
 
 void EdgeToEdge2Samples::setMean(){
-  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
+  intcpSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
   betaInfSet.resize(numCovar);
@@ -38,10 +36,6 @@ void EdgeToEdge2Samples::setMean(){
 
   intcpSet = std::accumulate(intcp.begin(),intcp.end(),0.0);
   intcpSet /= double(numSamples);
-  alphaSet = std::accumulate(alpha.begin(),alpha.end(),0.0);
-  alphaSet /= double(numSamples);
-  powerSet = std::accumulate(power.begin(),power.end(),0.0);
-  powerSet /= double(numSamples);
   trtPreSet = std::accumulate(trtPre.begin(),trtPre.end(),0.0);
   trtPreSet /= double(numSamples);
   trtActSet = std::accumulate(trtAct.begin(),trtAct.end(),0.0);
@@ -66,7 +60,7 @@ void EdgeToEdge2Samples::setMean(){
 
 
 void EdgeToEdge2Samples::setRand(){
-  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
+  intcpSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
   betaInfSet.resize(numCovar);
@@ -75,8 +69,6 @@ void EdgeToEdge2Samples::setRand(){
   int i = njm::runifInterv(0,numSamples);
 
   intcpSet = intcp.at(i);
-  alphaSet = alpha.at(i);
-  powerSet = power.at(i);
   trtPreSet = trtPre.at(i);
   trtActSet = trtAct.at(i);
 
@@ -91,7 +83,7 @@ void EdgeToEdge2Samples::setRand(){
 }
 
 void EdgeToEdge2Samples::setPar(const int i,const bool fromBurn){
-  intcpSet = alphaSet = powerSet = trtPreSet = trtActSet = 0.0;
+  intcpSet = trtPreSet = trtActSet = 0.0;
   betaSet.resize(numCovar);
   std::fill(betaSet.begin(),betaSet.end(),0.0);
   betaInfSet.resize(numCovar);
@@ -99,8 +91,6 @@ void EdgeToEdge2Samples::setPar(const int i,const bool fromBurn){
 
   if(fromBurn){
     intcpSet = intcpBurn.at(i);
-    alphaSet = alphaBurn.at(i);
-    powerSet = powerBurn.at(i);
     trtPreSet = trtPreBurn.at(i);
     trtActSet = trtActBurn.at(i);
 
@@ -115,8 +105,6 @@ void EdgeToEdge2Samples::setPar(const int i,const bool fromBurn){
   }
   else{
     intcpSet = intcp.at(i);
-    alphaSet = alpha.at(i);
-    powerSet = power.at(i);
     trtPreSet = trtPre.at(i);
     trtActSet = trtAct.at(i);
 
@@ -138,8 +126,6 @@ std::vector<double> EdgeToEdge2Samples::getPar() const {
   std::vector<double> par {intcpSet};
   par.insert(par.end(),betaSet.begin(),betaSet.end());
   par.insert(par.end(),betaInfSet.begin(),betaInfSet.end());
-  par.push_back(alphaSet);
-  par.push_back(powerSet);
   par.push_back(trtActSet);
   par.push_back(trtPreSet);
 
@@ -208,8 +194,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> betaInf (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
-                             0.1, // alpha
-                             0.0, // power
                              0.0, // trtAct
                              0.0}; // trtPre
   par.insert(par.begin()+1,beta.begin(),beta.end());
@@ -229,8 +213,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
   double intcp_mean=0,intcp_var=100,
     beta_mean=0,beta_var=10,
     betaInf_mean=0,betaInf_var=10,
-    alpha_mean=0,alpha_var=1,
-    power_mean=0,power_var=1,
     trtPre_mean=priorTrtMean,trtPre_var=1,
     trtAct_mean=priorTrtMean,trtAct_var=1;
 
@@ -250,9 +232,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
     betaInf_cur.push_back(*it++);
   betaInf_can = betaInf_cur;
 
-  alpha_cur=alpha_can= (*it < 0.00001 ? 0.01 : *it);
-  ++it;
-  power_cur=power_can= *it++;
   trtAct_cur=trtAct_can= *it++;
   trtPre_cur=trtPre_can= *it++;
 
@@ -271,16 +250,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
   samples.betaInfBurn.clear();
   samples.betaInf.reserve((numSamples-numBurn)*numCovar);
   samples.betaInfBurn.reserve((numBurn)*numCovar);
-
-  samples.alpha.clear();
-  samples.alphaBurn.clear();
-  samples.alpha.reserve(numSamples-numBurn);
-  samples.alphaBurn.reserve(numBurn);
-
-  samples.power.clear();
-  samples.powerBurn.clear();
-  samples.power.reserve(numSamples-numBurn);
-  samples.powerBurn.reserve(numBurn);
 
   samples.trtPre.clear();
   samples.trtPreBurn.clear();
@@ -307,10 +276,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
   updateCovarBeta(covarBetaInf_cur,covar,betaInf_cur,numNodes,numCovar);
   covarBetaInf_can = covarBetaInf_cur;
 
-  alphaW_cur.resize(numNodes*numNodes);
-  updateAlphaW(alphaW_cur,d,cc,alpha_cur,power_cur,numNodes);
-  alphaW_can = alphaW_cur;
-
   // get the likelihood with the current parameters
   ll_cur=ll_can=ll();
 
@@ -324,8 +289,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
 
   double upd;
   double R;
-
-  double logAlpha_cur,logAlpha_can;
 
   int displayOn=1;
   int display=1;
@@ -478,70 +441,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
 
 
 
-
-    // sample alpha
-    ++att.at(numCovar+ALPHA_);
-
-    logAlpha_cur=std::log(alpha_cur);
-
-    upd=std::exp(logAlpha_cur + mh.at(numCovar+ALPHA_)*njm::rnorm01());
-    alpha_can=upd;
-    logAlpha_can=std::log(alpha_can);
-
-    // update alphaW
-    updateAlphaW(alphaW_can,alpha_cur,alpha_can,numNodes);
-
-    // get new likelihood
-    ll_can=ll();
-
-
-    R=ll_can + (-.5/alpha_var)*std::pow(logAlpha_can - alpha_mean,2.0)
-      - ll_cur - (-.5/alpha_var)*std::pow(logAlpha_cur - alpha_mean,2.0);
-
-    // accept?
-    if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+ALPHA_);
-      alpha_cur=alpha_can;
-      alphaW_cur=alphaW_can;
-      ll_cur=ll_can;
-    }
-    else{
-      alpha_can=alpha_cur;
-      alphaW_can=alphaW_cur;
-      ll_can=ll_cur;
-    }
-
-
-
-    // sample power
-    ++att.at(numCovar+POWER_);
-    upd = power_cur + mh.at(numCovar+POWER_)*njm::rnorm01();
-    power_can=upd;
-
-    // update alphaW
-    updateAlphaW(alphaW_can,d,cc,alpha_cur,power_can,numNodes);
-
-    // get new likelihood
-    ll_can=ll();
-
-
-    R=ll_can + (-.5/power_var)*std::pow(power_can - power_mean,2.0)
-      - ll_cur - (-.5/power_var)*std::pow(power_cur - power_mean,2.0);
-
-
-    // accept?
-    if(std::log(njm::runif01()) < R){
-      ++acc.at(numCovar+POWER_);
-      power_cur=power_can;
-      alphaW_cur=alphaW_can;
-      ll_cur=ll_can;
-    }
-    else{
-      power_can=power_cur;
-      alphaW_can=alphaW_cur;
-      ll_can=ll_cur;
-    }
-
     if(i<numBurn){
       // time for tuning!
       int len=int(mh.size());
@@ -566,8 +465,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
         samples.betaInfBurn.insert(samples.betaInfBurn.end(),
           betaInf_cur.begin(),
           betaInf_cur.end());
-        samples.alphaBurn.push_back(alpha_cur);
-        samples.powerBurn.push_back(power_cur);
         samples.trtPreBurn.push_back(trtPre_cur);
         samples.trtActBurn.push_back(trtAct_cur);
       }
@@ -578,8 +475,6 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
       samples.beta.insert(samples.beta.end(),beta_cur.begin(),beta_cur.end());
       samples.betaInf.insert(samples.betaInf.end(),
         betaInf_cur.begin(),betaInf_cur.end());
-      samples.alpha.push_back(alpha_cur);
-      samples.power.push_back(power_cur);
       samples.trtPre.push_back(trtPre_cur);
       samples.trtAct.push_back(trtAct_cur);
 
@@ -592,14 +487,11 @@ void EdgeToEdge2Mcmc::sample(int const numSamples, int const numBurn,
   intcp_can = samples.intcpSet;
   beta_can = samples.betaSet;
   betaInf_can = samples.betaInfSet;
-  alpha_can = samples.alphaSet;
-  power_can = samples.powerSet;
   trtPre_can = samples.trtPreSet;
   trtAct_can = samples.trtActSet;
 
   updateCovarBeta(covarBeta_can,covar,beta_can,numNodes,numCovar);
   updateCovarBeta(covarBetaInf_can,covar,betaInf_can,numNodes,numCovar);
-  updateAlphaW(alphaW_can,d,cc,alpha_can,power_can,numNodes);
 
   samples.llPt = ll();
 
@@ -638,11 +530,6 @@ double EdgeToEdge2Mcmc::ll(){
             baseProb=baseProbInit;
 
             baseProb += covarBetaInf_can.at(k);
-
-            if(j < k)
-              baseProb -= alphaW_can.at(j*numNodes + k);
-            else
-              baseProb -= alphaW_can.at(k*numNodes + j);
 
             if(trtActHist.at(k*T + i-1)==1)
               baseProb -= trtAct_can;
