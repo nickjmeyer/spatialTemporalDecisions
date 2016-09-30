@@ -9,7 +9,7 @@
 
 
 class Gravity2Samples{
- public:
+public:
   int numSamples;
   int numBurn;
   int numCovar;
@@ -40,13 +40,13 @@ class Gravity2Samples{
 
 
 class Gravity2Mcmc{
- public:
+public:
 
   void load(const std::vector<std::vector<int> > & history,
-	    const std::vector<int> & status,
-	    const FixedData & fD);
+    const std::vector<int> & status,
+    const FixedData & fD);
   void load(const std::vector<std::vector<int> > & history,
-	    const FixedData & fD);
+    const FixedData & fD);
 
   double priorTrtMean;
 
@@ -105,41 +105,41 @@ class Gravity2Mcmc{
 
   //functions
   void sample(int const numSamples, int const numBurn,
-	      const bool saveBurn = false);
+    const bool saveBurn = false);
   void sample(int const numSamples, int const numBurn,
-	      const std::vector<double> & par,
-	      const bool saveBurn = false);
+    const std::vector<double> & par,
+    const bool saveBurn = false);
   double ll();
 
   inline static void updateAlphaW(std::vector<double> & alphaW,
-				  const double & alphaOld,
-				  const double & alphaNew,
-				  const int numNodes);
+    const double & alphaOld,
+    const double & alphaNew,
+    const int numNodes);
   inline static void updateAlphaW(std::vector<double> & alphaW,
-				  const std::vector<double> & d,
-				  const std::vector<double> & cc,
-				  const double & alpha,
-				  const double & powerNew,
-				  const int numNodes);
+    const std::vector<double> & d,
+    const std::vector<double> & cc,
+    const double & alpha,
+    const double & powerNew,
+    const int numNodes);
   inline static void updateCovarBeta(std::vector<double> & covarBeta,
-				     const std::vector<double> & covar,
-				     const std::vector<double> & beta,
-				     const int numNodes,
-				     const int numCovar);
+    const std::vector<double> & covar,
+    const std::vector<double> & beta,
+    const int numNodes,
+    const int numCovar);
   inline static void updateCovarBeta(std::vector<double> & covarBeta,
-				     const std::vector<double> & covar,
-				     const double & betaOld,
-				     const double & betaNew,
-				     const int covarInd,
-				     const int numCovar);
+    const std::vector<double> & covar,
+    const double & betaOld,
+    const double & betaNew,
+    const int covarInd,
+    const int numCovar);
 };
 
 
 
 inline void Gravity2Mcmc::updateAlphaW(std::vector<double> & alphaW,
-				       const double & alphaOld,
-				       const double & alphaNew,
-				       const int numNodes){
+  const double & alphaOld,
+  const double & alphaNew,
+  const int numNodes){
   double scale = alphaNew/alphaOld;
   int i,j;
   for(i = 0; i < numNodes; ++i)
@@ -149,23 +149,23 @@ inline void Gravity2Mcmc::updateAlphaW(std::vector<double> & alphaW,
 
 
 inline void Gravity2Mcmc::updateAlphaW(std::vector<double> & alphaW,
-				       const std::vector<double> & d,
-				       const std::vector<double> & cc,
-				       const double & alpha,
-				       const double & powerNew,
-				       const int numNodes){
+  const std::vector<double> & d,
+  const std::vector<double> & cc,
+  const double & alpha,
+  const double & powerNew,
+  const int numNodes){
   int i,j;
   for(i = 0; i < numNodes; ++i)
     for(j = i; j < numNodes; ++j)
       alphaW.at(i*numNodes + j) = alpha * d.at(i*numNodes + j)/
-	std::pow(cc.at(i*numNodes + j),std::exp(powerNew));
+        std::pow(cc.at(i*numNodes + j),std::exp(powerNew));
 }
 
 inline void Gravity2Mcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					  const std::vector<double> & covar,
-					  const std::vector<double> & beta,
-					  const int numNodes,
-					  const int numCovar){
+  const std::vector<double> & covar,
+  const std::vector<double> & beta,
+  const int numNodes,
+  const int numCovar){
   int i,j;
   double prod;
   for(i = 0; i < numNodes; ++i){
@@ -179,11 +179,11 @@ inline void Gravity2Mcmc::updateCovarBeta(std::vector<double> & covarBeta,
 
 
 inline void Gravity2Mcmc::updateCovarBeta(std::vector<double> & covarBeta,
-					  const std::vector<double> & covar,
-					  const double & betaOld,
-					  const double & betaNew,
-					  const int covarInd,
-					  const int numCovar){
+  const std::vector<double> & covar,
+  const double & betaOld,
+  const double & betaNew,
+  const int covarInd,
+  const int numCovar){
   int i = 0;
   double diff = betaNew - betaOld;
   std::for_each(covarBeta.begin(),covarBeta.end(),
