@@ -119,8 +119,8 @@ std::vector<double> GravitySamples::getPar() const {
 
 
 void GravityMcmc::load(const std::vector<std::vector<int> > & history,
-		       const std::vector<int> & status,
-		       const FixedData & fD){
+  const std::vector<int> & status,
+  const FixedData & fD){
   std::vector<std::vector<int> > all;
   all = history;
   all.push_back(status);
@@ -130,7 +130,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void GravityMcmc::load(const std::vector<std::vector<int> > & history,
-		       const FixedData & fD){
+  const FixedData & fD){
   numNodes=fD.numNodes;
   T=(int)history.size();
   numCovar=fD.numCovar;
@@ -165,7 +165,7 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
     val = 0;
     for(j = 0; j < T; ++j){
       if(infHist.at(i*T + j) == 1) // this should be 1
-	++val;
+        ++val;
       timeInf.at(i*T + j) = val;
     }
   }
@@ -174,21 +174,21 @@ void GravityMcmc::load(const std::vector<std::vector<int> > & history,
 
 
 void GravityMcmc::sample(int const numSamples, int const numBurn,
-			 const bool saveBurn){
+  const bool saveBurn){
   std::vector<double> beta (numCovar,0.0);
   std::vector<double> par = {-3.0, // intcp
-			     0.1, // alpha
-			     0.0, // power
-			     0.0, // trtAct
-			     0.0}; // trtPre
+                             0.1, // alpha
+                             0.0, // power
+                             0.0, // trtAct
+                             0.0}; // trtPre
   par.insert(par.begin()+1,beta.begin(),beta.end());
   sample(numSamples,numBurn,par,saveBurn);
 }
 
 
 void GravityMcmc::sample(int const numSamples, int const numBurn,
-			 const std::vector<double> & par,
-			 const bool saveBurn){
+  const std::vector<double> & par,
+  const bool saveBurn){
   samples.numSamples = numSamples - numBurn;
   samples.numBurn = numBurn;
 
@@ -321,26 +321,26 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
       beta_can.at(j)=upd;
 
       updateCovarBeta(covarBeta_can,covar,
-		      beta_cur.at(j),beta_can.at(j),
-		      j,numCovar);
+        beta_cur.at(j),beta_can.at(j),
+        j,numCovar);
 
       // get new likelihood
       ll_can=ll();
 
       R=ll_can + (-.5/beta_var)*std::pow(beta_can.at(j) - beta_mean,2.0)
-	- ll_cur - (-.5/beta_var)*std::pow(beta_cur.at(j) - beta_mean,2.0);
+        - ll_cur - (-.5/beta_var)*std::pow(beta_cur.at(j) - beta_mean,2.0);
 
       // accept?
       if(std::log(njm::runif01()) < R){
-	++acc.at(j);
-	beta_cur.at(j)=beta_can.at(j);
-	ll_cur=ll_can;
-	covarBeta_cur=covarBeta_can;
+        ++acc.at(j);
+        beta_cur.at(j)=beta_can.at(j);
+        ll_cur=ll_can;
+        covarBeta_cur=covarBeta_can;
       }
       else{
-	beta_can.at(j)=beta_cur.at(j);
-	covarBeta_can=covarBeta_cur;
-	ll_can=ll_cur;
+        beta_can.at(j)=beta_cur.at(j);
+        covarBeta_can=covarBeta_cur;
+        ll_can=ll_cur;
       }
     }
 
@@ -465,26 +465,26 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
       int len=int(mh.size());
       double accRatio;
       for(j = 0; j < len; ++j){
-	if(att.at(j) > 50){
-	  accRatio=((double)acc.at(j))/((double)att.at(j));
-	  if(accRatio < .3)
-	    mh.at(j)*=.8;
-	  else if(accRatio > .6)
-	    mh.at(j)*=1.2;
+        if(att.at(j) > 50){
+          accRatio=((double)acc.at(j))/((double)att.at(j));
+          if(accRatio < .3)
+            mh.at(j)*=.8;
+          else if(accRatio > .6)
+            mh.at(j)*=1.2;
 
-	  acc.at(j)=0;
-	  att.at(j)=0;
-	}
+          acc.at(j)=0;
+          att.at(j)=0;
+        }
       }
       if(saveBurn){
-	samples.intcpBurn.push_back(intcp_cur);
-	samples.betaBurn.insert(samples.betaBurn.end(),
-				beta_cur.begin(),
-				beta_cur.end());
-	samples.alphaBurn.push_back(alpha_cur);
-	samples.powerBurn.push_back(power_cur);
-	samples.trtPreBurn.push_back(trtPre_cur);
-	samples.trtActBurn.push_back(trtAct_cur);
+        samples.intcpBurn.push_back(intcp_cur);
+        samples.betaBurn.insert(samples.betaBurn.end(),
+          beta_cur.begin(),
+          beta_cur.end());
+        samples.alphaBurn.push_back(alpha_cur);
+        samples.powerBurn.push_back(power_cur);
+        samples.trtPreBurn.push_back(trtPre_cur);
+        samples.trtActBurn.push_back(trtAct_cur);
       }
     }
     else if(i%thin==0){
@@ -515,8 +515,8 @@ void GravityMcmc::sample(int const numSamples, int const numBurn,
   samples.llPt = ll();
 
   samples.Dbar=-2.0*std::accumulate(samples.ll.begin(),
-				    samples.ll.end(),
-				    0.0)/double(samples.numSamples);
+    samples.ll.end(),
+    0.0)/double(samples.numSamples);
   samples.pD=samples.Dbar - -2.0*samples.llPt;
   samples.DIC=samples.pD + samples.Dbar;
 
@@ -535,43 +535,43 @@ double GravityMcmc::ll(){
   for(i=1; i<T; i++){// loop over time interval that has changed
     for(j=0; j<numNodes; j++){
       if(infHist.at(j*T + i-1)==0){// if county is susceptible get infProb
-	wontProb=1.0;
-	// set a base number to decrease floating point operations
-	if(trtPreHist.at(j*T + i-1)==0)
-	  baseProbInit=intcp_can+covarBeta_can.at(j);
-	else
-	  baseProbInit=intcp_can+covarBeta_can.at(j) - trtPre_can;
+        wontProb=1.0;
+        // set a base number to decrease floating point operations
+        if(trtPreHist.at(j*T + i-1)==0)
+          baseProbInit=intcp_can+covarBeta_can.at(j);
+        else
+          baseProbInit=intcp_can+covarBeta_can.at(j) - trtPre_can;
 
-	for(k=0; k<numNodes; k++){
-	  // if county is infected it affects the infProb
-	  if(infHist.at(k*T + i-1)==1){
-	    // calculate infProb
-	    baseProb=baseProbInit;
-	    if(j < k)
-	      baseProb -= alphaW_can.at(j*numNodes + k);
-	    else
-	      baseProb -= alphaW_can.at(k*numNodes + j);
+        for(k=0; k<numNodes; k++){
+          // if county is infected it affects the infProb
+          if(infHist.at(k*T + i-1)==1){
+            // calculate infProb
+            baseProb=baseProbInit;
+            if(j < k)
+              baseProb -= alphaW_can.at(j*numNodes + k);
+            else
+              baseProb -= alphaW_can.at(k*numNodes + j);
 
-	    if(trtActHist.at(k*T + i-1)==1)
-	      baseProb -= trtAct_can;
+            if(trtActHist.at(k*T + i-1)==1)
+              baseProb -= trtAct_can;
 
-	    expProb=std::exp(baseProb);
+            expProb=std::exp(baseProb);
 
-	    wontProb*=1.0/(1.0+expProb);
-	  }
-	}
+            wontProb*=1.0/(1.0+expProb);
+          }
+        }
 
-	prob=1.0-wontProb;
+        prob=1.0-wontProb;
 
-	if(!(prob > 0.0))
-	  prob=std::exp(-30.0);
-	else if(!(prob < 1.0))
-	  prob=1.0 - std::exp(-30.0);
+        if(!(prob > 0.0))
+          prob=std::exp(-30.0);
+        else if(!(prob < 1.0))
+          prob=1.0 - std::exp(-30.0);
 
-	if(infHist.at(j*T + i)==0)
-	  llVal+=std::log(1-prob);
-	else
-	  llVal+=std::log(prob);
+        if(infHist.at(j*T + i)==0)
+          llVal+=std::log(1-prob);
+        else
+          llVal+=std::log(prob);
       }
     }
   }
