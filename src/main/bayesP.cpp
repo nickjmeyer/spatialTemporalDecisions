@@ -107,12 +107,22 @@ template <class M>
 void runBayesP(const std::string & file, const int obs,
   const int numSamples,const int numBurn,
   const int numStats,
-  const bool save){
+  const bool save,
+  const bool edgeToEdge){
+
+  std::string edgeExt;
+  if(edgeToEdge) {
+    edgeExt = "edge";
+  } else {
+    edgeExt = "spatial";
+  }
+
   njm::resetSeed(0);
 
   typedef System<M,M> S;
 
   S sObs("obsData.txt");
+  sObs.setEdgeToEdge(edgeToEdge);
 
   std::vector<std::vector<int> > h;
   h = sObs.sD.history;
@@ -128,10 +138,10 @@ void runBayesP(const std::string & file, const int obs,
                                     "max_dist_from_start"};
 
   if(obs){
-    njm::toFile(names,njm::sett.datExt("obsStats_",".txt"),
+    njm::toFile(names,njm::sett.datExt("obsStats_"+edgeExt+"_",".txt"),
   		std::ios_base::out);
     njm::toFile(getStats(h,sObs.sD,sObs.fD),
-  		njm::sett.datExt("obsStats_",".txt"));
+      njm::sett.datExt("obsStats_"+edgeExt+"_",".txt"));
   }
 
   sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
@@ -148,6 +158,7 @@ void runBayesP(const std::string & file, const int obs,
     std::vector< std::vector<double> > stats;
 
     S s;
+    s.setEdgeToEdge(edgeToEdge);
     Starts starts("startingLocations.txt");
     s.modelGen_r = sObs.modelGen_r;
     s.modelEst_r = s.modelGen_r;
@@ -170,10 +181,10 @@ void runBayesP(const std::string & file, const int obs,
       stats.push_back(getStats(h,s.sD,s.fD));
     }
 
-    njm::toFile(names,njm::sett.datExt("sampStats_mean_"+file+"_",".txt"),
-      std::ios_base::out);
+    njm::toFile(names,njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",
+        ".txt"),std::ios_base::out);
     njm::toFile(njm::toString(stats,"\n",""),
-      njm::sett.datExt("sampStats_mean_"+file+"_",".txt"));
+      njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",".txt"));
   }
 
 
@@ -223,13 +234,14 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
 
     njm::toFile(njm::toString(sObs.modelGen_r.getPar()," ","\n"),
-      njm::sett.datExt("sampStats_"+file+"_MLE_",".txt"));
+      njm::sett.datExt("sampStats_"+file+"_MLE_"+edgeExt+"_",".txt"));
 
     std::vector<double> par;
 
     std::vector< std::vector<double> > stats;
 
     S s;
+    s.setEdgeToEdge(edgeToEdge);
     Starts starts("startingLocations.txt");
     s.modelGen_r = sObs.modelGen_r;
     s.modelGen_r.setFisher(sObs.sD,sObs.tD,sObs.fD,sObs.dD);
@@ -252,10 +264,10 @@ void runBayesP(const std::string & file, const int obs,
       stats.push_back(getStats(h,s.sD,s.fD));
     }
 
-    njm::toFile(names,njm::sett.datExt("sampStats_mle_"+file+"_",".txt"),
-      std::ios_base::out);
+    njm::toFile(names,njm::sett.datExt("sampStats_mle_"+file+"_"+edgeExt+"_",
+        ".txt"),std::ios_base::out);
     njm::toFile(njm::toString(stats,"\n",""),
-      njm::sett.datExt("sampStats_mle_"+file+"_",".txt"));
+      njm::sett.datExt("sampStats_mle_"+file+"_"+edgeExt+"_",".txt"));
   }
 
 
@@ -267,7 +279,7 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.mcmc.samples.setPar(i);
     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
         " ","\n"),
-  		njm::sett.datExt("sampStats_"+file+"_param_",".txt"),
+      njm::sett.datExt("sampStats_"+file+"_param_"+edgeExt+"_",".txt"),
   		std::ios_base::app);
   }
 
@@ -275,39 +287,39 @@ void runBayesP(const std::string & file, const int obs,
     sObs.modelGen_r.mcmc.samples.setPar(i,true);
     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
         " ","\n"),
-  		njm::sett.datExt("sampStats_"+file+"_paramBurn_",".txt"),
+      njm::sett.datExt("sampStats_"+file+"_paramBurn_"+edgeExt+"_",".txt"),
   		std::ios_base::app);
   }
 
   // posterior mode
   sObs.modelGen_r.mcmc.samples.setMode();
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
-    njm::sett.datExt("sampStats_"+file+"_paramMode_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_paramMode_"+edgeExt+"_",".txt"));
 
   // posterior mean
   sObs.modelGen_r.mcmc.samples.setMean();
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
-    njm::sett.datExt("sampStats_"+file+"_paramMean_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_paramMean_"+edgeExt+"_",".txt"));
 
   // likelihood
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
-    njm::sett.datExt("sampStats_"+file+"_ll_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_ll_"+edgeExt+"_",".txt"));
 
   // likelihood at mean
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.llPt,"\n"),
-    njm::sett.datExt("sampStats_"+file+"_llPt_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_llPt_"+edgeExt+"_",".txt"));
 
   // pD
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.pD,"\n"),
-    njm::sett.datExt("sampStats_"+file+"_pD_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_pD_"+edgeExt+"_",".txt"));
 
   // Dbar
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.Dbar,"\n"),
-    njm::sett.datExt("sampStats_"+file+"_Dbar_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_Dbar_"+edgeExt+"_",".txt"));
 
   // DIC
   njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.DIC,"\n"),
-    njm::sett.datExt("sampStats_"+file+"_DIC_",".txt"));
+    njm::sett.datExt("sampStats_"+file+"_DIC_"+edgeExt+"_",".txt"));
 
 }
 
@@ -337,18 +349,25 @@ int main(int argc, char ** argv){
 #pragma omp parallel sections                   \
   shared(numSamples,numBurn,numStats)
     {
-#pragma omp section
-      {
-        runBayesP<ModelGravityGDist
-                  >("gravity",1,
-                    numSamples,numBurn,numStats,save);
-      }
+// #pragma omp section
+//       {
+//         runBayesP<ModelGravityGDist
+//                   >("gravity",1,
+//                     numSamples,numBurn,numStats,save,false);
+//       }
 
 #pragma omp section
       {
         runBayesP<Model2GravityGDist
-                  >("gravity2",0,
-                    numSamples,numBurn,numStats,save);
+                  >("gravity2",1,
+                    numSamples,numBurn,numStats,save,false);
+      }
+
+#pragma omp section
+      {
+        runBayesP<Model2EdgeToEdge
+                  >("edgeToEdge2",0,
+                    numSamples,numBurn,numStats,save,true);
       }
 
 // #pragma omp section
