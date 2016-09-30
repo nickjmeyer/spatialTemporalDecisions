@@ -32,13 +32,13 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
   s.modelGen_r.save();
   s = S("obsData.txt");
-  s.setEdgeToEdge(FLAGS_edgeToEdge)
+  s.setEdgeToEdge(FLAGS_edgeToEdge);
 
   s.modelGen_r.setType(MLE);
   s.modelGen_r.fit(s.sD,s.tD,s.fD,s.dD,true);
   s.modelGen_r.save();
   s = S("obsData.txt");
-  s.setEdgeToEdge(FLAGS_edgeToEdge)
+  s.setEdgeToEdge(FLAGS_edgeToEdge);
 
   double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
@@ -71,7 +71,7 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
     s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
     s.modelGen_r.save();
     s = S("obsData.txt");
-    s.setEdgeToEdge(FLAGS_edgeToEdge)
+    s.setEdgeToEdge(FLAGS_edgeToEdge);
 
     // std::cout << "par: " << njm::toString(par," ","\n");
     // par = s.modelGen.getPar({"trtAct","trtPre"});
