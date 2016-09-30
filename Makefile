@@ -8,7 +8,7 @@ BUILDDIR:=.build_release
 endif
 
 
-BLACKLIST:=bayesP obsDataStats test3 test bayesPsamplesBR test2 tuneSp \
+BLACKLIST:=obsDataStats test3 test bayesPsamplesBR test2 tuneSp \
 toyFeatures2Multi getCov getDist isConnected mergeClusters sample \
 toyFeatures0 toyFeatures1 toyFeatures2 toyFeatures3 toyFeatures4 \
 toyFeatures6 toyFeatures7 wnsFeatures0 wnsFeatures1 wnsFeatures2
@@ -21,7 +21,8 @@ runM1Mles \
 runM1MlesMiss \
 runM1MlesWns \
 runM1MlesWnsMiss \
-copyParams
+copyParams \
+bayesP
 
 CPP_SRC:=$(wildcard src/main/*.cpp)
 CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
