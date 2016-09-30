@@ -59,6 +59,7 @@ public:
   std::vector<double> timeInf;
 
   // information about each county
+  std::vector<int> net;
   std::vector<double> d;
   std::vector<double> cc;
   std::vector<double> covar;

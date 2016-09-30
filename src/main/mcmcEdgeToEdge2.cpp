@@ -151,6 +151,7 @@ void EdgeToEdge2Mcmc::load(const std::vector<std::vector<int> > & history,
   T=(int)history.size();
   numCovar=fD.numCovar;
   samples.numCovar = numCovar;
+  net = fD.network;
 
   priorTrtMean = fD.priorTrtMean;
 
