@@ -12,6 +12,7 @@
 #include "paramBeta2.hpp"
 #include "paramGravPowGDist.hpp"
 #include "paramTrt.hpp"
+#include "mcmcEdgeToEdge2.hpp"
 
 
 class Model2EdgeToEdge : public ModelBase {
@@ -22,6 +23,8 @@ class Model2EdgeToEdge : public ModelBase {
   Model2EdgeToEdge(const Model2EdgeToEdge & m);
 
   virtual Model2EdgeToEdge & operator=(const Model2EdgeToEdge & m);
+
+	EdgeToEdge2Mcmc mcmc;
 };
 
 
