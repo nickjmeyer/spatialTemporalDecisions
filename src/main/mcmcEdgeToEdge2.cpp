@@ -524,8 +524,9 @@ double EdgeToEdge2Mcmc::ll(){
           baseProbInit=intcp_can+covarBeta_can.at(j) - trtPre_can;
 
         for(k=0; k<numNodes; k++){
-          // if county is infected it affects the infProb
-          if(infHist.at(k*T + i-1)==1){
+          // if county is infected it affects the infProb only if it
+          // is a neighbor
+          if(infHist.at(k*T + i-1)==1 && net.at(j*numNodes + k)){
             // calculate infProb
             baseProb=baseProbInit;
 
