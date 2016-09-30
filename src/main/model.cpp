@@ -23,11 +23,7 @@ ModelBase::ModelBase(const std::string & str,
   ready = 0;
   pars = newPars;
 
-  numPars = 0;
-  std::for_each(pars.begin(),pars.end(),
-    [this](ParamBase * p){
-      numPars += p->size();
-    });
+  numPars = -1;
 }
 
 
@@ -35,6 +31,12 @@ void ModelBase::init(const FixedData & fD) {
   std::for_each(pars.begin(),pars.end(),
     [&fD](ParamBase * p){
       p->init(fD);
+    });
+
+  numPars = 0;
+  std::for_each(pars.begin(),pars.end(),
+    [this](ParamBase * p){
+      numPars += p->size();
     });
 }
 
