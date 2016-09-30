@@ -12,8 +12,8 @@ DRY=--nodryRun
 EDGE_TO_EDGE="--edgeToEdge ${DRY}"
 SPATIAL="--noedgeToEdge ${DRY}"
 
-${EXEC_PATH}/tuneGenWNS --srcDir ${PROJ_ROOT}/data/wns ${SPATIAL} ${DRY}
-${EXEC_PATH}/tuneGenWNS --srcDir ${PROJ_ROOT}/data/wns --edgeToEdge ${DRY}
+${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${EDGE_TO_EDGE}
 
 ########################################
 ## copy params
@@ -52,8 +52,7 @@ ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree1000 \
 ## tune generative models
 
 ## wns
-${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${SPATIAL}
-${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${EDGE_TO_EDGE}
+## these are tuned above before copying the parameters
 
 ## spatial spread
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp100 ${SPATIAL}
