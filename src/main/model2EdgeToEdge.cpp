@@ -38,6 +38,7 @@ Model2EdgeToEdge::Model2EdgeToEdge(const Model2EdgeToEdge & m){
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
   fixSample = m.fixSample;
+  mcmc = m.mcmc;
   setEdgeToEdge(m.getEdgeToEdge());
 }
 
