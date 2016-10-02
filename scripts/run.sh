@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## quit on error
+set -e
+
 PROJ_ROOT=.
 
 EXEC_PATH=${PROJ_ROOT}/build/main
