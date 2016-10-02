@@ -155,7 +155,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         << "rank: " << infRanks(node0) << std::endl
         << "infFeat: " << f.infFeat.row(j)
         << "weights: " << tp.weights.t()
-        << "jitter: " << jitter.t();
+        << "jitter: " << jitter.t()
+        << "featStddev: " << featStddev.diag().t()
+        << "calcjitter: " << calcJitter();
       if(tD.a.at(sD.infected.at(node0)))
 				sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
@@ -172,7 +174,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         << "rank: " << notRanks(node0) << std::endl
         << "notFeat: " << f.notFeat.row(j)
         << "weights: " << tp.weights.t()
-        << "jitter: " << jitter.t();
+        << "jitter: " << jitter.t()
+        << "featStddev: " << featStddev.diag().t()
+        << "calcjitter: " << calcJitter();
       if(tD.p.at(sD.notInfec.at(node0)))
 				sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
