@@ -209,11 +209,11 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=selInfected.top().second;
-      if(tD.a.at(sD.Infected.at(node0)) == 1) {
+      if(tD.a.at(sD.infected.at(node0)) == 1) {
         std::cout << "inf ranks:" << std::endl
                   << infRanks << std::endl
                   << "***********************" << std::endl;
-        CHECK_EQ(tD.a.at(sD.Infected.at(node0)),0);
+        CHECK_EQ(tD.a.at(sD.infected.at(node0)),0);
       }
       tD.a.at(sD.infected.at(node0)) = 1;
       selInfected.pop();
