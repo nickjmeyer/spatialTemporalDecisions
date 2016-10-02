@@ -1,2 +1,2 @@
 #!/bin/bash
-./scripts/run.sh | tee >(sed 's/.*\r//'> run.log)
+./scripts/run.sh 2>&1 | tee >(sed 's/.*\r//'> run.log)
