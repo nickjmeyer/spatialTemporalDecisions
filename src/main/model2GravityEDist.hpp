@@ -23,6 +23,9 @@ class Model2GravityEDist : public ModelBase {
   Model2GravityEDist(const Model2GravityEDist & m);
 
   virtual Model2GravityEDist & operator=(const Model2GravityEDist & m);
+
+
+  Gravity2Mcmc mcmc;
 };
 
 

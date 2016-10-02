@@ -171,7 +171,7 @@ void Gravity2Mcmc::load(const std::vector<std::vector<int> > & history,
   infHist.resize(numNodes*T);
   trtPreHist.resize(numNodes*T);
   trtActHist.resize(numNodes*T);
-  d = fD.gDist;
+  d = fD.eDist;
   cc.resize(numNodes*numNodes);
   covar = fD.covar;
   timeInf.resize(numNodes*T);

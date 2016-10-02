@@ -358,7 +358,7 @@ int main(int argc, char ** argv){
 
 #pragma omp section
       {
-        runBayesP<Model2GravityGDist
+        runBayesP<Model2GravityEDist
                   >("gravity2",1,
                     numSamples,numBurn,numStats,save,false);
       }

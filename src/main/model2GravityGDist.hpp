@@ -12,8 +12,6 @@
 #include "paramBeta2.hpp"
 #include "paramGravityGDist.hpp"
 #include "paramTrt.hpp"
-#include "mcmcGravity2.hpp"
-
 
 class Model2GravityGDist : public ModelBase {
  protected:
@@ -23,8 +21,6 @@ class Model2GravityGDist : public ModelBase {
   Model2GravityGDist(const Model2GravityGDist & m);
 
   virtual Model2GravityGDist & operator=(const Model2GravityGDist & m);
-
-  Gravity2Mcmc mcmc;
 };
 
 

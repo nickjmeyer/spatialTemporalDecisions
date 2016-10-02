@@ -38,7 +38,6 @@ Model2GravityGDist::Model2GravityGDist(const Model2GravityGDist & m){
   numInfected = m.numInfected;
   numNotInfec = m.numNotInfec;
   fitType = m.fitType;
-  mcmc = m.mcmc;
   fixSample = m.fixSample;
   setEdgeToEdge(m.getEdgeToEdge());
 }
