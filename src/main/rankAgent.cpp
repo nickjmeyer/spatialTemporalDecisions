@@ -151,7 +151,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       node0 = shufInfected.top().second;
       shufInfected.pop();
       CHECK(std::isfinite(infRanks(node0)))
-        << "infFeat: " << f.infFeat.row(j);
+        << std::endl
+        << "infFeat: [" << f.infFeat.row(j) << "]" << std::endl
+        << "weights: [" << tp.weights.t() << "]" << std::endl;
       if(tD.a.at(sD.infected.at(node0)))
 				sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
@@ -164,7 +166,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
       node0 = shufNotInfec.top().second;
       shufNotInfec.pop();
       CHECK(std::isfinite(notRanks(node0)))
-        << "notFeat: " << f.notFeat.row(j);
+        << std::endl
+        << "notFeat: [" << f.notFeat.row(j) << "]" << std::endl
+        << "weights: [" << tp.weights.t() << "]" << std::endl;
       if(tD.p.at(sD.notInfec.at(node0)))
 				sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
 						::lowest(),node0));
