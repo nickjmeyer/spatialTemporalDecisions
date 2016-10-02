@@ -150,26 +150,22 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     for(j=0; j<sD.numInfected; j++){
       node0 = shufInfected.top().second;
       shufInfected.pop();
-      if(!tD.a.at(sD.infected.at(node0)))
+      if(tD.a.at(sD.infected.at(node0)))
+				sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
+						::lowest(),node0));
+      else
 				sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
-      // if(tD.a.at(sD.infected.at(node0)))
-			// 	sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
-			// 			::lowest(),node0));
-      // else
-			// 	sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
     }
 
 
     for(j=0; j<sD.numNotInfec; j++){
       node0 = shufNotInfec.top().second;
       shufNotInfec.pop();
-      if(!tD.p.at(sD.notInfec.at(node0)))
+      if(tD.p.at(sD.notInfec.at(node0)))
+				sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
+						::lowest(),node0));
+      else
 				sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
-      // if(tD.p.at(sD.notInfec.at(node0)))
-			// 	sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
-			// 			::lowest(),node0));
-      // else
-			// 	sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
     }
 
 
