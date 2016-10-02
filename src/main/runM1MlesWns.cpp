@@ -54,6 +54,8 @@ int main(int argc, char ** argv){
             ra.tp.jitterScale = -1;
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
 
+            ma.setEdgeToEdge(FLAGS_edgeToEdge);
+
             SPO spo;
             spo.tp.fixSample = 1;
 
@@ -125,6 +127,8 @@ int main(int argc, char ** argv){
 
             ra.tp.jitterScale = -1;
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
+
+            ma.setEdgeToEdge(FLAGS_edgeToEdge);
 
             SPO spo;
             spo.tp.fixSample = 1;

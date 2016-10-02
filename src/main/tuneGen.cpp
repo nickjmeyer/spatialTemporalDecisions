@@ -237,6 +237,7 @@ int main(int argc, char ** argv){
       RM rm;
       RR rr;
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
 
       njm::message("Tuning Intercept");
@@ -316,6 +317,7 @@ int main(int argc, char ** argv){
       RM rm;
       RR rr;
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
 
       njm::message("Tuning Intercept");

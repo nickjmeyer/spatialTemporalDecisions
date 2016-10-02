@@ -25,6 +25,11 @@ class MyopicAgent : public BaseAgent<M> {
   int numAct;
   int numPre;
 
+  bool edgeToEdge;
+
+  bool getEdgeToEdge();
+  void setEdgeToEdge(const bool edgeToEdge);
+
   static std::string name;
 };
 

@@ -149,6 +149,7 @@ int main(int argc, char ** argv){
       RM rm;
       RR rr;
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
 
       double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
@@ -224,6 +225,7 @@ int main(int argc, char ** argv){
       RM rm;
       RR rr;
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
+      ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
 
       double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).smean();
