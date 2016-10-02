@@ -209,7 +209,12 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=selInfected.top().second;
-      CHECK_EQ(tD.a.at(sD.infected.at(node0)),0);
+      if(tD.a.at(sD.Infected.at(node0)) == 1) {
+        std::cout << "inf ranks:" << std::endl
+                  << infRanks << std::endl
+                  << "***********************" << std::endl;
+        CHECK_EQ(tD.a.at(sD.Infected.at(node0)),0);
+      }
       tD.a.at(sD.infected.at(node0)) = 1;
       selInfected.pop();
     }
@@ -217,7 +222,12 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // add preventative treatment
     for(j = 0; j < addPre && cN < numPre; cN++,j++){
       node0=selNotInfec.top().second;
-      CHECK_EQ(tD.a.at(sD.notInfec.at(node0)),0);
+      if(tD.p.at(sD.notInfec.at(node0)) == 1) {
+        std::cout << "not ranks:" << std::endl
+                  << notRanks << std::endl
+                  << "***********************" << std::endl;
+        CHECK_EQ(tD.p.at(sD.notInfec.at(node0)),0);
+      }
       tD.p.at(sD.notInfec.at(node0)) = 1;
       selNotInfec.pop();
     }
@@ -290,7 +300,7 @@ std::vector<double> RankTuneParam::getPar() const {
   std::vector<double> par;
   par = arma::conv_to< std::vector<double> >::from(weights);
   // par.push_back(sigma);
-  return par;
+return par;
 }
 
 
