@@ -23,19 +23,9 @@ double TuneGenMA(S & s, const int numReps, const Starts & starts){
   njm::message("Goal: " + njm::toString(goal,""));
   double tol = 1e-3;
 
-  std::vector<double> zeroPar(s.modelGen_r.numPars,0.0);
-  s.modelGen_r.putPar(zeroPar.begin());
   double trt = 1.0;
 
-
-
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-  s.modelGen_r.save();
-  s = S("obsData.txt");
-  s.setEdgeToEdge(FLAGS_edgeToEdge);
-
-  s.modelGen_r.setType(MLE);
-  s.modelGen_r.fit(s.sD,s.tD,s.fD,s.dD,true);
   s.modelGen_r.save();
   s = S("obsData.txt");
   s.setEdgeToEdge(FLAGS_edgeToEdge);
