@@ -127,7 +127,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 				featStddev.insert_rows(0,f.infFeat.row(j));
     }
     featStddev = arma::cov(featStddev);
-    jitter = arma::sqrt(featStddev.diag())*calcJitter();
+    // need to add abs() since values close to zero can sometimes
+    // result in small negative numbers due to instability
+    jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
 
     for(j = 0; j < f.numFeatures; j++)
       jitter(j) *= njm::rnorm01();
