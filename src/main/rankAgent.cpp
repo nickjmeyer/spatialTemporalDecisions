@@ -91,7 +91,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   if(sD.notInfec.empty())
     return;
 
-	CHECK_EQ(getEdgeToEdge(),f.tp.getEdgeToEdge());
+  CHECK_EQ(getEdgeToEdge(),f.tp.getEdgeToEdge());
 
   // number of each type of treatment to give
   numPre = getNumPre(sD,tD,fD,dD);
@@ -209,7 +209,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // add active treatment
     for(j = 0; j < addAct && cI < numAct; cI++,j++){
       node0=selInfected.top().second;
-			CHECK_EQ(tD.a.at(sD.infected.at(node0),0);
+      CHECK_EQ(tD.a.at(sD.infected.at(node0)),0);
       tD.a.at(sD.infected.at(node0)) = 1;
       selInfected.pop();
     }
@@ -217,7 +217,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // add preventative treatment
     for(j = 0; j < addPre && cN < numPre; cN++,j++){
       node0=selNotInfec.top().second;
-			CHECK_EQ(tD.a.at(sD.notInfect.at(node0),0);
+      CHECK_EQ(tD.a.at(sD.notInfec.at(node0)),0);
       tD.p.at(sD.notInfec.at(node0)) = 1;
       selNotInfec.pop();
     }
@@ -235,23 +235,23 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   for(i = 0; i < fD.numNodes; i++){
     if(tD.p.at(i) != 1 && tD.p.at(i) != 0){
       std::cout << "Prevenative treatment not 1 or 0"
-								<< ": " << tD.p.at(i)
-								<< std::endl;
+                << ": " << tD.p.at(i)
+                << std::endl;
       throw(1);
     }
     else if(tD.a.at(i) != 1 && tD.a.at(i) != 0){
       std::cout << "Active treatment not 1 or 0"
-								<< std::endl;
+                << std::endl;
       throw(1);
     }
     else if(tD.a.at(i) == 1 && sD.status.at(i) < 2){
       std::cout << "Not infected receiving active treatment"
-								<< std::endl;
+                << std::endl;
       throw(1);
     }
     else if(tD.p.at(i) == 1 && sD.status.at(i) >= 2){
       std::cout << "Infected receiving preventative treament"
-								<< std::endl;
+                << std::endl;
       throw(1);
     }
     else if(tD.a.at(i) == 1)
@@ -263,22 +263,22 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
   // check if total number of treatments are correct
   if(totAct != numAct){
     std::cout << "Not correct amount of active treatments."
-							<< std::endl
-							<< "Should be " << numAct << " but is " << totAct << "."
-							<< std::endl
-							<< "Number of infected nodes is " << sD.numInfected
-							<< "(" << sD.infected.size() << ")"
-							<< std::endl;
+              << std::endl
+              << "Should be " << numAct << " but is " << totAct << "."
+              << std::endl
+              << "Number of infected nodes is " << sD.numInfected
+              << "(" << sD.infected.size() << ")"
+              << std::endl;
     throw(1);
   }
   else if(totPre != numPre){
     std::cout << "Not correct amount of preventative treatments."
-							<< std::endl
-							<< "Should be " << numPre << " but is " << totPre << "."
-							<< std::endl
-							<< "Number of not infected nodes is " << sD.numNotInfec
-							<< "(" << sD.notInfec.size() << ")"
-							<< std::endl;
+              << std::endl
+              << "Should be " << numPre << " but is " << totPre << "."
+              << std::endl
+              << "Number of not infected nodes is " << sD.numNotInfec
+              << "(" << sD.notInfec.size() << ")"
+              << std::endl;
     throw(1);
   }
 #endif
