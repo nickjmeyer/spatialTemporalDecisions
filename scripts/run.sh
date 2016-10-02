@@ -22,9 +22,9 @@ ${EXEC_PATH}/tuneGenWNS --srcDir ${WNS} ${EDGE_TO_EDGE}
 ## copy params
 
 ## spatial spread
-${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp100 ${SPATIAL}
-${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp500 ${SPATIAL}
-${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp1000 ${SPATIAL}
+# ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp100 ${SPATIAL}
+# ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp500 ${SPATIAL}
+# ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp1000 ${SPATIAL}
 
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/grid100 ${SPATIAL}
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/grid500 ${SPATIAL}
@@ -58,9 +58,9 @@ ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree1000 \
 ## these are tuned above before copying the parameters
 
 ## spatial spread
-${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp100 ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp500 ${SPATIAL}
-${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp1000 ${SPATIAL}
+# ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp100 ${SPATIAL}
+# ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp500 ${SPATIAL}
+# ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp1000 ${SPATIAL}
 
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid100 ${SPATIAL}
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/grid500 ${SPATIAL}
@@ -91,9 +91,9 @@ ${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
 
 ## spatial spread
-${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp500 ${SPATIAL}
-${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp1000 ${SPATIAL}
+# ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
+# ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp500 ${SPATIAL}
+# ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp1000 ${SPATIAL}
 
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid100 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/grid500 ${SPATIAL}
@@ -124,9 +124,9 @@ ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
 
 ## spatial spread
-${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp100 ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp500 ${SPATIAL}
-${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp1000 ${SPATIAL}
+# ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp100 ${SPATIAL}
+# ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp500 ${SPATIAL}
+# ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp1000 ${SPATIAL}
 
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid100 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid500 ${SPATIAL}
