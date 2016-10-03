@@ -1,6 +1,10 @@
 #include <glog/logging.h>
 #include "rankAgent.hpp"
 
+#include <mutex>
+
+std::mutex global_stream_mutex;
+
 
 template class RankAgent<ToyFeatures5<ModelGravityGDist>,
 												 ModelGravityGDist>;
@@ -138,12 +142,15 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
           zeroStddev = true;
         }
       }
+
+      global_stream_mutex.lock();
       CHECK(!zeroStddev)
         << std::endl
         << "inf feat: " << std::endl
         << f.infFeat << std::endl
         << "not feat: " << std::endl
         << f.notFeat << std::endl;
+      global_stream_mutex.unlock();
     }
 
     for(j = 0; j < f.numFeatures; j++)
