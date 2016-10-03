@@ -169,14 +169,16 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
       notFeat(i,featNum) = modProbTot*notFeat(i,0);
     } else {
       double distWeightProb = 0;
+      double sumWeight = 0;
       for (int j = 0; j < sD.numNotInfec; ++j) {
         // probability i infects j, weighted by distance
         const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
         const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
               fD.numNodes)));
-        distWeightProb += fD.expDistWeight.at(index) * prob;
+        const double weight = fD.expDistWeight.at(index);
+        distWeightProb += weight * prob;
       }
-      notFeat(i,featNum) = distWeightProb * notFeat(i,0);
+      notFeat(i,featNum) = notFeat(i,0) * (distWeightProb / sumWeight) ;
     }
   }
 
