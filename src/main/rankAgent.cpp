@@ -138,7 +138,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     {
       bool zeroStddev = false;
       for (int featInd = 0; featInd < f.numFeatures; ++featInd) {
-        if(featStddev.diag()(featInd) < 0.01) {
+        if(featStddev.diag()(featInd) < 1e-8) {
           zeroStddev = true;
         }
       }
