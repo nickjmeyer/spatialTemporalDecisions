@@ -44,15 +44,39 @@ void WnsFeatures3<M>::preCompData(const SimData & sD,
   m.setFill(sD,tD,fD,dD);
   m.setQuick(sD,tD,fD,dD);
 
-  // extract  connectiviy for not infected
+  // extract centrality for not infected
   int i;
   centralityNotInfec.resize(sD.numNotInfec);
   if(tp.getEdgeToEdge()) {
-    for(i=0; i<sD.numNotInfec; i++)
-      centralityNotInfec(i) = fD.subGraph.at(sD.notInfec.at(i));
+    const double minCentrality = * std::min_element(
+      fD.subGraph.begin(),fD.subGraph.end());
+    const double maxCentrality = * std::max_element(
+      fD.subGraph.begin(),fD.subGraph.end());
+    const double rngCentrality = maxCentrality - minCentrality;
+
+    CHECK_GT(rngCentrality,1e-3);
+
+    for(i=0; i<sD.numNotInfec; i++) {
+      double val = fD.subGraph.at(sD.notInfec.at(i));
+      val -= minCentrality;
+      val /= rngCentrality;
+      centralityNotInfec(i) = val;
+    }
   } else {
-    for(i=0; i<sD.numNotInfec; i++)
-      centralityNotInfec(i) = fD.hpdd.at(sD.notInfec.at(i));
+    const double minCentrality = * std::min_element(
+      fD.hpdd.begin(),fD.hpdd.end());
+    const double maxCentrality = * std::max_element(
+      fD.hpdd.begin(),fD.hpdd.end());
+    const double rngCentrality = maxCentrality - minCentrality;
+
+    CHECK_GT(rngCentrality,1e-3);
+
+    for(i=0; i<sD.numNotInfec; i++){
+      double val = fD.hpdd.at(sD.notInfec.at(i));
+      val -= minCentrality;
+      val /= maxCentrality;
+      centralityNotInfec(i) = val;
+    }
   }
 
   // obtain neighbors and probabilities not infected infects other not infected
