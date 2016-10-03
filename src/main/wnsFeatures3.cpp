@@ -177,6 +177,7 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
               fD.numNodes)));
         const double weight = fD.expDistWeight.at(index);
         distWeightProb += weight * prob;
+        sumWeight += weight;
       }
       notFeat(i,featNum) = notFeat(i,0) * (distWeightProb / sumWeight) ;
     }
