@@ -180,7 +180,7 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
 
           const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
                 fD.numNodes)));
-          const double modProb = prob * (1.0 - notFeat(j,0))
+          const double modProb = prob * (1.0 - notFeat(j,0));
 
           distWeightProb += weight * modProb;
           sumWeight += weight;
