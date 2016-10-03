@@ -145,7 +145,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 
       global_stream_mutex.lock();
       CHECK(!zeroStddev)
-        << std::endl
+        << featStddev.diag() << std::endl
         << "inf feat: " << std::endl
         << f.infFeat << std::endl
         << "not feat: " << std::endl
