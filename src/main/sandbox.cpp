@@ -36,6 +36,7 @@ int main(int argc, char ** argv){
   ra.setEdgeToEdge(edgeToEdge);
   // ra.reset();
 
+  std::cout << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
   double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
   std::cout << " valRA: " + njm::toString(valRA,"") << std::endl;
 
