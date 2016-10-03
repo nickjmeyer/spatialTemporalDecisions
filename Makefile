@@ -22,7 +22,8 @@ runM1MlesMiss \
 runM1MlesWns \
 runM1MlesWnsMiss \
 copyParams \
-bayesP
+bayesP \
+sandbox
 
 CPP_SRC:=$(wildcard src/main/*.cpp)
 CPP_SRC:=$(notdir $(basename $(CPP_SRC)))
