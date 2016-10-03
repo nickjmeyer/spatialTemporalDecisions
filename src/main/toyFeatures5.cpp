@@ -174,15 +174,27 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
       double distWeightProb = 0;
       double sumWeight = 0;
       for (int j = 0; j < sD.numNotInfec; ++j) {
-        // probability i infects j, weighted by distance
-        const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
-        const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
-              fD.numNodes)));
-        const double weight = fD.expDistWeight.at(index);
-        distWeightProb += weight * prob;
-        sumWeight += weight;
+        if (j != i) {
+          // probability i infects j, weighted by distance
+          const int index = sD.notInfec.at(j) * fD.numNodes + sD.notInfec.at(i);
+          const double weight = fD.expDistWeight.at(index);
+
+          const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,i,
+                fD.numNodes)));
+          const double modProb = prob * (1.0 - notFeat(j,0));
+
+          distWeightProb += weight * modProb;
+          sumWeight += weight;
+        }
       }
-      notFeat(i,featNum) = notFeat(i,0) * (distWeightProb / sumWeight);
+
+      // use as a guard against division by zero
+      if (sD.numNotInfec > 1) {
+        notFeat(i,featNum) = notFeat(i,0) * (distWeightProb / sumWeight);
+      } else {
+        notFeat(i,featNum) = 0.0;
+      }
+
     }
   }
 
