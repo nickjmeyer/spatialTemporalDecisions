@@ -135,23 +135,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     // result in small negative numbers due to instability
     jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
 
-    {
-      bool zeroStddev = false;
-      for (int featInd = 0; featInd < f.numFeatures; ++featInd) {
-        if(featStddev.diag()(featInd) < 1e-8) {
-          zeroStddev = true;
-        }
-      }
-
-      global_stream_mutex.lock();
-      CHECK(!zeroStddev)
-        << featStddev.diag() << std::endl
-        << "inf feat: " << std::endl
-        << f.infFeat << std::endl
-        << "not feat: " << std::endl
-        << f.notFeat << std::endl;
-      global_stream_mutex.unlock();
-    }
 
     for(j = 0; j < f.numFeatures; j++)
       jitter(j) *= njm::rnorm01();
