@@ -84,7 +84,8 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
 
     val = rn.run(s,nt,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f\r", ++iter, val);
+    printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
+      ++iter, val, scale);
     fflush(stdout);
   }
 
