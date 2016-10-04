@@ -60,7 +60,7 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
               << std::endl;
   sDist = 0;
   for(i = 0; i < sD.numInfected; ++i){
-    sDist += fD.gDist.at(sD.infected.at(i)*fD.numNodes + start);
+    sDist += fD.eDist.at(sD.infected.at(i)*fD.numNodes + start);
   }
   sDist/=(double)sD.numInfected;
   stats.push_back(sDist);
@@ -94,8 +94,8 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
   // max dist from starting location
   sDist = std::numeric_limits<double>::lowest();
   for(i = 0; i < sD.numInfected; ++i)
-    if(fD.gDist.at(sD.infected.at(i)*fD.numNodes + start) > sDist)
-      sDist = fD.gDist.at(sD.infected.at(i)*fD.numNodes + start);
+    if(fD.eDist.at(sD.infected.at(i)*fD.numNodes + start) > sDist)
+      sDist = fD.eDist.at(sD.infected.at(i)*fD.numNodes + start);
   stats.push_back(sDist);
 
 
