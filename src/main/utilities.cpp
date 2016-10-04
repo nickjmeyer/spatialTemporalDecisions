@@ -25,4 +25,18 @@ double njm::l2norm(std::vector<double> & v){
       v.at(i)/=norm;
   return norm;
 }
-  
+
+double njm::sampVar(const std::vector<double> & v){
+  std::vector<double>::const_iterator it,end;
+  end = v.end();
+  double mean = 0, meanSq = 0;
+  for (it = v.begin(); it != end; ++it) {
+    const double val = *it;
+    mean += val;
+    meanSq += val*val;
+  }
+  const int cnt = v.size();
+  mean /= cnt;
+  meanSq /= cnt;
+  return (cnt / (cnt - 1)) * (meanSq - mean);
+}

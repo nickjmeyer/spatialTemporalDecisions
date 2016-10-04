@@ -135,6 +135,7 @@ double l2norm(const std::vector<double> & v0,
 
 double l2norm(std::vector<double> & v);
 
+double sampVar(const std::vector<double> & v);
 
 };
 
