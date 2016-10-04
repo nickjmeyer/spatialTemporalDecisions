@@ -330,10 +330,16 @@ int main(int argc, char ** argv){
       njm::message("Tuning Intercept");
 
       double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+      s.modelGen_r.read();
+      s.modelEst_r.read();
+      s.revert();
 
       njm::message("Tuning Treatment");
 
       double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+      s.modelGen_r.read();
+      s.modelEst_r.read();
+      s.revert();
 
       double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
