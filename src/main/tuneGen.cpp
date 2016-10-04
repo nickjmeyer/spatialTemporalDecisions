@@ -24,7 +24,7 @@ DEFINE_bool(dryRun,false,"Do not execute main");
 
 
 template <class S, class NT,class RN, class MG>
-double TuneGenNT(S & s, const int numReps, const Starts & starts){
+double TuneGenNT(S s, const int numReps, const Starts & starts){
   NT nt;
   RN rn;
 
@@ -98,7 +98,7 @@ double TuneGenNT(S & s, const int numReps, const Starts & starts){
 
 
 template <class S, class MA, class RM, class NT, class RN>
-double TuneGenMA(S & s, const int numReps, const Starts & starts){
+double TuneGenMA(S s, const int numReps, const Starts & starts){
   NT nt;
   RN rn;
 
