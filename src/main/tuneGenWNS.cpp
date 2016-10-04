@@ -76,6 +76,14 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
   s.modelGen_r.save();
 
+  double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+    + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+  priorMeanTrt *= 4.0;
+
+  // write prior mean of treatment effect
+  njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+    std::ios_base::out);
+
   printf("\n");
 
   njm::message("Est. goal: " + njm::toString(val,""));
@@ -157,6 +165,9 @@ int main(int argc, char ** argv){
       njm::message("Tuning Treatment");
 
       double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+      s.modelGen_r.read();
+      s.modelEst_r.read();
+      s.revert();
 
       double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
@@ -253,13 +264,6 @@ int main(int argc, char ** argv){
 
       std::vector<double> par = s.modelGen_r.getPar();
 
-      double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-        + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
-      priorMeanTrt *= 4.0;
-
-      // write prior mean of treatment effect
-      njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-        std::ios_base::out);
     }
 
     njm::sett.clean();
