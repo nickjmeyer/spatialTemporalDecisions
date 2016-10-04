@@ -311,6 +311,11 @@ void System<MG,
   njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
   fD.numNodes = fD.fips.size();
   njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
+  const double eDistVar = njm::sampVar(fd.eDist);
+  CHECK_GT(eDistVar,1e-5);
+  for (int i = 0; i < fD.numNodes/fD.numNodes; ++i) {
+    fD.eDist /= std::sqrt(eDistVar);
+  }
   njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
   njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
   njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
