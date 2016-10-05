@@ -84,9 +84,9 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
 
     val = rn.run(s,nt,numReps,numYears,starts).smean();
-    printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\n",
+    printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
       ++iter, val, scale);
-    std::cout << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
+    // std::cout << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
     fflush(stdout);
   }
 
