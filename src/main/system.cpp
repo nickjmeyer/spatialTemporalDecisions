@@ -313,7 +313,7 @@ void System<MG,
   njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
   const double eDistVar = njm::sampVar(fD.eDist);
   CHECK_GT(eDistVar,1e-5);
-  for (int i = 0; i < fD.numNodes/fD.numNodes; ++i) {
+  for (int i = 0; i < fD.numNodes*fD.numNodes; ++i) {
     fD.eDist.at(i) /= std::sqrt(eDistVar);
   }
   njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
