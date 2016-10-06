@@ -545,7 +545,7 @@ void System<MG,
     ExpDistData edd;
     edd.dist = distValsForExp;
     edd.proportion = 0.8;
-    edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
+    edd.cutoff = 2*(int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
     edd.cutoff = std::max(edd.cutoff,1);
 
     bool keepGoing = true;
