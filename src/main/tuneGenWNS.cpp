@@ -26,9 +26,9 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
   double trt = 1.0;
 
   s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-  s.modelGen_r.save();
-  s = S("obsData.txt");
-  s.setEdgeToEdge(FLAGS_edgeToEdge);
+  std::vector<double> par = s.modelGen_r.getPar();
+  s.modelEst_r.putPar(par.begin());
+  s.revert();
 
   double val = rm.run(s,ma,numReps,numYears,starts).smean();
   double scale = 1.1, shrink = .9;
@@ -59,9 +59,13 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
 
     s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-    s.modelGen_r.save();
-    s = S("obsData.txt");
-    s.setEdgeToEdge(FLAGS_edgeToEdge);
+    par = s.modelGen_r.getPar();
+    s.modelEst_r.putPar(par.begin());
+    s.revert();
+
+    // s.modelGen_r.save();
+    // s = S("obsData.txt");
+    // s.setEdgeToEdge(FLAGS_edgeToEdge);
 
     // std::cout << "par: " << njm::toString(par," ","\n");
     // par = s.modelGen.getPar({"trtAct","trtPre"});
@@ -186,15 +190,6 @@ int main(int argc, char ** argv){
         " valAA: " + njm::toString(valAA,""));
 
 
-      std::vector<double> par = s.modelGen_r.getPar();
-
-      double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-        + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
-      priorMeanTrt *= 4.0;
-
-      // write prior mean of treatment effect
-      njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-        std::ios_base::out);
     } else {
       // typedef ModelTimeExpCavesGDistTrendPowCon MG;
       typedef Model2GravityEDist MG;
@@ -244,6 +239,9 @@ int main(int argc, char ** argv){
       njm::message("Tuning Treatment");
 
       double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+      s.modelGen_r.read();
+      s.modelEst_r.read();
+      s.revert();
 
       double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
 
@@ -260,10 +258,6 @@ int main(int argc, char ** argv){
         " valRA: " + njm::toString(valRA,"") +
         "\n" +
         " valAA: " + njm::toString(valAA,""));
-
-
-      std::vector<double> par = s.modelGen_r.getPar();
-
     }
 
     njm::sett.clean();
