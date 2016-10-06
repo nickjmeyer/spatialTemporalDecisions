@@ -44,11 +44,11 @@ ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/rand500 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree100 \
-						${SPATIAL}
+						${EDGE_TO_EDGE}
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree500 \
-						${SPATIAL}
+						${EDGE_TO_EDGE}
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/scalefree1000 \
-						${SPATIAL}
+						${EDGE_TO_EDGE}
 
 
 ########################################
