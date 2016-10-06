@@ -12,7 +12,7 @@ const float eps = 1e-6;
 TEST(TestUtilities,TestSampVar) {
   std::vector<double> v = {1,2,3,4,5};
   const double answer = (2*2 + 1*1 + 0 + 1*1 + 2*2)/4;
-  CHECK_EQ(njm::sampVar(v),answer);
+  EXPECT_NEAR(njm::sampVar(v),answer,1e-10);
 }
 
 
