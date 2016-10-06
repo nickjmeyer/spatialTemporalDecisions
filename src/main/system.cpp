@@ -564,9 +564,9 @@ void System<MG,
       lastAbove = (f > 0);
 
       if(df > 0) {
-        root -= adjust;
-      } else {
         root += adjust;
+      } else {
+        root -= adjust;
       }
 
       std::cout << f << " (" << df << ") " << " --> " << root << std::endl;
