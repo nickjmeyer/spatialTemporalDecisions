@@ -215,6 +215,14 @@ template class VanillaRunner<System<Model2GPowGDist,
 				    ModelGDist>,
 			     ProximalAgent<ModelGDist> >;
 
+template class VanillaRunner<System<Model2GravityEDist,
+                                    Model2GravityEDist>,
+                             AllAgent<Model2GravityEDist> >;
+
+template class VanillaRunner<System<Model2EdgeToEdge,
+                                    Model2EdgeToEdge>,
+                             AllAgent<Model2EdgeToEdge> >;
+
 
 template<class S, class A>
 RunStats
