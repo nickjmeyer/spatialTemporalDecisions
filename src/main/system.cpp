@@ -556,6 +556,8 @@ void System<MG,
 
       root -= f/df;
 
+      std::cout << f << " (" << df << ") " << " --> " << root << std::endl;
+
       keepGoing = (std::abs(f/df) > 1e-8);
       if(!std::isfinite(root)){
         error = true;
