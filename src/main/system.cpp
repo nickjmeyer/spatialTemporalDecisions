@@ -550,15 +550,27 @@ void System<MG,
 
     bool keepGoing = true;
     bool error = false;
+    bool lastAbove = true;
+    double adjust = 10.0;
+    double scale = 0.9;
     while(keepGoing && !error) {
       double f = expDistEval(root,&edd);
       double df = expDistGrad(root,&edd);
 
-      root -= f/df;
+      if((df > 0) != lastAbove)
+        adjust *= scale;
+
+      if(df > 0) {
+        root -= adjust;
+        lastAbove = true;
+      } else {
+        root += adjust;
+        lastAbove = false;
+      }
 
       std::cout << f << " (" << df << ") " << " --> " << root << std::endl;
 
-      keepGoing = (std::abs(f/df) > 1e-8);
+      keepGoing = (scale > 1e-8);
       if(!std::isfinite(root)){
         error = true;
       }
