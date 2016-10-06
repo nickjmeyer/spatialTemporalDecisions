@@ -557,15 +557,16 @@ void System<MG,
       double f = expDistEval(root,&edd);
       double df = expDistGrad(root,&edd);
 
-      if((df > 0) != lastAbove)
+      if((f > 0) != lastAbove) {
         adjust *= scale;
+      }
+
+      lastAbove = (f > 0);
 
       if(df > 0) {
         root -= adjust;
-        lastAbove = true;
       } else {
         root += adjust;
-        lastAbove = false;
       }
 
       std::cout << f << " (" << df << ") " << " --> " << root << std::endl;
