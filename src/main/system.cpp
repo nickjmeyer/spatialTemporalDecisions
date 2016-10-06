@@ -520,63 +520,61 @@ void System<MG,
   }
 
 
-  // weighted distance
+  // weighted distance with exp decay
   {
-    double minDist = *std::min_element(fD.eDist.begin(),fD.eDist.end());
     std::vector<double> distValsForExp;
     for (i = 0; i < fD.numNodes; ++i) {
       for (j = (i+1); j < fD.numNodes; ++j) {
-        // subtract minDist for stability (min because of the negative
-        // coefficient in the objective function)
-        distValsForExp.push_back(fD.eDist.at(i*fD.numNodes + j) - minDist);
+        distValsForExp.push_back(fD.eDist.at(i*fD.numNodes + j));
       }
     }
+
+    {
+      double minDist = *std::min_element(
+        distValsForExp.begin(),distValsForExp.end());
+      for (i = 0;  i < distValsForExp.size(); ++i) {
+        // subtract minDist for stability (min because of the negative
+        // coefficient in the objective function)
+        distValsForExp.at(i) -= minDist;
+      }
+    }
+    std::sort(distValsForExp.begin(),distValsForExp.end());
+
+    double root = 100.0;
 
     ExpDistData edd;
     edd.dist = distValsForExp;
     edd.proportion = 0.8;
     edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
     edd.cutoff = std::max(edd.cutoff,1);
-    gsl_function_fdf fdf;
-    fdf.params = &edd;
-    fdf.f = &expDistEval;
-    fdf.df = &expDistGrad;
-    fdf.fdf = &expDistEvalGrad;
 
+    bool keepGoing = true;
+    bool error = false;
+    while(keepGoing && !error) {
+      double f = expDistEval(root,&edd);
+      double df = expDistGrad(root,&edd);
 
-    const gsl_root_fdfsolver_type * solver_type;
-    solver_type = gsl_root_fdfsolver_newton;
-    gsl_root_fdfsolver * solver;
-    solver = gsl_root_fdfsolver_alloc(solver_type);
-    double root0 = 1.0;
-    double root = root0;
+      root -= f/df;
 
-    gsl_root_fdfsolver_set(solver,&fdf,root);
-    int status = GSL_CONTINUE;
-    for (i = 0; i < 100 && status == GSL_CONTINUE; ++i) {
-      status = gsl_root_fdfsolver_iterate(solver);
-      if (status != GSL_CONTINUE)
-        break;
-
-      root0 = root;
-      root = gsl_root_fdfsolver_root(solver);
-
-      status = gsl_root_test_delta(root,root0,0,0.001);
+      keepGoing = (std::abs(f/df) > 1e-8);
+      if(!std::isfinite(root)){
+        error = true;
+      }
     }
-    gsl_root_fdfsolver_free(solver);
-
-    if (status == GSL_CONTINUE) {
-      njm::message("too many iterations for exp dist weights");
-      throw(1);
-    } else if (status != GSL_SUCCESS) {
-      njm::message("not successful for exp dist weights");
-      throw(1);
+    if(error && fD.numNodes < 10) {
+      njm::message("WARNING: could not find root for exp weighted distance, "
+        "proceeding since network is small and this is likely a test.  "
+        "Setting root to 1.0");
+      root = 1.0;
+    } else {
+      CHECK(!error) << "Could not find root";
     }
 
     fD.expDistWeight.clear();
     for (i = 0, k = 0; i < fD.numNodes; ++i) {
       for (j = 0; j < fD.numNodes; ++j,++k) {
-        fD.expDistWeight.push_back(- (fD.eDist.at(k) - minDist) * root);
+        fD.expDistWeight.push_back(
+          std::exp(- fD.eDist.at(k) * root));
       }
     }
   }
