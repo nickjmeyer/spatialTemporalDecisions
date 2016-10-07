@@ -262,59 +262,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 
   }
 
-#ifndef NJM_NO_DEBUG
-  int totPre = 0,totAct = 0;
-  // check if valid treatments are given to valid locations
-  for(i = 0; i < fD.numNodes; i++){
-    if(tD.p.at(i) != 1 && tD.p.at(i) != 0){
-      std::cout << "Prevenative treatment not 1 or 0"
-                << ": " << tD.p.at(i)
-                << std::endl;
-      throw(1);
-    }
-    else if(tD.a.at(i) != 1 && tD.a.at(i) != 0){
-      std::cout << "Active treatment not 1 or 0"
-                << std::endl;
-      throw(1);
-    }
-    else if(tD.a.at(i) == 1 && sD.status.at(i) < 2){
-      std::cout << "Not infected receiving active treatment"
-                << std::endl;
-      throw(1);
-    }
-    else if(tD.p.at(i) == 1 && sD.status.at(i) >= 2){
-      std::cout << "Infected receiving preventative treament"
-                << std::endl;
-      throw(1);
-    }
-    else if(tD.a.at(i) == 1)
-      totAct++;
-    else if(tD.p.at(i) == 1)
-      totPre++;
-  }
-
-  // check if total number of treatments are correct
-  if(totAct != numAct){
-    std::cout << "Not correct amount of active treatments."
-              << std::endl
-              << "Should be " << numAct << " but is " << totAct << "."
-              << std::endl
-              << "Number of infected nodes is " << sD.numInfected
-              << "(" << sD.infected.size() << ")"
-              << std::endl;
-    throw(1);
-  }
-  else if(totPre != numPre){
-    std::cout << "Not correct amount of preventative treatments."
-              << std::endl
-              << "Should be " << numPre << " but is " << totPre << "."
-              << std::endl
-              << "Number of not infected nodes is " << sD.numNotInfec
-              << "(" << sD.notInfec.size() << ")"
-              << std::endl;
-    throw(1);
-  }
-#endif
+  checkForValidTrt(sD,tD,fD,dD);
 }
 
 

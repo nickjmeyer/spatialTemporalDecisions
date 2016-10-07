@@ -30,6 +30,9 @@ double expDistEval(double c, void * params);
 double expDistGrad(double c, void * params);
 void expDistEvalGrad(double c, void *params, double *eval, double *grad);
 
+void checkForValidTrt(
+  const SimData & sD, const TrtData & tD,
+    const FixedData & fD, const DynamicData & fD);
 
 template <class MG, class ME>
 class System {

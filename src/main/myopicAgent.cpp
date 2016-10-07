@@ -89,4 +89,6 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
     tD.p.at(sortNotInfec.top().second) = 1;
     sortNotInfec.pop();
   }
+
+  checkForValidTrt(sD,tD,fD,dD);
 }
