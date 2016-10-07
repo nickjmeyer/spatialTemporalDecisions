@@ -1,11 +1,41 @@
 #include <gtest/gtest.h>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_deriv.h>
 #include "tuneGenWNS.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
 
-TEST(TestPreCompData,TestExpDistWeight) {
+TEST(TestPrecompData,TestExpDistWeightGradient) {
+  std::vector<double> dVals;
+  for (int i = 0; i < 100; ++i) {
+    dVals.push_back(njm::runif01());
+  }
+  std::sort(dVals.begin(),dVals.end());
+
+  ExpDistData edd;
+  edd.dist = dVals;
+  edd.proportion = 0.8;
+  edd.cutoff = 20;
+
+  gsl_function F;
+  F.function = &expDistEval;
+  F.params = &edd;
+
+  double result;
+  double abserr;
+
+  const std::vector<double> rootVals = {-5.0,-1.0,0.0,1.0,5.0,10.0,100.0};
+  for (int i = 0; i < rootVals.size(); ++i) {
+    gsl_deriv_central(&F,rootVals.at(i),1e-8,&result,&abserr);
+    EXPECT_NEAR(expDistGrad(rootVals.at(i),&edd),result,1e-6)
+      << "Failed for root " << rootVals.at(i);
+  }
+
+}
+
+TEST(TestPreCompData,TestExpDistWeightValue) {
   const bool edgeToEdge = false;
 
   typedef Model2GravityEDist MG;
@@ -41,7 +71,7 @@ TEST(TestPreCompData,TestExpDistWeight) {
     sumAll += uniqWeight.at(i);
   }
 
-  EXPECT_NEAR(sumProp,0.8*sumAll,1e-8);
+  EXPECT_NEAR(sumProp/sumAll,0.8,1e-8);
 }
 
 int main(int argc, char **argv) {
