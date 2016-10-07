@@ -551,14 +551,21 @@ void System<MG,
 
     bool keepGoing = true;
     bool error = false;
+    const double incrementBound = 100.0;
     int nIters = 0;
     while(keepGoing && !error) {
       const double f = expDistEval(root,&edd);
       const double df = expDistGrad(root,&edd);
 
-      const double increment = std::max(std::min(f/df,100.0),-100.0);
+      const double increment = f/df;
 
-      root -= increment;
+      if (increment > incrementBound) {
+        root -= std::log(increment);
+      } else if (increment < -incrementBound) {
+        root -= -std::log(-increment);
+      } else {
+        root -= incrememnt;
+      }
 
       keepGoing = (std::abs(increment) > 1e-6);
       if(!std::isfinite(root)){
