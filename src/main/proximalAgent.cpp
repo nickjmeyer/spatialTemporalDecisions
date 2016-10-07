@@ -12,6 +12,8 @@ template class ProximalAgent<Model2EdgeToEdge>;
 
 template class ProximalAgent<ModelGDist>;
 
+template class ProximalAgent<ModelIntercept>;
+
 
 template<class M>
 std::string ProximalAgent<M>::name = "proximal";
