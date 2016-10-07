@@ -89,6 +89,7 @@ ${EXEC_PATH}/tuneGen --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
 ## wns
 ${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${EDGE_TO_EDGE}
 
 ## spatial spread
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
@@ -122,6 +123,7 @@ ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
 ## wns
 ${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
+${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
 
 ## spatial spread
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp100 ${SPATIAL}
