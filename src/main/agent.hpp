@@ -30,4 +30,10 @@ int getNumAct(const SimData & sD,
 	      const DynamicData & dD);
 
 
+void checkForValidTrt(
+  const SimData & sD, const TrtData & tD,
+    const FixedData & fD, const DynamicData & dD);
+
+
+
 #endif
