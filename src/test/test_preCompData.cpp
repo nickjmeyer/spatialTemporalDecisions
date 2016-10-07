@@ -60,8 +60,8 @@ TEST(TestPreCompData,TestExpDistWeightValue) {
   std::sort(uniqWeight.begin(),uniqWeight.end());
   std::reverse(uniqWeight.begin(),uniqWeight.end());
 
-  const int cutoff = int(((double)s.fD.numNodes)/
-    std::log((double)s.fD.numNodes));
+  const int cutoff = int(((double)uniqWeight.size())/
+    std::log((double)uniqWeight.size()));
   double sumProp = 0.0;
   double sumAll = 0.0;
   for (int i = 0;  i < uniqWeight.size(); ++i) {
