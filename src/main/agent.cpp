@@ -47,19 +47,23 @@ void checkForValidTrt(
       CHECK(tD.a.at(i) == 1 || tD.a.at(i) == 0)
         << "Active treatment not 1 or 0"
         << std::endl;
+
       if(tD.a.at(i) == 1) {
         CHECK(sD.status.at(i) >= 2)
           << "Not infected receiving active treatment"
           << std::endl;
       }
+
       if(tD.p.at(i) == 1) {
         CHECK(sD.status.at(i) < 2)
           << "Infected receiving preventative treament"
           << std::endl;
       }
-      else if(tD.a.at(i) == 1)
+
+      if(tD.a.at(i) == 1)
         totAct++;
-      else if(tD.p.at(i) == 1)
+
+      if(tD.p.at(i) == 1)
         totPre++;
     }
 
