@@ -56,7 +56,12 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
       if(!above)
         scale*=shrink;
 
-      s.modelGen_r.linScale(1.0 + scale);
+      // s.modelGen_r.linScale(1.0 + scale);
+
+      std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+      CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+      curIntcp.at(0) -= scale;
+      s.modelGen_r.setPar("intcp",curIntcp.at(0));
 
       above = 1;
     }
@@ -64,7 +69,11 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
       if(above)
         scale*=shrink;
 
-      s.modelGen_r.linScale(1.0/(1.0 + scale));
+      std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+      CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+      curIntcp.at(0) += scale;
+      s.modelGen_r.setPar("intcp",curIntcp.at(0));
+      // s.modelGen_r.linScale(1.0/(1.0 + scale));
 
       above = 0;
     }
@@ -83,7 +92,8 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
     val = rn.run(s,nt,numReps,numYears,starts).smean();
     printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
       ++iter, val, scale);
-    // std::cout << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
+    // std::cout << std::endl
+    //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
     fflush(stdout);
   }
 
