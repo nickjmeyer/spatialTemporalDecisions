@@ -548,7 +548,7 @@ void System<MG,
     edd.cutoff = std::max(edd.cutoff,1);
 
     // close to the solution for white nose data
-    double root = 247.472;
+    double root = 6.79776;
 
     bool keepGoing = true;
     bool error = false;
