@@ -40,40 +40,40 @@ template class System<ModelEDist,
 template class System<ModelIntercept,
                       ModelIntercept>;
 
-struct ExpDistData {
-  std::vector<double> dist;
-  int cutoff;
-  double proportion;
-};
-
 double expDistEval(double c, void * params) {
   ExpDistData * edd = static_cast<ExpDistData*>(params);
   const int size = edd->dist.size();
-  double ret = 0.0;
+  double numer = 0.0;
+  double denom = 0.0;
   for (int i = 0; i < size; ++i) {
     const double weight = std::exp(-edd->dist.at(i)*c);
     if(i < edd->cutoff) {
-      ret += (1.0 - edd->proportion) * weight;
-    } else {
-      ret += -edd->proportion * weight;
+      numer += weight;
     }
+    denom += weight;
   }
-  return ret;
+  return (numer/denom) - edd->proportion;
 }
 
 double expDistGrad(double c, void * params) {
   ExpDistData * edd = static_cast<ExpDistData*>(params);
   const int size = edd->dist.size();
-  double ret = 0.0;
+  double numer = 0.0;
+  double denom = 0.0;
+  double numerPrime = 0.0;
+  double denomPrime = 0.0;
   for (int i = 0; i < size; ++i) {
-    const double grad = -edd->dist.at(i) * std::exp(-edd->dist.at(i)*c);
+    const double weight = std::exp(-edd->dist.at(i)*c);
+    const double grad = -edd->dist.at(i) * weight;
     if(i < edd->cutoff) {
-      ret += (1.0 - edd->proportion) * grad;
-    } else {
-      ret += -edd->proportion * grad;
+      numer += weight;
+      numerPrime += grad;
     }
+    denom += weight;
+    denomPrime += grad;
   }
-  return ret;
+
+  return (denom*numerPrime - numer*denomPrime)/(denom*denom);
 }
 
 void expDistEvalGrad(double c, void *params, double *eval, double *grad) {
@@ -540,46 +540,38 @@ void System<MG,
     }
     std::sort(distValsForExp.begin(),distValsForExp.end());
 
-    double root = 100.0;
-
     ExpDistData edd;
     edd.dist = distValsForExp;
     edd.proportion = 0.8;
-    edd.cutoff = 2*(int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
+    edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
     edd.cutoff = std::max(edd.cutoff,1);
+
+    // close to the solution for white nose data
+    double root = 247.472;
 
     bool keepGoing = true;
     bool error = false;
-    bool lastAbove = true;
-    double adjust = 10.0;
-    double scale = 0.9;
+    int nIters = 0;
     while(keepGoing && !error) {
-      double f = expDistEval(root,&edd);
-      double df = expDistGrad(root,&edd);
+      const double f = expDistEval(root,&edd);
+      const double df = expDistGrad(root,&edd);
 
-      if((f > 0) != lastAbove) {
-        adjust *= scale;
-      }
+      const double increment = f/df;
 
-      lastAbove = (f > 0);
+      root -= increment;
 
-      if(df > 0) {
-        root += adjust;
-      } else {
-        root -= adjust;
-      }
-
-      std::cout << f << " (" << df << ") " << " --> " << root << std::endl;
-
-      keepGoing = (scale > 1e-8);
+      keepGoing = (std::abs(increment) > 1e-6);
       if(!std::isfinite(root)){
+        error = true;
+      } else if (nIters++ > 100) {
         error = true;
       }
     }
-    if(error && fD.numNodes < 10) {
-      njm::message("WARNING: could not find root for exp weighted distance, "
-        "proceeding since network is small and this is likely a test.  "
-        "Setting root to 1.0");
+
+    if(error && fD.numNodes < 20) {
+      LOG(WARNING) << "Could not find root.  Too unstable.  "
+                   << "Network is small so assuming this is a test.  "
+                   << "Setting root = 1.0 and proceeding.";
       root = 1.0;
     } else {
       CHECK(!error) << "Could not find root";

@@ -19,6 +19,17 @@
 #include "rand.hpp"
 #include "calcCentrality.hpp"
 
+// used in precomputing data
+struct ExpDistData {
+  std::vector<double> dist;
+  int cutoff;
+  double proportion;
+};
+
+double expDistEval(double c, void * params);
+double expDistGrad(double c, void * params);
+void expDistEvalGrad(double c, void *params, double *eval, double *grad);
+
 
 template <class MG, class ME>
 class System {
