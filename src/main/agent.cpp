@@ -51,7 +51,7 @@ void checkForValidTrt(
         << std::endl;
     }
     if(tD.p.at(i) == 1) {
-      CHECK(sD.status.at(i) >= 2)
+      CHECK(sD.status.at(i) < 2)
         << "Infected receiving preventative treament"
         << std::endl;
     }
