@@ -31,6 +31,8 @@ int main(int argc, char ** argv) {
 		} else {
 			copyParams<Model2GravityEDist>(path);
 		}
+
+		njm::sett.clean();
 	}
 	return 0;
 }
