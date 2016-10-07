@@ -564,7 +564,7 @@ void System<MG,
       } else if (increment < -incrementBound) {
         root -= -std::log(-increment);
       } else {
-        root -= incrememnt;
+        root -= increment;
       }
 
       keepGoing = (std::abs(increment) > 1e-6);
