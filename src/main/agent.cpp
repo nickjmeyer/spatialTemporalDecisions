@@ -1,4 +1,5 @@
 #include "agent.hpp"
+#include <glog/logging.h>
 
 
 int getNumPre(const SimData & sD,
