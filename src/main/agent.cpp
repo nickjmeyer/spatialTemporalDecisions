@@ -35,6 +35,7 @@ void checkForValidTrt(
   const int numAct = getNumAct(sD,tD,fD,dD);
   const int numPre = getNumPre(sD,tD,fD,dD);
 
+#pragma omp critical {
   int totPre = 0,totAct = 0;
   // check if valid treatments are given to valid locations
   for(int i = 0; i < fD.numNodes; i++){
@@ -78,4 +79,5 @@ void checkForValidTrt(
     << "Number of not infected nodes is " << sD.numNotInfec
     << "(" << sD.notInfec.size() << ")"
     << std::endl;
+}
 }
