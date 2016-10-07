@@ -556,7 +556,7 @@ void System<MG,
       const double f = expDistEval(root,&edd);
       const double df = expDistGrad(root,&edd);
 
-      const double increment = f/df;
+      const double increment = std::min(std::max(f/df,100.0),-100.0);
 
       root -= increment;
 
