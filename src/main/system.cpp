@@ -552,7 +552,7 @@ void System<MG,
 
     bool keepGoing = true;
     bool error = false;
-    const double incrementBound = 100.0;
+    const double incrementBound = 5.0;
     int nIters = 0;
     while(keepGoing && !error) {
       const double f = expDistEval(root,&edd);
