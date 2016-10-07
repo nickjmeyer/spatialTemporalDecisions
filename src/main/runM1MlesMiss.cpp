@@ -12,6 +12,9 @@ int main(int argc, char ** argv){
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
+        njm::toFile(FLAGS_edgeToEdge,
+            njm::sett.datExt("edgeToEdge_flag_",".txt"));
+
         if(FLAGS_edgeToEdge) {
 
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
