@@ -76,6 +76,7 @@ void checkForValidTrt(
       << "Number of infected nodes is " << sD.numInfected
       << "(" << sD.infected.size() << ")"
       << std::endl;
+
     CHECK(totPre == numPre)
       << "Not correct amount of preventative treatments."
       << std::endl
