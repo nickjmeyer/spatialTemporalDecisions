@@ -543,7 +543,8 @@ void System<MG,
     ExpDistData edd;
     edd.dist = distValsForExp;
     edd.proportion = 0.8;
-    edd.cutoff = (int)(((double)fD.numNodes)/std::log((double)fD.numNodes));
+    const int numDistVals = distValsForExp.size();
+    edd.cutoff = (int)(((double)numDistVals)/std::log((double)numDistVals));
     edd.cutoff = std::max(edd.cutoff,1);
 
     // close to the solution for white nose data
