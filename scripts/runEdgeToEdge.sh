@@ -18,10 +18,7 @@ SPATIAL="--noedgeToEdge ${DRY}"
 ########################################
 ## run sims {correctly specified}
 
-## wns
-${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${EDGE_TO_EDGE}
-
-## network spread
+## toy network spread
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree100 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree500 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/scalefree1000 ${EDGE_TO_EDGE}
@@ -34,14 +31,14 @@ ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand100 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand500 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
 
+## wns network spread
+${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${EDGE_TO_EDGE}
+
 
 ########################################
 ## run sims {incorrectly specified}
 
-## wns
-${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${EDGE_TO_EDGE}
-
-## network spread
+## toy network spread
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree100 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree500 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/scalefree1000 ${EDGE_TO_EDGE}
@@ -53,3 +50,6 @@ ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid1000 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand100 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand500 ${EDGE_TO_EDGE}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand1000 ${EDGE_TO_EDGE}
+
+## wns network spread
+${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${EDGE_TO_EDGE}

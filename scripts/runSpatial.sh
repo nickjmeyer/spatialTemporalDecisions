@@ -18,10 +18,7 @@ SPATIAL="--noedgeToEdge ${DRY}"
 ########################################
 ## run sims {correctly specified}
 
-## wns
-${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
-
-## spatial spread
+## toy spatial spread
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp500 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp1000 ${SPATIAL}
@@ -34,14 +31,14 @@ ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand100 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand500 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${SPATIAL}
 
+## wns spatial spread
+${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
+
 
 ########################################
 ## run sims {incorrectly specified}
 
-## wns
-${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
-
-## spatial spread
+## toy spatial spread
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp100 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp500 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/crp1000 ${SPATIAL}
@@ -53,3 +50,6 @@ ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid1000 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand100 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand500 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand1000 ${SPATIAL}
+
+## wns spatial spread
+${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
