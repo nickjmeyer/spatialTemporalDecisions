@@ -1,20 +1,5 @@
 #include "proximalAgent.hpp"
 
-template class ProximalAgent<ModelGravityGDist>;
-
-template class ProximalAgent<Model2GravityGDist>;
-
-template class ProximalAgent<Model2GravityEDist>;
-
-template class ProximalAgent<Model2GPowGDist>;
-
-template class ProximalAgent<Model2EdgeToEdge>;
-
-template class ProximalAgent<ModelGDist>;
-
-template class ProximalAgent<ModelIntercept>;
-
-
 template<class M>
 std::string ProximalAgent<M>::name = "proximal";
 
@@ -103,3 +88,18 @@ void ProximalAgent<M>::applyTrt(const SimData & sD,
 
   checkForValidTrt(sD,tD,fD,dD);
 }
+
+
+template class ProximalAgent<ModelGravityGDist>;
+
+template class ProximalAgent<Model2GravityGDist>;
+
+template class ProximalAgent<Model2GravityEDist>;
+
+template class ProximalAgent<Model2GPowGDist>;
+
+template class ProximalAgent<Model2EdgeToEdge>;
+
+template class ProximalAgent<ModelGDist>;
+
+template class ProximalAgent<ModelIntercept>;

@@ -11,25 +11,6 @@ void WnsFeatures3TuneParam::putPar(const std::vector<double> & par){
 }
 
 
-
-
-
-
-template class WnsFeatures3<ModelGravityGDist>;
-
-template class WnsFeatures3<Model2GravityGDist>;
-
-template class WnsFeatures3<Model2GravityEDist>;
-
-template class WnsFeatures3<ModelGDist>;
-
-template class WnsFeatures3<ModelEDist>;
-
-template class WnsFeatures3<ModelIntercept>;
-
-template class WnsFeatures3<Model2EdgeToEdge>;
-
-
 template <class M>
 void WnsFeatures3<M>::preCompData(const SimData & sD,
 				  const TrtData & tD,
@@ -274,3 +255,18 @@ void WnsFeatures3<M>::updateFeatures(const SimData & sD,
 
   getFeatures(sD,tD,fD,dD,m);
 }
+
+
+template class WnsFeatures3<ModelGravityGDist>;
+
+template class WnsFeatures3<Model2GravityGDist>;
+
+template class WnsFeatures3<Model2GravityEDist>;
+
+template class WnsFeatures3<ModelGDist>;
+
+template class WnsFeatures3<ModelEDist>;
+
+template class WnsFeatures3<ModelIntercept>;
+
+template class WnsFeatures3<Model2EdgeToEdge>;

@@ -1,8 +1,6 @@
 #include "randomAgent.hpp"
 
 
-template class RandomAgent<ModelGravityGDist>;
-
 template<class M>
 const std::string RandomAgent<M>::name = "random";
 
@@ -22,14 +20,14 @@ void RandomAgent<M>::applyTrt(const SimData & sD,
   for(i=0; i<sD.numNotInfec; i++){
     node0=sD.notInfec.at(i);
     sortNotInfec.push(std::pair<double,int>(njm::runif01(),node0));
-  }    
+  }
 
-  
+
   for(i=0; i<sD.numInfected; i++){
     node0=sD.infected.at(i);
     sortInfected.push(std::pair<double,int>(njm::runif01(),node0));
-  }    
-	 
+  }
+
 
   for(i=0; i<numAct; i++){
     tD.a.at(sortInfected.top().second) = 1;
@@ -42,3 +40,4 @@ void RandomAgent<M>::applyTrt(const SimData & sD,
   }
 }
 
+template class RandomAgent<ModelGravityGDist>;

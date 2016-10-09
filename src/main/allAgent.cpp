@@ -1,18 +1,5 @@
 #include "allAgent.hpp"
 
-template class AllAgent<ModelGravityGDist>;
-
-template class AllAgent<Model2GravityGDist>;
-
-template class AllAgent<Model2EdgeToEdge>;
-
-template class AllAgent<Model2GravityEDist>;
-
-template class AllAgent<Model2GPowGDist>;
-
-template class AllAgent<ModelGDist>;
-
-
 template <class M>
 std::string AllAgent<M>::name = "all";
 
@@ -34,3 +21,16 @@ void AllAgent<M>::applyTrt(const SimData & sD,
 		});
 
 }
+
+
+template class AllAgent<ModelGravityGDist>;
+
+template class AllAgent<Model2GravityGDist>;
+
+template class AllAgent<Model2EdgeToEdge>;
+
+template class AllAgent<Model2GravityEDist>;
+
+template class AllAgent<Model2GPowGDist>;
+
+template class AllAgent<ModelGDist>;

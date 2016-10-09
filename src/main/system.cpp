@@ -4,42 +4,6 @@
 #include <gsl/gsl_roots.h>
 #include <glog/logging.h>
 
-template class System<ModelGravityGDist,
-                      ModelGravityGDist>;
-
-template class System<Model2GravityGDist,
-                      Model2GravityGDist>;
-
-template class System<Model2GravityEDist,
-                      Model2GravityEDist>;
-
-template class System<Model2GravityEDist,
-                      ModelEDist>;
-
-template class System<Model2GPowGDist,
-                      Model2GPowGDist>;
-
-template class System<Model2EdgeToEdge,
-                      Model2EdgeToEdge>;
-
-template class System<Model2EdgeToEdge,
-                      ModelIntercept>;
-
-template class System<Model2GPowGDist,
-                      ModelGDist>;
-
-template class System<Model2GravityGDist,
-                      ModelGDist>;
-
-template class System<ModelGDist,
-                      ModelGDist>;
-
-template class System<ModelEDist,
-                      ModelEDist>;
-
-template class System<ModelIntercept,
-                      ModelIntercept>;
-
 double expDistEval(double c, void * params) {
   ExpDistData * edd = static_cast<ExpDistData*>(params);
   const int size = edd->dist.size();
@@ -780,3 +744,43 @@ double System<MG,
               ME>::value(){
   return ((double)sD.numInfected)/((double)fD.numNodes);
 }
+
+
+
+
+
+template class System<ModelGravityGDist,
+                      ModelGravityGDist>;
+
+template class System<Model2GravityGDist,
+                      Model2GravityGDist>;
+
+template class System<Model2GravityEDist,
+                      Model2GravityEDist>;
+
+template class System<Model2GravityEDist,
+                      ModelEDist>;
+
+template class System<Model2GPowGDist,
+                      Model2GPowGDist>;
+
+template class System<Model2EdgeToEdge,
+                      Model2EdgeToEdge>;
+
+template class System<Model2EdgeToEdge,
+                      ModelIntercept>;
+
+template class System<Model2GPowGDist,
+                      ModelGDist>;
+
+template class System<Model2GravityGDist,
+                      ModelGDist>;
+
+template class System<ModelGDist,
+                      ModelGDist>;
+
+template class System<ModelEDist,
+                      ModelEDist>;
+
+template class System<ModelIntercept,
+                      ModelIntercept>;

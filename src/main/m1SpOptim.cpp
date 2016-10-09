@@ -35,105 +35,6 @@ void M1SpOptimTunePar::putPar(const std::vector<double> & par){
 }
 
 
-template class M1SpOptim<System<ModelGDist,
-				ModelGDist>,
-			 RankAgent<WnsFeatures3<ModelGDist>,
-				   ModelGDist>,
-			 ModelGDist>;
-
-
-template class M1SpOptim<System<ModelGravityGDist,
-				ModelGravityGDist>,
-			 RankAgent<WnsFeatures3<ModelGravityGDist>,
-				   ModelGravityGDist>,
-			 ModelGravityGDist>;
-
-template class M1SpOptim<System<Model2GravityGDist,
-				Model2GravityGDist>,
-			 RankAgent<WnsFeatures3<Model2GravityGDist>,
-				   Model2GravityGDist>,
-			 Model2GravityGDist>;
-
-template class M1SpOptim<System<Model2EdgeToEdge,
-																ModelIntercept>,
-												 RankAgent<WnsFeatures3<ModelIntercept>,
-																	 ModelIntercept>,
-												 ModelIntercept>;
-
-template class M1SpOptim<System<Model2EdgeToEdge,
-																Model2EdgeToEdge>,
-												 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-																	 Model2EdgeToEdge>,
-												 Model2EdgeToEdge>;
-
-template class M1SpOptim<System<Model2GravityEDist,
-																Model2GravityEDist>,
-												 RankAgent<WnsFeatures3<Model2GravityEDist>,
-																	 Model2GravityEDist>,
-												 Model2GravityEDist>;
-
-template class M1SpOptim<System<Model2GravityEDist,
-																ModelEDist>,
-												 RankAgent<WnsFeatures3<ModelEDist>,
-																	 ModelEDist>,
-												 ModelEDist>;
-
-template class M1SpOptim<System<Model2GravityGDist,
-				ModelGDist>,
-			 RankAgent<WnsFeatures3<ModelGDist>,
-				   ModelGDist>,
-			 ModelGDist>;
-
-template class M1SpOptim<System<Model2GravityGDist,
-				Model2GravityGDist>,
-			 RankAgent<ToyFeatures5<Model2GravityGDist>,
-				   Model2GravityGDist>,
-			 Model2GravityGDist>;
-
-template class M1SpOptim<System<Model2GravityEDist,
-																Model2GravityEDist>,
-												 RankAgent<ToyFeatures5<Model2GravityEDist>,
-																	 Model2GravityEDist>,
-												 Model2GravityEDist>;
-
-template class M1SpOptim<System<Model2GravityEDist,
-																ModelEDist>,
-												 RankAgent<ToyFeatures5<ModelEDist>,
-																	 ModelEDist>,
-												 ModelEDist>;
-
-template class M1SpOptim<System<Model2GPowGDist,
-				Model2GPowGDist>,
-			 RankAgent<ToyFeatures5<Model2GPowGDist>,
-				   Model2GPowGDist>,
-			 Model2GPowGDist>;
-
-template class M1SpOptim<System<Model2EdgeToEdge,
-																Model2EdgeToEdge>,
-												 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-																	 Model2EdgeToEdge>,
-												 Model2EdgeToEdge>;
-
-template class M1SpOptim<System<Model2EdgeToEdge,
-																ModelIntercept>,
-												 RankAgent<ToyFeatures5<ModelIntercept>,
-																	 ModelIntercept>,
-												 ModelIntercept>;
-
-template class M1SpOptim<System<Model2GPowGDist,
-				ModelGDist>,
-			 RankAgent<ToyFeatures5<ModelGDist>,
-				   ModelGDist>,
-			 ModelGDist>;
-
-template class M1SpOptim<System<Model2GravityGDist,
-				ModelGDist>,
-			 RankAgent<ToyFeatures5<ModelGDist>,
-				   ModelGDist>,
-			 ModelGDist>;
-
-
-
 template <class S, class A, class M>
 M1SpOptim<S,A,M>::M1SpOptim(){
   name = "M1Sp";
@@ -284,3 +185,101 @@ void M1SpOptim<S,A,M>
   tp.B = bestB;
 
 }
+
+
+template class M1SpOptim<System<ModelGDist,
+        ModelGDist>,
+       RankAgent<WnsFeatures3<ModelGDist>,
+           ModelGDist>,
+       ModelGDist>;
+
+
+template class M1SpOptim<System<ModelGravityGDist,
+        ModelGravityGDist>,
+       RankAgent<WnsFeatures3<ModelGravityGDist>,
+           ModelGravityGDist>,
+       ModelGravityGDist>;
+
+template class M1SpOptim<System<Model2GravityGDist,
+        Model2GravityGDist>,
+       RankAgent<WnsFeatures3<Model2GravityGDist>,
+           Model2GravityGDist>,
+       Model2GravityGDist>;
+
+template class M1SpOptim<System<Model2EdgeToEdge,
+                                ModelIntercept>,
+                         RankAgent<WnsFeatures3<ModelIntercept>,
+                                   ModelIntercept>,
+                         ModelIntercept>;
+
+template class M1SpOptim<System<Model2EdgeToEdge,
+                                Model2EdgeToEdge>,
+                         RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                                   Model2EdgeToEdge>,
+                         Model2EdgeToEdge>;
+
+template class M1SpOptim<System<Model2GravityEDist,
+                                Model2GravityEDist>,
+                         RankAgent<WnsFeatures3<Model2GravityEDist>,
+                                   Model2GravityEDist>,
+                         Model2GravityEDist>;
+
+template class M1SpOptim<System<Model2GravityEDist,
+                                ModelEDist>,
+                         RankAgent<WnsFeatures3<ModelEDist>,
+                                   ModelEDist>,
+                         ModelEDist>;
+
+template class M1SpOptim<System<Model2GravityGDist,
+        ModelGDist>,
+       RankAgent<WnsFeatures3<ModelGDist>,
+           ModelGDist>,
+       ModelGDist>;
+
+template class M1SpOptim<System<Model2GravityGDist,
+        Model2GravityGDist>,
+       RankAgent<ToyFeatures5<Model2GravityGDist>,
+           Model2GravityGDist>,
+       Model2GravityGDist>;
+
+template class M1SpOptim<System<Model2GravityEDist,
+                                Model2GravityEDist>,
+                         RankAgent<ToyFeatures5<Model2GravityEDist>,
+                                   Model2GravityEDist>,
+                         Model2GravityEDist>;
+
+template class M1SpOptim<System<Model2GravityEDist,
+                                ModelEDist>,
+                         RankAgent<ToyFeatures5<ModelEDist>,
+                                   ModelEDist>,
+                         ModelEDist>;
+
+template class M1SpOptim<System<Model2GPowGDist,
+        Model2GPowGDist>,
+       RankAgent<ToyFeatures5<Model2GPowGDist>,
+           Model2GPowGDist>,
+       Model2GPowGDist>;
+
+template class M1SpOptim<System<Model2EdgeToEdge,
+                                Model2EdgeToEdge>,
+                         RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                                   Model2EdgeToEdge>,
+                         Model2EdgeToEdge>;
+
+template class M1SpOptim<System<Model2EdgeToEdge,
+                                ModelIntercept>,
+                         RankAgent<ToyFeatures5<ModelIntercept>,
+                                   ModelIntercept>,
+                         ModelIntercept>;
+
+template class M1SpOptim<System<Model2GPowGDist,
+        ModelGDist>,
+       RankAgent<ToyFeatures5<ModelGDist>,
+           ModelGDist>,
+       ModelGDist>;
+
+template class M1SpOptim<System<Model2GravityGDist,
+        ModelGDist>,
+       RankAgent<ToyFeatures5<ModelGDist>,
+           ModelGDist>,
+       ModelGDist>;

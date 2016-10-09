@@ -1,56 +1,6 @@
 #include <glog/logging.h>
 #include "rankAgent.hpp"
 
-
-template class RankAgent<ToyFeatures5<ModelGravityGDist>,
-												 ModelGravityGDist>;
-
-template class RankAgent<ToyFeatures5<Model2GravityGDist>,
-												 Model2GravityGDist>;
-
-template class RankAgent<ToyFeatures5<Model2GravityEDist>,
-												 Model2GravityEDist>;
-
-template class RankAgent<ToyFeatures5<Model2GPowGDist>,
-												 Model2GPowGDist>;
-
-template class RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-												 Model2EdgeToEdge>;
-
-template class RankAgent<ToyFeatures5<ModelGDist>,
-												 ModelGDist>;
-
-template class RankAgent<ToyFeatures5<ModelEDist>,
-												 ModelEDist>;
-
-template class RankAgent<ToyFeatures5<ModelIntercept>,
-												 ModelIntercept>;
-
-
-template class RankAgent<WnsFeatures3<ModelGDist>,
-												 ModelGDist>;
-
-template class RankAgent<WnsFeatures3<ModelEDist>,
-												 ModelEDist>;
-
-template class RankAgent<WnsFeatures3<ModelIntercept>,
-												 ModelIntercept>;
-
-template class RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-												 Model2EdgeToEdge>;
-
-template class RankAgent<WnsFeatures3<ModelGravityGDist>,
-												 ModelGravityGDist>;
-
-template class RankAgent<WnsFeatures3<Model2GravityGDist>,
-												 Model2GravityGDist>;
-
-template class RankAgent<WnsFeatures3<Model2GravityEDist>,
-												 Model2GravityEDist>;
-
-
-
-
 template <class F, class M>
 RankAgent<F,M>::RankAgent(){
   tp.weights_r.ones(f.numFeatures);
@@ -283,3 +233,51 @@ template <class F, class M>
 double RankAgent<F,M>::calcJitter(){
   return tp.jitterScale > 0 ? 1.0/tp.jitterScale : 0.0;
 }
+
+
+
+template class RankAgent<ToyFeatures5<ModelGravityGDist>,
+                         ModelGravityGDist>;
+
+template class RankAgent<ToyFeatures5<Model2GravityGDist>,
+                         Model2GravityGDist>;
+
+template class RankAgent<ToyFeatures5<Model2GravityEDist>,
+                         Model2GravityEDist>;
+
+template class RankAgent<ToyFeatures5<Model2GPowGDist>,
+                         Model2GPowGDist>;
+
+template class RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                         Model2EdgeToEdge>;
+
+template class RankAgent<ToyFeatures5<ModelGDist>,
+                         ModelGDist>;
+
+template class RankAgent<ToyFeatures5<ModelEDist>,
+                         ModelEDist>;
+
+template class RankAgent<ToyFeatures5<ModelIntercept>,
+                         ModelIntercept>;
+
+
+template class RankAgent<WnsFeatures3<ModelGDist>,
+                         ModelGDist>;
+
+template class RankAgent<WnsFeatures3<ModelEDist>,
+                         ModelEDist>;
+
+template class RankAgent<WnsFeatures3<ModelIntercept>,
+                         ModelIntercept>;
+
+template class RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                         Model2EdgeToEdge>;
+
+template class RankAgent<WnsFeatures3<ModelGravityGDist>,
+                         ModelGravityGDist>;
+
+template class RankAgent<WnsFeatures3<Model2GravityGDist>,
+                         Model2GravityGDist>;
+
+template class RankAgent<WnsFeatures3<Model2GravityEDist>,
+                         Model2GravityEDist>;

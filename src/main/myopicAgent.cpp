@@ -1,22 +1,5 @@
 #include "myopicAgent.hpp"
 
-template class MyopicAgent<ModelGravityGDist>;
-
-template class MyopicAgent<Model2GravityGDist>;
-
-template class MyopicAgent<Model2GravityEDist>;
-
-template class MyopicAgent<Model2GPowGDist>;
-
-template class MyopicAgent<Model2EdgeToEdge>;
-
-template class MyopicAgent<ModelGDist>;
-
-template class MyopicAgent<ModelEDist>;
-
-template class MyopicAgent<ModelIntercept>;
-
-
 template <class M>
 std::string MyopicAgent<M>::name = "myopic";
 
@@ -92,3 +75,20 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
 
   checkForValidTrt(sD,tD,fD,dD);
 }
+
+
+template class MyopicAgent<ModelGravityGDist>;
+
+template class MyopicAgent<Model2GravityGDist>;
+
+template class MyopicAgent<Model2GravityEDist>;
+
+template class MyopicAgent<Model2GPowGDist>;
+
+template class MyopicAgent<Model2EdgeToEdge>;
+
+template class MyopicAgent<ModelGDist>;
+
+template class MyopicAgent<ModelEDist>;
+
+template class MyopicAgent<ModelIntercept>;

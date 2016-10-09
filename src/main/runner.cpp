@@ -31,103 +31,6 @@ TrainRunner<S,A>
 
 
 
-template class PlainRunner<System<ModelGDist,
-                                  ModelGDist>,
-                           RankAgent<ToyFeatures5<ModelGDist>,
-                                     ModelGDist> >;
-
-
-template class PlainRunner<System<ModelGravityGDist,
-                                  ModelGravityGDist>,
-                           NoTrt<ModelGravityGDist> >;
-
-
-template class PlainRunner<System<ModelGravityGDist,
-                                  ModelGravityGDist>,
-                           RankAgent<WnsFeatures3<ModelGravityGDist>,
-                                     ModelGravityGDist> >;
-
-
-template class PlainRunner<System<Model2GravityGDist,
-                                  Model2GravityGDist>,
-                           RankAgent<WnsFeatures3<Model2GravityGDist>,
-                                     Model2GravityGDist> >;
-
-
-template class PlainRunner<System<ModelIntercept,
-																	ModelIntercept>,
-													 RankAgent<WnsFeatures3<ModelIntercept>,
-																		 ModelIntercept> >;
-
-
-template class PlainRunner<System<Model2EdgeToEdge,
-																	Model2EdgeToEdge>,
-													 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-																		 Model2EdgeToEdge> >;
-
-
-template class PlainRunner<System<Model2GravityEDist,
-																	Model2GravityEDist>,
-													 RankAgent<WnsFeatures3<Model2GravityEDist>,
-																		 Model2GravityEDist> >;
-
-
-template class PlainRunner<System<ModelEDist,
-																	ModelEDist>,
-													 RankAgent<WnsFeatures3<ModelEDist>,
-																		 ModelEDist> >;
-
-
-template class PlainRunner<System<Model2GravityGDist,
-                                  Model2GravityGDist>,
-                           RankAgent<ToyFeatures5<Model2GravityGDist>,
-                                     Model2GravityGDist> >;
-
-
-template class PlainRunner<System<Model2GravityEDist,
-																	Model2GravityEDist>,
-													 RankAgent<ToyFeatures5<Model2GravityEDist>,
-																		 Model2GravityEDist> >;
-
-
-template class PlainRunner<System<ModelEDist,
-																	ModelEDist>,
-													 RankAgent<ToyFeatures5<ModelEDist>,
-																		 ModelEDist> >;
-
-
-template class PlainRunner<System<Model2GPowGDist,
-                                  Model2GPowGDist>,
-                           RankAgent<ToyFeatures5<Model2GPowGDist>,
-                                     Model2GPowGDist> >;
-
-
-template class PlainRunner<System<Model2EdgeToEdge,
-																	Model2EdgeToEdge>,
-													 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-																		 Model2EdgeToEdge> >;
-
-
-template class PlainRunner<System<ModelIntercept,
-																	ModelIntercept>,
-													 RankAgent<ToyFeatures5<ModelIntercept>,
-																		 ModelIntercept> >;
-
-
-template class PlainRunner<System<Model2GPowGDist,
-                                  ModelGDist>,
-                           RankAgent<ToyFeatures5<ModelGDist>,
-                                     ModelGDist> >;
-
-template class PlainRunner<System<ModelGDist,
-                                  ModelGDist>,
-                           RankAgent<WnsFeatures3<ModelGDist>,
-                                     ModelGDist> >;
-
-
-
-
-
 template <class S, class A>
 RunStats
 PlainRunner<S,A>
@@ -164,64 +67,100 @@ PlainRunner<S,A>
   return rs;
 }
 
+template class PlainRunner<System<ModelGDist,
+                                  ModelGDist>,
+                           RankAgent<ToyFeatures5<ModelGDist>,
+                                     ModelGDist> >;
 
 
-template class VanillaRunner<System<ModelGravityGDist,
-                                    ModelGravityGDist>,
-                             NoTrt<ModelGravityGDist> >;
-
-template class VanillaRunner<System<Model2GravityGDist,
-                                    Model2GravityGDist>,
-                             NoTrt<Model2GravityGDist> >;
-
-template class VanillaRunner<System<Model2GravityEDist,
-																		Model2GravityEDist>,
-														 NoTrt<Model2GravityEDist> >;
-
-template class VanillaRunner<System<Model2GPowGDist,
-                                    Model2GPowGDist>,
-                             NoTrt<Model2GPowGDist> >;
-
-template class VanillaRunner<System<Model2EdgeToEdge,
-																		Model2EdgeToEdge>,
-														 NoTrt<Model2EdgeToEdge> >;
-
-template class VanillaRunner<System<Model2GPowGDist,
-                                    ModelGDist>,
-                             NoTrt<ModelGDist> >;
-
-template class VanillaRunner<System<ModelGravityGDist,
-                                    ModelGravityGDist>,
-                             ProximalAgent<ModelGravityGDist> >;
-
-template class VanillaRunner<System<Model2GravityGDist,
-                                    Model2GravityGDist>,
-                             ProximalAgent<Model2GravityGDist> >;
+template class PlainRunner<System<ModelGravityGDist,
+                                  ModelGravityGDist>,
+                           NoTrt<ModelGravityGDist> >;
 
 
-template class VanillaRunner<System<Model2GravityEDist,
-																		Model2GravityEDist>,
-														 ProximalAgent<Model2GravityEDist> >;
+template class PlainRunner<System<ModelGravityGDist,
+                                  ModelGravityGDist>,
+                           RankAgent<WnsFeatures3<ModelGravityGDist>,
+                                     ModelGravityGDist> >;
 
-template class VanillaRunner<System<Model2GPowGDist,
-                                    Model2GPowGDist>,
-                             ProximalAgent<Model2GPowGDist> >;
 
-template class VanillaRunner<System<Model2EdgeToEdge,
-																		Model2EdgeToEdge>,
-														 ProximalAgent<Model2EdgeToEdge> >;
+template class PlainRunner<System<Model2GravityGDist,
+                                  Model2GravityGDist>,
+                           RankAgent<WnsFeatures3<Model2GravityGDist>,
+                                     Model2GravityGDist> >;
 
-template class VanillaRunner<System<Model2GPowGDist,
-                                    ModelGDist>,
-                             ProximalAgent<ModelGDist> >;
 
-template class VanillaRunner<System<Model2GravityEDist,
-                                    Model2GravityEDist>,
-                             AllAgent<Model2GravityEDist> >;
+template class PlainRunner<System<ModelIntercept,
+                                  ModelIntercept>,
+                           RankAgent<WnsFeatures3<ModelIntercept>,
+                                     ModelIntercept> >;
 
-template class VanillaRunner<System<Model2EdgeToEdge,
-                                    Model2EdgeToEdge>,
-                             AllAgent<Model2EdgeToEdge> >;
+
+template class PlainRunner<System<Model2EdgeToEdge,
+                                  Model2EdgeToEdge>,
+                           RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                                     Model2EdgeToEdge> >;
+
+
+template class PlainRunner<System<Model2GravityEDist,
+                                  Model2GravityEDist>,
+                           RankAgent<WnsFeatures3<Model2GravityEDist>,
+                                     Model2GravityEDist> >;
+
+
+template class PlainRunner<System<ModelEDist,
+                                  ModelEDist>,
+                           RankAgent<WnsFeatures3<ModelEDist>,
+                                     ModelEDist> >;
+
+
+template class PlainRunner<System<Model2GravityGDist,
+                                  Model2GravityGDist>,
+                           RankAgent<ToyFeatures5<Model2GravityGDist>,
+                                     Model2GravityGDist> >;
+
+
+template class PlainRunner<System<Model2GravityEDist,
+                                  Model2GravityEDist>,
+                           RankAgent<ToyFeatures5<Model2GravityEDist>,
+                                     Model2GravityEDist> >;
+
+
+template class PlainRunner<System<ModelEDist,
+                                  ModelEDist>,
+                           RankAgent<ToyFeatures5<ModelEDist>,
+                                     ModelEDist> >;
+
+
+template class PlainRunner<System<Model2GPowGDist,
+                                  Model2GPowGDist>,
+                           RankAgent<ToyFeatures5<Model2GPowGDist>,
+                                     Model2GPowGDist> >;
+
+
+template class PlainRunner<System<Model2EdgeToEdge,
+                                  Model2EdgeToEdge>,
+                           RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                                     Model2EdgeToEdge> >;
+
+
+template class PlainRunner<System<ModelIntercept,
+                                  ModelIntercept>,
+                           RankAgent<ToyFeatures5<ModelIntercept>,
+                                     ModelIntercept> >;
+
+
+template class PlainRunner<System<Model2GPowGDist,
+                                  ModelGDist>,
+                           RankAgent<ToyFeatures5<ModelGDist>,
+                                     ModelGDist> >;
+
+template class PlainRunner<System<ModelGDist,
+                                  ModelGDist>,
+                           RankAgent<WnsFeatures3<ModelGDist>,
+                                     ModelGDist> >;
+
+
 
 
 template<class S, class A>
@@ -283,129 +222,62 @@ VanillaRunner<S,A>
   return rs;
 }
 
+template class VanillaRunner<System<ModelGravityGDist,
+                                    ModelGravityGDist>,
+                             NoTrt<ModelGravityGDist> >;
+
+template class VanillaRunner<System<Model2GravityGDist,
+                                    Model2GravityGDist>,
+                             NoTrt<Model2GravityGDist> >;
+
+template class VanillaRunner<System<Model2GravityEDist,
+                                    Model2GravityEDist>,
+                             NoTrt<Model2GravityEDist> >;
+
+template class VanillaRunner<System<Model2GPowGDist,
+                                    Model2GPowGDist>,
+                             NoTrt<Model2GPowGDist> >;
+
+template class VanillaRunner<System<Model2EdgeToEdge,
+                                    Model2EdgeToEdge>,
+                             NoTrt<Model2EdgeToEdge> >;
+
+template class VanillaRunner<System<Model2GPowGDist,
+                                    ModelGDist>,
+                             NoTrt<ModelGDist> >;
+
+template class VanillaRunner<System<ModelGravityGDist,
+                                    ModelGravityGDist>,
+                             ProximalAgent<ModelGravityGDist> >;
+
+template class VanillaRunner<System<Model2GravityGDist,
+                                    Model2GravityGDist>,
+                             ProximalAgent<Model2GravityGDist> >;
 
 
-template class VanillaRunnerNS<System<ModelGravityGDist,
-                                      ModelGravityGDist>,
-                               NoTrt<ModelGravityGDist> >;
+template class VanillaRunner<System<Model2GravityEDist,
+                                    Model2GravityEDist>,
+                             ProximalAgent<Model2GravityEDist> >;
 
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 NoTrt<Model2EdgeToEdge> >;
+template class VanillaRunner<System<Model2GPowGDist,
+                                    Model2GPowGDist>,
+                             ProximalAgent<Model2GPowGDist> >;
 
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 NoTrt<Model2GravityEDist> >;
+template class VanillaRunner<System<Model2EdgeToEdge,
+                                    Model2EdgeToEdge>,
+                             ProximalAgent<Model2EdgeToEdge> >;
 
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               NoTrt<Model2GravityGDist> >;
+template class VanillaRunner<System<Model2GPowGDist,
+                                    ModelGDist>,
+                             ProximalAgent<ModelGDist> >;
 
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               AllAgent<Model2GravityGDist> >;
+template class VanillaRunner<System<Model2GravityEDist,
+                                    Model2GravityEDist>,
+                             AllAgent<Model2GravityEDist> >;
 
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 AllAgent<Model2EdgeToEdge> >;
-
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 AllAgent<Model2GravityEDist> >;
-
-template class VanillaRunnerNS<System<Model2GPowGDist,
-                                      Model2GPowGDist>,
-                               NoTrt<Model2GPowGDist> >;
-
-template class VanillaRunnerNS<System<Model2GPowGDist,
-                                      Model2GPowGDist>,
-                               AllAgent<Model2GPowGDist> >;
-
-template class VanillaRunnerNS<System<ModelGravityGDist,
-                                      ModelGravityGDist>,
-                               ProximalAgent<ModelGravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               ProximalAgent<Model2GravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 ProximalAgent<Model2EdgeToEdge> >;
-
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 ProximalAgent<Model2GravityEDist> >;
-
-template class VanillaRunnerNS<System<Model2GPowGDist,
-                                      Model2GPowGDist>,
-                               ProximalAgent<Model2GPowGDist> >;
-
-template class VanillaRunnerNS<System<ModelGravityGDist,
-                                      ModelGravityGDist>,
-                               MyopicAgent<ModelGravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               MyopicAgent<Model2GravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 MyopicAgent<Model2EdgeToEdge> >;
-
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 MyopicAgent<Model2GravityEDist> >;
-
-template class VanillaRunnerNS<System<Model2GPowGDist,
-                                      Model2GPowGDist>,
-                               MyopicAgent<Model2GPowGDist> >;
-
-template class VanillaRunnerNS<System<ModelGravityGDist,
-                                      ModelGravityGDist>,
-                               RankAgent<ToyFeatures5<ModelGravityGDist>,
-                                         ModelGravityGDist> >;
-
-template class VanillaRunnerNS<System<ModelGravityGDist,
-                                      ModelGravityGDist>,
-                               RankAgent<WnsFeatures3<ModelGravityGDist>,
-                                         ModelGravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               RankAgent<WnsFeatures3<Model2GravityGDist>,
-                                         Model2GravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-																				 Model2EdgeToEdge> >;
-
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 RankAgent<WnsFeatures3<Model2GravityEDist>,
-																				 Model2GravityEDist> >;
-
-template class VanillaRunnerNS<System<Model2GravityGDist,
-                                      Model2GravityGDist>,
-                               RankAgent<ToyFeatures5<Model2GravityGDist>,
-                                         Model2GravityGDist> >;
-
-template class VanillaRunnerNS<System<Model2EdgeToEdge,
-																			Model2EdgeToEdge>,
-															 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-																				 Model2EdgeToEdge> >;
-
-template class VanillaRunnerNS<System<Model2GravityEDist,
-																			Model2GravityEDist>,
-															 RankAgent<ToyFeatures5<Model2GravityEDist>,
-																				 Model2GravityEDist> >;
-
-template class VanillaRunnerNS<System<Model2GPowGDist,
-                                      Model2GPowGDist>,
-                               RankAgent<ToyFeatures5<Model2GPowGDist>,
-                                         Model2GPowGDist> >;
-
+template class VanillaRunner<System<Model2EdgeToEdge,
+                                    Model2EdgeToEdge>,
+                             AllAgent<Model2EdgeToEdge> >;
 
 
 
@@ -449,45 +321,127 @@ VanillaRunnerNS<S,A>
 }
 
 
+template class VanillaRunnerNS<System<ModelGravityGDist,
+                                      ModelGravityGDist>,
+                               NoTrt<ModelGravityGDist> >;
 
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               NoTrt<Model2EdgeToEdge> >;
 
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               NoTrt<Model2GravityEDist> >;
 
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               NoTrt<Model2GravityGDist> >;
 
-template class FitOnlyRunner<System<ModelGravityGDist,
-                                    ModelGravityGDist>,
-                             MyopicAgent<ModelGravityGDist> >;
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               AllAgent<Model2GravityGDist> >;
 
-template class FitOnlyRunner<System<Model2GravityGDist,
-                                    Model2GravityGDist>,
-                             MyopicAgent<Model2GravityGDist> >;
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               AllAgent<Model2EdgeToEdge> >;
 
-template class FitOnlyRunner<System<Model2GravityEDist,
-																		Model2GravityEDist>,
-														 MyopicAgent<Model2GravityEDist> >;
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               AllAgent<Model2GravityEDist> >;
 
-template class FitOnlyRunner<System<Model2GravityEDist,
-																		ModelEDist>,
-														 MyopicAgent<ModelEDist> >;
+template class VanillaRunnerNS<System<Model2GPowGDist,
+                                      Model2GPowGDist>,
+                               NoTrt<Model2GPowGDist> >;
 
-template class FitOnlyRunner<System<Model2GPowGDist,
-                                    Model2GPowGDist>,
-                             MyopicAgent<Model2GPowGDist> >;
+template class VanillaRunnerNS<System<Model2GPowGDist,
+                                      Model2GPowGDist>,
+                               AllAgent<Model2GPowGDist> >;
 
-template class FitOnlyRunner<System<Model2EdgeToEdge,
-																		Model2EdgeToEdge>,
-														 MyopicAgent<Model2EdgeToEdge> >;
+template class VanillaRunnerNS<System<ModelGravityGDist,
+                                      ModelGravityGDist>,
+                               ProximalAgent<ModelGravityGDist> >;
 
-template class FitOnlyRunner<System<Model2EdgeToEdge,
-																		ModelIntercept>,
-														 MyopicAgent<ModelIntercept> >;
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               ProximalAgent<Model2GravityGDist> >;
 
-template class FitOnlyRunner<System<Model2GPowGDist,
-                                    ModelGDist>,
-                             MyopicAgent<ModelGDist> >;
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               ProximalAgent<Model2EdgeToEdge> >;
 
-template class FitOnlyRunner<System<Model2GravityGDist,
-                                    ModelGDist>,
-                             MyopicAgent<ModelGDist> >;
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               ProximalAgent<Model2GravityEDist> >;
+
+template class VanillaRunnerNS<System<Model2GPowGDist,
+                                      Model2GPowGDist>,
+                               ProximalAgent<Model2GPowGDist> >;
+
+template class VanillaRunnerNS<System<ModelGravityGDist,
+                                      ModelGravityGDist>,
+                               MyopicAgent<ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               MyopicAgent<Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               MyopicAgent<Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               MyopicAgent<Model2GravityEDist> >;
+
+template class VanillaRunnerNS<System<Model2GPowGDist,
+                                      Model2GPowGDist>,
+                               MyopicAgent<Model2GPowGDist> >;
+
+template class VanillaRunnerNS<System<ModelGravityGDist,
+                                      ModelGravityGDist>,
+                               RankAgent<ToyFeatures5<ModelGravityGDist>,
+                                         ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<ModelGravityGDist,
+                                      ModelGravityGDist>,
+                               RankAgent<WnsFeatures3<ModelGravityGDist>,
+                                         ModelGravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               RankAgent<WnsFeatures3<Model2GravityGDist>,
+                                         Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                                         Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               RankAgent<WnsFeatures3<Model2GravityEDist>,
+                                         Model2GravityEDist> >;
+
+template class VanillaRunnerNS<System<Model2GravityGDist,
+                                      Model2GravityGDist>,
+                               RankAgent<ToyFeatures5<Model2GravityGDist>,
+                                         Model2GravityGDist> >;
+
+template class VanillaRunnerNS<System<Model2EdgeToEdge,
+                                      Model2EdgeToEdge>,
+                               RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                                         Model2EdgeToEdge> >;
+
+template class VanillaRunnerNS<System<Model2GravityEDist,
+                                      Model2GravityEDist>,
+                               RankAgent<ToyFeatures5<Model2GravityEDist>,
+                                         Model2GravityEDist> >;
+
+template class VanillaRunnerNS<System<Model2GPowGDist,
+                                      Model2GPowGDist>,
+                               RankAgent<ToyFeatures5<Model2GPowGDist>,
+                                         Model2GPowGDist> >;
+
 
 
 template <class S, class A>
@@ -554,157 +508,41 @@ FitOnlyRunner<S,A>
 }
 
 
-template class
-OptimRunner<System<Model2GravityGDist,
-									 Model2GravityGDist>,
-						RankAgent<ToyFeatures5<Model2GravityGDist>,
-											Model2GravityGDist>,
-						M1SpOptim<System<Model2GravityGDist,
-														 Model2GravityGDist>,
-											RankAgent<ToyFeatures5<Model2GravityGDist>,
-																Model2GravityGDist>,
-											Model2GravityGDist> >;
+template class FitOnlyRunner<System<ModelGravityGDist,
+                                    ModelGravityGDist>,
+                             MyopicAgent<ModelGravityGDist> >;
 
-template class
-OptimRunner<System<Model2GravityEDist,
-                   Model2GravityEDist>,
-            RankAgent<ToyFeatures5<Model2GravityEDist>,
-                      Model2GravityEDist>,
-            M1SpOptim<System<Model2GravityEDist,
-                             Model2GravityEDist>,
-                      RankAgent<ToyFeatures5<Model2GravityEDist>,
-                                Model2GravityEDist>,
-                      Model2GravityEDist> >;
+template class FitOnlyRunner<System<Model2GravityGDist,
+                                    Model2GravityGDist>,
+                             MyopicAgent<Model2GravityGDist> >;
 
+template class FitOnlyRunner<System<Model2GravityEDist,
+                                    Model2GravityEDist>,
+                             MyopicAgent<Model2GravityEDist> >;
 
-template class
-OptimRunner<System<Model2GravityEDist,
-									 ModelEDist>,
-						RankAgent<ToyFeatures5<ModelEDist>,
-											ModelEDist>,
-						M1SpOptim<System<Model2GravityEDist,
-														 ModelEDist>,
-											RankAgent<ToyFeatures5<ModelEDist>,
-																ModelEDist>,
-											ModelEDist> >;
+template class FitOnlyRunner<System<Model2GravityEDist,
+                                    ModelEDist>,
+                             MyopicAgent<ModelEDist> >;
 
+template class FitOnlyRunner<System<Model2GPowGDist,
+                                    Model2GPowGDist>,
+                             MyopicAgent<Model2GPowGDist> >;
 
-template class
-OptimRunner<System<Model2GPowGDist,
-                   Model2GPowGDist>,
-            RankAgent<ToyFeatures5<Model2GPowGDist>,
-                      Model2GPowGDist>,
-            M1SpOptim<System<Model2GPowGDist,
-                             Model2GPowGDist>,
-                      RankAgent<ToyFeatures5<Model2GPowGDist>,
-                                Model2GPowGDist>,
-                      Model2GPowGDist> >;
+template class FitOnlyRunner<System<Model2EdgeToEdge,
+                                    Model2EdgeToEdge>,
+                             MyopicAgent<Model2EdgeToEdge> >;
 
+template class FitOnlyRunner<System<Model2EdgeToEdge,
+                                    ModelIntercept>,
+                             MyopicAgent<ModelIntercept> >;
 
-template class
-OptimRunner<System<Model2EdgeToEdge,
-									 Model2EdgeToEdge>,
-						RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-											Model2EdgeToEdge>,
-						M1SpOptim<System<Model2EdgeToEdge,
-														 Model2EdgeToEdge>,
-											RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-																Model2EdgeToEdge>,
-											Model2EdgeToEdge> >;
+template class FitOnlyRunner<System<Model2GPowGDist,
+                                    ModelGDist>,
+                             MyopicAgent<ModelGDist> >;
 
-
-template class
-OptimRunner<System<Model2EdgeToEdge,
-									 ModelIntercept>,
-						RankAgent<ToyFeatures5<ModelIntercept>,
-											ModelIntercept>,
-						M1SpOptim<System<Model2EdgeToEdge,
-														 ModelIntercept>,
-											RankAgent<ToyFeatures5<ModelIntercept>,
-																ModelIntercept>,
-											ModelIntercept> >;
-
-
-template class
-OptimRunner<System<Model2GPowGDist,
-                   ModelGDist>,
-            RankAgent<ToyFeatures5<ModelGDist>,
-                      ModelGDist>,
-            M1SpOptim<System<Model2GPowGDist,
-                             ModelGDist>,
-                      RankAgent<ToyFeatures5<ModelGDist>,
-                                ModelGDist>,
-                      ModelGDist> >;
-
-
-template class
-OptimRunner<System<Model2GravityGDist,
-                   ModelGDist>,
-            RankAgent<ToyFeatures5<ModelGDist>,
-                      ModelGDist>,
-            M1SpOptim<System<Model2GravityGDist,
-                             ModelGDist>,
-                      RankAgent<ToyFeatures5<ModelGDist>,
-                                ModelGDist>,
-                      ModelGDist> >;
-
-
-template class
-OptimRunner<System<Model2EdgeToEdge,
-									 ModelIntercept>,
-						RankAgent<WnsFeatures3<ModelIntercept>,
-											ModelIntercept>,
-						M1SpOptim<System<Model2EdgeToEdge,
-														 ModelIntercept>,
-											RankAgent<WnsFeatures3<ModelIntercept>,
-																ModelIntercept>,
-											ModelIntercept> >;
-
-
-template class
-OptimRunner<System<Model2EdgeToEdge,
-									 Model2EdgeToEdge>,
-						RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-											Model2EdgeToEdge>,
-						M1SpOptim<System<Model2EdgeToEdge,
-														 Model2EdgeToEdge>,
-											RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-																Model2EdgeToEdge>,
-											Model2EdgeToEdge> >;
-
-
-template class
-OptimRunner<System<Model2GravityGDist,
-                   Model2GravityGDist>,
-            RankAgent<WnsFeatures3<Model2GravityGDist>,
-                      Model2GravityGDist>,
-            M1SpOptim<System<Model2GravityGDist,
-                             Model2GravityGDist>,
-                      RankAgent<WnsFeatures3<Model2GravityGDist>,
-                                Model2GravityGDist>,
-                      Model2GravityGDist> >;
-
-template class
-OptimRunner<System<Model2GravityEDist,
-									 Model2GravityEDist>,
-						RankAgent<WnsFeatures3<Model2GravityEDist>,
-											Model2GravityEDist>,
-						M1SpOptim<System<Model2GravityEDist,
-														 Model2GravityEDist>,
-											RankAgent<WnsFeatures3<Model2GravityEDist>,
-																Model2GravityEDist>,
-											Model2GravityEDist> >;
-
-template class
-OptimRunner<System<Model2GravityGDist,
-                   ModelGDist>,
-            RankAgent<WnsFeatures3<ModelGDist>,
-                      ModelGDist>,
-            M1SpOptim<System<Model2GravityGDist,
-                             ModelGDist>,
-                      RankAgent<WnsFeatures3<ModelGDist>,
-                                ModelGDist>,
-                      ModelGDist> >;
+template class FitOnlyRunner<System<Model2GravityGDist,
+                                    ModelGDist>,
+                             MyopicAgent<ModelGDist> >;
 
 
 
@@ -843,6 +681,163 @@ OptimRunner<S,A,Optim>
 
 
 
+
+
+
+template class
+OptimRunner<System<Model2GravityGDist,
+                   Model2GravityGDist>,
+            RankAgent<ToyFeatures5<Model2GravityGDist>,
+                      Model2GravityGDist>,
+            M1SpOptim<System<Model2GravityGDist,
+                             Model2GravityGDist>,
+                      RankAgent<ToyFeatures5<Model2GravityGDist>,
+                                Model2GravityGDist>,
+                      Model2GravityGDist> >;
+
+template class
+OptimRunner<System<Model2GravityEDist,
+                   Model2GravityEDist>,
+            RankAgent<ToyFeatures5<Model2GravityEDist>,
+                      Model2GravityEDist>,
+            M1SpOptim<System<Model2GravityEDist,
+                             Model2GravityEDist>,
+                      RankAgent<ToyFeatures5<Model2GravityEDist>,
+                                Model2GravityEDist>,
+                      Model2GravityEDist> >;
+
+
+template class
+OptimRunner<System<Model2GravityEDist,
+                   ModelEDist>,
+            RankAgent<ToyFeatures5<ModelEDist>,
+                      ModelEDist>,
+            M1SpOptim<System<Model2GravityEDist,
+                             ModelEDist>,
+                      RankAgent<ToyFeatures5<ModelEDist>,
+                                ModelEDist>,
+                      ModelEDist> >;
+
+
+template class
+OptimRunner<System<Model2GPowGDist,
+                   Model2GPowGDist>,
+            RankAgent<ToyFeatures5<Model2GPowGDist>,
+                      Model2GPowGDist>,
+            M1SpOptim<System<Model2GPowGDist,
+                             Model2GPowGDist>,
+                      RankAgent<ToyFeatures5<Model2GPowGDist>,
+                                Model2GPowGDist>,
+                      Model2GPowGDist> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+                   Model2EdgeToEdge>,
+            RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                      Model2EdgeToEdge>,
+            M1SpOptim<System<Model2EdgeToEdge,
+                             Model2EdgeToEdge>,
+                      RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                                Model2EdgeToEdge>,
+                      Model2EdgeToEdge> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+                   ModelIntercept>,
+            RankAgent<ToyFeatures5<ModelIntercept>,
+                      ModelIntercept>,
+            M1SpOptim<System<Model2EdgeToEdge,
+                             ModelIntercept>,
+                      RankAgent<ToyFeatures5<ModelIntercept>,
+                                ModelIntercept>,
+                      ModelIntercept> >;
+
+
+template class
+OptimRunner<System<Model2GPowGDist,
+                   ModelGDist>,
+            RankAgent<ToyFeatures5<ModelGDist>,
+                      ModelGDist>,
+            M1SpOptim<System<Model2GPowGDist,
+                             ModelGDist>,
+                      RankAgent<ToyFeatures5<ModelGDist>,
+                                ModelGDist>,
+                      ModelGDist> >;
+
+
+template class
+OptimRunner<System<Model2GravityGDist,
+                   ModelGDist>,
+            RankAgent<ToyFeatures5<ModelGDist>,
+                      ModelGDist>,
+            M1SpOptim<System<Model2GravityGDist,
+                             ModelGDist>,
+                      RankAgent<ToyFeatures5<ModelGDist>,
+                                ModelGDist>,
+                      ModelGDist> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+                   ModelIntercept>,
+            RankAgent<WnsFeatures3<ModelIntercept>,
+                      ModelIntercept>,
+            M1SpOptim<System<Model2EdgeToEdge,
+                             ModelIntercept>,
+                      RankAgent<WnsFeatures3<ModelIntercept>,
+                                ModelIntercept>,
+                      ModelIntercept> >;
+
+
+template class
+OptimRunner<System<Model2EdgeToEdge,
+                   Model2EdgeToEdge>,
+            RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                      Model2EdgeToEdge>,
+            M1SpOptim<System<Model2EdgeToEdge,
+                             Model2EdgeToEdge>,
+                      RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                                Model2EdgeToEdge>,
+                      Model2EdgeToEdge> >;
+
+
+template class
+OptimRunner<System<Model2GravityGDist,
+                   Model2GravityGDist>,
+            RankAgent<WnsFeatures3<Model2GravityGDist>,
+                      Model2GravityGDist>,
+            M1SpOptim<System<Model2GravityGDist,
+                             Model2GravityGDist>,
+                      RankAgent<WnsFeatures3<Model2GravityGDist>,
+                                Model2GravityGDist>,
+                      Model2GravityGDist> >;
+
+template class
+OptimRunner<System<Model2GravityEDist,
+                   Model2GravityEDist>,
+            RankAgent<WnsFeatures3<Model2GravityEDist>,
+                      Model2GravityEDist>,
+            M1SpOptim<System<Model2GravityEDist,
+                             Model2GravityEDist>,
+                      RankAgent<WnsFeatures3<Model2GravityEDist>,
+                                Model2GravityEDist>,
+                      Model2GravityEDist> >;
+
+template class
+OptimRunner<System<Model2GravityGDist,
+                   ModelGDist>,
+            RankAgent<WnsFeatures3<ModelGDist>,
+                      ModelGDist>,
+            M1SpOptim<System<Model2GravityGDist,
+                             ModelGDist>,
+                      RankAgent<WnsFeatures3<ModelGDist>,
+                                ModelGDist>,
+                      ModelGDist> >;
+
+
+
 template <class S, class A, class Optim>
 RunStats
 OptimRunnerNS<S,A,Optim>
@@ -899,6 +894,54 @@ OptimRunnerNS<S,A,Optim>
 
 
 
+template <class S, class A, class Optim>
+RunStats
+TuneRunner<S,A,Optim>
+::run(S system,
+  A agent,
+  Optim optim,
+  const int numReps, const int numPoints){
+
+  RunStats rs;
+  // double value=0;
+  int r,t;
+  for(r=0; r<numReps; r++){
+    if(system.modelGen_r.sample()){
+      std::vector<double> newPar = system.modelGen_r.getPar();
+      system.modelEst_r.putPar(newPar.begin());
+    }
+
+    system.revert();
+    agent.reset();
+
+    // begin rep r
+    for(t=system.sD.time; t<numPoints; t++){
+
+      if(t>=system.fD.trtStart){
+        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+			    t > system.fD.trtStart);
+
+        optim.optim(system,agent);
+
+        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+          system.modelEst);
+      }
+
+      system.updateStatus();
+
+      system.nextPoint();
+
+    }
+    // end rep r
+
+    rs(system.value());
+    // value += system.value();
+  }
+
+  return rs;
+}
+
+
 template class
 TuneRunner<System<ModelGDist,
                   ModelGDist>,
@@ -948,50 +991,50 @@ TuneRunner<System<Model2GravityGDist,
 
 template class
 TuneRunner<System<ModelIntercept,
-									ModelIntercept>,
-					 RankAgent<WnsFeatures3<ModelIntercept>,
-										 ModelIntercept>,
-					 M1SpOptim<System<ModelIntercept,
-														ModelIntercept>,
-										 RankAgent<WnsFeatures3<ModelIntercept>,
-															 ModelIntercept>,
-										 ModelIntercept> >;
+                  ModelIntercept>,
+           RankAgent<WnsFeatures3<ModelIntercept>,
+                     ModelIntercept>,
+           M1SpOptim<System<ModelIntercept,
+                            ModelIntercept>,
+                     RankAgent<WnsFeatures3<ModelIntercept>,
+                               ModelIntercept>,
+                     ModelIntercept> >;
 
 
 template class
 TuneRunner<System<Model2EdgeToEdge,
-									Model2EdgeToEdge>,
-					 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-										 Model2EdgeToEdge>,
-					 M1SpOptim<System<Model2EdgeToEdge,
-														Model2EdgeToEdge>,
-										 RankAgent<WnsFeatures3<Model2EdgeToEdge>,
-															 Model2EdgeToEdge>,
-										 Model2EdgeToEdge> >;
+                  Model2EdgeToEdge>,
+           RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                     Model2EdgeToEdge>,
+           M1SpOptim<System<Model2EdgeToEdge,
+                            Model2EdgeToEdge>,
+                     RankAgent<WnsFeatures3<Model2EdgeToEdge>,
+                               Model2EdgeToEdge>,
+                     Model2EdgeToEdge> >;
 
 
 template class
 TuneRunner<System<Model2GravityEDist,
-									Model2GravityEDist>,
-					 RankAgent<WnsFeatures3<Model2GravityEDist>,
-										 Model2GravityEDist>,
-					 M1SpOptim<System<Model2GravityEDist,
-														Model2GravityEDist>,
-										 RankAgent<WnsFeatures3<Model2GravityEDist>,
-															 Model2GravityEDist>,
-										 Model2GravityEDist> >;
+                  Model2GravityEDist>,
+           RankAgent<WnsFeatures3<Model2GravityEDist>,
+                     Model2GravityEDist>,
+           M1SpOptim<System<Model2GravityEDist,
+                            Model2GravityEDist>,
+                     RankAgent<WnsFeatures3<Model2GravityEDist>,
+                               Model2GravityEDist>,
+                     Model2GravityEDist> >;
 
 
 template class
 TuneRunner<System<ModelEDist,
-									ModelEDist>,
-					 RankAgent<WnsFeatures3<ModelEDist>,
-										 ModelEDist>,
-					 M1SpOptim<System<ModelEDist,
-														ModelEDist>,
-										 RankAgent<WnsFeatures3<ModelEDist>,
-															 ModelEDist>,
-										 ModelEDist> >;
+                  ModelEDist>,
+           RankAgent<WnsFeatures3<ModelEDist>,
+                     ModelEDist>,
+           M1SpOptim<System<ModelEDist,
+                            ModelEDist>,
+                     RankAgent<WnsFeatures3<ModelEDist>,
+                               ModelEDist>,
+                     ModelEDist> >;
 
 
 template class
@@ -1008,26 +1051,26 @@ TuneRunner<System<Model2GravityGDist,
 
 template class
 TuneRunner<System<Model2GravityEDist,
-									Model2GravityEDist>,
-					 RankAgent<ToyFeatures5<Model2GravityEDist>,
-										 Model2GravityEDist>,
-					 M1SpOptim<System<Model2GravityEDist,
-														Model2GravityEDist>,
-										 RankAgent<ToyFeatures5<Model2GravityEDist>,
-															 Model2GravityEDist>,
-										 Model2GravityEDist> >;
+                  Model2GravityEDist>,
+           RankAgent<ToyFeatures5<Model2GravityEDist>,
+                     Model2GravityEDist>,
+           M1SpOptim<System<Model2GravityEDist,
+                            Model2GravityEDist>,
+                     RankAgent<ToyFeatures5<Model2GravityEDist>,
+                               Model2GravityEDist>,
+                     Model2GravityEDist> >;
 
 
 template class
 TuneRunner<System<ModelEDist,
-									ModelEDist>,
-					 RankAgent<ToyFeatures5<ModelEDist>,
-										 ModelEDist>,
-					 M1SpOptim<System<ModelEDist,
-														ModelEDist>,
-										 RankAgent<ToyFeatures5<ModelEDist>,
-															 ModelEDist>,
-										 ModelEDist> >;
+                  ModelEDist>,
+           RankAgent<ToyFeatures5<ModelEDist>,
+                     ModelEDist>,
+           M1SpOptim<System<ModelEDist,
+                            ModelEDist>,
+                     RankAgent<ToyFeatures5<ModelEDist>,
+                               ModelEDist>,
+                     ModelEDist> >;
 
 
 template class
@@ -1044,26 +1087,26 @@ TuneRunner<System<Model2GPowGDist,
 
 template class
 TuneRunner<System<Model2EdgeToEdge,
-									Model2EdgeToEdge>,
-					 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-										 Model2EdgeToEdge>,
-					 M1SpOptim<System<Model2EdgeToEdge,
-														Model2EdgeToEdge>,
-										 RankAgent<ToyFeatures5<Model2EdgeToEdge>,
-															 Model2EdgeToEdge>,
-										 Model2EdgeToEdge> >;
+                  Model2EdgeToEdge>,
+           RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                     Model2EdgeToEdge>,
+           M1SpOptim<System<Model2EdgeToEdge,
+                            Model2EdgeToEdge>,
+                     RankAgent<ToyFeatures5<Model2EdgeToEdge>,
+                               Model2EdgeToEdge>,
+                     Model2EdgeToEdge> >;
 
 
 template class
 TuneRunner<System<ModelIntercept,
-									ModelIntercept>,
-					 RankAgent<ToyFeatures5<ModelIntercept>,
-										 ModelIntercept>,
-					 M1SpOptim<System<ModelIntercept,
-														ModelIntercept>,
-										 RankAgent<ToyFeatures5<ModelIntercept>,
-															 ModelIntercept>,
-										 ModelIntercept> >;
+                  ModelIntercept>,
+           RankAgent<ToyFeatures5<ModelIntercept>,
+                     ModelIntercept>,
+           M1SpOptim<System<ModelIntercept,
+                            ModelIntercept>,
+                     RankAgent<ToyFeatures5<ModelIntercept>,
+                               ModelIntercept>,
+                     ModelIntercept> >;
 
 
 template class
@@ -1076,58 +1119,6 @@ TuneRunner<System<Model2GPowGDist,
                      RankAgent<ToyFeatures5<ModelGDist>,
                                ModelGDist>,
                      ModelGDist> >;
-
-
-
-
-template <class S, class A, class Optim>
-RunStats
-TuneRunner<S,A,Optim>
-::run(S system,
-  A agent,
-  Optim optim,
-  const int numReps, const int numPoints){
-
-  RunStats rs;
-  // double value=0;
-  int r,t;
-  for(r=0; r<numReps; r++){
-    if(system.modelGen_r.sample()){
-      std::vector<double> newPar = system.modelGen_r.getPar();
-      system.modelEst_r.putPar(newPar.begin());
-    }
-
-    system.revert();
-    agent.reset();
-
-    // begin rep r
-    for(t=system.sD.time; t<numPoints; t++){
-
-      if(t>=system.fD.trtStart){
-        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t > system.fD.trtStart);
-
-        optim.optim(system,agent);
-
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-      }
-
-      system.updateStatus();
-
-      system.nextPoint();
-
-    }
-    // end rep r
-
-    rs(system.value());
-    // value += system.value();
-  }
-
-  return rs;
-}
-
-
 
 
 
