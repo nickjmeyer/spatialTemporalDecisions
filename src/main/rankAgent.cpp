@@ -1,10 +1,6 @@
 #include <glog/logging.h>
 #include "rankAgent.hpp"
 
-#include <mutex>
-
-std::mutex global_stream_mutex;
-
 
 template class RankAgent<ToyFeatures5<ModelGravityGDist>,
 												 ModelGravityGDist>;
