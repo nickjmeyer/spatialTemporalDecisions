@@ -5,6 +5,7 @@
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 DEFINE_bool(dryRun,false,"Do not execute main");
+DEFINE_int64(numReps,100,"Number of replications");
 
 int main(int argc, char ** argv){
     ::google::InitGoogleLogging(argv[0]);
@@ -45,7 +46,7 @@ int main(int argc, char ** argv){
             s.modelGen_r.setType(MLES);
             s.modelEst_r.setType(MLES);
 
-            int numReps = 100;
+            int numReps = FLAGS_numReps;
             Starts starts(numReps,s.fD.numNodes);
 
             NT nt;
@@ -153,7 +154,7 @@ int main(int argc, char ** argv){
             s.modelGen_r.setType(MLES);
             s.modelEst_r.setType(MLES);
 
-            int numReps = 100;
+            int numReps = FLAGS_numReps;
             Starts starts(numReps,s.fD.numNodes);
 
             NT nt;
