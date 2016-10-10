@@ -3,9 +3,10 @@
 RunStats::RunStats(){
   n = 0U;
   vals.clear();
-  smean_ = 0.0;
-  svar_ = 0.0;
-  ssd_ = 0.0;
+  sMean_ = 0.0;
+  sSqMean_ = 0.0;
+  sVar_ = 0.0;
+  sSd_ = 0.0;
   seMean_ = 0.0;
 }
 
@@ -18,18 +19,19 @@ RunStats::RunStats(const std::vector<double> & init)
 void RunStats::update(const double & add){
   if(n == 0){
     ++n;
-    smean_ = add;
-    svar_ = 0.0;
-    ssd_ = 0.0;
+    sMean_ = add;
+    sSqMean_ = add*add;
+    sVar_ = 0.0;
+    sSd_ = 0.0;
     seMean_ = 0.0;
   }
   else{
     ++n;
-    svar_ = svar_*double(n-2)/double(n-1)
-      + (add - smean_)*(add - smean_)/double(n);
-    smean_ = smean_ + (add - smean_)/double(n);
-    ssd_ = std::sqrt(svar_);
-    seMean_ = ssd_/std::sqrt(double(n));
+    sMean_ = sMean_ + (add - sMean_)/double(n);
+    sSqMean_ = sSqMean_ + (add*add - sSqMean_)/double(n);
+    sVar_ = (sSqMean_ - sMean_*sMean_)*double(n)/double(n-1);
+    sSd_ = std::sqrt(sVar_);
+    seMean_ = sSd_/std::sqrt(double(n));
   }
 }
 
@@ -42,18 +44,18 @@ void RunStats::update(const std::vector<double> & add){
 }
 
 
-double RunStats::smean() const {
-  return smean_;
+double RunStats::sMean() const {
+  return sMean_;
 }
 
 
-double RunStats::svar() const {
-  return svar_;
+double RunStats::sVar() const {
+  return sVar_;
 }
 
 
-double RunStats::ssd() const {
-  return ssd_;
+double RunStats::sSd() const {
+  return sSd_;
 }
 
 

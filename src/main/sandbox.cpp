@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
   // ra.reset();
 
   std::cout << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
-  double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+  double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
   std::cout << " valRA: " + njm::toString(valRA,"") << std::endl;
 
   njm::sett.clean();

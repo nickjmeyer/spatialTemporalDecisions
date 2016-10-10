@@ -99,10 +99,10 @@ void M1SpOptim<S,A,M>
 
 
     agent.tp.putPar(parPH);
-    valP = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
+    valP = runner.run(s,agent,tp.mcReps,s.fD.finalT).sMean();
 
     agent.tp.putPar(parMH);
-    valM = runner.run(s,agent,tp.mcReps,s.fD.finalT).smean();
+    valM = runner.run(s,agent,tp.mcReps,s.fD.finalT).sMean();
 
 
     for(i=0; i<numPar; i++)
@@ -172,7 +172,7 @@ void M1SpOptim<S,A,M>
     o.tp.A=abVals.at(i).first;
     o.tp.B=abVals.at(i).second;
 
-    val = r.run(s,agent,o,50,s.fD.finalT).smean();
+    val = r.run(s,agent,o,50,s.fD.finalT).sMean();
     if(val < minVal){
       bestA = o.tp.A;
       bestB = o.tp.B;

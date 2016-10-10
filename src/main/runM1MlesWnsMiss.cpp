@@ -61,12 +61,12 @@ int main(int argc, char ** argv){
 
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
@@ -114,12 +114,12 @@ int main(int argc, char ** argv){
 
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
 
         }

@@ -79,9 +79,9 @@ int main(int argc, char ** argv){
             // no treatment
             rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
             njm::message("   No treatment: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("none, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -89,9 +89,9 @@ int main(int argc, char ** argv){
             // proximal
             rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
             njm::message("       Proximal: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("proximal, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("proximal, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -99,9 +99,9 @@ int main(int argc, char ** argv){
             // myopic
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("myopic, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("myopic, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -109,9 +109,9 @@ int main(int argc, char ** argv){
             // all agent
             rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
             njm::message("      All Agent: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + " (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("all, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("all, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -119,9 +119,9 @@ int main(int argc, char ** argv){
             // policy search
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("ps, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -188,9 +188,9 @@ int main(int argc, char ** argv){
             // no treatment
             rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
             njm::message("   No treatment: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("none, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -198,9 +198,9 @@ int main(int argc, char ** argv){
             // proximal
             rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
             njm::message("       Proximal: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("proximal, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("proximal, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -208,9 +208,9 @@ int main(int argc, char ** argv){
             // myopic
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("myopic, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("myopic, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -218,9 +218,9 @@ int main(int argc, char ** argv){
             // all agent
             rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
             njm::message("      All Agent: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + " (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("all, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("all, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
@@ -228,9 +228,9 @@ int main(int argc, char ** argv){
             // policy search
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.smean(),"")
+                + njm::toString(rs.sMean(),"")
                 + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("ps, "+ njm::toString(rs.smean(),"") +
+            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);

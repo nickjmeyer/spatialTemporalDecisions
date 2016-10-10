@@ -43,7 +43,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
   s.revert();
 
 
-  double val = rn.run(s,nt,numReps,numYears,starts).smean();
+  double val = rn.run(s,nt,numReps,numYears,starts).sMean();
   double scale = 1.025, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
@@ -89,7 +89,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
 
 
-    val = rn.run(s,nt,numReps,numYears,starts).smean();
+    val = rn.run(s,nt,numReps,numYears,starts).sMean();
     printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
       ++iter, val, scale);
     // std::cout << std::endl
@@ -118,8 +118,8 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
   int numYears = s.fD.finalT;
 
-  double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).smean();
-  double atFinalT = rn.run(s,nt,numReps,numYears,starts).smean();
+  double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).sMean();
+  double atFinalT = rn.run(s,nt,numReps,numYears,starts).sMean();
 
   double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
   njm::message("Goal: " + njm::toString(goal,""));
@@ -133,7 +133,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
   s.modelEst_r.putPar(par.begin());
   s.revert();
 
-  double val = rm.run(s,ma,numReps,numYears,starts).smean();
+  double val = rm.run(s,ma,numReps,numYears,starts).sMean();
   double scale = 1.1, shrink = .9;
   int above = int(val > goal);
   int iter = 0;
@@ -171,7 +171,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
     // std::cout << "par: " << njm::toString(par," ","\n");
 
 
-    val = rm.run(s,ma,numReps,numYears,starts).smean();
+    val = rm.run(s,ma,numReps,numYears,starts).sMean();
     printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
       ++iter, val, trt);
     fflush(stdout);
@@ -206,7 +206,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 //   PA pa;
 //   RP rp;
 
-//   return rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+//   return rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 // }
 
 
@@ -272,11 +272,11 @@ int main(int argc, char ** argv){
       s.modelEst_r.read();
       s.revert();
 
-      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
       njm::message(" valNT: " + njm::toString(valNT,"") +
         "\n" +
@@ -344,11 +344,11 @@ int main(int argc, char ** argv){
       s.modelEst_r.read();
       s.revert();
 
-      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).smean();
+      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).smean();
+      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).smean();
+      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
       njm::message(" valNT: " + njm::toString(valNT,"") +
         "\n" +
