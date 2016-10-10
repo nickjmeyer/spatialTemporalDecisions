@@ -1,6 +1,8 @@
 #include "timer.hpp"
 
-Timer njm::timer;
+namespace njm{
+
+Timer timer;
 
 using namespace std;
 using namespace chrono;
@@ -143,4 +145,6 @@ void Timer::stop(const string name){
   diff = tock.time_since_epoch() - tick.at(thread).at(name).time_since_epoch();
   running.at(thread).at(name) += diff;
 #endif
+}
+
 }
