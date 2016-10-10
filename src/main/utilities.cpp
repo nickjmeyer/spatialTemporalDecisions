@@ -38,5 +38,5 @@ double njm::sampVar(const std::vector<double> & v){
   const int cnt = v.size();
   mean /= cnt;
   meanSq /= cnt;
-  return (cnt / (cnt - 1)) * (meanSq - mean*mean);
+  return (double(cnt) / double(cnt - 1)) * (meanSq - mean*mean);
 }
