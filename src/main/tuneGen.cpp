@@ -254,6 +254,8 @@ int main(int argc, char ** argv){
       RA ra;
       RM rm;
       RR rr;
+
+      pa.setEdgeToEdge(FLAGS_edgeToEdge);
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
       ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
@@ -326,6 +328,7 @@ int main(int argc, char ** argv){
       RA ra;
       RM rm;
       RR rr;
+      pa.setEdgeToEdge(FLAGS_edgeToEdge);
       ra.setEdgeToEdge(FLAGS_edgeToEdge);
       ma.setEdgeToEdge(FLAGS_edgeToEdge);
       // ra.reset();
