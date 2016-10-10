@@ -25,7 +25,7 @@ Timer::~Timer(){
 void Timer::print(){
 #ifndef NJM_NO_TIMER
   // print the times
-  
+
   int i,I = omp_get_max_threads();
   map<string,high_resolution_clock::duration> total;
   map<string,int> counts;
@@ -34,16 +34,16 @@ void Timer::print(){
   map<string,high_resolution_clock::duration>::iterator it,beg,end;
   for(i = 0; i < I; ++i){
     // iterate over threads
-    
+
     beg = running.at(i).begin();
     end = running.at(i).end();
     for(it = beg; it != end; ++it){
       // iterate over chunks that the thread timed
-      
+
       if(counts.find(it->first) == counts.end()){
-	counts.insert(pair<string,int>(it->first,0));
-	total.insert(pair<string,high_resolution_clock::duration>
-		     (it->first,high_resolution_clock::duration::zero()));
+        counts.insert(pair<string,int>(it->first,0));
+        total.insert(pair<string,high_resolution_clock::duration>
+          (it->first,high_resolution_clock::duration::zero()));
       }
 
       // count how many threads contributed
@@ -73,7 +73,7 @@ void Timer::print(){
   if(totalOrd.size() > 0){
     // header
     printf("%s%s","\n#-----------------------------------TIMER",
-	   "------------------------------------\n");
+      "------------------------------------\n");
     printf("%18s  %12s %18s %18s\n","ID","Percent","Total","Total/Thread");
 
     // print out the [name, percentage, total, total per thread]
@@ -91,18 +91,18 @@ void Timer::print(){
       percTotal = 100.0*double(curTimeMs.count()) / double(totalTimeMs.count());
       totalMins = double(curTimeMs.count()) * double(1.66666666667e-5);
       perThreadMins = totalMins / double(counts.at(top.second));
-    
+
       printf("%18.18s: % 12.8f % 18.8f % 18.8f   mins\n",
-	     top.second.c_str(), percTotal, totalMins, perThreadMins);
+        top.second.c_str(), percTotal, totalMins, perThreadMins);
     }
     // footer
     printf("\n%18.18s: % 12.8f   mins\n",
-	   "Aggregated total",
-	   double(totalTimeMs.count()) * double(1.66666666667e-5));
+      "Aggregated total",
+      double(totalTimeMs.count()) * double(1.66666666667e-5));
     printf("%s%s","------------------------------------TIMER",
-	   "-----------------------------------#\n");
+      "-----------------------------------#\n");
   }
-  
+
 #endif
 }
 
@@ -110,7 +110,7 @@ void Timer::print(){
 void Timer::start(const string name){
 #ifndef NJM_NO_TIMER
   // start the time (dont get time till end of function)
-  
+
   int thread = omp_get_thread_num();
 
   map<string,time_point<high_resolution_clock> >::iterator it,end;
@@ -120,10 +120,10 @@ void Timer::start(const string name){
 
   if(end == it){ // if this chunk doesn't have a time yet
     running.at(thread).insert(pair<string,high_resolution_clock::duration>
-			      (name,high_resolution_clock::duration::zero()));
+      (name,high_resolution_clock::duration::zero()));
     tick.at(thread).insert(pair<string,time_point<high_resolution_clock> >
-			   (name,
-			    high_resolution_clock::now()));
+      (name,
+        high_resolution_clock::now()));
   }
   else // otherwise overwrite the current tick
     it->second = high_resolution_clock::now();
