@@ -190,6 +190,7 @@ int main(int argc, char ** argv){
 
       RunStats rs;
 
+      njm::timer.start("No treatment");
       // no treatment
       rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
       njm::message("   No treatment: "
@@ -199,8 +200,10 @@ int main(int argc, char ** argv){
         ", " + njm::toString(rs.seMean(),"") + "\n",
         njm::sett.datExt("results_",".txt"),
         std::ios_base::app);
+      njm::timer.stop("No treatment");
 
 
+      njm::timer.start("Proximal");
       // proximal
       rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
       njm::message("       Proximal: "
@@ -210,7 +213,9 @@ int main(int argc, char ** argv){
         ", " + njm::toString(rs.seMean(),"") + "\n",
         njm::sett.datExt("results_",".txt"),
         std::ios_base::app);
+      njm::timer.stop("Proximal");
 
+      njm::timer.start("Myopic");
       // myopic
       rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
       njm::message("         Myopic: "
@@ -220,7 +225,9 @@ int main(int argc, char ** argv){
         ", " + njm::toString(rs.seMean(),"") + "\n",
         njm::sett.datExt("results_",".txt"),
         std::ios_base::app);
+      njm::timer.stop("Myopic");
 
+      njm::timer.start("All agent");
       // all agent
       rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
       njm::message("      All Agent: "
@@ -230,7 +237,9 @@ int main(int argc, char ** argv){
         ", " + njm::toString(rs.seMean(),"") + "\n",
         njm::sett.datExt("results_",".txt"),
         std::ios_base::app);
+      njm::timer.stop("All agent");
 
+      njm::timer.start("Policy search");
       // policy search
       rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
       njm::message("  Policy Search: "
@@ -240,6 +249,7 @@ int main(int argc, char ** argv){
         ", " + njm::toString(rs.seMean(),"") + "\n",
         njm::sett.datExt("results_",".txt"),
         std::ios_base::app);
+      njm::timer.stop("Policy search");
 
     }
     njm::sett.clean();
