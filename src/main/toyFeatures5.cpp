@@ -1,4 +1,5 @@
 #include <glog/logging.h>
+#include "timer.hpp"
 #include "toyFeatures5.hpp"
 
 std::vector<double> ToyFeatures5TuneParam::getPar() const{
@@ -17,6 +18,7 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  njm::timer.start("preCompData");
   CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
 
   // pre compute stuff
@@ -96,6 +98,7 @@ void ToyFeatures5<M>::preCompData(const SimData & sD,
       }
     }
   }
+  njm::timer.stop("preCompData");
 }
 
 
@@ -106,6 +109,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  njm::timer.start("getFeatures");
   CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
 
   // clear containers
@@ -119,7 +123,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
   // start feature construction
 
-
+  njm::timer.start("feature0");
   int i,j,featNum=0;
   std::vector<int>::const_iterator itD0,itD1,beg;
 
@@ -130,8 +134,10 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 
   featNum++;
+  njm::timer.stop("feature0");
 
 
+  njm::timer.start("feature1");
   // feature 1
   // joint probability of infection between not infected and not infected
   // weighted average of joint probabilities
@@ -193,8 +199,9 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
 
 
   featNum++;
+  njm::timer.stop("feature1");
 
-
+  njm::timer.start("feature2");
   // feature 2
   // weighted subgraph connectivity measures
   notFeat.col(featNum) = notFeat.col(0) % centralityNotInfec;
@@ -202,7 +209,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   infFeat.col(featNum) = (1.0 - weightMat) * centralityNotInfec;
 
   featNum++;
-
+  njm::timer.stop("feature2");
 
 
   tDPre = tD;
@@ -222,6 +229,7 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
   // }
 
   CHECK_EQ(featNum,numFeatures);
+  njm::timer.stop("getFeatures");
 }
 
 
@@ -232,6 +240,7 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
   const FixedData & fD,
   const DynamicData & dD,
   M & m){
+  njm::timer.start("updateFeatures");
   CHECK_EQ(tp.getEdgeToEdge(),m.getEdgeToEdge());
 
   int i,j,num;
@@ -254,6 +263,7 @@ void ToyFeatures5<M>::updateFeatures(const SimData & sD,
     }
   }
 
+  njm::timer.stop("updateFeatures");
   getFeatures(sD,tD,fD,dD,m);
 }
 
