@@ -163,6 +163,8 @@ int main(int argc, char ** argv){
       s.modelGen_r.setType(MLES);
       s.modelEst_r.setType(MLES);
 
+      std::cout << njm::toString(s.modelGen_r.getPar()) << std::endl;
+
       int numReps = 1;
       Starts starts(numReps,s.fD.numNodes);
 
