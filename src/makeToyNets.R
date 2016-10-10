@@ -44,10 +44,9 @@ genRandNet<-function(n,numNeigh=3){
 
   net=list(n=n,neigh=neigh,nodes=nodes,
            fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
-  net$d=getDist(net)
+  net$gDist=getDist(net)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
 
   net$start = getStart(net$n)
 
@@ -152,19 +151,19 @@ genRingNet<-function(n1,n2){
            fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
 
 
-  net$d = matrix(0,nrow=n,ncol=n)
-  net$d[which(neigh==1)] = 1
+  net$gDist = matrix(0,nrow=n,ncol=n)
+  net$gDist[which(neigh==1)] = 1
   for(i in 0:(n2-1)){
-    net$d[n-i,n-i-1] = 1/n2
-    net$d[n-i-1,n-i] = net$d[n-i,n-i-1]
+    net$gDist[n-i,n-i-1] = 1/n2
+    net$gDist[n-i-1,n-i] = net$gDist[n-i,n-i-1]
   }
-  net$d[which(neigh==0)] = -1
-  diag(net$d)=0
+  net$gDist[which(neigh==0)] = -1
+  diag(net$gDist)=0
 
-  net$d=getDist(net,preAlloc=1)
+  net$gDist=getDist(net,preAlloc=1)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
+  net$gDist=net$gDist
 
   net$start = getStart(net$n)
 
@@ -203,10 +202,10 @@ genGridNet<-function(n1,n2){
   net=list(n=n,neigh=neigh,nodes=as.matrix(nodes),
            fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
 
-  net$d=getDist(net)
+  net$gDist=getDist(net)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
+  net$gDist=net$gDist
 
   net$start = getStart(net$n)
 
@@ -279,7 +278,7 @@ genCrpNet<-function(n) {
 
   net=list(n=n,neigh=c(),nodes=nodes,fips=1:n,caves=cov$caves,Xcov=cov$Xcov)
 
-  net$d=c()
+  net$gDist=c()
 
   meanCaves=mean(net$caves)
 
@@ -325,20 +324,20 @@ genAlleyNet<-function(nodes){
   net$fips=1:alley$n
   net$Xcov=cov$Xcov
 
-  net$d = matrix(-1,nrow=net$n,ncol=net$n)
-  net$d[which(net$neigh == 1)] = 1
+  net$gDist = matrix(-1,nrow=net$n,ncol=net$n)
+  net$gDist[which(net$neigh == 1)] = 1
   prongs = which(abs(net$nodes[,2]) > .0000001)
   for(i in prongs){
     for(j in 1:net$n){
       if(net$neigh[i,j] == 1)
-        net$d[i,j] = net$d[j,i] = .9
+        net$gDist[i,j] = net$gDist[j,i] = .9
     }
   }
-  diag(net$d) = 0
-  net$d=getDist(net,preAlloc=1)
+  diag(net$gDist) = 0
+  net$gDist=getDist(net,preAlloc=1)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
+  net$gDist=net$gDist
 
   net$start = getStart(net$n)
 
@@ -516,12 +515,12 @@ genBowTieNet<-function(grid1N,grid2N,midN){
   net=list(n=n,neigh=neigh,nodes=as.matrix(nodes),
            fips=1:n,caves=caves,Xcov=Xcov)
 
-  net$dist = getDist(net)
+  net$gDistist = getDist(net)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
+  net$gDist=net$gDist
 
-  ## net$dist=(getDist(net)*max(grid1N,grid2N))^3
+  ## net$gDistist=(getDist(net)*max(grid1N,grid2N))^3
 
   net$start = getStart(net$n)
 
@@ -552,10 +551,10 @@ genScaleFreeNet<-function(n){
   net$caves=cov$caves
   net$Xcov=cov$Xcov
 
-  net$d=getDist(net)
+  net$gDist=getDist(net)
 
   meanCaves=mean(net$caves)
-  net$d=net$d
+  net$gDist=net$gDist
 
   net$start = getStart(net$n)
 
@@ -595,9 +594,9 @@ genShrinkNet<-function(n1,n0=2){
     return(rbind(nodes1,nodes2))
   }
 
-  net$d=as.matrix(dist(net$nodes,method="manhattan"))
+  net$gDist=as.matrix(dist(net$nodes,method="manhattan"))
 
-  net$neigh=as.matrix(net$d<(1+.000001))*1
+  net$neigh=as.matrix(net$gDist<(1+.000001))*1
 
   net$fips=1:(net$n)
 
@@ -632,7 +631,7 @@ getDist<-function(net,preAlloc=0){
   else{
     dyn.load("main/getDist.so")
     out=.C("getDist",
-           d=as.double(net$d),
+           d=as.double(net$gDist),
            n=as.integer(net$n),
            neigh=as.integer(net$neigh),
            nodesX=as.double(net$nodes[,1]),
@@ -804,7 +803,7 @@ saveNet<-function(net,dir=NULL){
     write.table(subGraph,file,col.names=FALSE,row.names=FALSE)
 
     ## centroidsMds
-    centroidsMds = cmdscale(net$d,k=2)
+    centroidsMds = cmdscale(net$gDist,k=2)
     file=paste(dir,"centroidsMds.txt",sep="")
     write.table(centroidsMds,file,col.names=FALSE,row.names=FALSE)
 
