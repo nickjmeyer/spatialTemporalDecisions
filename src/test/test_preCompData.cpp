@@ -3,6 +3,7 @@
 #include <glog/logging.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_deriv.h>
+#include <algorithm>
 #include "tuneGenWNS.hpp"
 
 DEFINE_string(srcDir,"","Path to source directory");
@@ -73,6 +74,44 @@ TEST(TestPreCompData,TestExpDistWeightValue) {
 
   EXPECT_NEAR(sumProp/sumAll,0.8,1e-8);
 }
+
+TEST(TestPreCompData,TestExpDistWeightNear) {
+  const bool edgeToEdge = false;
+
+  typedef Model2GravityEDist MG;
+
+  typedef MG ME;
+
+  typedef System<MG,ME> S;
+
+  typedef WnsFeatures3<ME> F;
+  typedef RankAgent<F,ME> RA;
+
+  typedef VanillaRunnerNS<S,RA> RR;
+
+  S s;
+
+  for (int i = 0; i < s.fD.numNodes; ++i) {
+    const std::vector<int> & near = s.fD.expDistWeightNear.at(i);
+    const int numNear = near.size();
+    double maxNearDist = -1.0;
+    for (int j = 0; j < numNear; ++j) {
+      const double distVal = s.fD.eDist.at(i*s.fD.numNodes + near.at(j));
+      if(distVal > maxNearDist) {
+        maxNearDist = distVal;
+      }
+    }
+    ASSERT_GT(maxNearDist,0.0);
+
+    for (int j = 0; j < s.fD.numNodes; ++j) {
+      if(std::find(near.begin(), near.end(), j) == near.end()
+        && i != j) {
+        EXPECT_GE(s.fD.eDist.at(i*s.fD.numNodes + j), maxNearDist);
+      }
+    }
+  }
+}
+
 
 int main(int argc, char **argv) {
   gflags::ParseCommandLineFlags(&argc,&argv,true);
