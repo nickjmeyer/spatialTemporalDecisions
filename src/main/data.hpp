@@ -130,6 +130,7 @@ struct FixedData {
   std::vector<double> hpdd;
 
   std::vector<double> expDistWeight;
+  std::vector<std::vector<int> > expDistWeightNear;
 
 
   bool forecastFlat; // extend the last time point out

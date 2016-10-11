@@ -549,12 +549,29 @@ void System<MG,
     }
 
     fD.expDistWeight.clear();
+    fD.expDistWeightNear.resize(fD.numNodes);
+    const int numNear = std::log(fD.numNodes) + 1;
     for (i = 0, k = 0; i < fD.numNodes; ++i) {
+      std::vector<std::pair<double,int> > near;
       for (j = 0; j < fD.numNodes; ++j,++k) {
-        fD.expDistWeight.push_back(
-          std::exp(- fD.eDist.at(k) * root));
+        const double val = std::exp(- fD.eDist.at(k) * root);
+
+        // store the value
+        fD.expDistWeight.push_back(val);
+
+        // put -val since we want largest first
+        if(i != j)
+          near.push_back(std::pair<double,int>(-val,j));
+      }
+
+      // sort to get largest
+      std::sort(near.begin(),near.end());
+      fD.expDistWeightNear.at(i).clear();
+      for (j = 0; j < numNear; ++j) {
+        fD.expDistWeightNear.at(i).push_back(near.at(j).second);
       }
     }
+
   }
 }
 
