@@ -159,21 +159,22 @@ void ToyFeatures5<M>::getFeatures(const SimData & sD,
     } else {
       double distWeightProb = 0;
       const int numNear = fD.expDistWeightNear.at(i).size();
-      for (int j = 0; j < numNear; ++j) { // j is a node index
+      for (int j = 0; j < numNear; ++j) {
+        const int jInd = fD.expDistWeightNear.at(i).at(j);
 
-        CHECK_NE(i,j) << "Node appears in its own set of near.";
-        if(sD.status.at(j) < 2) {// j must be not infected
+        CHECK_NE(i,jInd) << "Node appears in its own set of near.";
+        if(sD.status.at(jInd) < 2) {// j must be not infected
           // get notInfec index for j
           const int jNot = std::lower_bound(
-            sD.notInfec.begin(),sD.notInfec.end(),j) - sD.notInfec.begin();
+            sD.notInfec.begin(),sD.notInfec.end(),jInd) - sD.notInfec.begin();
 
-          CHECK_EQ(sD.notInfec.at(jNot),j) << "lower_bound did not work";
+          CHECK_EQ(sD.notInfec.at(jNot),jInd) << "lower_bound did not work";
 
           // probability i infects j, weighted by distance
-          const int index = j * fD.numNodes + sD.notInfec.at(i);
+          const int index = jInd * fD.numNodes + sD.notInfec.at(i);
           const double weight = fD.expDistWeight.at(index);
 
-          const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(j,
+          const double prob = 1.0 - 1.0/(1.0 + std::exp(m.oneOnOne(jInd,
                 sD.notInfec.at(i),fD.numNodes)));
           const double modProb = prob * (1.0 - notFeat(jNot,0));
 
