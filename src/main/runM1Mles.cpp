@@ -114,6 +114,7 @@ int main(int argc, char ** argv){
                 std::ios_base::app);
 
             // policy search
+            njm::timer.start("policy search");
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
                 + njm::toString(rs.sMean(),"")
@@ -122,6 +123,7 @@ int main(int argc, char ** argv){
                 ", " + njm::toString(rs.seMean(),"") + "\n",
                 njm::sett.datExt("results_",".txt"),
                 std::ios_base::app);
+            njm::timer.stop("policy search");
 
         } else {
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;

@@ -6,26 +6,26 @@ template <class S, class A>
 RunStats
 TrainRunner<S,A>
 ::run(S system,
-  A agent,
-  const int numReps, const int numPoints){
-  // double value=0;
-  int r,t;
-  RunStats rs;
-  for(r=0; r<numReps; r++){
-    system.model.assignRand(system.paramGen_r,system.paramEst_r);
-    system.revert();
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart)
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst,system.paramEst);
-      system.updateStatus();
+        A agent,
+        const int numReps, const int numPoints){
+    // double value=0;
+    int r,t;
+    RunStats rs;
+    for(r=0; r<numReps; r++){
+        system.model.assignRand(system.paramGen_r,system.paramEst_r);
+        system.revert();
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart)
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst,system.paramEst);
+            system.updateStatus();
 
-      system.nextPoint();
+            system.nextPoint();
+        }
+        rs(system.value());
+        // value += system.value();
     }
-    rs(system.value());
-    // value += system.value();
-  }
-  return rs;
+    return rs;
 }
 
 
@@ -35,36 +35,36 @@ template <class S, class A>
 RunStats
 PlainRunner<S,A>
 ::run(S system,
-  A agent,
-  const int numReps, const int numPoints){
-  RunStats rs;
-  // double value=0;
-  int r,t;
-  for(r=0; r<numReps; r++){
-    if(system.modelGen_r.sample()){
-      std::vector<double> newPar = system.modelGen_r.getPar();
-      system.modelEst_r.putPar(newPar.begin());
-      system.modelGen_r.setFill(system.sD,system.tD,system.fD,system.dD);
-      system.modelEst_r.setFill(system.sD,system.tD,system.fD,system.dD);
+        A agent,
+        const int numReps, const int numPoints){
+    RunStats rs;
+    // double value=0;
+    int r,t;
+    for(r=0; r<numReps; r++){
+        if(system.modelGen_r.sample()){
+            std::vector<double> newPar = system.modelGen_r.getPar();
+            system.modelEst_r.putPar(newPar.begin());
+            system.modelGen_r.setFill(system.sD,system.tD,system.fD,system.dD);
+            system.modelEst_r.setFill(system.sD,system.tD,system.fD,system.dD);
+        }
+
+        system.revert();
+
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart)
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
+
+            system.updateStatus();
+
+            system.nextPoint();
+        }
+
+        rs(system.value());
+        // value += system.value();
     }
 
-    system.revert();
-
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart)
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-
-      system.updateStatus();
-
-      system.nextPoint();
-    }
-
-    rs(system.value());
-    // value += system.value();
-  }
-
-  return rs;
+    return rs;
 }
 
 template class PlainRunner<System<ModelGDist,
@@ -167,59 +167,59 @@ template<class S, class A>
 RunStats
 VanillaRunner<S,A>
 ::run(S system,
-  A agent,
-  const int numReps, const int numPoints,
-  const Starts & starts){
-  // double value=0;
-  int r,t;
+        A agent,
+        const int numReps, const int numPoints,
+        const Starts & starts){
+    // double value=0;
+    int r,t;
 
-  RunStats rs;
-  std::vector<std::vector<double> > valueAll(numReps);
+    RunStats rs;
+    std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(valueAll,starts,rs)                                \
-  firstprivate(system,agent)                                \
-  private(r,t)
-  for(r=0; r<numReps; r++){
-    njm::resetSeed(r);
-    system.reset(starts[r]);
+    shared(valueAll,starts,rs)                              \
+    firstprivate(system,agent)                              \
+    private(r,t)
+    for(r=0; r<numReps; r++){
+        njm::resetSeed(r);
+        system.reset(starts[r]);
 
 #pragma omp critical
-    {
-      valueAll.at(r).clear();
-      valueAll.at(r).push_back(system.value());
-    }
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart)
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
+        {
+            valueAll.at(r).clear();
+            valueAll.at(r).push_back(system.value());
+        }
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart)
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
 
-      system.updateStatus();
+            system.updateStatus();
 
-      system.nextPoint();
-
-#pragma omp critical
-      {
-        valueAll.at(r).push_back(system.value());
-      }
-    }
+            system.nextPoint();
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
-    }
+            {
+                valueAll.at(r).push_back(system.value());
+            }
+        }
 
-    system.sD.history.push_back(system.sD.status);
-    njm::toFile(njm::toString(system.sD.history,"\n","")
-      ,njm::sett.datExt(agent.name +
-        "_history_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-  }
-  njm::toFile(njm::toString(valueAll,"\n",""),
-    njm::sett.datExt(agent.name+
-      "_values_",".txt"));
-  return rs;
+#pragma omp critical
+        {
+            rs(system.value());
+            // value += system.value();
+        }
+
+        system.sD.history.push_back(system.sD.status);
+        njm::toFile(njm::toString(system.sD.history,"\n","")
+                ,njm::sett.datExt(agent.name +
+                        "_history_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+    }
+    njm::toFile(njm::toString(valueAll,"\n",""),
+            njm::sett.datExt(agent.name+
+                    "_values_",".txt"));
+    return rs;
 }
 
 template class VanillaRunner<System<ModelGravityGDist,
@@ -285,39 +285,39 @@ template<class S, class A>
 RunStats
 VanillaRunnerNS<S,A>
 ::run(S system,
-  A agent,
-  const int numReps, const int numPoints,
-  const Starts & starts){
-  // double value=0;
-  int r,t;
+        A agent,
+        const int numReps, const int numPoints,
+        const Starts & starts){
+    // double value=0;
+    int r,t;
 
-  RunStats rs;
+    RunStats rs;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(starts,rs)                                         \
-  firstprivate(system,agent)                                \
-  private(r,t)
-  for(r=0; r<numReps; r++){
-    njm::resetSeed(r);
-    system.reset(starts[r]);
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart)
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
+    shared(starts,rs)                                       \
+    firstprivate(system,agent)                              \
+    private(r,t)
+    for(r=0; r<numReps; r++){
+        njm::resetSeed(r);
+        system.reset(starts[r]);
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart)
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
 
-      system.updateStatus();
+            system.updateStatus();
 
-      system.nextPoint();
+            system.nextPoint();
 
-    }
+        }
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
-    }
+        {
+            rs(system.value());
+            // value += system.value();
+        }
 
-  }
-  return rs;
+    }
+    return rs;
 }
 
 
@@ -448,63 +448,63 @@ template <class S, class A>
 RunStats
 FitOnlyRunner<S,A>
 ::run(S system,
-  A agent,
-  const int numReps, const int numPoints,
-  const Starts & starts){
-  // double value=0;
-  int r,t;
+        A agent,
+        const int numReps, const int numPoints,
+        const Starts & starts){
+    // double value=0;
+    int r,t;
 
-  RunStats rs;
-  std::vector<std::vector<double> > valueAll(numReps);
+    RunStats rs;
+    std::vector<std::vector<double> > valueAll(numReps);
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-  shared(valueAll,starts,rs)                                \
-  firstprivate(system,agent)                                \
-  private(r,t)
-  for(r=0; r<numReps; r++){
-    njm::resetSeed(r);
-    system.reset(starts[r]);
+    shared(valueAll,starts,rs)                              \
+    firstprivate(system,agent)                              \
+    private(r,t)
+    for(r=0; r<numReps; r++){
+        njm::resetSeed(r);
+        system.reset(starts[r]);
 
 #pragma omp critical
-    {
-      valueAll.at(r).clear();
-      valueAll.at(r).push_back(system.value());
-    }
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart){
-        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t > system.fD.trtStart);
+        {
+            valueAll.at(r).clear();
+            valueAll.at(r).push_back(system.value());
+        }
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart){
+                system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+                        t > system.fD.trtStart);
 
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-      }
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
+            }
 
-      system.updateStatus();
+            system.updateStatus();
 
-      system.nextPoint();
-
-#pragma omp critical
-      {
-        valueAll.at(r).push_back(system.value());
-      }
-    }
+            system.nextPoint();
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
-    }
+            {
+                valueAll.at(r).push_back(system.value());
+            }
+        }
 
-    system.sD.history.push_back(system.sD.status);
-    njm::toFile(njm::toString(system.sD.history,"\n","")
-      ,njm::sett.datExt(agent.name+
-        "_history_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-  }
-  njm::toFile(njm::toString(valueAll,"\n",""),
-    njm::sett.datExt(agent.name+
-      "_values_",".txt"));
-  return rs;
+#pragma omp critical
+        {
+            rs(system.value());
+            // value += system.value();
+        }
+
+        system.sD.history.push_back(system.sD.status);
+        njm::toFile(njm::toString(system.sD.history,"\n","")
+                ,njm::sett.datExt(agent.name+
+                        "_history_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+    }
+    njm::toFile(njm::toString(valueAll,"\n",""),
+            njm::sett.datExt(agent.name+
+                    "_values_",".txt"));
+    return rs;
 }
 
 
@@ -550,133 +550,139 @@ template <class S, class A, class Optim>
 RunStats
 OptimRunner<S,A,Optim>
 ::run(S system,
-  A agent,
-  Optim optim,
-  const int numReps, const int numPoints,
-  const Starts & starts){
-  int tick,tickR,tock,tockR,done=0;
-  tick = std::time(NULL);
-  double hours;
+        A agent,
+        Optim optim,
+        const int numReps, const int numPoints,
+        const Starts & starts){
+    int tick,tickR,tock,tockR,done=0;
+    tick = std::time(NULL);
+    double hours;
 
-  RunStats rs;
-  // double value=0;
-  int r,t;
-  std::vector<std::vector<double> > valueAll(numReps);
-  std::vector<std::vector<double> > weights;
+    RunStats rs;
+    // double value=0;
+    int r,t;
+    std::vector<std::vector<double> > valueAll(numReps);
+    std::vector<std::vector<double> > weights;
 
-  std::vector<int> times(numReps);
+    std::vector<int> times(numReps);
 
-  // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
-  int threads = omp_get_max_threads();
+    // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
+    int threads = omp_get_max_threads();
 
 #pragma omp parallel for num_threads(threads)   \
-  shared(valueAll,tock,tick,starts,rs)          \
-  firstprivate(system,agent,optim,weights)      \
-  private(r,t,tockR,tickR)
-  for(r=0; r<numReps; r++){
-    njm::resetSeed(r);
-    // record time for each replication
-    tickR=std::time(NULL);
+    shared(valueAll,tock,tick,starts,rs)        \
+    firstprivate(system,agent,optim,weights)    \
+    private(r,t,tockR,tickR)
+    for(r=0; r<numReps; r++){
+        njm::resetSeed(r);
+        // record time for each replication
+        tickR=std::time(NULL);
 
-    system.reset(starts[r]);
-    agent.reset();
-    optim.reset();
-
-#pragma omp critical
-    {
-      valueAll.at(r).clear();
-      valueAll.at(r).push_back(system.value());
-    }
-    weights.clear();
-
-    // begin rep r
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart){
-        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t > system.fD.trtStart);
-
-        optim.optim(system,agent);
-
-        weights.push_back(agent.tp.getPar());
-
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-      }
-
-      system.updateStatus();
-
-      system.nextPoint();
+        system.reset(starts[r]);
+        agent.reset();
+        optim.reset();
 
 #pragma omp critical
-      {
-        valueAll.at(r).push_back(system.value());
-      }
-    }
-    // end rep r...time to write results to disk
+        {
+            valueAll.at(r).clear();
+            valueAll.at(r).push_back(system.value());
+        }
+        weights.clear();
+
+        // begin rep r
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart){
+                njm::timer.start("fit");
+                system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+                        t > system.fD.trtStart);
+                njm::timer.stop("fit");
+
+                njm::timer.start("optim");
+                optim.optim(system,agent);
+                njm::timer.stop("optim");
+
+                weights.push_back(agent.tp.getPar());
+
+                njm::timer.start("trt");
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
+                njm::timer.stop("trt");
+            }
+
+            system.updateStatus();
+
+            system.nextPoint();
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
-    }
-
-    // store time for iteration
-    tockR = std::time(NULL);
-#pragma omp critical
-    {
-      times.at(r) = tockR - tickR;
-    }
-
-    // write history to file
-    system.sD.history.push_back(system.sD.status);
-    njm::toFile(njm::toString(system.sD.history,"\n","")
-      ,njm::sett.datExt(agent.name+"_"+optim.name+
-        "_history_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-    // write weights
-    njm::toFile(njm::toString(weights,"\n","")
-      ,njm::sett.datExt(agent.name+"_"+optim.name+
-        "_weights_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-
-    // write optim parameters to file
-    njm::toFile(njm::toString(optim.tp.getPar()," ","\n")
-      ,njm::sett.datExt(agent.name+"_"+optim.name+
-        "_tunePar_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-
+            {
+                valueAll.at(r).push_back(system.value());
+            }
+        }
+        // end rep r...time to write results to disk
 
 #pragma omp critical
-    {
-      done++;
-      tock = std::time(NULL);
-      hours = ((double)(tock-tick))/((double)done);
-      hours /= 3600.0;
+        {
+            rs(system.value());
+            // value += system.value();
+        }
 
-      njm::toFile("Completed " + njm::toString(done,"",6,0) +
-        " out of " + njm::toString(numReps,"",6,0) +
-        " in " + njm::toString(hours,"",8,4) + " hours" +
-        " with value " + njm::toString(rs.sMean(),"",6,4) +
-        "\n",
-        njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
-          ".txt"));
+        // store time for iteration
+        tockR = std::time(NULL);
+#pragma omp critical
+        {
+            times.at(r) = tockR - tickR;
+        }
+
+        // write history to file
+        system.sD.history.push_back(system.sD.status);
+        njm::toFile(njm::toString(system.sD.history,"\n","")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_history_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+        // write weights
+        njm::toFile(njm::toString(weights,"\n","")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_weights_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+
+        // write optim parameters to file
+        njm::toFile(njm::toString(optim.tp.getPar()," ","\n")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_tunePar_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+
+
+#pragma omp critical
+        {
+            done++;
+            tock = std::time(NULL);
+            hours = ((double)(tock-tick))/((double)done);
+            hours /= 3600.0;
+
+            njm::toFile("Completed " + njm::toString(done,"",6,0) +
+                    " out of " + njm::toString(numReps,"",6,0) +
+                    " in " + njm::toString(hours,"",8,4) + " hours" +
+                    " with value " + njm::toString(rs.sMean(),"",6,4) +
+                    "\n",
+                    njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
+                            ".txt"));
+        }
+
     }
 
-  }
+    njm::toFile(njm::toString(valueAll,"\n",""),
+            njm::sett.datExt(agent.name+"_"+optim.name+
+                    "_values_",".txt"));
 
-  njm::toFile(njm::toString(valueAll,"\n",""),
-    njm::sett.datExt(agent.name+"_"+optim.name+
-      "_values_",".txt"));
-
-  njm::toFile(njm::toString(times,"\n",""),
-    njm::sett.datExt(agent.name+"_"+optim.name+
-      "_times_",".txt"));
+    njm::toFile(njm::toString(times,"\n",""),
+            njm::sett.datExt(agent.name+"_"+optim.name+
+                    "_times_",".txt"));
 
 
-  return rs;
+    return rs;
 }
 
 
@@ -842,54 +848,54 @@ template <class S, class A, class Optim>
 RunStats
 OptimRunnerNS<S,A,Optim>
 ::run(S system,
-  A agent,
-  Optim optim,
-  const int numReps, const int numPoints,
-  const Starts & starts){
+        A agent,
+        Optim optim,
+        const int numReps, const int numPoints,
+        const Starts & starts){
 
-  RunStats rs;
-  // double value=0;
-  int r,t;
+    RunStats rs;
+    // double value=0;
+    int r,t;
 
-  int threads = omp_get_max_threads();
+    int threads = omp_get_max_threads();
 
 #pragma omp parallel for num_threads(threads)   \
-  shared(starts,rs)                             \
-  firstprivate(system,agent,optim)              \
-  private(r,t)
-  for(r=0; r<numReps; r++){
-    system.reset(starts[r]);
-    agent.reset();
-    optim.reset();
+    shared(starts,rs)                           \
+    firstprivate(system,agent,optim)            \
+    private(r,t)
+    for(r=0; r<numReps; r++){
+        system.reset(starts[r]);
+        agent.reset();
+        optim.reset();
 
-    // begin rep r
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t>=system.fD.trtStart){
-        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t > system.fD.trtStart);
+        // begin rep r
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t>=system.fD.trtStart){
+                system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+                        t > system.fD.trtStart);
 
-        optim.optim(system,agent);
+                optim.optim(system,agent);
 
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-      }
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
+            }
 
-      system.updateStatus();
+            system.updateStatus();
 
-      system.nextPoint();
+            system.nextPoint();
 
-    }
-    // end rep r
+        }
+        // end rep r
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
+        {
+            rs(system.value());
+            // value += system.value();
+        }
+
     }
 
-  }
-
-  return rs;
+    return rs;
 }
 
 
@@ -898,47 +904,47 @@ template <class S, class A, class Optim>
 RunStats
 TuneRunner<S,A,Optim>
 ::run(S system,
-  A agent,
-  Optim optim,
-  const int numReps, const int numPoints){
+        A agent,
+        Optim optim,
+        const int numReps, const int numPoints){
 
-  RunStats rs;
-  // double value=0;
-  int r,t;
-  for(r=0; r<numReps; r++){
-    if(system.modelGen_r.sample()){
-      std::vector<double> newPar = system.modelGen_r.getPar();
-      system.modelEst_r.putPar(newPar.begin());
+    RunStats rs;
+    // double value=0;
+    int r,t;
+    for(r=0; r<numReps; r++){
+        if(system.modelGen_r.sample()){
+            std::vector<double> newPar = system.modelGen_r.getPar();
+            system.modelEst_r.putPar(newPar.begin());
+        }
+
+        system.revert();
+        agent.reset();
+
+        // begin rep r
+        for(t=system.sD.time; t<numPoints; t++){
+
+            if(t>=system.fD.trtStart){
+                system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
+                        t > system.fD.trtStart);
+
+                optim.optim(system,agent);
+
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst);
+            }
+
+            system.updateStatus();
+
+            system.nextPoint();
+
+        }
+        // end rep r
+
+        rs(system.value());
+        // value += system.value();
     }
 
-    system.revert();
-    agent.reset();
-
-    // begin rep r
-    for(t=system.sD.time; t<numPoints; t++){
-
-      if(t>=system.fD.trtStart){
-        system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
-			    t > system.fD.trtStart);
-
-        optim.optim(system,agent);
-
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst);
-      }
-
-      system.updateStatus();
-
-      system.nextPoint();
-
-    }
-    // end rep r
-
-    rs(system.value());
-    // value += system.value();
-  }
-
-  return rs;
+    return rs;
 }
 
 
@@ -1127,68 +1133,68 @@ template <class S, class A, class Optim>
 RunStats
 TestRunner<S,A,Optim>
 ::run(S system,
-  A agent,
-  Optim optim,
-  const int numReps, const int numPoints){
+        A agent,
+        Optim optim,
+        const int numReps, const int numPoints){
 
-  RunStats rs;
-  // double value=0;
-  int r,t;
-  std::vector<std::vector<double> > valueAll(numReps);
-  std::vector<std::vector<double> > weights;
-  int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
+    RunStats rs;
+    // double value=0;
+    int r,t;
+    std::vector<std::vector<double> > valueAll(numReps);
+    std::vector<std::vector<double> > weights;
+    int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
 #pragma omp parallel for num_threads(threads)   \
-  shared(valueAll,rs)                           \
-  firstprivate(system,agent,optim,weights)      \
-  private(r,t)
-  for(r=0; r<numReps; r++){
-    system.reset();
+    shared(valueAll,rs)                         \
+    firstprivate(system,agent,optim,weights)    \
+    private(r,t)
+    for(r=0; r<numReps; r++){
+        system.reset();
 #pragma omp critical
-    {
-      valueAll.at(r).clear();
-      valueAll.at(r).push_back(system.value());
-    }
-    weights.clear();
-    for(t=system.sD.time; t<numPoints; t++){
-      if(t==system.fD.trtStart){
-        optim.optim(system,agent);
-        weights.push_back(agent.tp.getPar());
-      }
+        {
+            valueAll.at(r).clear();
+            valueAll.at(r).push_back(system.value());
+        }
+        weights.clear();
+        for(t=system.sD.time; t<numPoints; t++){
+            if(t==system.fD.trtStart){
+                optim.optim(system,agent);
+                weights.push_back(agent.tp.getPar());
+            }
 
-      if(t>=system.fD.trtStart)
-        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
-          system.modelEst,system.paramEst);
+            if(t>=system.fD.trtStart)
+                agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                        system.modelEst,system.paramEst);
 
-      system.updateStatus();
+            system.updateStatus();
 
-      system.nextPoint();
-
-#pragma omp critical
-      {
-        valueAll.at(r).push_back(system.value());
-      }
-    }
+            system.nextPoint();
 
 #pragma omp critical
-    {
-      rs(system.value());
-      // value += system.value();
-    }
+            {
+                valueAll.at(r).push_back(system.value());
+            }
+        }
 
-    system.sD.history.push_back(system.sD.status);
-    njm::toFile(njm::toString(system.sD.history,"\n","")
-      ,njm::sett.datExt(agent.name+"_"+optim.name+
-        "_history_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-    njm::toFile(njm::toString(weights,"\n","")
-      ,njm::sett.datExt(agent.name+"_"+optim.name+
-        "_weights_"+
-        njm::toString(r,"",0,0)
-        +"_",".txt"));
-  }
-  njm::toFile(njm::toString(valueAll,"\n",""),
-    njm::sett.datExt(agent.name+"_"+optim.name+
-      "_values_",".txt"));
-  return rs;
+#pragma omp critical
+        {
+            rs(system.value());
+            // value += system.value();
+        }
+
+        system.sD.history.push_back(system.sD.status);
+        njm::toFile(njm::toString(system.sD.history,"\n","")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_history_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+        njm::toFile(njm::toString(weights,"\n","")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_weights_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+    }
+    njm::toFile(njm::toString(valueAll,"\n",""),
+            njm::sett.datExt(agent.name+"_"+optim.name+
+                    "_values_",".txt"));
+    return rs;
 }
