@@ -607,11 +607,11 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     T = gsl_multimin_fdfminimizer_vector_bfgs2;
     s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
 
-    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.025,0.1);
+    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.1,0.1);
 
     int iter = 0;
     int status;
-    const int maxIter = 200;
+    const int maxIter = 100;
     do{
         iter++;
         status = gsl_multimin_fdfminimizer_iterate(s);
@@ -639,22 +639,25 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     //     << "gradient check: "
     //     << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
     //     << "gradient: " << njm::toString(gradVals," ","") << std::endl;
-    if(iter >= maxIter)
-        std::cout << "exceeded iters" << std::endl;
+    // if(iter >= maxIter)
+    //     std::cout << "exceeded iters" << std::endl;
 
-    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE ||
-            (status == 27
-                    && sD.numInfected == 1
-                    && sD.time > fD.trtStart))
-        << std::endl
-        << "status: " << status << std::endl
-        << "iter: " << iter << std::endl
-        << "numInfected: " << sD.numInfected << std::endl
-        << "time: " << sD.time << std::endl
-        << "gradient check: "
-        << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
-        << "gradient: " << njm::toString(gradVals," ","") << std::endl
-        << "starting: " << njm::toString(startingVals," ","") << std::endl;
+    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE);
+
+    // CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE ||
+    //         (status == 27
+    //                 && sD.numInfected == 1
+    //                 && sD.time > fD.trtStart))
+    //     << std::endl
+    //     << "status: " << status << std::endl
+    //     << "iter: " << iter << std::endl
+    //     << "numInfected: " << sD.numInfected << std::endl
+    //     << "time: " << sD.time << std::endl
+    //     << "gradient check: "
+    //     << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+    //     << "f: " << s->f << std::endl
+    //     << "gradient: " << njm::toString(gradVals," ","") << std::endl
+    //     << "starting: " << njm::toString(startingVals," ","") << std::endl;
 
 // #pragma omp critical
 //     {
