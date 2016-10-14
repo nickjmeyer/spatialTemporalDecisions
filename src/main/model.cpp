@@ -642,7 +642,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     if(iter >= maxIter)
         std::cout << "exceeded iters" << std::endl;
 
-    CHECK(status == GSL_SUCCESS ||
+    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE ||
             (status == 27
                     && sD.numInfected == 1
                     && sD.time > fD.trtStart))
