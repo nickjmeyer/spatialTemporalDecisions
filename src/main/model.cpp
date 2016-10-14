@@ -631,11 +631,6 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 #pragma omp critical
     {
         if(status != GSL_SUCCESS) {
-            int sumHistory = 0;
-            for (int i = 0; i < sD.history.size(); ++i) {
-                sumHistory += std::accumulate(sD.history.at(i).begin(),
-                        sD.history.at(i).end(),0);
-            }
             std::cout << "setup values" << std::endl;
             std::cout << "time: " << sD.time << std::endl
                       << "numInfected: " << sD.numInfected << std::endl
@@ -643,8 +638,13 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
                       << "sum infected: " << std::accumulate(sD.infected.begin(),
                               sD.infected.end(),0) << std::endl
                       << "sum notInfec: " << std::accumulate(sD.notInfec.begin(),
-                              sD.notInfec.end(),0) << std::endl
-                      << "sum history: " << sumHistory << std::endl;
+                              sD.notInfec.end(),0) << std::endl;
+            for (int i = 0; i < sD.history.size(); ++i) {
+                std::cout << "sum history " << i << ": "
+                          << std::accumulate(sD.history.at(i).begin(),
+                                  sD.history.at(i).end(),0)
+                          << std::endl;
+            }
 
             std::cout << "Gradient: "
                       << njm::toString(gradVals," ","") << std::endl;
