@@ -628,7 +628,17 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
-    CHECK_LT(iter,maxIter) << "Reached max iterations";
+    CHECK_LT(iter,maxIter)
+        << "Reached max iterations"
+        << std::endl
+        << "status: " << status << std::endl
+        << "iter: " << iter << std::endl
+        << "numInfected: " << sD.numInfected << std::endl
+        << "time: " << sD.time << std::endl
+        << "gradient check: "
+        << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+        << "gradient: " << njm::toString(gradVals," ","") << std::endl;
+
     CHECK(status == GSL_SUCCESS ||
             (status == 27
                     && sD.numInfected == 1
