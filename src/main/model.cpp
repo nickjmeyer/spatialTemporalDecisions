@@ -611,7 +611,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 
     int iter = 0;
     int status;
-    const int maxIter = 100;
+    const int maxIter = 200;
     do{
         iter++;
         status = gsl_multimin_fdfminimizer_iterate(s);
