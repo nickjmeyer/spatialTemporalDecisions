@@ -513,8 +513,13 @@ void ModelBase::revert(){
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
         const FixedData & fD, const DynamicData & dD,
         const bool init){
-    if(init && false){
-        fit(getPar(),sD,tD,fD,dD);
+    if(init){
+        // used penalized version of current par;
+        std::vector<double> currPar = getPar();
+        for (int i = 0; i < currPar.size(); ++i) {
+            currPar.at(i) *= 0.5;
+        }
+        fit(currPar,sD,tD,fD,dD);
     }
     else{
         std::vector<double> startingVals(numPars,0.2);
