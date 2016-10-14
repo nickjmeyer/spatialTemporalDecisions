@@ -15,7 +15,7 @@ TrainRunner<S,A>
         system.model.assignRand(system.paramGen_r,system.paramEst_r);
         system.revert();
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart)
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0)
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst,system.paramEst);
             system.updateStatus();
@@ -53,7 +53,7 @@ PlainRunner<S,A>
         njm::timer.stop("plain setup");
 
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart){
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 njm::timer.start("plain applyTrt");
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
@@ -198,7 +198,7 @@ VanillaRunner<S,A>
             valueAll.at(r).push_back(system.value());
         }
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart)
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0)
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
 
@@ -309,7 +309,7 @@ VanillaRunnerNS<S,A>
         njm::resetSeed(r);
         system.reset(starts[r]);
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart)
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0)
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
 
@@ -479,7 +479,7 @@ FitOnlyRunner<S,A>
             valueAll.at(r).push_back(system.value());
         }
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart){
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
 
@@ -600,7 +600,7 @@ OptimRunner<S,A,Optim>
 
         // begin rep r
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart){
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 njm::timer.start("fit");
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
@@ -879,7 +879,7 @@ OptimRunnerNS<S,A,Optim>
 
         // begin rep r
         for(t=system.sD.time; t<numPoints; t++){
-            if(t>=system.fD.trtStart){
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
 
@@ -932,7 +932,7 @@ TuneRunner<S,A,Optim>
         // begin rep r
         for(t=system.sD.time; t<numPoints; t++){
 
-            if(t>=system.fD.trtStart){
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
 
@@ -1165,12 +1165,12 @@ TestRunner<S,A,Optim>
         }
         weights.clear();
         for(t=system.sD.time; t<numPoints; t++){
-            if(t==system.fD.trtStart){
+            if(t==system.fD.trtStart && system.sD.numNotInfec > 0){
                 optim.optim(system,agent);
                 weights.push_back(agent.tp.getPar());
             }
 
-            if(t>=system.fD.trtStart)
+            if(t>=system.fD.trtStart && system.sD.numNotInfec > 0)
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst,system.paramEst);
 
