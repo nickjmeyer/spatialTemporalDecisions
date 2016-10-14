@@ -624,7 +624,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     }while(status == GSL_CONTINUE && iter < maxIter);
 
     CHECK_LT(iter,maxIter) << "Reached maximum iterations";
-    CHECK_EQ(status,GSL_SUCCESS);
+    CHECK_EQ(status,GSL_SUCCESS) << "Used " << iter << " iterations";
 
 
     std::vector<double> mle;
