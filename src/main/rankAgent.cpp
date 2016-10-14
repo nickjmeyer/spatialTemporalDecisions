@@ -51,11 +51,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     f.preCompData(sD,tD,fD,dD,m);
     f.getFeatures(sD,tD,fD,dD,m);
 
-    // jitter the current weights
-    arma::colvec jitter;
-    arma::mat featStddev;
-    jitter.zeros(f.numFeatures);
-
     int i=0,j=0,node0=0,addPre=0,addAct=0;
     int cI = 0,cN = 0;
 
@@ -63,31 +58,44 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 
     numChunks = std::min(std::max(numPre,numAct),numChunks);
 
+    const double jitterVal = calcJitter();
 
     for(i = 0; i < numChunks; i++){
         njm::timer.start("rank");
         // get jitter
-        featStddev.zeros(0,f.numFeatures);
-        for(j = 0; j < sD.numNotInfec; ++j){
-            if(tD.p.at(sD.notInfec.at(j)) == 0)
-                featStddev.insert_rows(0,f.notFeat.row(j));
+        if (jitterVal > 0) {
+            // jitter the current weights
+            arma::colvec jitter;
+            arma::mat featStddev;
+            jitter.zeros(f.numFeatures);
+
+            featStddev.zeros(0,f.numFeatures);
+            for(j = 0; j < sD.numNotInfec; ++j){
+                if(tD.p.at(sD.notInfec.at(j)) == 0)
+                    featStddev.insert_rows(0,f.notFeat.row(j));
+            }
+            for(j = 0; j < sD.numInfected; ++j){
+                if(tD.a.at(sD.infected.at(j)) == 0)
+                    featStddev.insert_rows(0,f.infFeat.row(j));
+            }
+            featStddev = arma::cov(featStddev);
+            // need to add abs() since values close to zero can sometimes
+            // result in small negative numbers due to instability
+            jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
+
+
+            for(j = 0; j < f.numFeatures; j++)
+                jitter(j) *= njm::rnorm01();
+
+            // calculate ranks
+            infRanks = f.infFeat * (tp.weights + jitter);
+            notRanks = f.notFeat * (tp.weights + jitter);
+        } else {
+            // calculate ranks
+            infRanks = f.infFeat * tp.weights;
+            notRanks = f.notFeat * tp.weights;
         }
-        for(j = 0; j < sD.numInfected; ++j){
-            if(tD.a.at(sD.infected.at(j)) == 0)
-                featStddev.insert_rows(0,f.infFeat.row(j));
-        }
-        featStddev = arma::cov(featStddev);
-        // need to add abs() since values close to zero can sometimes
-        // result in small negative numbers due to instability
-        jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
 
-
-        for(j = 0; j < f.numFeatures; j++)
-            jitter(j) *= njm::rnorm01();
-
-        // calculate ranks
-        infRanks = f.infFeat * (tp.weights + jitter);
-        notRanks = f.notFeat * (tp.weights + jitter);
 
         // shuffle the node indices
         std::priority_queue<std::pair<double,int> > shufInfected,shufNotInfec;
