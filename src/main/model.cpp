@@ -633,7 +633,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         << std::endl
         << "Iterations: " << iter << std::endl
         << "Num infected: " << sD.numInfected << std::endl
-        << "Infected: " << njm::toString(s.sD.infected) << std::endl;
+        << "Infected: " << njm::toString(sD.infected," ","") << std::endl
         << "Num notInfec: " << sD.numNotInfec << std::endl
         << "Gradient: " << njm::toString(gradVals," ","") << std::endl;
 
