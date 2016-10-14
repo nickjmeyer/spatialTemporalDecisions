@@ -624,7 +624,11 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     }while(status == GSL_CONTINUE && iter < maxIter);
 
     CHECK_LT(iter,maxIter) << "Reached maximum iterations";
-    CHECK_EQ(status,GSL_SUCCESS) << "Used " << iter << " iterations";
+    CHECK_EQ(status,GSL_SUCCESS)
+        << std::endl
+        << "Iterations: " << iter << std::endl
+        << "Num infected: " << sD.numInfected << std::endl
+        << "Num notInfec: " << sD.numNotInfec << std::endl;
 
 
     std::vector<double> mle;
