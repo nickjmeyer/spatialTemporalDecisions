@@ -607,7 +607,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     T = gsl_multimin_fdfminimizer_vector_bfgs2;
     s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
 
-    gsl_multimin_fdfminimizer_set(s,&my_func,x,1.0,0.01);
+    gsl_multimin_fdfminimizer_set(s,&my_func,x,1.0,0.1);
 
     int iter = 0;
     int status;
@@ -623,12 +623,18 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 
     }while(status == GSL_CONTINUE && iter < maxIter);
 
+    std::vector<double> gradVals;
+    for (pi = 0; pi < int(numPars); ++pi) {
+        gradVals.push_back(gsl_vector_get(s->gradient,pi));
+    }
+
     CHECK_LT(iter,maxIter) << "Reached maximum iterations";
     CHECK_EQ(status,GSL_SUCCESS)
         << std::endl
         << "Iterations: " << iter << std::endl
         << "Num infected: " << sD.numInfected << std::endl
-        << "Num notInfec: " << sD.numNotInfec << std::endl;
+        << "Num notInfec: " << sD.numNotInfec << std::endl
+        << "Gradient: " << njm::toString(gradVals," ","") << std::endl;
 
 
     std::vector<double> mle;
