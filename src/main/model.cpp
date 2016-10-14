@@ -653,7 +653,8 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         << "time: " << sD.time << std::endl
         << "gradient check: "
         << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
-        << "gradient: " << njm::toString(gradVals," ","") << std::endl;
+        << "gradient: " << njm::toString(gradVals," ","") << std::endl
+        << "starting: " << njm::toString(startingVals," ","") << std::endl;
 
 // #pragma omp critical
 //     {
