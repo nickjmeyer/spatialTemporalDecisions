@@ -1,5 +1,5 @@
-#ifndef BAYES_P_HPP__
-#define BAYES_P_HPP__
+#ifndef BAYES_P_HPP
+#define BAYES_P_HPP
 
 #include <iostream>
 #include <vector>

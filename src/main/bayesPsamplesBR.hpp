@@ -1,5 +1,5 @@
-#ifndef BAYES_P_SAMPLES_BR_HPP__
-#define BAYES_P_SAMPLES_BR_HPP__
+#ifndef BAYES_P_SAMPLES_BR_HPP
+#define BAYES_P_SAMPLES_BR_HPP
 
 
 #include <iostream>

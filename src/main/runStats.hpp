@@ -1,5 +1,5 @@
-#ifndef RUN_STATS_HPP__
-#define RUN_STATS_HPP__
+#ifndef RUN_STATS_HPP
+#define RUN_STATS_HPP
 
 #include <vector>
 #include <cmath>

@@ -1,5 +1,5 @@
-#ifndef PARAM_BETA_HPP__
-#define PARAM_BETA_HPP__
+#ifndef PARAM_BETA_HPP
+#define PARAM_BETA_HPP
 
 #include "param.hpp"
 
@@ -8,17 +8,17 @@ class ParamBeta : public ParamBase {
  protected:
   std::vector<double> covarBeta;
   std::vector<double> covar;
-  
+
   int numNodes;
-  
+
   virtual unsigned int initParsSize(const FixedData & fD);
 
-  virtual std::vector<std::string> initNames();  
+  virtual std::vector<std::string> initNames();
 
   virtual void initInternal(const FixedData & fD);
-  
+
   virtual void updateBefore();
-  
+
   virtual void updateAfter();
 
  public:

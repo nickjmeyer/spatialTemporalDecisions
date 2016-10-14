@@ -1,5 +1,5 @@
-#ifndef AGENT_HPP__
-#define AGENT_HPP__
+#ifndef AGENT_HPP
+#define AGENT_HPP
 
 
 #include "data.hpp"

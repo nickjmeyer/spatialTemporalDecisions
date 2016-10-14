@@ -1,5 +1,5 @@
-#ifndef RUN_M1_MLES_WNS_HPP__
-#define RUN_M1_MLES_WNS_HPP__
+#ifndef RUN_M1_MLES_WNS_HPP
+#define RUN_M1_MLES_WNS_HPP
 
 
 #include <iostream>

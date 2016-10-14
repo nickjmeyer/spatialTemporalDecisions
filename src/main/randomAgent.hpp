@@ -1,5 +1,5 @@
-#ifndef RANDOM_AGENT_HPP__
-#define RANDOM_AGENT_HPP__
+#ifndef RANDOM_AGENT_HPP
+#define RANDOM_AGENT_HPP
 
 
 #include <vector>

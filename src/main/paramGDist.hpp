@@ -1,5 +1,5 @@
-#ifndef PARAM_G_DIST_HPP__
-#define PARAM_G_DIST_HPP__
+#ifndef PARAM_G_DIST_HPP
+#define PARAM_G_DIST_HPP
 
 #include "param.hpp"
 
@@ -14,9 +14,9 @@ class ParamGDist : public ParamBase {
   virtual std::vector<std::string> initNames();
 
   virtual void initInternal(const FixedData & fD);
-  
+
   virtual void updateBefore();
-  
+
   virtual void updateAfter();
 
  public:

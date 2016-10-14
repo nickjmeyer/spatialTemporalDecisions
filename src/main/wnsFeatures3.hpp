@@ -1,5 +1,5 @@
-#ifndef WNS_FEATURES_3_HPP__
-#define WNS_FEATURES_3_HPP__
+#ifndef WNS_FEATURES_3_HPP
+#define WNS_FEATURES_3_HPP
 
 #include <vector>
 #include <queue>

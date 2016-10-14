@@ -1,5 +1,5 @@
-#ifndef DENSITY_EST_HPP__
-#define DENSITY_EST_HPP__
+#ifndef DENSITY_EST_HPP
+#define DENSITY_EST_HPP
 
 #include <cmath>
 #include <algorithm>

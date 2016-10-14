@@ -1,5 +1,5 @@
-#ifndef OBS_DATA_STATS_HPP__
-#define OBS_DATA_STATS_HPP__
+#ifndef OBS_DATA_STATS_HPP
+#define OBS_DATA_STATS_HPP
 
 
 #include <iostream>

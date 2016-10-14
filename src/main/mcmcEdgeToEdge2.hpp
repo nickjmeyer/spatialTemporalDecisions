@@ -1,5 +1,5 @@
-#ifndef EDGE_TO_EDGE_2_MCMC_HPP__
-#define EDGE_TO_EDGE_2_MCMC_HPP__
+#ifndef EDGE_TO_EDGE_2_MCMC_HPP
+#define EDGE_TO_EDGE_2_MCMC_HPP
 
 #include <vector>
 #include <algorithm>

@@ -1,5 +1,5 @@
-#ifndef TOY_FEATURES_5_HPP__
-#define TOY_FEATURES_5_HPP__
+#ifndef TOY_FEATURES_5_HPP
+#define TOY_FEATURES_5_HPP
 
 #include <vector>
 #include <queue>

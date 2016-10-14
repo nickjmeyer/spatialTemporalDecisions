@@ -1,5 +1,5 @@
-#ifndef PARAM_HPP__
-#define PARAM_HPP__
+#ifndef PARAM_HPP
+#define PARAM_HPP
 
 #include <vector>
 #include <algorithm>

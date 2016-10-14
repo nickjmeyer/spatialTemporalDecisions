@@ -1,5 +1,5 @@
-#ifndef MODEL_2_EDGE_TO_EDGE_HPP__
-#define MODEL_2_EDGE_TO_EDGE_HPP__
+#ifndef MODEL_2_EDGE_TO_EDGE_HPP
+#define MODEL_2_EDGE_TO_EDGE_HPP
 
 
 #include <armadillo>

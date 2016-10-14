@@ -1,5 +1,5 @@
-#ifndef TUNE_PARAM_HPP__
-#define TUNE_PARAM_HPP__
+#ifndef TUNE_PARAM_HPP
+#define TUNE_PARAM_HPP
 
 #include <vector>
 

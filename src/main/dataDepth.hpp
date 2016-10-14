@@ -1,5 +1,5 @@
-#ifndef DATA_DEPTH_HPP__
-#define DATA_DEPTH_HPP__
+#ifndef DATA_DEPTH_HPP
+#define DATA_DEPTH_HPP
 
 
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef STARTS_HPP__
-#define STARTS_HPP__
+#ifndef STARTS_HPP
+#define STARTS_HPP
 
 
 #include <vector>

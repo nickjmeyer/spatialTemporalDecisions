@@ -1,5 +1,5 @@
-#ifndef PARAM_BETA_2_HPP__
-#define PARAM_BETA_2_HPP__
+#ifndef PARAM_BETA_2_HPP
+#define PARAM_BETA_2_HPP
 
 #include "param.hpp"
 

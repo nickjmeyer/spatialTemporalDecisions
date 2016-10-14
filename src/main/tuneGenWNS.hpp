@@ -1,5 +1,5 @@
-#ifndef TUNE_GEN_WNS_HPP__
-#define TUNE_GEN_WNS_HPP__
+#ifndef TUNE_GEN_WNS_HPP
+#define TUNE_GEN_WNS_HPP
 
 
 #include <iostream>

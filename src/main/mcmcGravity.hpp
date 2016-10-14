@@ -1,5 +1,5 @@
-#ifndef GRAVITY_MCMC_HPP__
-#define GRAVITY_MCMC_HPP__
+#ifndef GRAVITY_MCMC_HPP
+#define GRAVITY_MCMC_HPP
 
 #include <vector>
 #include <algorithm>

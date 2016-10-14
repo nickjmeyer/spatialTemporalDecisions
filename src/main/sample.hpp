@@ -1,5 +1,5 @@
-#ifndef SAMPLE_HPP__
-#define SAMPLE_HPP__
+#ifndef SAMPLE_HPP
+#define SAMPLE_HPP
 
 #include <vector>
 #include "rand.hpp"

@@ -1,5 +1,5 @@
-#ifndef MODEL_GRAVITY_G_DIST_HPP__
-#define MODEL_GRAVITY_G_DIST_HPP__
+#ifndef MODEL_GRAVITY_G_DIST_HPP
+#define MODEL_GRAVITY_G_DIST_HPP
 
 
 #include <armadillo>

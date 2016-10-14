@@ -1,5 +1,5 @@
-#ifndef TUNE_RA_OSSP_HPP__
-#define TUNE_RA_OSSP_HPP__
+#ifndef TUNE_RA_OSSP_HPP
+#define TUNE_RA_OSSP_HPP
 
 
 #include <iostream>
@@ -31,7 +31,7 @@ class FFX {
 
   std::vector<std::string> factors;
   std::vector<std::vector<double> > values;
-  
+
   std::vector<std::string> stats;
 
   std::vector<std::vector<double> > allObs;
@@ -39,7 +39,7 @@ class FFX {
   std::vector<int> maxSett;
 
   void setReps(const int num);
-  
+
   void addFactor(const std::string & f,
 		 const std::vector<double> & fVals);
   void addStat(const std::string & s);

@@ -1,5 +1,5 @@
-#ifndef UTILITIES_HPP__
-#define UTILITIES_HPP__
+#ifndef UTILITIES_HPP
+#define UTILITIES_HPP
 
 #include <iostream>
 #include <fstream>

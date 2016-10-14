@@ -1,5 +1,5 @@
-#ifndef PARAM_GRAV_POW_G_DIST_HPP__
-#define PARAM_GRAV_POW_G_DIST_HPP__
+#ifndef PARAM_GRAV_POW_G_DIST_HPP
+#define PARAM_GRAV_POW_G_DIST_HPP
 
 
 #include "param.hpp"

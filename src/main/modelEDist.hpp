@@ -1,5 +1,5 @@
-#ifndef MODEL_E_DIST_HPP__
-#define MODEL_E_DIST_HPP__
+#ifndef MODEL_E_DIST_HPP
+#define MODEL_E_DIST_HPP
 
 
 #include <armadillo>

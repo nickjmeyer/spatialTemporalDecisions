@@ -1,5 +1,5 @@
-#ifndef SYSTEM_HPP__
-#define SYSTEM_HPP__
+#ifndef SYSTEM_HPP
+#define SYSTEM_HPP
 
 
 #include <vector>

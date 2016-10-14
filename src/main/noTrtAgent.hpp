@@ -1,5 +1,5 @@
-#ifndef NO_TRT_AGENT_HPP__
-#define NO_TRT_AGENT_HPP__
+#ifndef NO_TRT_AGENT_HPP
+#define NO_TRT_AGENT_HPP
 
 #include "agent.hpp"
 #include "features.hpp"

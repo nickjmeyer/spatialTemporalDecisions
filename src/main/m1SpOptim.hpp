@@ -1,5 +1,5 @@
-#ifndef M1_SP_OPTIM_HPP__
-#define M1_SP_OPTIM_HPP__
+#ifndef M1_SP_OPTIM_HPP
+#define M1_SP_OPTIM_HPP
 
 
 #include "data.hpp"

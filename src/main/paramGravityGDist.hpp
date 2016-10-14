@@ -1,5 +1,5 @@
-#ifndef PARAM_GRAVITY_G_DIST_HPP__
-#define PARAM_GRAVITY_G_DIST_HPP__
+#ifndef PARAM_GRAVITY_G_DIST_HPP
+#define PARAM_GRAVITY_G_DIST_HPP
 
 
 #include "param.hpp"
@@ -10,7 +10,7 @@ class ParamGravityGDist : public ParamBase {
   std::vector<double> dist;
   std::vector<double> cc;
   int numNodes;
-  
+
   virtual unsigned int initParsSize(const FixedData & fD);
 
   virtual std::vector<std::string> initNames();
@@ -18,9 +18,9 @@ class ParamGravityGDist : public ParamBase {
   virtual std::vector<bool> initToScale();
 
   virtual void initInternal(const FixedData & fD);
-  
+
   virtual void updateBefore();
-  
+
   virtual void updateAfter();
 
  public:
@@ -38,7 +38,7 @@ class ParamGravityGDist : public ParamBase {
 		       const TrtData & tD,
 		       const FixedData & fD,
 		       const DynamicData & dD);
-  
+
   virtual std::vector<double> partial(const int notNode,
 				      const int infNode,
 				      const SimData & sD,

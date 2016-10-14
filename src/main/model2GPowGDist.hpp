@@ -1,5 +1,5 @@
-#ifndef MODEL_2_G_POW_G_DIST_HPP__
-#define MODEL_2_G_POW_G_DIST_HPP__
+#ifndef MODEL_2_G_POW_G_DIST_HPP
+#define MODEL_2_G_POW_G_DIST_HPP
 
 
 #include <armadillo>

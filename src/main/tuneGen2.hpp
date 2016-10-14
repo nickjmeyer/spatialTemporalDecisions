@@ -1,5 +1,5 @@
-#ifndef TUNE_GEN_2_HPP__
-#define TUNE_GEN_2_HPP__
+#ifndef TUNE_GEN_2_HPP
+#define TUNE_GEN_2_HPP
 
 
 

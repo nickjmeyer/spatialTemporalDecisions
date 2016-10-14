@@ -1,5 +1,5 @@
-#ifndef ALL_AGENT_HPP__
-#define ALL_AGENT_HPP__
+#ifndef ALL_AGENT_HPP
+#define ALL_AGENT_HPP
 
 
 #include <armadillo>

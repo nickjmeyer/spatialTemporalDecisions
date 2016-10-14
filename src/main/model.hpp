@@ -1,5 +1,5 @@
-#ifndef MODEL_HPP__
-#define MODEL_HPP__
+#ifndef MODEL_HPP
+#define MODEL_HPP
 
 
 #include <armadillo>

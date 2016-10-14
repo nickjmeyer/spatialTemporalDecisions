@@ -1,5 +1,5 @@
-#ifndef PROXIMAL_AGENT_HPP__
-#define PROXIMAL_AGENT_HPP__
+#ifndef PROXIMAL_AGENT_HPP
+#define PROXIMAL_AGENT_HPP
 
 
 #include <vector>

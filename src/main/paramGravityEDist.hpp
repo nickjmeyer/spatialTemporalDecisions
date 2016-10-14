@@ -1,5 +1,5 @@
-#ifndef PARAM_GRAVITY_E_DIST_HPP__
-#define PARAM_GRAVITY_E_DIST_HPP__
+#ifndef PARAM_GRAVITY_E_DIST_HPP
+#define PARAM_GRAVITY_E_DIST_HPP
 
 
 #include "param.hpp"

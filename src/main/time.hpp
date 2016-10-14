@@ -1,5 +1,5 @@
-#ifndef TIME_HPP__
-#define TIME_HPP__
+#ifndef TIME_HPP
+#define TIME_HPP
 
 
 

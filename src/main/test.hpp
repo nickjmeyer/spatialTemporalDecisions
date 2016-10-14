@@ -1,5 +1,5 @@
-#ifndef TEST_HPP__
-#define TEST_HPP__
+#ifndef TEST_HPP
+#define TEST_HPP
 
 
 

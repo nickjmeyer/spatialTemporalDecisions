@@ -1,5 +1,5 @@
-#ifndef MYOPIC_AGENT_HPP__
-#define MYOPIC_AGENT_HPP__
+#ifndef MYOPIC_AGENT_HPP
+#define MYOPIC_AGENT_HPP
 
 
 #include <armadillo>

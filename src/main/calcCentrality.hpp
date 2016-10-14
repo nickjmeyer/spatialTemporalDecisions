@@ -1,5 +1,5 @@
-#ifndef CALC_CENTRALITY_HPP__
-#define CALC_CENTRALITY_HPP__
+#ifndef CALC_CENTRALITY_HPP
+#define CALC_CENTRALITY_HPP
 
 #include <cmath>
 #include <fstream>
@@ -9,13 +9,13 @@
 #include <armadillo>
 #include <eigen3/Eigen/Sparse>
 
-void getSubGraph(int nodes, std::vector<int> const * const network, 
+void getSubGraph(int nodes, std::vector<int> const * const network,
 		 std::vector<double> * const subGraph);
 void getSubGraph(int nodes, std::vector<int> const * const network,
 		 std::vector<double> * const subGraph, int const deg);
 void getSubGraphEig(int nodes, std::vector<int> const * const network,
 		    std::vector<double> * const subGraph, int const deg);
-void getBetweenness(int nodes, std::vector<int> const * const network, 
+void getBetweenness(int nodes, std::vector<int> const * const network,
 		   std::vector<double> * const btwn);
 
 class MyQueue{

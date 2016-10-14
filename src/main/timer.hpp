@@ -1,5 +1,5 @@
-#ifndef TIMER_HPP__
-#define TIMER_HPP__
+#ifndef TIMER_HPP
+#define TIMER_HPP
 
 
 #include <iostream>
@@ -16,19 +16,20 @@ namespace njm {
 
 class Timer {
 public:
-  Timer();
-  ~Timer();
+    Timer();
+    ~Timer();
 
-  void print();
+    void print();
 
-  void start(const std::string name);
-  void stop(const std::string name);
+    void start(const std::string name);
+    void stop(const std::string name);
 
 private:
-  std::vector<std::map<std::string,high_resolution_clock::duration> > running;
-  std::vector<std::map<std::string,
-                       time_point<high_resolution_clock,
-                                  high_resolution_clock::duration> > > tick;
+    std::vector<std::map<std::string,high_resolution_clock::duration> > running;
+
+    std::vector<std::map<std::string,
+                         time_point<high_resolution_clock,
+                                    high_resolution_clock::duration> > > tick;
 };
 
 extern Timer timer;

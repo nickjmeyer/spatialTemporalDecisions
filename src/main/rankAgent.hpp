@@ -1,5 +1,5 @@
-#ifndef RANK_AGENT_HPP__
-#define RANK_AGENT_HPP__
+#ifndef RANK_AGENT_HPP
+#define RANK_AGENT_HPP
 
 
 #include <armadillo>

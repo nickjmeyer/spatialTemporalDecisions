@@ -1,5 +1,5 @@
-#ifndef RUNNER_HPP__
-#define RUNNER_HPP__
+#ifndef RUNNER_HPP
+#define RUNNER_HPP
 
 
 #include <omp.h>

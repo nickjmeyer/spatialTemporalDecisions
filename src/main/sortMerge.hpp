@@ -1,5 +1,5 @@
-#ifndef SORT_MERGE__
-#define SORT_MERGE__
+#ifndef SORT_MERGE
+#define SORT_MERGE
 
 #include <vector>
 #include <map>

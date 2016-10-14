@@ -1,5 +1,5 @@
-#ifndef PARAM_TRT_HPP__
-#define PARAM_TRT_HPP__
+#ifndef PARAM_TRT_HPP
+#define PARAM_TRT_HPP
 
 
 #include "param.hpp"
@@ -9,15 +9,15 @@ class ParamTrt : public ParamBase {
   std::vector<int> a;
   std::vector<int> p;
   int numNodes;
-  
+
   virtual unsigned int initParsSize(const FixedData & fD);
 
   virtual std::vector<std::string> initNames();
 
   virtual void initInternal(const FixedData & fD);
-  
+
   virtual void updateBefore();
-  
+
   virtual void updateAfter();
 
  public:

@@ -1,5 +1,5 @@
-#ifndef MODEL_INTERCEPT_HPP__
-#define MODEL_INTERCEPT_HPP__
+#ifndef MODEL_INTERCEPT_HPP
+#define MODEL_INTERCEPT_HPP
 
 
 #include <armadillo>

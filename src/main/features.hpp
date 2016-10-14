@@ -1,5 +1,5 @@
-#ifndef FEATURES_HPP__
-#define FEATURES_HPP__
+#ifndef FEATURES_HPP
+#define FEATURES_HPP
 
 #include "data.hpp"
 #include "system.hpp"
@@ -12,7 +12,7 @@ class BaseFeatures {
 			   const FixedData & fD,
 			   const DynamicData & dD,
 			   M & m) = 0;
-  
+
   virtual void getFeatures(const SimData & sD,
 			   const TrtData & tD,
 			   const FixedData & fD,

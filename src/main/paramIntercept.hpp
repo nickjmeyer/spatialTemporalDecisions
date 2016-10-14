@@ -1,5 +1,5 @@
-#ifndef PARAM_INTERCEPT_HPP__
-#define PARAM_INTERCEPT_HPP__
+#ifndef PARAM_INTERCEPT_HPP
+#define PARAM_INTERCEPT_HPP
 
 #include "param.hpp"
 
@@ -10,9 +10,9 @@ class ParamIntercept : public ParamBase {
   virtual std::vector<std::string> initNames();
 
   virtual void initInternal(const FixedData & fD);
-  
+
   virtual void updateBefore();
-  
+
   virtual void updateAfter();
 
  public:
@@ -38,7 +38,7 @@ class ParamIntercept : public ParamBase {
 				      const TrtData & tD,
 				      const FixedData & fD,
 				      const DynamicData & dD);
-  
+
 };
 
 
