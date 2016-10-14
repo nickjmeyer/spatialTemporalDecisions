@@ -513,7 +513,7 @@ void ModelBase::revert(){
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
         const FixedData & fD, const DynamicData & dD,
         const bool init){
-    if(init && false){
+    if(init){
         fit(getPar(),sD,tD,fD,dD);
     }
     else{
@@ -628,37 +628,43 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
-#pragma omp critical
-    {
-        if(status != GSL_SUCCESS) {
-            std::cout << "setup values" << std::endl;
-            std::cout << "time: " << sD.time << std::endl
-                      << "numInfected: " << sD.numInfected << std::endl
-                      << "numNotInfec: " << sD.numNotInfec << std::endl
-                      << "sum infected: " << std::accumulate(sD.infected.begin(),
-                              sD.infected.end(),0) << std::endl
-                      << "sum notInfec: " << std::accumulate(sD.notInfec.begin(),
-                              sD.notInfec.end(),0) << std::endl;
-            for (int i = 0; i < sD.history.size(); ++i) {
-                std::cout << "sum history " << i << ": "
-                          << std::accumulate(sD.history.at(i).begin(),
-                                  sD.history.at(i).end(),0)
-                          << std::endl;
-            }
+    CHECK_LT(iter,maxIter) << "Reached max iterations";
+    CHECK(status == GSL_SUCCESS ||
+            (status == 27
+                    && sD.numInfected == 1
+                    && sD.time > sD.trtStart));
 
-            std::cout << "Gradient: "
-                      << njm::toString(gradVals," ","") << std::endl;
-            std::cout << "Status: " << status << std::endl;
-            CHECK_LT(iter,maxIter) << "Reached maximum iterations";
-            CHECK_EQ(status,GSL_SUCCESS)
-                << std::endl
-                << "Iterations: " << iter << std::endl
-                << "Num infected: " << sD.numInfected << std::endl
-                << "Infected: " << njm::toString(sD.infected," ","") << std::endl
-                << "Num notInfec: " << sD.numNotInfec << std::endl
-                << "Gradient: " << njm::toString(gradVals," ","") << std::endl;
-        }
-    }
+// #pragma omp critical
+//     {
+//         if(status != GSL_SUCCESS) {
+//             std::cout << "setup values" << std::endl;
+//             std::cout << "time: " << sD.time << std::endl
+//                       << "numInfected: " << sD.numInfected << std::endl
+//                       << "numNotInfec: " << sD.numNotInfec << std::endl
+//                       << "sum infected: " << std::accumulate(sD.infected.begin(),
+//                               sD.infected.end(),0) << std::endl
+//                       << "sum notInfec: " << std::accumulate(sD.notInfec.begin(),
+//                               sD.notInfec.end(),0) << std::endl;
+//             for (int i = 0; i < sD.history.size(); ++i) {
+//                 std::cout << "sum history " << i << ": "
+//                           << std::accumulate(sD.history.at(i).begin(),
+//                                   sD.history.at(i).end(),0)
+//                           << std::endl;
+//             }
+
+//             std::cout << "Gradient: "
+//                       << njm::toString(gradVals," ","") << std::endl;
+//             std::cout << "Status: " << status << std::endl;
+//             CHECK_LT(iter,maxIter) << "Reached maximum iterations";
+//             CHECK_EQ(status,GSL_SUCCESS)
+//                 << std::endl
+//                 << "Iterations: " << iter << std::endl
+//                 << "Num infected: " << sD.numInfected << std::endl
+//                 << "Infected: " << njm::toString(sD.infected," ","") << std::endl
+//                 << "Num notInfec: " << sD.numNotInfec << std::endl
+//                 << "Gradient: " << njm::toString(gradVals," ","") << std::endl;
+//         }
+//     }
 
 
     std::vector<double> mle;
