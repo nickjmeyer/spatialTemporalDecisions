@@ -632,7 +632,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     CHECK(status == GSL_SUCCESS ||
             (status == 27
                     && sD.numInfected == 1
-                    && sD.time > sD.trtStart));
+                    && sD.time > fD.trtStart));
 
 // #pragma omp critical
 //     {
