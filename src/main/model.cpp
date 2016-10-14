@@ -607,7 +607,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     T = gsl_multimin_fdfminimizer_vector_bfgs2;
     s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
 
-    gsl_multimin_fdfminimizer_set(s,&my_func,x,1.0,0.1);
+    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.1,0.1);
 
     int iter = 0;
     int status;
@@ -635,6 +635,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
                     && sD.time > fD.trtStart))
         << std::endl
         << "status: " << status << std::endl
+        << "iter: " << iter << std::endl
         << "numInfected: " << sD.numInfected << std::endl
         << "time: " << sD.time << std::endl
         << "gradient check: "
