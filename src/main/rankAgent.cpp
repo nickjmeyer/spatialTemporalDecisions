@@ -51,6 +51,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     f.preCompData(sD,tD,fD,dD,m);
     f.getFeatures(sD,tD,fD,dD,m);
 
+    // jitter containers
+    arma::colvec jitter;
+    arma::mat featStddev;
+
     int i=0,j=0,node0=0,addPre=0,addAct=0;
     int cI = 0,cN = 0;
 
@@ -65,8 +69,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         // get jitter
         if (jitterVal > 0) {
             // jitter the current weights
-            arma::colvec jitter;
-            arma::mat featStddev;
             jitter.zeros(f.numFeatures);
 
             featStddev.zeros(0,f.numFeatures);
