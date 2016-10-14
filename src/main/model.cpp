@@ -611,6 +611,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 
     int iter = 0;
     int status;
+    const int maxIter = 100;
     do{
         iter++;
         status = gsl_multimin_fdfminimizer_iterate(s);
@@ -620,7 +621,10 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
 
         status = gsl_multimin_test_gradient(s->gradient,0.1);
 
-    }while(status == GSL_CONTINUE && iter < 100);
+    }while(status == GSL_CONTINUE && iter < maxIter);
+
+    CHECK_LT(iter,maxIter) << "Reached maximum iterations";
+    CHECK_EQ(status,GSL_SUCCESS);
 
 
     std::vector<double> mle;
