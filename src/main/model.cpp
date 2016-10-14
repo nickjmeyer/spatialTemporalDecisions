@@ -513,7 +513,7 @@ void ModelBase::revert(){
 void ModelBase::fit(const SimData & sD, const TrtData & tD,
         const FixedData & fD, const DynamicData & dD,
         const bool init){
-    if(init){
+    if(init && false){
         fit(getPar(),sD,tD,fD,dD);
     }
     else{
