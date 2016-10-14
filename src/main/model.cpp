@@ -619,7 +619,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         if(status)
             break;
 
-        status = gsl_multimin_test_gradient(s->gradient,0.01);
+        status = gsl_multimin_test_gradient(s->gradient,0.1);
 
     }while(status == GSL_CONTINUE && iter < maxIter);
 
