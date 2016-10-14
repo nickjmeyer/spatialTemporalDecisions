@@ -517,7 +517,7 @@ void ModelBase::fit(const SimData & sD, const TrtData & tD,
         // used penalized version of current par;
         std::vector<double> currPar = getPar();
         for (int i = 0; i < currPar.size(); ++i) {
-            currPar.at(i) *= 0.5;
+            currPar.at(i) *= 0.25;
         }
         fit(currPar,sD,tD,fD,dD);
     }
@@ -647,7 +647,17 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     // if(iter >= maxIter)
     //     std::cout << "exceeded iters" << std::endl;
 
-    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE);
+    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE)
+            << std::endl
+            << "status: " << status << std::endl
+            << "iter: " << iter << std::endl
+            << "numInfected: " << sD.numInfected << std::endl
+            << "time: " << sD.time << std::endl
+            << "gradient check: "
+            << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+            << "f: " << s->f << std::endl
+            << "gradient: " << njm::toString(gradVals," ","") << std::endl
+            << "starting: " << njm::toString(startingVals," ","") << std::endl;
 
     // CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE ||
     //         (status == 27
