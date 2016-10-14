@@ -632,7 +632,14 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
     CHECK(status == GSL_SUCCESS ||
             (status == 27
                     && sD.numInfected == 1
-                    && sD.time > fD.trtStart));
+                    && sD.time > fD.trtStart))
+        << std::endl
+        << "status: " << status << std::endl
+        << "numInfected: " << sD.numInfected << std::endl
+        << "time: " << sD.time << std::endl
+        << "gradient check: "
+        << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+        << "gradient: " << njm::toString(gradVals," ","") << std::endl;
 
 // #pragma omp critical
 //     {
