@@ -93,9 +93,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             infRanks = f.infFeat * (tp.weights + jitter);
             notRanks = f.notFeat * (tp.weights + jitter);
         } else {
-            for (j = 0; j < f.numFeatures; ++j) {
-                njm::rnorm01();
-            }
             // calculate ranks
             infRanks = f.infFeat * tp.weights;
             notRanks = f.notFeat * tp.weights;
