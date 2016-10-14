@@ -98,11 +98,13 @@ void M1SpOptim<S,A,M>
     }
 
 
+    njm::timer.start("optim run");
     agent.tp.putPar(parPH);
     valP = runner.run(s,agent,tp.mcReps,s.fD.finalT).sMean();
 
     agent.tp.putPar(parMH);
     valM = runner.run(s,agent,tp.mcReps,s.fD.finalT).sMean();
+    njm::timer.stop("optim run");
 
 
     for(i=0; i<numPar; i++)
