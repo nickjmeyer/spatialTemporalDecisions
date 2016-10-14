@@ -634,6 +634,7 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         << "status: " << status << std::endl
         << "iter: " << iter << std::endl
         << "numInfected: " << sD.numInfected << std::endl
+        << "numNotInfec: " << sD.numNotInfec << std::endl
         << "time: " << sD.time << std::endl
         << "gradient check: "
         << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
