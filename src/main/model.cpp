@@ -752,9 +752,6 @@ double ModelBase::logll(const SimData & sD,
 
     int t,nN;
     // loop over time points
-    // setFill(sD,tD,fD,dD);
-    std::vector<double> testProbs;
-    std::vector<double> testInfProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -861,12 +858,15 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                                 beg * nNInfByiN * gradVal.at(pi);
                         }
 
-                        // const int partialIndex = nNode*fD.numNodes*numPars +
-                        //     iNode*numPars;
-                        // for(pi=0; pi < int(numPars); ++pi){
-                        //     logllGradVal.at(pi) += beg * nNInfByiN *
-                        //         pcPartial.at(partialIndex + pi);
-                        // }
+                        const int partialIndex = nNode*fD.numNodes*numPars +
+                            iNode*numPars;
+                        for(pi=0; pi < int(numPars); ++pi){
+                            // logllGradVal.at(pi) += beg * nNInfByiN *
+                            //     pcPartial.at(partialIndex + pi);
+                            const double diff = std::abs(gradVal.at(pi)
+                                    - pcPartial.at(partialIndex + pi));
+                            CHECK_LT(diff, 1e-12);
+                        }
                     }
                 }
             }
@@ -958,12 +958,16 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                         for(pi=0; pi < int(numPars); ++pi){
                             logllGradVal.at(pi) +=
                                 beg * nNInfByiN * gradVal.at(pi);
+                        }
 
-                        // const int partialIndex = nNode*fD.numNodes*numPars
-                        //     + iNode*numPars;
-                        // for(pi=0; pi < int(numPars); ++pi){
-                        //     logllGradVal.at(pi) += beg * nNInfByiN *
-                        //         pcPartial.at(partialIndex + pi);
+                        const int partialIndex = nNode*fD.numNodes*numPars
+                            + iNode*numPars;
+                        for(pi=0; pi < int(numPars); ++pi){
+                            // logllGradVal.at(pi) += beg * nNInfByiN *
+                            //     pcPartial.at(partialIndex + pi);
+                            const double diff std::abs(gradVal.at(pi)
+                                    - pcPartial.at(partialIndex + pi));
+                            CHECK_LT(diff,1e-12);
                         }
                     }
                 }
