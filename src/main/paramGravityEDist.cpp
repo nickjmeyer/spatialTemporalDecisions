@@ -78,6 +78,7 @@ std::vector<double> ParamGravityEDist::partial(const int notNode,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
+    njm::timer.start("partial_gravityEDist");
     double alpha = pars.at(0);
     double power = pars.at(1);
     std::vector<double> p;
@@ -88,6 +89,7 @@ std::vector<double> ParamGravityEDist::partial(const int notNode,
     // so the negatives cancel
     p.push_back(alpha*dist[ind]*std::log(cc[ind])*std::exp(power)/
             std::pow(cc[ind],std::exp(power)));
+    njm::timer.stop("partial_gravityEDist");
     return p;
 }
 

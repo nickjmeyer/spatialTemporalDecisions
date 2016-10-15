@@ -70,6 +70,7 @@ std::vector<double> ParamBeta2::partial(const int notNode,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
+    njm::timer.start("partial_beta2");
     std::vector<double> p;
 
     int i,ind = notNode*numCovar,indInf = infNode*numCovar;
@@ -79,5 +80,6 @@ std::vector<double> ParamBeta2::partial(const int notNode,
     for(i = 0; i < numCovar; ++i){
         p.push_back(covar.at(indInf + i));
     }
+    njm::timer.stop("partial_beta2");
     return p;
 }

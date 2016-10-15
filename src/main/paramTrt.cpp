@@ -105,8 +105,10 @@ std::vector<double> ParamTrt::partial(const int notNode,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
+    njm::timer.start("partial_trt");
     std::vector<double> p;
     p.push_back(-tD.a.at(infNode));
     p.push_back(-tD.p.at(notNode));
+    njm::timer.stop("partial_trt");
     return p;
 }
