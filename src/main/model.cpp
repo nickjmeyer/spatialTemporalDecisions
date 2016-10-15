@@ -965,7 +965,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                         for(pi=0; pi < int(numPars); ++pi){
                             // logllGradVal.at(pi) += beg * nNInfByiN *
                             //     pcPartial.at(partialIndex + pi);
-                            const double diff std::abs(gradVal.at(pi)
+                            const double diff = std::abs(gradVal.at(pi)
                                     - pcPartial.at(partialIndex + pi));
                             CHECK_LT(diff,1e-12);
                         }
