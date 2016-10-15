@@ -5,11 +5,8 @@ set -e
 
 PROJ_ROOT=.
 
-## tune
-./scripts/runTune.sh 2>&1 | tee >(sed 's/.*\r//'> runTune.log)
+./scripts/runTuneLog.sh
 
-## runSpatial
-./scripts/runSpatial.sh 2>&1 | tee >(sed 's/.*\r//'> runSpatial.log)
+./scripts/runSpatialLog.sh
 
-## runEdgeToEdge
-./scripts/runEdgeToEdge.sh 2>&1 | tee >(sed 's/.*\r//'> runEdgeToEdge.log)
+./scripts/runEdgeToEdgeLog.sh
