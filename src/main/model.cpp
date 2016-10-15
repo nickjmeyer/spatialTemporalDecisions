@@ -770,10 +770,14 @@ double ModelBase::logll(const SimData & sD,
             setFill(sDi,tDi,fD,dDi);
 
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+                const double diff = std::abs(testProbs.at(testInd)
+                        - this->probs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-18);
             }
-
+            CHECK_LT(totDiff,1e-18);
         }
 
         // modFill(sDi,tDi,fD,dDi);
@@ -843,9 +847,14 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
             setFill(sDi,tDi,fD,dDi);
 
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+                const double diff = std::abs(testProbs.at(testInd)
+                        - this->probs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-18);
             }
+            CHECK_LT(totDiff,1e-18);
         }
 
 
@@ -938,11 +947,14 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
             setFill(sDi,tDi,fD,dDi);
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-                CHECK_LT(std::abs(testProbs.at(testInd)
-                                - this->probs.at(testInd)), 1e-18);
-
+                const double diff = std::abs(testProbs.at(testInd)
+                        - this->probs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-18);
             }
+            CHECK_LT(totDiff,1e-18);
         }
 
         // setFill(sDi,tDi,fD,dDi);
