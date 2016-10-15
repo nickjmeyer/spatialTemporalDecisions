@@ -8,6 +8,7 @@ ParamBase::ParamBase(const ParamBase & p){
     beg = pars.begin();
     end = pars.end();
     offset = p.offset;
+    totNumPars = p.totNumPars;
     parsSize = p.parsSize;
     names = p.names;
     toScale = p.toScale;
