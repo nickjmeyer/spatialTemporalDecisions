@@ -15,8 +15,8 @@
 
 
 std::vector<double> getStats(const std::vector<std::vector<int> > & h,
-			     const SimData & sD,
-			     const FixedData & fD);
+        const SimData & sD,
+        const FixedData & fD);
 
 
 

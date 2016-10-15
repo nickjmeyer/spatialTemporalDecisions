@@ -13,23 +13,23 @@
 
 template <class M>
 class ProximalAgent : public BaseAgent<M> {
- public:
-  ProximalAgent();
+public:
+    ProximalAgent();
 
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & model);
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model);
 
-  int numAct;
-  int numPre;
+    int numAct;
+    int numPre;
 
-  virtual void setEdgeToEdge(const bool edgeToEdge);
+    virtual void setEdgeToEdge(const bool edgeToEdge);
 
-  bool edgeToEdge;
+    bool edgeToEdge;
 
-  static std::string name;
+    static std::string name;
 };
 
 

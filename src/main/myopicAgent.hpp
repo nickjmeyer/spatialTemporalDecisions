@@ -12,25 +12,25 @@
 
 template <class M>
 class MyopicAgent : public BaseAgent<M> {
- public:
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & model);
+public:
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model);
 
-  arma::colvec infFeat;
-  arma::colvec notFeat;
+    arma::colvec infFeat;
+    arma::colvec notFeat;
 
-  int numAct;
-  int numPre;
+    int numAct;
+    int numPre;
 
-  bool edgeToEdge;
+    bool edgeToEdge;
 
-  bool getEdgeToEdge();
-  void setEdgeToEdge(const bool edgeToEdge);
+    bool getEdgeToEdge();
+    void setEdgeToEdge(const bool edgeToEdge);
 
-  static std::string name;
+    static std::string name;
 };
 
 

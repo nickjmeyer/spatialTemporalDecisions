@@ -14,17 +14,17 @@
 
 template <class M>
 class RandomAgent : BaseAgent<M> {
- public:
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & model);
+public:
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model);
 
-  int numAct;
-  int numPre;
+    int numAct;
+    int numPre;
 
-  static const std::string name;
+    static const std::string name;
 };
 
 

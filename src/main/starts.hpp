@@ -10,15 +10,15 @@
 
 
 class Starts {
- public:
-  Starts(const std::string & file);
-  Starts(const int numReps, const int numNodes);
+public:
+    Starts(const std::string & file);
+    Starts(const int numReps, const int numNodes);
 
-  std::vector<int> operator[](const int i) const;
+    std::vector<int> operator[](const int i) const;
 
- private:
-  int dynamic;
-  std::vector<std::vector<int> > ind;
+private:
+    int dynamic;
+    std::vector<std::vector<int> > ind;
 };
 
 

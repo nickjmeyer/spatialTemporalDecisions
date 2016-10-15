@@ -14,13 +14,13 @@
 
 
 class ModelEDist : public ModelBase {
- protected:
- public:
-  ModelEDist();
-  ModelEDist(const FixedData & fD);
-  ModelEDist(const ModelEDist & m);
+protected:
+public:
+    ModelEDist();
+    ModelEDist(const FixedData & fD);
+    ModelEDist(const ModelEDist & m);
 
-  virtual ModelEDist & operator=(const ModelEDist & m);
+    virtual ModelEDist & operator=(const ModelEDist & m);
 };
 
 

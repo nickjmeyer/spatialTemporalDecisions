@@ -18,48 +18,48 @@
 
 
 class RankTuneParam : public TuneParam {
- public:
-  std::vector<double> getPar() const;
-  void putPar(const std::vector<double> & par);
+public:
+    std::vector<double> getPar() const;
+    void putPar(const std::vector<double> & par);
 
-  arma::colvec weights_r;
-  arma::colvec weights;
+    arma::colvec weights_r;
+    arma::colvec weights;
 
-  double jitterScale;
+    double jitterScale;
 
-  bool shuffle;
+    bool shuffle;
 };
 
 
 template <class F, class M>
 class RankAgent : public BaseAgent<M> {
- public:
-  RankAgent();
+public:
+    RankAgent();
 
-  void reset();
+    void reset();
 
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & m);
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & m);
 
-  virtual double calcJitter();
+    virtual double calcJitter();
 
-  F f;
+    F f;
 
-  arma::colvec infRanks;
-  arma::colvec notRanks;
+    arma::colvec infRanks;
+    arma::colvec notRanks;
 
-  int numAct;
-  int numPre;
+    int numAct;
+    int numPre;
 
-  RankTuneParam tp;
+    RankTuneParam tp;
 
-  std::string name;
+    std::string name;
 
-  void setEdgeToEdge(const bool edgeToEdge);
-  bool getEdgeToEdge() const;
+    void setEdgeToEdge(const bool edgeToEdge);
+    bool getEdgeToEdge() const;
 };
 
 

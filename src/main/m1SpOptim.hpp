@@ -12,37 +12,37 @@
 #include "runner.hpp"
 
 class M1SpOptimTunePar : public TuneParam{
- public:
-  M1SpOptimTunePar();
+public:
+    M1SpOptimTunePar();
 
-  std::vector<double> getPar() const;
-  void putPar(const std::vector<double> & par);
+    std::vector<double> getPar() const;
+    void putPar(const std::vector<double> & par);
 
-  int mcReps;
+    int mcReps;
 
-  double C,t,ell,muMin,A,B;
+    double C,t,ell,muMin,A,B;
 
-  int tune;
+    int tune;
 
-  int fixSample;
+    int fixSample;
 };
 
 
 template <class S, class A, class M>
 class M1SpOptim : BaseOptim<S,A,M>{
- public:
-  M1SpOptim();
+public:
+    M1SpOptim();
 
-  void reset();
+    void reset();
 
-  virtual void optim(const S & system,
-		     A & agent);
-  virtual void tune(const System<M,M> & system,
-		    A agent);
+    virtual void optim(const S & system,
+            A & agent);
+    virtual void tune(const System<M,M> & system,
+            A agent);
 
-  M1SpOptimTunePar tp;
+    M1SpOptimTunePar tp;
 
-  std::string name;
+    std::string name;
 };
 
 

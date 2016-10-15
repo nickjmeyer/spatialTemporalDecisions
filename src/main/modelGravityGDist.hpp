@@ -16,17 +16,17 @@
 
 
 class ModelGravityGDist : public ModelBase {
- protected:
- public:
-  ModelGravityGDist();
-  ModelGravityGDist(const FixedData & fD);
-  ModelGravityGDist(const ModelGravityGDist & m);
+protected:
+public:
+    ModelGravityGDist();
+    ModelGravityGDist(const FixedData & fD);
+    ModelGravityGDist(const ModelGravityGDist & m);
 
-  virtual ModelGravityGDist & operator=(const ModelGravityGDist & m);
+    virtual ModelGravityGDist & operator=(const ModelGravityGDist & m);
 
-  double tuneTrt(const FixedData & fD);
+    double tuneTrt(const FixedData & fD);
 
-  GravityMcmc mcmc;
+    GravityMcmc mcmc;
 };
 
 

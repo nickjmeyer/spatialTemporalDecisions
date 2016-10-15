@@ -6,9 +6,9 @@
 
 template<typename T>
 void sampleVals(std::vector<T> * const sample,
-		std::vector<T> const * const values,
-		std::vector<double> * const probs,
-		int const sampleSize);
+        std::vector<T> const * const values,
+        std::vector<double> * const probs,
+        int const sampleSize);
 // REQUIRES: *probs add up to 1; at least sampleSize probs are non-zero;
 //           values->size() == probs->size(); sampleSize <= values->size()
 // MODIFIES: *sample
@@ -17,8 +17,8 @@ void sampleVals(std::vector<T> * const sample,
 
 template<typename T>
 void sampleVals(std::vector<T> * const sample,
-		std::vector<T> const * const values,
-		int const sampleSize);
+        std::vector<T> const * const values,
+        int const sampleSize);
 // REQUIRES: at least sampleSize probs are non-zero;
 //           values->size() == probs->size(); sampleSize <= values->size()
 

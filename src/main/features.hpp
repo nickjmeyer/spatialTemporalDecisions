@@ -6,29 +6,29 @@
 
 template <class M>
 class BaseFeatures {
- public:
-  virtual void preCompData(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   M & m) = 0;
+public:
+    virtual void preCompData(const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & m) = 0;
 
-  virtual void getFeatures(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   M & m) = 0;
+    virtual void getFeatures(const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & m) = 0;
 
-  virtual void updateFeatures(const SimData & sD,
+    virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
 			      M & m) = 0;
 
-  TrtData tDPre;
+    TrtData tDPre;
 
-  arma::mat infFeat;
-  arma::mat notFeat;
+    arma::mat infFeat;
+    arma::mat notFeat;
 
 };
 
@@ -36,7 +36,7 @@ class BaseFeatures {
 
 
 void reconstructNetwork(std::vector<int> & network,
-			std::vector<int> & treated);
+        std::vector<int> & treated);
 
 
 

@@ -7,14 +7,14 @@
 
 template <class M>
 class NoTrt : public BaseAgent<M> {
- public:
-  void applyTrt(const SimData & sD,
-		TrtData & tD,
-		const FixedData & fD,
-		const DynamicData & dD,
-		M & model);
+public:
+    void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model);
 
-  static std::string name;
+    static std::string name;
 };
 
 

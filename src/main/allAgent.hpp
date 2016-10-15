@@ -12,14 +12,14 @@
 
 template <class M>
 class AllAgent : public BaseAgent<M> {
- public:
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & model);
+public:
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model);
 
-  static std::string name;
+    static std::string name;
 };
 
 

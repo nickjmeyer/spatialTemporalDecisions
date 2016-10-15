@@ -14,13 +14,13 @@
 #include "paramTrt.hpp"
 
 class Model2GravityGDist : public ModelBase {
- protected:
- public:
-  Model2GravityGDist();
-  Model2GravityGDist(const FixedData & fD);
-  Model2GravityGDist(const Model2GravityGDist & m);
+protected:
+public:
+    Model2GravityGDist();
+    Model2GravityGDist(const FixedData & fD);
+    Model2GravityGDist(const Model2GravityGDist & m);
 
-  virtual Model2GravityGDist & operator=(const Model2GravityGDist & m);
+    virtual Model2GravityGDist & operator=(const Model2GravityGDist & m);
 };
 
 

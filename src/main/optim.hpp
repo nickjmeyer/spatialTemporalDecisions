@@ -10,11 +10,11 @@
 
 template <class S, class A, class M>
 class BaseOptim {
- public:
-  virtual void optim(const S & system,
-		     A & agent)=0;
+public:
+    virtual void optim(const S & system,
+            A & agent)=0;
 
-  std::string name;
+    std::string name;
 };
 
 

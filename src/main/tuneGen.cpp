@@ -25,172 +25,172 @@ DEFINE_bool(dryRun,false,"Do not execute main");
 
 template <class S, class NT,class RN, class MG>
 double TuneGenNT(S s, const int numReps, const Starts & starts){
-  NT nt;
-  RN rn;
+    NT nt;
+    RN rn;
 
-  double goal = 0.7;
-  njm::message("Goal: " + njm::toString(goal,""));
+    double goal = 0.7;
+    njm::message("Goal: " + njm::toString(goal,""));
 
-  int numYears = s.fD.finalT;
-  double tol = 1e-3;
-
-  // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
-  //     s.modelGen_r.getPar({"alpha"})[0],
-  //     s.fD.caves));
-
-  std::vector<double> par = s.modelGen_r.getPar();
-  s.modelEst_r.putPar(par.begin());
-  s.revert();
-
-
-  double val = rn.run(s,nt,numReps,numYears,starts).sMean();
-  double scale = 1.025, shrink = .9;
-  int above = int(val > goal);
-  int iter = 0;
-
-  printf("Iter: %05d  >>>  Current value: %08.6f\r",
-    ++iter, val);
-
-  while(std::abs(val - goal) > tol){
-    if(val > goal){
-      if(!above)
-        scale*=shrink;
-
-      // s.modelGen_r.linScale(1.0 + scale);
-
-      std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
-      CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
-      curIntcp.at(0) -= scale;
-      s.modelGen_r.setPar("intcp",curIntcp.at(0));
-
-      above = 1;
-    }
-    else{
-      if(above)
-        scale*=shrink;
-
-      std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
-      CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
-      curIntcp.at(0) += scale;
-      s.modelGen_r.setPar("intcp",curIntcp.at(0));
-      // s.modelGen_r.linScale(1.0/(1.0 + scale));
-
-      above = 0;
-    }
-
-    par = s.modelGen_r.getPar();
-    s.modelEst_r.putPar(par.begin());
-    s.revert();
-
+    int numYears = s.fD.finalT;
+    double tol = 1e-3;
 
     // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
     //     s.modelGen_r.getPar({"alpha"})[0],
     //     s.fD.caves));
 
+    std::vector<double> par = s.modelGen_r.getPar();
+    s.modelEst_r.putPar(par.begin());
+    s.revert();
 
 
-    val = rn.run(s,nt,numReps,numYears,starts).sMean();
-    printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
-      ++iter, val, scale);
-    // std::cout << std::endl
-    //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
-    fflush(stdout);
-  }
+    double val = rn.run(s,nt,numReps,numYears,starts).sMean();
+    double scale = 1.025, shrink = .9;
+    int above = int(val > goal);
+    int iter = 0;
 
-  s.modelGen_r.save();
+    printf("Iter: %05d  >>>  Current value: %08.6f\r",
+            ++iter, val);
 
-  njm::message("Est. goal: " + njm::toString(val,""));
+    while(std::abs(val - goal) > tol){
+        if(val > goal){
+            if(!above)
+                scale*=shrink;
+
+            // s.modelGen_r.linScale(1.0 + scale);
+
+            std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+            CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+            curIntcp.at(0) -= scale;
+            s.modelGen_r.setPar("intcp",curIntcp.at(0));
+
+            above = 1;
+        }
+        else{
+            if(above)
+                scale*=shrink;
+
+            std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+            CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+            curIntcp.at(0) += scale;
+            s.modelGen_r.setPar("intcp",curIntcp.at(0));
+            // s.modelGen_r.linScale(1.0/(1.0 + scale));
+
+            above = 0;
+        }
+
+        par = s.modelGen_r.getPar();
+        s.modelEst_r.putPar(par.begin());
+        s.revert();
 
 
-  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+        // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+        //     s.modelGen_r.getPar({"alpha"})[0],
+        //     s.fD.caves));
 
-  return(val);
+
+
+        val = rn.run(s,nt,numReps,numYears,starts).sMean();
+        printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
+                ++iter, val, scale);
+        // std::cout << std::endl
+        //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
+        fflush(stdout);
+    }
+
+    s.modelGen_r.save();
+
+    njm::message("Est. goal: " + njm::toString(val,""));
+
+
+    njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
+    return(val);
 }
 
 
 template <class S, class MA, class RM, class NT, class RN>
 double TuneGenMA(S s, const int numReps, const Starts & starts){
-  NT nt;
-  RN rn;
+    NT nt;
+    RN rn;
 
-  MA ma;
-  RM rm;
+    MA ma;
+    RM rm;
 
-  int numYears = s.fD.finalT;
+    int numYears = s.fD.finalT;
 
-  double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).sMean();
-  double atFinalT = rn.run(s,nt,numReps,numYears,starts).sMean();
+    double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).sMean();
+    double atFinalT = rn.run(s,nt,numReps,numYears,starts).sMean();
 
-  double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
-  njm::message("Goal: " + njm::toString(goal,""));
-  double tol = 1e-3;
+    double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
+    njm::message("Goal: " + njm::toString(goal,""));
+    double tol = 1e-3;
 
-  std::vector<double> par;
-  double trt = 1.0;
-
-  s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
-  par = s.modelGen_r.getPar();
-  s.modelEst_r.putPar(par.begin());
-  s.revert();
-
-  double val = rm.run(s,ma,numReps,numYears,starts).sMean();
-  double scale = 1.1, shrink = .9;
-  int above = int(val > goal);
-  int iter = 0;
-
-
-  printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
-    ++iter, val, trt);
-
-  while(std::abs(val - goal) > tol){
-    if(val > goal){
-      if(!above)
-        scale*=shrink;
-
-      trt *= 1.0 + scale;
-
-      above = 1;
-    }
-    else{
-      if(above)
-        scale*=shrink;
-
-      trt *= 1.0/(1.0 + scale);
-
-      above = 0;
-    }
-
+    std::vector<double> par;
+    double trt = 1.0;
 
     s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
     par = s.modelGen_r.getPar();
     s.modelEst_r.putPar(par.begin());
     s.revert();
 
-    // std::cout << "par: " << njm::toString(par," ","\n");
-    // par = s.modelGen.getPar({"trtAct","trtPre"});
-    // std::cout << "par: " << njm::toString(par," ","\n");
+    double val = rm.run(s,ma,numReps,numYears,starts).sMean();
+    double scale = 1.1, shrink = .9;
+    int above = int(val > goal);
+    int iter = 0;
 
 
-    val = rm.run(s,ma,numReps,numYears,starts).sMean();
     printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
-      ++iter, val, trt);
-    fflush(stdout);
-  }
+            ++iter, val, trt);
 
-  s.modelGen_r.save();
+    while(std::abs(val - goal) > tol){
+        if(val > goal){
+            if(!above)
+                scale*=shrink;
 
-  double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
-    + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
-  priorMeanTrt *= 4.0;
-  njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
-    std::ios_base::out);
+            trt *= 1.0 + scale;
+
+            above = 1;
+        }
+        else{
+            if(above)
+                scale*=shrink;
+
+            trt *= 1.0/(1.0 + scale);
+
+            above = 0;
+        }
 
 
-  njm::message("Est. goal: " + njm::toString(val,""));
+        s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+        par = s.modelGen_r.getPar();
+        s.modelEst_r.putPar(par.begin());
+        s.revert();
 
-  njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+        // std::cout << "par: " << njm::toString(par," ","\n");
+        // par = s.modelGen.getPar({"trtAct","trtPre"});
+        // std::cout << "par: " << njm::toString(par," ","\n");
 
-  return(val);
+
+        val = rm.run(s,ma,numReps,numYears,starts).sMean();
+        printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
+                ++iter, val, trt);
+        fflush(stdout);
+    }
+
+    s.modelGen_r.save();
+
+    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+            + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+    priorMeanTrt *= 4.0;
+    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+            std::ios_base::out);
+
+
+    njm::message("Est. goal: " + njm::toString(val,""));
+
+    njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
+    return(val);
 }
 
 
@@ -211,162 +211,162 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
 
 int main(int argc, char ** argv){
-  ::google::InitGoogleLogging(argv[0]);
-  ::gflags::ParseCommandLineFlags(&argc,&argv,true);
-  if(!FLAGS_dryRun) {
-    njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
+    ::google::InitGoogleLogging(argv[0]);
+    ::gflags::ParseCommandLineFlags(&argc,&argv,true);
+    if(!FLAGS_dryRun) {
+        njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-    if(FLAGS_edgeToEdge) {
-      // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
+        if(FLAGS_edgeToEdge) {
+            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-      typedef Model2EdgeToEdge MG;
-      typedef MG ME;
+            typedef Model2EdgeToEdge MG;
+            typedef MG ME;
 
-      typedef System<MG,ME> S;
-      typedef NoTrt<ME> NT;
-      typedef ProximalAgent<ME> PA;
-      typedef MyopicAgent<ME> MA;
+            typedef System<MG,ME> S;
+            typedef NoTrt<ME> NT;
+            typedef ProximalAgent<ME> PA;
+            typedef MyopicAgent<ME> MA;
 
-      typedef AllAgent<ME> AA;
+            typedef AllAgent<ME> AA;
 
-      typedef ToyFeatures5<ME> F;
-      typedef RankAgent<F,ME> RA;
+            typedef ToyFeatures5<ME> F;
+            typedef RankAgent<F,ME> RA;
 
-      typedef VanillaRunnerNS<S,NT> RN;
-      typedef VanillaRunnerNS<S,PA> RP;
-      typedef VanillaRunnerNS<S,MA> RM;
-      typedef VanillaRunnerNS<S,RA> RR;
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
 
-      typedef VanillaRunnerNS<S,AA> R_AA;
+            typedef VanillaRunnerNS<S,AA> R_AA;
 
-      S s;
-      s.setEdgeToEdge(FLAGS_edgeToEdge);
-      s.modelEst_r = s.modelGen_r;
-      s.revert();
+            S s;
+            s.setEdgeToEdge(FLAGS_edgeToEdge);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-      int numReps = 500;
-      Starts starts(numReps,s.fD.numNodes);
+            int numReps = 500;
+            Starts starts(numReps,s.fD.numNodes);
 
-      MA ma;
-      PA pa;
-      RP rp;
+            MA ma;
+            PA pa;
+            RP rp;
 
-      RA ra;
-      RM rm;
-      RR rr;
+            RA ra;
+            RM rm;
+            RR rr;
 
-      pa.setEdgeToEdge(FLAGS_edgeToEdge);
-      ra.setEdgeToEdge(FLAGS_edgeToEdge);
-      ma.setEdgeToEdge(FLAGS_edgeToEdge);
-      // ra.reset();
+            pa.setEdgeToEdge(FLAGS_edgeToEdge);
+            ra.setEdgeToEdge(FLAGS_edgeToEdge);
+            ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
-      njm::message("Tuning Intercept");
+            njm::message("Tuning Intercept");
 
-      double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
-      s.modelGen_r.read();
-      s.modelEst_r.read();
-      s.revert();
+            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-      njm::message("Tuning Treatment");
+            njm::message("Tuning Treatment");
 
-      double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
-      s.modelGen_r.read();
-      s.modelEst_r.read();
-      s.revert();
+            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-      njm::message(" valNT: " + njm::toString(valNT,"") +
-        "\n" +
-        " valPA: " + njm::toString(valPA,"") +
-        "\n" +
-        " valMA: " + njm::toString(valMA,"") +
-        "\n" +
-        " valRA: " + njm::toString(valRA,"") +
-        "\n" +
-        " valAA: " + njm::toString(valAA,""));
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
 
-    } else {
-      // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
+        } else {
+            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-      typedef Model2GravityEDist MG;
-      typedef MG ME;
+            typedef Model2GravityEDist MG;
+            typedef MG ME;
 
-      typedef System<MG,ME> S;
-      typedef NoTrt<ME> NT;
-      typedef ProximalAgent<ME> PA;
-      typedef MyopicAgent<ME> MA;
+            typedef System<MG,ME> S;
+            typedef NoTrt<ME> NT;
+            typedef ProximalAgent<ME> PA;
+            typedef MyopicAgent<ME> MA;
 
-      typedef AllAgent<ME> AA;
+            typedef AllAgent<ME> AA;
 
-      typedef ToyFeatures5<ME> F;
-      typedef RankAgent<F,ME> RA;
+            typedef ToyFeatures5<ME> F;
+            typedef RankAgent<F,ME> RA;
 
-      typedef VanillaRunnerNS<S,NT> RN;
-      typedef VanillaRunnerNS<S,PA> RP;
-      typedef VanillaRunnerNS<S,MA> RM;
-      typedef VanillaRunnerNS<S,RA> RR;
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
 
-      typedef VanillaRunnerNS<S,AA> R_AA;
+            typedef VanillaRunnerNS<S,AA> R_AA;
 
-      S s;
-      s.setEdgeToEdge(FLAGS_edgeToEdge);
-      s.modelEst_r = s.modelGen_r;
-      s.revert();
+            S s;
+            s.setEdgeToEdge(FLAGS_edgeToEdge);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-      int numReps = 500;
-      Starts starts(numReps,s.fD.numNodes);
+            int numReps = 500;
+            Starts starts(numReps,s.fD.numNodes);
 
-      MA ma;
-      PA pa;
-      RP rp;
+            MA ma;
+            PA pa;
+            RP rp;
 
-      RA ra;
-      RM rm;
-      RR rr;
-      pa.setEdgeToEdge(FLAGS_edgeToEdge);
-      ra.setEdgeToEdge(FLAGS_edgeToEdge);
-      ma.setEdgeToEdge(FLAGS_edgeToEdge);
-      // ra.reset();
+            RA ra;
+            RM rm;
+            RR rr;
+            pa.setEdgeToEdge(FLAGS_edgeToEdge);
+            ra.setEdgeToEdge(FLAGS_edgeToEdge);
+            ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
-      njm::message("Tuning Intercept");
+            njm::message("Tuning Intercept");
 
-      double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
-      s.modelGen_r.read();
-      s.modelEst_r.read();
-      s.revert();
+            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-      njm::message("Tuning Treatment");
+            njm::message("Tuning Treatment");
 
-      double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
-      s.modelGen_r.read();
-      s.modelEst_r.read();
-      s.revert();
+            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-      double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-      double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-      double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-      njm::message(" valNT: " + njm::toString(valNT,"") +
-        "\n" +
-        " valPA: " + njm::toString(valPA,"") +
-        "\n" +
-        " valMA: " + njm::toString(valMA,"") +
-        "\n" +
-        " valRA: " + njm::toString(valRA,"") +
-        "\n" +
-        " valAA: " + njm::toString(valAA,""));
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
+        }
+
+        njm::sett.clean();
+
     }
 
-    njm::sett.clean();
-
-  }
-
-  return 0;
+    return 0;
 }

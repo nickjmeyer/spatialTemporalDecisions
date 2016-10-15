@@ -8,54 +8,54 @@
 #include "calcCentrality.hpp"
 
 class WnsFeatures3TuneParam : public TuneParam {
- public:
-  virtual std::vector<double> getPar() const ;
-  virtual void putPar(const std::vector<double> & par);
+public:
+    virtual std::vector<double> getPar() const ;
+    virtual void putPar(const std::vector<double> & par);
 };
 
 template<class M>
 class WnsFeatures3 : public BaseFeatures<M> {
- public:
-  virtual void preCompData(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   M & m);
+public:
+    virtual void preCompData(const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & m);
 
-  virtual void getFeatures(const SimData & sD,
-			   const TrtData & tD,
-			   const FixedData & fD,
-			   const DynamicData & dD,
-			   M & m);
+    virtual void getFeatures(const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & m);
 
-  virtual void updateFeatures(const SimData & sD,
+    virtual void updateFeatures(const SimData & sD,
 			      const TrtData & tD,
 			      const FixedData & fD,
 			      const DynamicData & dD,
 			      M & m);
 
-  // neighbors of not infected
-  std::vector<std::vector<std::pair<int,double> > > notNeigh;
-  std::vector<int> notNeighNum;
+    // neighbors of not infected
+    std::vector<std::vector<std::pair<int,double> > > notNeigh;
+    std::vector<int> notNeighNum;
 
-  // not infected are neighbors of
-  std::vector<std::vector<std::pair<int,int> > > notNeighOf;
-  std::vector<int> notNeighOfNum;
+    // not infected are neighbors of
+    std::vector<std::vector<std::pair<int,int> > > notNeighOf;
+    std::vector<int> notNeighOfNum;
 
-  // halfplane data depth of not infec
-  // arma::colvec hpddNotInfec;
-  arma::colvec centralityNotInfec;
+    // halfplane data depth of not infec
+    // arma::colvec hpddNotInfec;
+    arma::colvec centralityNotInfec;
 
-  TrtData tDPre;
+    TrtData tDPre;
 
-  arma::mat infFeat;
-  arma::mat notFeat;
+    arma::mat infFeat;
+    arma::mat notFeat;
 
-  const static int numFeatures = 3;
+    const static int numFeatures = 3;
 
-  WnsFeatures3TuneParam tp;
+    WnsFeatures3TuneParam tp;
 
-  std::string name;
+    std::string name;
 
 };
 

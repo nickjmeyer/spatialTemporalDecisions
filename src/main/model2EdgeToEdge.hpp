@@ -16,15 +16,15 @@
 
 
 class Model2EdgeToEdge : public ModelBase {
- protected:
- public:
-  Model2EdgeToEdge();
-  Model2EdgeToEdge(const FixedData & fD);
-  Model2EdgeToEdge(const Model2EdgeToEdge & m);
+protected:
+public:
+    Model2EdgeToEdge();
+    Model2EdgeToEdge(const FixedData & fD);
+    Model2EdgeToEdge(const Model2EdgeToEdge & m);
 
-  virtual Model2EdgeToEdge & operator=(const Model2EdgeToEdge & m);
+    virtual Model2EdgeToEdge & operator=(const Model2EdgeToEdge & m);
 
-	EdgeToEdge2Mcmc mcmc;
+    EdgeToEdge2Mcmc mcmc;
 };
 
 

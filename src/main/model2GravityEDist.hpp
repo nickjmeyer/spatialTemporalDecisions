@@ -16,16 +16,16 @@
 
 
 class Model2GravityEDist : public ModelBase {
- protected:
- public:
-  Model2GravityEDist();
-  Model2GravityEDist(const FixedData & fD);
-  Model2GravityEDist(const Model2GravityEDist & m);
+protected:
+public:
+    Model2GravityEDist();
+    Model2GravityEDist(const FixedData & fD);
+    Model2GravityEDist(const Model2GravityEDist & m);
 
-  virtual Model2GravityEDist & operator=(const Model2GravityEDist & m);
+    virtual Model2GravityEDist & operator=(const Model2GravityEDist & m);
 
 
-  Gravity2Mcmc mcmc;
+    Gravity2Mcmc mcmc;
 };
 
 

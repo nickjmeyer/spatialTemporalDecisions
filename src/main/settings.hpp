@@ -12,41 +12,41 @@
 #include "dataDepth.hpp"
 
 class Settings {
- public:
-  Settings();
-  ~Settings();
+public:
+    Settings();
+    ~Settings();
 
-  void timeElapsed();
+    void timeElapsed();
 
-  // void set(int numInitVals, char ** initVals);
-  void setup(const std::string fileName, const std::string srcDir);
+    // void set(int numInitVals, char ** initVals);
+    void setup(const std::string fileName, const std::string srcDir);
 
-  void clean();
-  bool isSetup;
-  int cleaned;
+    void clean();
+    bool isSetup;
+    int cleaned;
 
-  std::string fileName;
-  std::string srcDir;
-  std::string datDir;
-  std::string date;
+    std::string fileName;
+    std::string srcDir;
+    std::string datDir;
+    std::string date;
 
-  const static int numVals;
+    const static int numVals;
 
-  int tick,tock,seconds;
-  void timeStamp();
+    int tick,tock,seconds;
+    void timeStamp();
 
-  std::string datExt(int inDir, std::string beg, std::string end) const;
-  std::string datExt(std::string beg, std::string end) const;
-  std::string datExt(int inDir, std::string end) const;
-  std::string datExt(std::string end) const;
-  std::string datExt(int inDir) const;
-  std::string datExt() const;
+    std::string datExt(int inDir, std::string beg, std::string end) const;
+    std::string datExt(std::string beg, std::string end) const;
+    std::string datExt(int inDir, std::string end) const;
+    std::string datExt(std::string end) const;
+    std::string datExt(int inDir) const;
+    std::string datExt() const;
 
-  std::string srcExt(const std::string file);
+    std::string srcExt(const std::string file);
 };
 
 namespace njm{
-  extern Settings sett;
+extern Settings sett;
 };
 
 #endif

@@ -12,27 +12,27 @@ DEFINE_bool(dryRun,false,"Do not execute main");
 
 template <typename T>
 void copyParams(const boost::filesystem::path path) {
-	System<T,T> s;
-	s.modelGen_r.read();
-	s.modelGen_r.save_to(path);
+    System<T,T> s;
+    s.modelGen_r.read();
+    s.modelGen_r.save_to(path);
 }
 
 
 int main(int argc, char ** argv) {
-  ::google::InitGoogleLogging(argv[0]);
-  ::gflags::ParseCommandLineFlags(&argc,&argv,true);
-	if(!FLAGS_dryRun) {
-		njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
+    ::google::InitGoogleLogging(argv[0]);
+    ::gflags::ParseCommandLineFlags(&argc,&argv,true);
+    if(!FLAGS_dryRun) {
+        njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-		const boost::filesystem::path path(FLAGS_outDir);
+        const boost::filesystem::path path(FLAGS_outDir);
 
-		if(FLAGS_edgeToEdge) {
-			copyParams<Model2EdgeToEdge>(path);
-		} else {
-			copyParams<Model2GravityEDist>(path);
-		}
+        if(FLAGS_edgeToEdge) {
+            copyParams<Model2EdgeToEdge>(path);
+        } else {
+            copyParams<Model2GravityEDist>(path);
+        }
 
-		njm::sett.clean();
-	}
-	return 0;
+        njm::sett.clean();
+    }
+    return 0;
 }

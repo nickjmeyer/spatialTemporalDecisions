@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
         njm::toFile(FLAGS_edgeToEdge,
-            njm::sett.datExt("edgeToEdge_flag_",".txt"));
+                njm::sett.datExt("edgeToEdge_flag_",".txt"));
 
         if(FLAGS_edgeToEdge) {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
@@ -61,13 +61,13 @@ int main(int argc, char ** argv){
 
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.sMean(),"")
-                + "  (" + njm::toString(rs.seMean(),"") + ")");
+                    + njm::toString(rs.sMean(),"")
+                    + "  (" + njm::toString(rs.seMean(),"") + ")");
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.sMean(),"")
-                + "  (" + njm::toString(rs.seMean(),"") + ")");
+                    + njm::toString(rs.sMean(),"")
+                    + "  (" + njm::toString(rs.seMean(),"") + ")");
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
             typedef Model2EdgeToEdge MG;
@@ -114,13 +114,13 @@ int main(int argc, char ** argv){
 
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
-                + njm::toString(rs.sMean(),"")
-                + "  (" + njm::toString(rs.seMean(),"") + ")");
+                    + njm::toString(rs.sMean(),"")
+                    + "  (" + njm::toString(rs.seMean(),"") + ")");
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
-                + njm::toString(rs.sMean(),"")
-                + "  (" + njm::toString(rs.seMean(),"") + ")");
+                    + njm::toString(rs.sMean(),"")
+                    + "  (" + njm::toString(rs.seMean(),"") + ")");
 
         }
     }

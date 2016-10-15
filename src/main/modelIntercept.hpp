@@ -13,13 +13,13 @@
 
 
 class ModelIntercept : public ModelBase {
- protected:
- public:
-  ModelIntercept();
-  ModelIntercept(const FixedData & fD);
-  ModelIntercept(const ModelIntercept & m);
+protected:
+public:
+    ModelIntercept();
+    ModelIntercept(const FixedData & fD);
+    ModelIntercept(const ModelIntercept & m);
 
-  virtual ModelIntercept & operator=(const ModelIntercept & m);
+    virtual ModelIntercept & operator=(const ModelIntercept & m);
 };
 
 

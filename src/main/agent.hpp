@@ -7,14 +7,14 @@
 
 template <class M>
 class BaseAgent {
- public:
-  virtual void applyTrt(const SimData & sD,
-			TrtData & tD,
-			const FixedData & fD,
-			const DynamicData & dD,
-			M & model) = 0;
+public:
+    virtual void applyTrt(const SimData & sD,
+            TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD,
+            M & model) = 0;
 
-  std::string name;
+    std::string name;
 };
 
 
@@ -31,8 +31,8 @@ int getNumAct(const SimData & sD,
 
 
 void checkForValidTrt(
-  const SimData & sD, const TrtData & tD,
-    const FixedData & fD, const DynamicData & dD);
+        const SimData & sD, const TrtData & tD,
+        const FixedData & fD, const DynamicData & dD);
 
 
 

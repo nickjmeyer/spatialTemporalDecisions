@@ -27,41 +27,41 @@
 
 
 class FFX {
- public:
+public:
 
-  FFX();
+    FFX();
 
-  std::vector<std::string> factors;
-  std::vector<std::vector<double> > values;
+    std::vector<std::string> factors;
+    std::vector<std::vector<double> > values;
 
-  std::vector<std::string> stats;
+    std::vector<std::string> stats;
 
-  std::vector<std::vector<double> > allObs;
+    std::vector<std::vector<double> > allObs;
 
-  std::vector<int> maxSett;
+    std::vector<int> maxSett;
 
-  void setReps(const int num);
+    void setReps(const int num);
 
-  void addFactor(const std::string & f,
-		 const std::vector<double> & fVals);
-  void addStat(const std::string & s);
+    void addFactor(const std::string & f,
+            const std::vector<double> & fVals);
+    void addStat(const std::string & s);
 
-  int numFactor;
-  int numStat;
+    int numFactor;
+    int numStat;
 
-  int numCombo;
-  int numReps;
+    int numCombo;
+    int numReps;
 
-  int maxInd;
+    int maxInd;
 
-  int getMax() const ;
-  std::vector<double> getSett(const int num) const;
-  double getSett(const std::string & f, const int num) const;
+    int getMax() const ;
+    std::vector<double> getSett(const int num) const;
+    double getSett(const std::string & f, const int num) const;
 
-  void addObs(const int num, const double & obs);
-  void addObs(const int num, const std::vector<double> & obs);
+    void addObs(const int num, const double & obs);
+    void addObs(const int num, const std::vector<double> & obs);
 
-  void saveObs(const std::string & file) const;
+    void saveObs(const std::string & file) const;
 };
 
 
