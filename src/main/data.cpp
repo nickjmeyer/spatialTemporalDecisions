@@ -1,8 +1,9 @@
 #include "data.hpp"
-
+#include "timer.hpp"
 
 std::vector<DataBundle>
 historyToData(const std::vector<std::vector<int> > & hist){
+    njm::timer.start("historyToData");
     int years = int(hist.size()), numNodes = int(hist[0].size());
     std::vector<DataBundle> res;
 
@@ -90,5 +91,6 @@ historyToData(const std::vector<std::vector<int> > & hist){
 
         res.push_back(DataBundle(sD,tD,dD));
     }
+    njm::timer.stop("historyToData");
     return res;
 }
