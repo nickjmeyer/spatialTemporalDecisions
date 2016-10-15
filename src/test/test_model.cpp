@@ -360,6 +360,65 @@ TYPED_TEST(TestModel,TestSetQuick) {
 TYPED_TEST(TestModel,TestSetPar) {
 }
 
+TYPED_TEST(TestModel,TestPcPartial) {
+    this->m->read();
+    this->m->setFill(this->system->sD,this->system->tD,
+            this->system->fD,this->system->dD,true);
+    for (int i = 0; i < this->system->sD.numNotInfec; i++) {
+        const int nNode = this->system->sD.notInfec.at(i);
+
+        for (int j = 0; j < this->system->sD.numInfected; ++j) {
+            const int iNode = this->system->sD.infected.at(j);
+
+            for (int k = 0; k < this->m->numPars; ++k) {
+                const int pcPartialIndex =
+                    nNode * this->system->fD.numNodes * this->m->numPars +
+                    iNode * this->m->numPars +
+                    k;
+                EXPECT_EQ(this->m->pcPartial.at(pcPartialIndex),
+                        this->m->partial(nNode,iNode,this->system->sD,
+                                this->system->tD,this->system->fD,
+                                this->system->dD).at(k))
+                    << "failed for not infected node " << nNode
+                    << " and infected node " << iNode
+                    << " for param " << k;
+            }
+        }
+    }
+
+    std::vector<double> infProbs(this->system->sD.numNotInfec,0.0);
+    infProbs.at(0) = 1.0;
+    this->system->nextPoint(infProbs);
+
+    this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
+    this->system->tD.p.at(this->system->sD.notInfec.at(0)) = 1;
+
+    this->m->modFill(this->system->sD,this->system->tD,
+            this->system->fD,this->system->dD,true);
+    for (int i = 0; i < this->system->sD.numNotInfec; i++) {
+        const int nNode = this->system->sD.notInfec.at(i);
+
+        for (int j = 0; j < this->system->sD.numInfected; ++j) {
+            const int iNode = this->system->sD.infected.at(j);
+
+            for (int k = 0; k < this->m->numPars; ++k) {
+                const int pcPartialIndex =
+                    nNode * this->system->fD.numNodes * this->m->numPars +
+                    iNode * this->m->numPars +
+                    k;
+                EXPECT_EQ(this->m->pcPartial.at(pcPartialIndex),
+                        this->m->partial(nNode,iNode,this->system->sD,
+                                this->system->tD,this->system->fD,
+                                this->system->dD).at(k))
+                    << "failed for not infected node " << nNode
+                    << " and infected node " << iNode
+                    << " for param " << k;
+            }
+        }
+    }
+}
+
+
 TYPED_TEST(TestModel,TestLogllGrad) {
   this->m->read();
 
