@@ -36,8 +36,8 @@ Model2GravityEDist::Model2GravityEDist(const Model2GravityEDist & m){
     meanHit = m.meanHit;
     varHit = m.varHit;
     ready = m.ready;
-    numInfected = m.numInfected;
-    numNotInfec = m.numNotInfec;
+    // numInfected = m.numInfected;
+    // numNotInfec = m.numNotInfec;
     fitType = m.fitType;
     fixSample = m.fixSample;
     mcmc = m.mcmc;

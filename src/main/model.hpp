@@ -30,7 +30,7 @@ public:
     arma::colvec meanHit;
     arma::mat varHit;
     int ready;
-    int numInfected,numNotInfec;
+    // int numInfected,numNotInfec; // not needed
     int fixSample;
 
     // defaults to false

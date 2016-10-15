@@ -36,8 +36,8 @@ ModelEDist::ModelEDist(const ModelEDist & m){
     meanHit = m.meanHit;
     varHit = m.varHit;
     ready = m.ready;
-    numInfected = m.numInfected;
-    numNotInfec = m.numNotInfec;
+    // numInfected = m.numInfected;
+    // numNotInfec = m.numNotInfec;
     fitType = m.fitType;
     fixSample = m.fixSample;
     setEdgeToEdge(m.getEdgeToEdge());

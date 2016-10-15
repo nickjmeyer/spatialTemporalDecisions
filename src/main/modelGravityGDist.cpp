@@ -36,8 +36,8 @@ ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
     meanHit = m.meanHit;
     varHit = m.varHit;
     ready = m.ready;
-    numInfected = m.numInfected;
-    numNotInfec = m.numNotInfec;
+    // numInfected = m.numInfected;
+    // numNotInfec = m.numNotInfec;
     fitType = m.fitType;
     mcmc = m.mcmc;
     fixSample = m.fixSample;
