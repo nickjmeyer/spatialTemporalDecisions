@@ -838,7 +838,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         } else {
             this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
-            testProbs = this->testProbs;
+            testProbs = this->probs;
 
             setFill(sDi,tDi,fD,dDi);
 
