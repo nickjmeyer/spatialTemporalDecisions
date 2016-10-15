@@ -55,6 +55,7 @@ void ParamIntercept::setFill(std::vector<double> & probs,
             std::cout << "size: " << pcPartial.size() << std::endl
                       << "offset: " << offset << std::endl
                       << "totNumPars: " << totNumPars << std::endl;
+            throw(1);
         }
     }
 }
