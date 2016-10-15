@@ -817,9 +817,9 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
 
         if (t == 0) {
-            setFill(sDi,tDi,fD,dDi);
+            setFill(sDi,tDi,fD,dDi,true);
         } else {
-            modFill(sDi,tDi,fD,dDi);
+            modFill(sDi,tDi,fD,dDi,true);
         }
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
@@ -901,9 +901,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const DynamicData & dDi = std::get<2>(db[t]);
 
         if (t == 0) {
-            setFill(sDi,tDi,fD,dDi);
+            setFill(sDi,tDi,fD,dDi,true);
         } else {
-            modFill(sDi,tDi,fD,dDi);
+            modFill(sDi,tDi,fD,dDi,true);
         }
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
