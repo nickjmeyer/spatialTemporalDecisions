@@ -357,10 +357,21 @@ TYPED_TEST(TestModel,TestLogllGrad) {
 
   std::vector<double> par = this->m->getPar();
 
+  const double val = this->m->logll(this->system->sD,this->system->tD,
+          this->system->fD,this->system->dD);
+
+  const std::vector<double> gradVal = this->m->logllGrad(
+          this->system->sD,this->system->tD,
+          this->system->fD,this->system->dD);
+
+  const std::pair<double,std::vector<double> > both = this->m->logllBoth(
+          this->system->sD,this->system->tD,
+          this->system->fD,this->system->dD);
+
+  EXPECT_EQ(val,both.first);
+
   for (int i = 0; i < this->m->numPars; ++i) {
     this->m->putPar(par.begin());
-    const double val = this->m->logllGrad(this->system->sD,this->system->tD,
-      this->system->fD,this->system->dD).at(i);
 
     GradientChecker<TypeParam> gc;
     gc.system = this->system;
@@ -375,7 +386,9 @@ TYPED_TEST(TestModel,TestLogllGrad) {
     double abserr;
     gsl_deriv_central(&F,par.at(i),1e-8,&result,&abserr);
 
-    EXPECT_NEAR(result,val,eps);
+    EXPECT_EQ(gradVal.at(i),both.second.at(i));
+    EXPECT_NEAR(result,gradVal.at(i),eps);
+    EXPECT_NEAR(result,both.second.at(i),eps);
   }
 }
 
