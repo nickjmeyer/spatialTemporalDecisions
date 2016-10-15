@@ -286,19 +286,16 @@ TYPED_TEST(TestModel,TestModFill) {
   this->m->setFill(this->system->sD,this->system->tD,
     this->system->fD,this->system->dD);
 
-  const std::vector<double> setProbs = this->m->probs;
-
   this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
   this->system->tD.p.at(this->system->sD.notInfec.at(0)) = 1;
+  this->system->updateStatus();
   std::vector<double> infProbs(this->system->sD.numNotInfec,0.0);
-  infProbs.at(0) = 1.0;
   infProbs.at(1) = 1.0;
   this->system->nextPoint(infProbs);
 
   this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
-  this->system->tD.a.at(this->system->sD.infected.at(2)) = 1;
+  this->system->tD.a.at(this->system->sD.infected.at(1)) = 1;
   this->system->tD.p.at(this->system->sD.notInfec.at(0)) = 1;
-  this->system->tD.p.at(this->system->sD.notInfec.at(1)) = 1;
 
 
   this->m->modFill(this->system->sD,this->system->tD,
@@ -306,13 +303,20 @@ TYPED_TEST(TestModel,TestModFill) {
 
   const std::vector<double> modProbs = this->m->probs;
 
+  this->m->setFill(this->system->sD,this->system->tD,
+          this->system->fD,this->system->dD);
+
+  const std::vector<double> setProbs = this->m->probs;
+
   std::vector<double>::const_iterator itSet,itMod;
   itSet = setProbs.begin();
-  itMod = setProbs.begin();
+  itMod = modProbs.begin();
   for (int i = 0; i < this->system->fD.numNodes; ++i) {
       for (int j = 0; j < this->system->fD.numNodes; ++j) {
-          EXPEXT_EQ(*itSet,*itMod)
+          EXPECT_EQ(*itSet,*itMod)
               << "failed for index " << i << " and " << j;
+          ++itSet;
+          ++itMod;
       }
   }
 }
