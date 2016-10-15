@@ -49,7 +49,13 @@ void ParamIntercept::setFill(std::vector<double> & probs,
 
     const int I = fD.numNodes*fD.numNodes;
     for (int i = 0; i < I; i++) {
-        pcPartial.at(i*totNumPars + offset) = 1;
+        try{
+            pcPartial.at(i*totNumPars + offset) = 1;
+        } catch(...) {
+            std::cout << "size: " << pcPartial.size() << std::endl
+                      << "offset: " << offset << std::endl
+                      << "totNumPars: " << totNumPars << std::endl;
+        }
     }
 }
 
