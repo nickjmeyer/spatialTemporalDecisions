@@ -95,14 +95,14 @@ public:
 
 
 typedef ::testing::Types<
-  ModelIntercept,
-  ModelGDist,
-  ModelEDist,
-  ModelGravityGDist,
-  Model2GPowGDist,
-  Model2GravityGDist,
-  Model2GravityEDist
-                         > MyTypes;
+    ModelIntercept,
+    ModelGDist,
+    ModelEDist,
+    ModelGravityGDist,
+    Model2GPowGDist,
+    Model2GravityGDist,
+    Model2GravityEDist
+    > MyTypes;
 TYPED_TEST_CASE(TestModel,MyTypes);
 
 TYPED_TEST(TestModel,TestInit) {
