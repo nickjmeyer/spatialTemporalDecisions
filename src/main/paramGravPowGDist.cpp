@@ -66,11 +66,53 @@ void ParamGravPowGDist::setFill(std::vector<double> & probs,
 }
 
 
+void ParamGravPowGDist::setFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
+    int i,I = numNodes*numNodes;
+    std::vector<double>::iterator it0;
+    std::vector<double>::const_iterator it1;
+    const double alpha = pars.at(0);
+    const double power = pars.at(1);
+    const double gPow = pars.at(2);
+    for(i = 0,
+            it0 = probs.begin(),
+            it1 = grav.begin(); i < I; ++it0,++it1,++i){ // not infected
+        *it0 -= *it1;
+
+        // the negative is because the term is subtracted in the model
+        pcPartial.at(i*totNumPars + offset) =
+            -std::pow(dist[i],gPow)/std::pow(cc[i],std::exp(power));
+        // remember that this term is subtracted in the model
+        // so the negatives cancel
+        pcPartial.at(i*totNumPars + offset + 1) =
+            alpha*std::pow(dist[i],gPow)*std::log(cc[i])*
+            std::exp(power)/std::pow(cc[i],std::exp(power));
+
+        pcPartial.at(i*totNumPars + offset + 2) =
+            -alpha*std::pow(dist[i],gPow)*std::log(dist[i])/
+                std::pow(cc[i],std::exp(power));
+    }
+}
+
+
 void ParamGravPowGDist::modFill(std::vector<double> & probs,
 				const SimData & sD,
 				const TrtData & tD,
 				const FixedData & fD,
 				const DynamicData & dD){
+}
+
+
+void ParamGravPowGDist::modFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
 }
 
 

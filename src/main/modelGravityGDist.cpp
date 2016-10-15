@@ -32,6 +32,7 @@ ModelGravityGDist::ModelGravityGDist(const ModelGravityGDist & m){
     expitInfProbs = m.expitInfProbs;
     expitRevProbs = m.expitRevProbs;
     quick = m.quick;
+    pcPartial = m.pcPartial;
     meanHit = m.meanHit;
     varHit = m.varHit;
     ready = m.ready;

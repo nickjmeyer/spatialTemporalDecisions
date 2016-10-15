@@ -24,6 +24,9 @@ public:
     std::vector<double> expitRevProbs;
     std::vector<double> quick;
 
+    // pre computed gradient
+    std::vector<double> pcPartial;
+
     arma::colvec meanHit;
     arma::mat varHit;
     int ready;
@@ -67,12 +70,14 @@ public:
     virtual void setFill(const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,
-            const DynamicData & dD);
+            const DynamicData & dD,
+            const bool setPcPartial = false);
 
     virtual void modFill(const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,
-            const DynamicData & dD);
+            const DynamicData & dD,
+            const bool setPcPartial = false);
 
     virtual void setQuick(const SimData & sD,
             const TrtData & tD,

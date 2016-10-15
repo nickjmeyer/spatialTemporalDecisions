@@ -40,6 +40,11 @@ void ModelBase::init(const FixedData & fD) {
                 p->setOffset(this->numPars);
                 this->numPars += p->size();
             });
+
+    std::for_each(pars.begin(),pars.end(),
+            [this](ParamBase * p){
+                p->setTotNumPars(this->numPars);
+            });
 }
 
 
@@ -223,17 +228,25 @@ std::vector<double> ModelBase::revProbs(){
 void ModelBase::setFill(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
-        const DynamicData & dD){
+        const DynamicData & dD,
+        const bool setPcPartial){
     njm::timer.start("setFill");
-    // njm::message("setFill");
     int i,parsSize = pars.size();
     probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
-    for(i = 0; i < parsSize; ++i){
-        pars[i]->setFill(probs,sD,tD,fD,dD);
-        // njm::message(njm::toString(i,"",0,0) + ": " +
-        // 		 njm::toString(std::accumulate(probs.begin(),probs.end(),0.0),
-        // 			       ""));
+
+    if (setPcPartial) {
+        this->pcPartial.resize(fD.numNodes*fD.numNodes*numPars);
+        std::fill(this->pcPartial.begin(),this->pcPartial.end(),0.);
+
+        for(i = 0; i < parsSize; ++i){
+            pars[i]->setFill(probs,pcPartial,sD,tD,fD,dD);
+        }
+    } else {
+        for(i = 0; i < parsSize; ++i){
+            pars[i]->setFill(probs,sD,tD,fD,dD);
+        }
     }
+
     set = 1;
     ready = 0;
     njm::timer.stop("setFill");
@@ -243,21 +256,24 @@ void ModelBase::setFill(const SimData & sD,
 void ModelBase::modFill(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
-        const DynamicData & dD){
+        const DynamicData & dD,
+        const bool setPcPartial){
     njm::timer.start("modFill");
     if(set == 1){
-        // njm::message("modFill");
         int i,parsSize = pars.size();
-        for(i = 0; i < parsSize; ++i){
-            pars[i]->modFill(probs,sD,tD,fD,dD);
-            // njm::message(njm::toString(i,"",0,0) + ": " +
-            // 		   njm::toString(std::accumulate(probs.begin(),
-            // 						 probs.end(),0.0),
-            // 				 ""));
+
+        if (setPcPartial) {
+            for(i = 0; i < parsSize; ++i){
+                pars[i]->modFill(probs,pcPartial,sD,tD,fD,dD);
+            }
+        } else {
+            for(i = 0; i < parsSize; ++i){
+                pars[i]->modFill(probs,sD,tD,fD,dD);
+            }
         }
     }
     else if(set == 0){
-        setFill(sD,tD,fD,dD);
+        setFill(sD,tD,fD,dD,setPcPartial);
     }
     ready = 0;
     njm::timer.stop("modFill");
@@ -736,12 +752,13 @@ double ModelBase::logll(const SimData & sD,
 
     int t,nN;
     // loop over time points
+    setFill(sD,tD,fD,dD);
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi);
+        modFill(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
@@ -786,6 +803,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     std::vector<double> logllGradVal(numPars,0.0);
     std::fill(logllGradVal.begin(),logllGradVal.end(),0.0);
 
+    setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
@@ -793,12 +811,13 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi);
+        modFill(sD,tD,fD,dD,true);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
-            std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
+            std::cout << "ModelBase::logll(): length of "
+                      << "expitInfProbs is not same as"
                       << " number of uninfected nodes at time t"
                       << std::endl;
             throw(1);
@@ -815,16 +834,19 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                 double beg = double(next)/prob - 1.0;
                 for(iN = 0; iN < sDi.numInfected; ++iN){
                     const int iNode = sDi.infected[iN];
-                    if((this->getEdgeToEdge() && fD.network.at(nNode*fD.numNodes + iNode))
+                    if((this->getEdgeToEdge()
+                                    && fD.network.at(nNode*fD.numNodes + iNode))
                             || !this->getEdgeToEdge()){
-                        // quick stores probabilty of not infefcting need to take
-                        // (1.0 - quick) to get probablity of infecting
+                        // Quick stores probabilty of not infecting.
+                        // Need to take (1.0 - quick) to get
+                        // probablity of infecting.
 
                         double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-                        std::vector<double> grad = partial(nNode,iNode,
-                                sDi,tDi,fD,dDi);
+                        const int partialIndex = nNode*fD.numNodes*numPars +
+                            iNode*numPars;
                         for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
+                            logllGradVal.at(pi) += beg * nNInfByiN *
+                                pcPartial.at(partialIndex + pi);
                         }
                     }
                 }
@@ -852,6 +874,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
     double logllVal = 0.0;
 
+    setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
@@ -859,7 +882,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi);
+        modFill(sDi,tDi,fD,dDi,true);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
@@ -908,11 +931,11 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
                         const double nNInfByiN =
                             1.0 - quick[nN*sDi.numInfected + iN];
-                        const std::vector<double> grad = partial(nNode,iNode,
-                                sDi,tDi,fD,dDi);
+                        const int partialIndex = nNode*fD.numNodes*numPars
+                            + iNode*numPars;
                         for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) +=
-                                beg * nNInfByiN * grad.at(pi);
+                            logllGradVal.at(pi) += beg * nNInfByiN *
+                                pcPartial.at(partialIndex + pi);
                         }
                     }
                 }

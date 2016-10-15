@@ -29,7 +29,21 @@ public:
             const FixedData & fD,
             const DynamicData & dD);
 
+    virtual void setFill(std::vector<double> & probs,
+            std::vector<double> & pcPartial,
+            const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD);
+
     virtual void modFill(std::vector<double> & probs,
+            const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD);
+
+    virtual void modFill(std::vector<double> & probs,
+            std::vector<double> & pcPartial,
             const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,

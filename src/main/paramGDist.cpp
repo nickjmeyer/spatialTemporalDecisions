@@ -48,7 +48,34 @@ void ParamGDist::setFill(std::vector<double> & probs,
 }
 
 
+void ParamGDist::setFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
+    int i,I = numNodes*numNodes;
+    std::vector<double>::iterator it0;
+    std::vector<double>::const_iterator it1;
+    for(i = 0,
+            it0 = probs.begin(),
+            it1 = alphaDist.begin(); i < I; ++it0,++it1,++i){ // not infected
+        *it0 -= *it1;
+        pcPartial.at(i*totNumPars + offset) = -dist[i];
+    }
+}
+
+
 void ParamGDist::modFill(std::vector<double> & probs,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
+}
+
+
+void ParamGDist::modFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
         const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,

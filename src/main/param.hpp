@@ -15,6 +15,7 @@ protected:
     std::vector<double> pars;
     std::vector<double>::iterator beg,end;
     unsigned int offset;
+    unsigned int totNumPars;
     unsigned int parsSize;
 
     std::vector<std::string> names;
@@ -52,6 +53,7 @@ public:
     virtual void init(const FixedData & fD);
 
     void setOffset(const unsigned int offset);
+    void setTotNumPars(const unsigned int totNumPars);
 
     // retrieve pars
     std::vector<double> getPar() const;
@@ -75,9 +77,23 @@ public:
             const FixedData & fD,
             const DynamicData & dD) = 0;
 
+    virtual void setFill(std::vector<double> & probs,
+            std::vector<double> & pcPartial,
+            const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD) = 0;
+
     // update the probs matrix for changes in simulation data
     // not an update for changes in parameters
     virtual void modFill(std::vector<double> & probs,
+            const SimData & sD,
+            const TrtData & tD,
+            const FixedData & fD,
+            const DynamicData & dD) = 0;
+
+    virtual void modFill(std::vector<double> & probs,
+            std::vector<double> & pcPartial,
             const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,

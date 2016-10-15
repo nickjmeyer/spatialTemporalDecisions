@@ -57,7 +57,42 @@ void ParamBeta2::setFill(std::vector<double> & probs,
 }
 
 
+void ParamBeta2::setFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
+    int i,j,k;
+    std::vector<double>::iterator it;
+    for(i = 0, it = probs.begin(); i < numNodes; ++i){ // not infected
+        for(j = 0; j < numNodes; ++j, ++it){ // infected
+            *it += covarBeta.at(i) + covarBetaInf.at(j);
+
+            // set partial derivative
+            for(k = 0; k < numCovar; ++k) {
+                pcPartial.at(i*numNodes*totNumPars + j*totNumPars
+                        + offset + k) = covar.at(i*numCovar + k);
+            }
+            for(k = 0; k < numCovar; ++k) {
+                pcPartial.at(i*numNodes*totNumPars + j*totNumPars
+                        + offset + numCovar + k) = covar.at(j*numCovar + k);
+            }
+        }
+    }
+}
+
+
 void ParamBeta2::modFill(std::vector<double> & probs,
+        const SimData & sD,
+        const TrtData & tD,
+        const FixedData & fD,
+        const DynamicData & dD){
+}
+
+
+void ParamBeta2::modFill(std::vector<double> & probs,
+        std::vector<double> & pcPartial,
         const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
