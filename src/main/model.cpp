@@ -775,9 +775,9 @@ double ModelBase::logll(const SimData & sD,
                 const double diff = std::abs(testProbs.at(testInd)
                         - this->probs.at(testInd));
                 totDiff += diff;
-                CHECK_LT(diff, 1e-18);
+                CHECK_LT(diff, 1e-12);
             }
-            CHECK_LT(totDiff,1e-18);
+            CHECK_LT(totDiff,1e-12);
         }
 
         // modFill(sDi,tDi,fD,dDi);
@@ -852,9 +852,9 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                 const double diff = std::abs(testProbs.at(testInd)
                         - this->probs.at(testInd));
                 totDiff += diff;
-                CHECK_LT(diff, 1e-18);
+                CHECK_LT(diff, 1e-12);
             }
-            CHECK_LT(totDiff,1e-18);
+            CHECK_LT(totDiff,1e-12);
         }
 
 
@@ -952,9 +952,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                 const double diff = std::abs(testProbs.at(testInd)
                         - this->probs.at(testInd));
                 totDiff += diff;
-                CHECK_LT(diff, 1e-18);
+                CHECK_LT(diff, 1e-12);
             }
-            CHECK_LT(totDiff,1e-18);
+            CHECK_LT(totDiff,1e-12);
         }
 
         // setFill(sDi,tDi,fD,dDi);
