@@ -753,6 +753,7 @@ double ModelBase::logll(const SimData & sD,
     int t,nN;
     // loop over time points
     // setFill(sD,tD,fD,dD);
+    std::vector<double> testProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -760,9 +761,19 @@ double ModelBase::logll(const SimData & sD,
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            testProbs = this->probs;
         } else {
+            this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            testProbs = this->probs;
+
             setFill(sDi,tDi,fD,dDi);
+
+            CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
+                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+            }
+
         }
 
         // modFill(sDi,tDi,fD,dDi);
@@ -814,6 +825,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     // setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
+    std::vector<double> testProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -822,9 +834,18 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            testProbs = this->probs;
         } else {
+            this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            testProbs = this->testProbs;
+
             setFill(sDi,tDi,fD,dDi);
+
+            CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
+                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+            }
         }
 
 
@@ -901,6 +922,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
     // setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
+    std::vector<double> testProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -908,9 +930,17 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            testProbs = this->probs;
         } else {
+            this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            testProbs = this->probs;
+
             setFill(sDi,tDi,fD,dDi);
+            CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+            for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
+                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+            }
         }
 
         // setFill(sDi,tDi,fD,dDi);
