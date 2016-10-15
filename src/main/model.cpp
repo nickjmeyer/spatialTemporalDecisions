@@ -373,6 +373,7 @@ std::vector<double> ModelBase::partial(const int notNode,
         const DynamicData & dD){
     njm::timer.start("partial");
     std::vector<double> p,pi;
+    p.reserve(numPars);
     int i,numPars = pars.size();
     for(i = 0; i < numPars; ++i){
         pi = pars[i]->partial(notNode,infNode,sD,tD,fD,dD);
