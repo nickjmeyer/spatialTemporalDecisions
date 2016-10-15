@@ -939,7 +939,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
             setFill(sDi,tDi,fD,dDi);
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-                CHECK_EQ(testProbs.at(testInd),this->probs.at(testInd));
+                CHECK_LT(std::abs(testProbs.at(testInd)
+                                - this->probs.at(testInd)), 1e-18);
+
             }
         }
 
