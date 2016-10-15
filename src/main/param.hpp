@@ -14,6 +14,7 @@ protected:
 
     std::vector<double> pars;
     std::vector<double>::iterator beg,end;
+    unsigned int offset;
     unsigned int parsSize;
 
     std::vector<std::string> names;
@@ -50,6 +51,7 @@ public:
     // calls initInternal, initParsSize
     virtual void init(const FixedData & fD);
 
+    void setOffset(const unsigned int offset);
 
     // retrieve pars
     std::vector<double> getPar() const;

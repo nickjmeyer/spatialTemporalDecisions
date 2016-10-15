@@ -7,6 +7,7 @@ ParamBase::ParamBase(const ParamBase & p){
     pars = p.pars;
     beg = pars.begin();
     end = pars.end();
+    offset = p.offset;
     parsSize = p.parsSize;
     names = p.names;
     toScale = p.toScale;
@@ -30,6 +31,11 @@ void ParamBase::init(const FixedData & fD){
 
     // initialize the internal information
     initInternal(fD);
+}
+
+
+void ParamBase::setOffset(const unsigned int offset) {
+    this->offset = offset;
 }
 
 

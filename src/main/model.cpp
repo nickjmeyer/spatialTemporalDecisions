@@ -37,7 +37,8 @@ void ModelBase::init(const FixedData & fD) {
     numPars = 0;
     std::for_each(pars.begin(),pars.end(),
             [this](ParamBase * p){
-                numPars += p->size();
+                p->setOffset(this->numPars);
+                this->numPars += p->size();
             });
 }
 
