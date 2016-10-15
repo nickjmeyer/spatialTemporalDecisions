@@ -749,92 +749,100 @@ double ModelBase::logll(const SimData & sD,
     std::vector<DataBundle> db = historyToData(hist);
 
     double logllVal = 0.0;
+    double logllValMod = 0.0;
+    {
+        int t,nN;
+        // loop over time points
+        // setFill(sD,tD,fD,dD);
+        std::vector<double> testProbs;
+        std::vector<double> testInfProbs;
+        for(t = 0; t < sD.time; ++t){
+            const SimData & sDi = std::get<0>(db[t]);
+            const TrtData & tDi = std::get<1>(db[t]);
+            const DynamicData & dDi = std::get<2>(db[t]);
 
-    int t,nN;
-    // loop over time points
-    // setFill(sD,tD,fD,dD);
-    std::vector<double> testProbs;
-    std::vector<double> testInfProbs;
-    for(t = 0; t < sD.time; ++t){
-        const SimData & sDi = std::get<0>(db[t]);
-        const TrtData & tDi = std::get<1>(db[t]);
-        const DynamicData & dDi = std::get<2>(db[t]);
-
-        if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
-        } else {
-            modFill(sDi,tDi,fD,dDi);
-        }
-        infProbs(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
 
-        // if (t == 0) {
-        //     setFill(sDi,tDi,fD,dDi);
-        //     infProbs(sDi,tDi,fD,dDi);
-
-        //     testProbs = this->probs;
-        // } else {
-        //     this->probs = testProbs;
-        //     modFill(sDi,tDi,fD,dDi);
-        //     infProbs(sDi,tDi,fD,dDi);
-        //     testProbs = this->probs;
-        //     testInfProbs = this->expitInfProbs;
-
-        //     setFill(sDi,tDi,fD,dDi);
-        //     infProbs(sDi,tDi,fD,dDi);
-
-        //     // test probs
-        //     CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
-        //     double totDiff = 0.0;
-        //     for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-        //         const double diff = std::abs(testProbs.at(testInd)
-        //                 - this->probs.at(testInd));
-        //         totDiff += diff;
-        //         CHECK_LT(diff, 1e-10);
-        //     }
-        //     CHECK_LT(totDiff,1e-10);
-
-        //     // test infProbs
-        //     CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
-        //     totDiff = 0.0;
-        //     for (int testInd; testInd < testInfProbs.size(); ++testInd) {
-        //         const double diff = std::abs(testInfProbs.at(testInd)
-        //                 - this->expitInfProbs.at(testInd));
-        //         totDiff += diff;
-        //         CHECK_LT(diff, 1e-10);
-        //     }
-        //     CHECK_LT(totDiff,1e-10);
-        // }
-        // modFill(sDi,tDi,fD,dDi);
-        // setFill(sDi,tDi,fD,dDi);
-        // infProbs(sDi,tDi,fD,dDi);
-
-        if(int(expitInfProbs.size()) != sDi.numNotInfec){
-            std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
-                      << " number of uninfected nodes at time t"
-                      << std::endl;
-            throw(1);
-        }
-
-        // njm::timer.start("logll_computation");
-        // loop over uninfected nodes at time t
-        for(nN = 0; nN < sDi.numNotInfec; ++nN){
-            double prob = expitInfProbs.at(nN);
-            int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
-            if(next == 1){
-                if(prob < 1e-44)
-                    logllVal += -100.0;
-                else
-                    logllVal += std::log(prob);
+            if(int(expitInfProbs.size()) != sDi.numNotInfec){
+                std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
+                          << " number of uninfected nodes at time t"
+                          << std::endl;
+                throw(1);
             }
-            else{
-                if((1.0-prob) < 1e-44)
-                    logllVal += -100.0;
-                else
-                    logllVal += std::log(1.0 - prob);
+
+            // njm::timer.start("logll_computation");
+            // loop over uninfected nodes at time t
+            for(nN = 0; nN < sDi.numNotInfec; ++nN){
+                double prob = expitInfProbs.at(nN);
+                int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
+                if(next == 1){
+                    if(prob < 1e-44)
+                        logllVal += -100.0;
+                    else
+                        logllVal += std::log(prob);
+                }
+                else{
+                    if((1.0-prob) < 1e-44)
+                        logllVal += -100.0;
+                    else
+                        logllVal += std::log(1.0 - prob);
+                }
             }
+            // njm::timer.stop("logll_computation");
         }
-        // njm::timer.stop("logll_computation");
     }
+
+    {
+        int t,nN;
+        // loop over time points
+        // setFill(sD,tD,fD,dD);
+        std::vector<double> testProbs;
+        std::vector<double> testInfProbs;
+        for(t = 0; t < sD.time; ++t){
+            const SimData & sDi = std::get<0>(db[t]);
+            const TrtData & tDi = std::get<1>(db[t]);
+            const DynamicData & dDi = std::get<2>(db[t]);
+
+            if (t == 0) {
+                setFill(sDi,tDi,fD,dDi);
+            } else {
+                modFill(sDi,tDi,fD,dDi);
+            }
+            infProbs(sDi,tDi,fD,dDi);
+
+            if(int(expitInfProbs.size()) != sDi.numNotInfec){
+                std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
+                          << " number of uninfected nodes at time t"
+                          << std::endl;
+                throw(1);
+            }
+
+            // njm::timer.start("logll_computation");
+            // loop over uninfected nodes at time t
+            for(nN = 0; nN < sDi.numNotInfec; ++nN){
+                double prob = expitInfProbs.at(nN);
+                int next = (hist[t+1][sDi.notInfec[nN]] < 2) ? 0 : 1;
+                if(next == 1){
+                    if(prob < 1e-44)
+                        logllValMod += -100.0;
+                    else
+                        logllValMod += std::log(prob);
+                }
+                else{
+                    if((1.0-prob) < 1e-44)
+                        logllValMod += -100.0;
+                    else
+                        logllValMod += std::log(1.0 - prob);
+                }
+            }
+            // njm::timer.stop("logll_computation");
+        }
+    }
+
+    CHECK_LT(std::abs(logllVal-logllValMod), 1e-12)
+        << "difference between " << logllVal << " and " << logllValMod
+        << " is " << std::abs(logllVal - logllValMod);
     return logllVal;
 }
 
