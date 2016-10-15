@@ -63,11 +63,19 @@ int main(int argc, char ** argv){
             njm::message("         Myopic: "
                     + njm::toString(rs.sMean(),"")
                     + "  (" + njm::toString(rs.seMean(),"") + ")");
+            njm::toFile("myopic, "+ njm::toString(rs.sMean(),"") +
+                    ", " + njm::toString(rs.seMean(),"") + "\n",
+                    njm::sett.datExt("results_",".txt"),
+                    std::ios_base::app);
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
                     + njm::toString(rs.sMean(),"")
                     + "  (" + njm::toString(rs.seMean(),"") + ")");
+            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
+                    ", " + njm::toString(rs.seMean(),"") + "\n",
+                    njm::sett.datExt("results_",".txt"),
+                    std::ios_base::app);
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
             typedef Model2EdgeToEdge MG;
@@ -116,12 +124,20 @@ int main(int argc, char ** argv){
             njm::message("         Myopic: "
                     + njm::toString(rs.sMean(),"")
                     + "  (" + njm::toString(rs.seMean(),"") + ")");
+            njm::toFile("myopic, "+ njm::toString(rs.sMean(),"") +
+                    ", " + njm::toString(rs.seMean(),"") + "\n",
+                    njm::sett.datExt("results_",".txt"),
+                    std::ios_base::app);
 
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
                     + njm::toString(rs.sMean(),"")
                     + "  (" + njm::toString(rs.seMean(),"") + ")");
 
+            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
+                    ", " + njm::toString(rs.seMean(),"") + "\n",
+                    njm::sett.datExt("results_",".txt"),
+                    std::ios_base::app);
         }
     }
 
