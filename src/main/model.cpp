@@ -44,8 +44,8 @@ void ModelBase::init(const FixedData & fD) {
 
 
 ModelBase::~ModelBase(){
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         delete pars.at(i);
     }
 }
@@ -60,8 +60,8 @@ void ModelBase::read(){
 void ModelBase::read_from(const boost::filesystem::path path){
     boost::filesystem::path paramDir = path / ("Param"+name);
     CHECK(boost::filesystem::exists(paramDir));
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         pars[i]->read(paramDir);
     }
 }
@@ -76,8 +76,8 @@ void ModelBase::save_to(const boost::filesystem::path path) const{
             << "failed to create directory " << paramDir;
     }
 
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         pars[i]->save(paramDir);
     }
 }
@@ -90,8 +90,8 @@ void ModelBase::save() const{
 
 
 void ModelBase::linScale(const double & scale){
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i)
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i)
         pars.at(i)->linScale(scale);
     set = 0;
     ready = 0;
@@ -226,9 +226,9 @@ void ModelBase::setFill(const SimData & sD,
         const DynamicData & dD){
     njm::timer.start("setFill");
     // njm::message("setFill");
-    int i,numPars = pars.size();
+    int i,parsSize = pars.size();
     probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
-    for(i = 0; i < numPars; ++i){
+    for(i = 0; i < parsSize; ++i){
         pars[i]->setFill(probs,sD,tD,fD,dD);
         // njm::message(njm::toString(i,"",0,0) + ": " +
         // 		 njm::toString(std::accumulate(probs.begin(),probs.end(),0.0),
@@ -247,8 +247,8 @@ void ModelBase::modFill(const SimData & sD,
     njm::timer.start("modFill");
     if(set == 1){
         // njm::message("modFill");
-        int i,numPars = pars.size();
-        for(i = 0; i < numPars; ++i){
+        int i,parsSize = pars.size();
+        for(i = 0; i < parsSize; ++i){
             pars[i]->modFill(probs,sD,tD,fD,dD);
             // njm::message(njm::toString(i,"",0,0) + ": " +
             // 		   njm::toString(std::accumulate(probs.begin(),
@@ -305,8 +305,8 @@ double ModelBase::oneOnOne(const int notNode,
 
 std::vector<double> ModelBase::getPar() const{
     std::vector<double> all,add;
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         add = pars[i]->getPar();
         all.insert(all.end(),add.begin(),add.end());
     }
@@ -317,8 +317,8 @@ std::vector<double> ModelBase::getPar() const{
 std::vector<double>
 ModelBase::getPar(const std::vector<std::string> & name) const{
     std::vector<double> res,add;
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         add = pars[i]->getPar(name);
         res.insert(res.end(),add.begin(),add.end());
     }
@@ -329,8 +329,8 @@ ModelBase::getPar(const std::vector<std::string> & name) const{
 std::vector<double>::const_iterator
 ModelBase::putPar(std::vector<double>::const_iterator it){
     set = 0;
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         it = pars[i]->putPar(it);
     }
     return it;
@@ -339,9 +339,9 @@ ModelBase::putPar(std::vector<double>::const_iterator it){
 
 void ModelBase::setPar(const std::string & name,
         const double & val){
-    int i,numPars = pars.size();
+    int i,parsSize = pars.size();
     bool found = false;
-    for(i = 0; i < numPars; ++i){
+    for(i = 0; i < parsSize; ++i){
         found |= pars[i]->setPar(name,val);
     }
 
@@ -354,9 +354,9 @@ void ModelBase::setPar(const std::string & name,
 
 void ModelBase::setPar(const std::vector<std::string> & name,
         const double & val){
-    int i,numPars = pars.size();
+    int i,parsSize = pars.size();
     bool found = false;
-    for(i = 0; i < numPars; ++i)
+    for(i = 0; i < parsSize; ++i)
         found |= pars[i]->setPar(name,val);
 
     if(!found){
@@ -375,8 +375,8 @@ std::vector<double> ModelBase::partial(const int notNode,
     njm::timer.start("partial");
     std::vector<double> p,pi;
     p.reserve(numPars);
-    int i,numPars = pars.size();
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size();
+    for(i = 0; i < parsSize; ++i){
         pi = pars[i]->partial(notNode,infNode,sD,tD,fD,dD);
         p.insert(p.end(),pi.begin(),pi.end());
     }
@@ -395,8 +395,8 @@ std::vector<double> ModelBase::partial2(const int notNode,
     njm::timer.start("partial2");
     std::vector<double> p,pi;
     std::vector<int> parsLen;
-    int i,numPars = pars.size(),totLen = 0;
-    for(i = 0; i < numPars; ++i){
+    int i,parsSize = pars.size(),totLen = 0;
+    for(i = 0; i < parsSize; ++i){
         parsLen.push_back(totLen);
         totLen += pars[i]->size();
     }
@@ -407,7 +407,7 @@ std::vector<double> ModelBase::partial2(const int notNode,
     std::fill(p.begin(),p.end(),0);
 
     int j,k,n,N,D;
-    for(i = 0; i < numPars; ++i){
+    for(i = 0; i < parsSize; ++i){
         pi = pars[i]->partial2(notNode,infNode,sD,tD,fD,dD);
 
         n = parsLen[i];
