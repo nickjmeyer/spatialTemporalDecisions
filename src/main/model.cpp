@@ -811,7 +811,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        modFill(sD,tD,fD,dD,true);
+        modFill(sDi,tDi,fD,dDi,true);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
