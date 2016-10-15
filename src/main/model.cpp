@@ -811,7 +811,8 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi,true);
+        // setFill(sDi,tDi,fD,dDi,true);
+        setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
@@ -842,12 +843,19 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                         // probablity of infecting.
 
                         double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-                        const int partialIndex = nNode*fD.numNodes*numPars +
-                            iNode*numPars;
+                        const std::vector<double> gradVal = partial(
+                                nNode,iNode,sDi,tDi,fD,dDi);
                         for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) += beg * nNInfByiN *
-                                pcPartial.at(partialIndex + pi);
+                            logllGradVal.at(pi) +=
+                                beg * nNInfByiN * gradVal.at(pi);
                         }
+
+                        // const int partialIndex = nNode*fD.numNodes*numPars +
+                        //     iNode*numPars;
+                        // for(pi=0; pi < int(numPars); ++pi){
+                        //     logllGradVal.at(pi) += beg * nNInfByiN *
+                        //         pcPartial.at(partialIndex + pi);
+                        // }
                     }
                 }
             }
@@ -882,7 +890,8 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi,true);
+        // setFill(sDi,tDi,fD,dDi,true);
+        setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
@@ -931,11 +940,17 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
                         const double nNInfByiN =
                             1.0 - quick[nN*sDi.numInfected + iN];
-                        const int partialIndex = nNode*fD.numNodes*numPars
-                            + iNode*numPars;
+                        const std::vector<double> gradVal = partial(
+                                nNode,iNode,sDi,tDi,fD,dDi);
                         for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) += beg * nNInfByiN *
-                                pcPartial.at(partialIndex + pi);
+                            logllGradVal.at(pi) +=
+                                beg * nNInfByiN * gradVal.at(pi);
+
+                        // const int partialIndex = nNode*fD.numNodes*numPars
+                        //     + iNode*numPars;
+                        // for(pi=0; pi < int(numPars); ++pi){
+                        //     logllGradVal.at(pi) += beg * nNInfByiN *
+                        //         pcPartial.at(partialIndex + pi);
                         }
                     }
                 }
