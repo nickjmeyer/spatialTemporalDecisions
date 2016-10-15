@@ -851,21 +851,21 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                         // probablity of infecting.
 
                         double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-                        const std::vector<double> gradVal = partial(
-                                nNode,iNode,sDi,tDi,fD,dDi);
-                        for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) +=
-                                beg * nNInfByiN * gradVal.at(pi);
-                        }
+                        // const std::vector<double> gradVal = partial(
+                        //         nNode,iNode,sDi,tDi,fD,dDi);
+                        // for(pi=0; pi < int(numPars); ++pi){
+                        //     logllGradVal.at(pi) +=
+                        //         beg * nNInfByiN * gradVal.at(pi);
+                        // }
 
                         const int partialIndex = nNode*fD.numNodes*numPars +
                             iNode*numPars;
                         for(pi=0; pi < int(numPars); ++pi){
-                            // logllGradVal.at(pi) += beg * nNInfByiN *
-                            //     pcPartial.at(partialIndex + pi);
-                            const double diff = std::abs(gradVal.at(pi)
-                                    - pcPartial.at(partialIndex + pi));
-                            CHECK_LT(diff, 1e-12);
+                            logllGradVal.at(pi) += beg * nNInfByiN *
+                                pcPartial.at(partialIndex + pi);
+                            // const double diff = std::abs(gradVal.at(pi)
+                            //         - pcPartial.at(partialIndex + pi));
+                            // CHECK_LT(diff, 1e-12);
                         }
                     }
                 }
@@ -953,21 +953,21 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
                         const double nNInfByiN =
                             1.0 - quick[nN*sDi.numInfected + iN];
-                        const std::vector<double> gradVal = partial(
-                                nNode,iNode,sDi,tDi,fD,dDi);
-                        for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) +=
-                                beg * nNInfByiN * gradVal.at(pi);
-                        }
+                        // const std::vector<double> gradVal = partial(
+                        //         nNode,iNode,sDi,tDi,fD,dDi);
+                        // for(pi=0; pi < int(numPars); ++pi){
+                        //     logllGradVal.at(pi) +=
+                        //         beg * nNInfByiN * gradVal.at(pi);
+                        // }
 
                         const int partialIndex = nNode*fD.numNodes*numPars
                             + iNode*numPars;
                         for(pi=0; pi < int(numPars); ++pi){
-                            // logllGradVal.at(pi) += beg * nNInfByiN *
-                            //     pcPartial.at(partialIndex + pi);
-                            const double diff = std::abs(gradVal.at(pi)
-                                    - pcPartial.at(partialIndex + pi));
-                            CHECK_LT(diff,1e-12);
+                            logllGradVal.at(pi) += beg * nNInfByiN *
+                                pcPartial.at(partialIndex + pi);
+                            // const double diff = std::abs(gradVal.at(pi)
+                            //         - pcPartial.at(partialIndex + pi));
+                            // CHECK_LT(diff,1e-12);
                         }
                     }
                 }
