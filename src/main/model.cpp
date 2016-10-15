@@ -758,9 +758,15 @@ double ModelBase::logll(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
+        if (t == 0) {
+            setFill(sDi,tDi,fD,dDi);
+        } else {
+            modFill(sDi,tDi,fD,dDi);
+            setFill(sDi,tDi,fD,dDi);
+        }
+
         // modFill(sDi,tDi,fD,dDi);
         // setFill(sDi,tDi,fD,dDi);
-        setFill(sDi,tDi,fD,dDi,true);
         infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
@@ -813,7 +819,15 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi,true);
+
+        if (t == 0) {
+            setFill(sDi,tDi,fD,dDi);
+        } else {
+            modFill(sDi,tDi,fD,dDi);
+            setFill(sDi,tDi,fD,dDi);
+        }
+
+
         // setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
@@ -892,7 +906,13 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi,true);
+        if (t == 0) {
+            setFill(sDi,tDi,fD,dDi);
+        } else {
+            modFill(sDi,tDi,fD,dDi);
+            setFill(sDi,tDi,fD,dDi);
+        }
+
         // setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
