@@ -892,21 +892,25 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
             njm::timer.stop("logll_computation");
 
             njm::timer.start("logllGrad_computation");
-            //log likelihood gradient
+            // log likelihood gradient
             if(prob > 0.0){
-                double beg = double(next)/prob - 1.0;
+                const double beg = double(next)/prob - 1.0;
                 for(iN = 0; iN < sDi.numInfected; ++iN){
                     const int iNode = sDi.infected[iN];
-                    if((this->getEdgeToEdge() && fD.network.at(nNode*fD.numNodes + iNode))
+                    if((this->getEdgeToEdge() &&
+                                    fD.network.at(nNode*fD.numNodes + iNode))
                             || !this->getEdgeToEdge()){
-                        // quick stores probabilty of not infefcting need to take
-                        // (1.0 - quick) to get probablity of infecting
+                        // Quick stores probabilty of not infecting.
+                        // Need to take (1.0 - quick) to get
+                        // probablity of infecting.
 
-                        double nNInfByiN = 1.0 - quick[nN*sDi.numInfected + iN];
-                        std::vector<double> grad = partial(nNode,iNode,
+                        const double nNInfByiN =
+                            1.0 - quick[nN*sDi.numInfected + iN];
+                        const std::vector<double> grad = partial(nNode,iNode,
                                 sDi,tDi,fD,dDi);
                         for(pi=0; pi < int(numPars); ++pi){
-                            logllGradVal.at(pi) += beg * nNInfByiN * grad.at(pi);
+                            logllGradVal.at(pi) +=
+                                beg * nNInfByiN * grad.at(pi);
                         }
                     }
                 }
