@@ -109,6 +109,14 @@ TYPED_TEST(TestModel,TestInit) {
   for (int i = 0; i < this->m->numPars; ++i) {
     EXPECT_NEAR(this->m->getPar().at(i),0.0,eps);
   }
+
+  unsigned int offset = 0;
+  for (int i = 0; i < this->m->pars.size(); ++i) {
+      EXPECT_EQ(offset,this->m->pars[i]->getOffset());
+      EXPECT_EQ(this->m->numPars,this->m->pars[i]->getTotNumPars());
+      offset += this->m->pars[i]->size();
+  }
+  EXPECT_EQ(offset,this->m->numPars);
 }
 
 TYPED_TEST(TestModel,TestReadSave) {
