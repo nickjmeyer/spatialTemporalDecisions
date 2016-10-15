@@ -282,74 +282,39 @@ TYPED_TEST(TestModel,TestRevProbs) {
 }
 
 TYPED_TEST(TestModel,TestModFill) {
-  // this->m->read();
-  // this->m->setFill(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->infProbs(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
+  this->m->read();
+  this->m->setFill(this->system->sD,this->system->tD,
+    this->system->fD,this->system->dD);
 
-  // std::vector<double> infProbs = this->m->infProbs();
+  const std::vector<double> setProbs = this->m->probs;
 
-  // ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
+  this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
+  this->system->tD.p.at(this->system->sD.notInfec.at(0)) = 1;
+  std::vector<double> infProbs(this->system->sD.numNotInfec,0.0);
+  infProbs.at(0) = 1.0;
+  infProbs.at(1) = 1.0;
+  this->system->nextPoint(infProbs);
 
-  // const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  // const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
+  this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
+  this->system->tD.a.at(this->system->sD.infected.at(2)) = 1;
+  this->system->tD.p.at(this->system->sD.notInfec.at(0)) = 1;
+  this->system->tD.p.at(this->system->sD.notInfec.at(1)) = 1;
 
-  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
-  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
 
-  // this->system->tD.a.at(this->system->sD.infected.at(0)) = 1;
+  this->m->modFill(this->system->sD,this->system->tD,
+    this->system->fD,this->system->dD);
 
-  // this->m->modFill(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->infProbs(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
+  const std::vector<double> modProbs = this->m->probs;
 
-  // infProbs = this->m->infProbs();
-
-  // const double oneNotTrt = 1.0/(1.0 + std::exp(this->intcp
-  //       - this->alpha*1.0 - this->trtAct));
-  // const double twoNotTrt = 1.0/(1.0 + std::exp(this->intcp
-  //       - this->alpha*2.0 - this->trtAct));
-
-  //   EXPECT_NEAR(1.0 - oneNotTrt*twoNot, infProbs.at(0),eps);
-  //   EXPECT_NEAR(1.0 - oneNot*twoNotTrt, infProbs.at(1),eps);
-}
-
-TYPED_TEST(TestModel,TestSetQuick) {
-  // this->m->read();
-  // this->m->setFill(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->setQuick(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->infProbs(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-
-  // std::vector<double> infProbs = this->m->infProbs();
-
-  // ASSERT_EQ(infProbs.size(),this->system->sD.numNotInfec);
-
-  // const double oneNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*1.0));
-  // const double twoNot = 1.0/(1.0 + std::exp(this->intcp - this->alpha*2.0));
-
-  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(0),eps);
-  // EXPECT_NEAR(1.0 - oneNot*twoNot, infProbs.at(1),eps);
-
-  // this->m->setEdgeToEdge(true);
-  // this->m->setFill(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->setQuick(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-  // this->m->infProbs(this->system->sD,this->system->tD,
-  //   this->system->fD,this->system->dD);
-
-  // infProbs = this->m->infProbs();
-
-  // EXPECT_NEAR(1.0 - oneNot, infProbs.at(0),eps);
-  // EXPECT_NEAR(1.0 - oneNot, infProbs.at(1),eps);
-}
-
-TYPED_TEST(TestModel,TestSetPar) {
+  std::vector<double>::const_iterator itSet,itMod;
+  itSet = setProbs.begin();
+  itMod = setProbs.begin();
+  for (int i = 0; i < this->system->fD.numNodes; ++i) {
+      for (int j = 0; j < this->system->fD.numNodes; ++j) {
+          EXPEXT_EQ(*itSet,*itMod)
+              << "failed for index " << i << " and " << j;
+      }
+  }
 }
 
 TYPED_TEST(TestModel,TestLogllGrad) {
@@ -427,19 +392,6 @@ TYPED_TEST(TestModel,TestLogllHess) {
     }
   }
 }
-
-TYPED_TEST(TestModel,TestSetFisher) {
-}
-
-TYPED_TEST(TestModel,TestSample) {
-}
-
-TYPED_TEST(TestModel,TestRevert) {
-}
-
-TYPED_TEST(TestModel,TestFit) {
-}
-
 
 void fakeNetworkSetup() {
   // setup the fake network
