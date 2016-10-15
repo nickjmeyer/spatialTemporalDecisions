@@ -160,7 +160,8 @@ public:
             const FixedData & fD,
             const DynamicData & dD);
 
-    virtual std::vector<double> logllGradBoth(const SimData & sD,
+    virtual std::pair<double,std::vector<double> > logllBoth(
+            const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,
             const DynamicData & dD);

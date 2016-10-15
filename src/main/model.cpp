@@ -836,12 +836,15 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
+
     std::vector<std::vector<int> > hist = sD.history;
     hist.push_back(sD.status);
     std::vector<DataBundle> db = historyToData(hist);
 
     std::vector<double> logllGradVal(numPars,0.0);
     std::fill(logllGradVal.begin(),logllGradVal.end(),0.0);
+
+    double logllVal = 0.0;
 
     int t,nN,iN,pi;
     // loop over time points
@@ -864,9 +867,24 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
             const int nNode = sDi.notInfec[nN];
-            double prob = expitInfProbs.at(nN);
-            int next = (hist[t+1][nNode] < 2) ? 0 : 1;
+            const double prob = expitInfProbs.at(nN);
+            const int next = (hist[t+1][nNode] < 2) ? 0 : 1;
 
+            // log likelihood
+            if(next == 1){
+                if(prob < 1e-44)
+                    logllVal += -100.0;
+                else
+                    logllVal += std::log(prob);
+            }
+            else{
+                if((1.0-prob) < 1e-44)
+                    logllVal += -100.0;
+                else
+                    logllVal += std::log(1.0 - prob);
+            }
+
+            //log likelihood gradient
             if(prob > 0.0){
                 double beg = double(next)/prob - 1.0;
                 for(iN = 0; iN < sDi.numInfected; ++iN){
@@ -887,7 +905,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
             }
         }
     }
-    return logllGradVal;
+    return std::pair<double,std::vector<double> >(logllVal,logllGradVal);
 }
 
 
