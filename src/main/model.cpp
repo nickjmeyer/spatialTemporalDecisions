@@ -803,7 +803,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     std::vector<double> logllGradVal(numPars,0.0);
     std::fill(logllGradVal.begin(),logllGradVal.end(),0.0);
 
-    setFill(sD,tD,fD,dD,true);
+    // setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
@@ -811,7 +811,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        modFill(sDi,tDi,fD,dDi,true);
+        setFill(sDi,tDi,fD,dDi,true);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
@@ -874,7 +874,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
     double logllVal = 0.0;
 
-    setFill(sD,tD,fD,dD,true);
+    // setFill(sD,tD,fD,dD,true);
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
@@ -882,7 +882,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        modFill(sDi,tDi,fD,dDi,true);
+        setFill(sDi,tDi,fD,dDi,true);
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
