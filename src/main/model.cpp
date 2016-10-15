@@ -887,8 +887,8 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
         infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
-            std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
-                      << " number of uninfected nodes at time t"
+            std::cout << "ModelBase::logll(): length of expitInfProbs "
+                      << "is not same as number of uninfected nodes at time t"
                       << std::endl;
             throw(1);
         }
