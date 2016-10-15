@@ -792,25 +792,25 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        setFill(sDi,tDi,fD,dDi);
-        // if (t == 0) {
-        //     setFill(sDi,tDi,fD,dDi);
-        // } else {
-        //     modFill(sDi,tDi,fD,dDi);
-        // }
+        // setFill(sDi,tDi,fD,dDi);
+        if (t == 0) {
+            setFill(sDi,tDi,fD,dDi);
+        } else {
+            modFill(sDi,tDi,fD,dDi);
+        }
 
-        // if (t == (sD.time - 1)) {
-        //     std::vector<double> probsMod = probs;
-        //     setFill(sDi,tDi,fD,dDi);
-        //     std::vector<double> probsSet = probs;
-        //     for (int testI = 0; testI < fD.numNodes; ++testI) {
-        //         for (int testJ = 0; testJ < fD.numNodes; ++testJ) {
-        //             const int testInd = testI*fD.numNodes + testJ;
-        //             CHECK_LT(std::abs(probsMod.at(testInd) -
-        //                             probsSet.at(testInd)), 1e-12);
-        //         }
-        //     }
-        // }
+        if (t == (sD.time - 1)) {
+            std::vector<double> probsMod = probs;
+            setFill(sDi,tDi,fD,dDi);
+            std::vector<double> probsSet = probs;
+            for (int testI = 0; testI < fD.numNodes; ++testI) {
+                for (int testJ = 0; testJ < fD.numNodes; ++testJ) {
+                    const int testInd = testI*fD.numNodes + testJ;
+                    CHECK_LT(std::abs(probsMod.at(testInd) -
+                                    probsSet.at(testInd)), 1e-12);
+                }
+            }
+        }
 
         setQuick(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
