@@ -1,4 +1,5 @@
 #include "paramBeta2.hpp"
+#include "timer.hpp"
 
 
 unsigned int ParamBeta2::initParsSize(const FixedData & fD){
