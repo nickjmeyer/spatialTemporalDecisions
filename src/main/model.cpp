@@ -762,41 +762,48 @@ double ModelBase::logll(const SimData & sD,
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
-            infProbs(sDi,tDi,fD,dDi);
-
-            testProbs = this->probs;
         } else {
-            this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
-            infProbs(sDi,tDi,fD,dDi);
-            testProbs = this->probs;
-            testInfProbs = this->expitInfProbs;
-
-            setFill(sDi,tDi,fD,dDi);
-            infProbs(sDi,tDi,fD,dDi);
-
-            // test probs
-            CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
-            double totDiff = 0.0;
-            for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
-                const double diff = std::abs(testProbs.at(testInd)
-                        - this->probs.at(testInd));
-                totDiff += diff;
-                CHECK_LT(diff, 1e-10);
-            }
-            CHECK_LT(totDiff,1e-10);
-
-            // test infProbs
-            CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
-            totDiff = 0.0;
-            for (int testInd; testInd < testInfProbs.size(); ++testInd) {
-                const double diff = std::abs(testInfProbs.at(testInd)
-                        - this->expitInfProbs.at(testInd));
-                totDiff += diff;
-                CHECK_LT(diff, 1e-10);
-            }
-            CHECK_LT(totDiff,1e-10);
         }
+        infProbs(sDi,tDi,fD,dDi);
+
+        // if (t == 0) {
+        //     setFill(sDi,tDi,fD,dDi);
+        //     infProbs(sDi,tDi,fD,dDi);
+
+        //     testProbs = this->probs;
+        // } else {
+        //     this->probs = testProbs;
+        //     modFill(sDi,tDi,fD,dDi);
+        //     infProbs(sDi,tDi,fD,dDi);
+        //     testProbs = this->probs;
+        //     testInfProbs = this->expitInfProbs;
+
+        //     setFill(sDi,tDi,fD,dDi);
+        //     infProbs(sDi,tDi,fD,dDi);
+
+        //     // test probs
+        //     CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
+        //     double totDiff = 0.0;
+        //     for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
+        //         const double diff = std::abs(testProbs.at(testInd)
+        //                 - this->probs.at(testInd));
+        //         totDiff += diff;
+        //         CHECK_LT(diff, 1e-10);
+        //     }
+        //     CHECK_LT(totDiff,1e-10);
+
+        //     // test infProbs
+        //     CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
+        //     totDiff = 0.0;
+        //     for (int testInd; testInd < testInfProbs.size(); ++testInd) {
+        //         const double diff = std::abs(testInfProbs.at(testInd)
+        //                 - this->expitInfProbs.at(testInd));
+        //         totDiff += diff;
+        //         CHECK_LT(diff, 1e-10);
+        //     }
+        //     CHECK_LT(totDiff,1e-10);
+        // }
         // modFill(sDi,tDi,fD,dDi);
         // setFill(sDi,tDi,fD,dDi);
         // infProbs(sDi,tDi,fD,dDi);
