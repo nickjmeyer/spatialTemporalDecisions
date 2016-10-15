@@ -65,7 +65,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     const double jitterVal = calcJitter();
 
     for(i = 0; i < numChunks; i++){
-        njm::timer.start("rank");
+        // njm::timer.start("rank");
         // get jitter
         if (jitterVal > 0) {
             // jitter the current weights
@@ -211,7 +211,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             selNotInfec.pop();
         }
 
-        njm::timer.stop("rank");
+        // njm::timer.stop("rank");
         // if more iterations, update features
         if((i+1) < numChunks){
             f.updateFeatures(sD,tD,fD,dD,m);

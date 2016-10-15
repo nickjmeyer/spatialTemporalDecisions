@@ -41,7 +41,7 @@ PlainRunner<S,A>
     // double value=0;
     int r,t;
     for(r=0; r<numReps; r++){
-        njm::timer.start("plain setup");
+        // njm::timer.start("plain setup");
         if(system.modelGen_r.sample()){
             std::vector<double> newPar = system.modelGen_r.getPar();
             system.modelEst_r.putPar(newPar.begin());
@@ -50,23 +50,23 @@ PlainRunner<S,A>
         }
 
         system.revert();
-        njm::timer.stop("plain setup");
+        // njm::timer.stop("plain setup");
 
         for(t=system.sD.time; t<numPoints; t++){
             if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
-                njm::timer.start("plain applyTrt");
+                // njm::timer.start("plain applyTrt");
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
-                njm::timer.stop("plain applyTrt");
+                // njm::timer.stop("plain applyTrt");
             }
 
-            njm::timer.start("plain updateStatus");
+            // njm::timer.start("plain updateStatus");
             system.updateStatus();
-            njm::timer.stop("plain updateStatus");
+            // njm::timer.stop("plain updateStatus");
 
-            njm::timer.start("plain nextPoint");
+            // njm::timer.start("plain nextPoint");
             system.nextPoint();
-            njm::timer.stop("plain nextPoint");
+            // njm::timer.stop("plain nextPoint");
         }
 
         rs(system.value());
@@ -601,21 +601,21 @@ OptimRunner<S,A,Optim>
         // begin rep r
         for(t=system.sD.time; t<numPoints; t++){
             if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
-                njm::timer.start("fit");
+                // njm::timer.start("fit");
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
-                njm::timer.stop("fit");
+                // njm::timer.stop("fit");
 
-                njm::timer.start("optim");
+                // njm::timer.start("optim");
                 optim.optim(system,agent);
-                njm::timer.stop("optim");
+                // njm::timer.stop("optim");
 
                 weights.push_back(agent.tp.getPar());
 
-                njm::timer.start("trt");
+                // njm::timer.start("trt");
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
-                njm::timer.stop("trt");
+                // njm::timer.stop("trt");
             }
 
             system.updateStatus();

@@ -74,7 +74,7 @@ int main(int argc, char ** argv){
 
 
             // no treatment
-            njm::timer.start("no treatment");
+            // njm::timer.start("no treatment");
             rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
             njm::message("   No treatment: "
                     + njm::toString(rs.sMean(),"")
@@ -83,10 +83,10 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("no treatment");
+            // njm::timer.stop("no treatment");
 
             // proximal
-            njm::timer.start("proximal");
+            // njm::timer.start("proximal");
             rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
             njm::message("       Proximal: "
                     + njm::toString(rs.sMean(),"")
@@ -95,10 +95,10 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("proximal");
+            // njm::timer.stop("proximal");
 
             // myopic
-            njm::timer.start("myopic");
+            // njm::timer.start("myopic");
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
                     + njm::toString(rs.sMean(),"")
@@ -107,10 +107,10 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("myopic");
+            // njm::timer.stop("myopic");
 
             // all agent
-            njm::timer.start("all agent");
+            // njm::timer.start("all agent");
             rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
             njm::message("      All Agent: "
                     + njm::toString(rs.sMean(),"")
@@ -119,10 +119,10 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("all agent");
+            // njm::timer.stop("all agent");
 
             // policy search
-            njm::timer.start("policy search");
+            // njm::timer.start("policy search");
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
                     + njm::toString(rs.sMean(),"")
@@ -131,7 +131,7 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("policy search");
+            // njm::timer.stop("policy search");
 
         } else {
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
@@ -191,7 +191,7 @@ int main(int argc, char ** argv){
             RunStats rs;
 
             // no treatment
-            njm::timer.start("no treatment");
+            // njm::timer.start("no treatment");
             rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
             njm::message("   No treatment: "
                     + njm::toString(rs.sMean(),"")
@@ -200,11 +200,11 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("no treatment");
+            // njm::timer.stop("no treatment");
 
 
             // proximal
-            njm::timer.start("proximal");
+            // njm::timer.start("proximal");
             rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
             njm::message("       Proximal: "
                     + njm::toString(rs.sMean(),"")
@@ -213,11 +213,11 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("proximal");
+            // njm::timer.stop("proximal");
 
 
             // myopic
-            njm::timer.start("myopic");
+            // njm::timer.start("myopic");
             rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
             njm::message("         Myopic: "
                     + njm::toString(rs.sMean(),"")
@@ -226,11 +226,11 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("myopic");
+            // njm::timer.stop("myopic");
 
 
             // all agent
-            njm::timer.start("all agent");
+            // njm::timer.start("all agent");
             rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
             njm::message("      All Agent: "
                     + njm::toString(rs.sMean(),"")
@@ -239,11 +239,11 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("all agent");
+            // njm::timer.stop("all agent");
 
 
             // policy search
-            njm::timer.start("policy search");
+            // njm::timer.start("policy search");
             rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
             njm::message("  Policy Search: "
                     + njm::toString(rs.sMean(),"")
@@ -252,7 +252,7 @@ int main(int argc, char ** argv){
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
-            njm::timer.stop("policy search");
+            // njm::timer.stop("policy search");
 
         }
     }

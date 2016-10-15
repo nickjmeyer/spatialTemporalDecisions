@@ -141,7 +141,7 @@ void ModelBase::infProbs(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("infProbs");
+    // njm::timer.start("infProbs");
     if(ready == 1){
         expitInfProbs.resize(sD.numNotInfec);
         int i,j,k;
@@ -170,7 +170,7 @@ void ModelBase::infProbs(const SimData & sD,
             expitInfProbs[i] = 1.0-prob;
         }
     }
-    njm::timer.stop("infProbs");
+    // njm::timer.stop("infProbs");
 }
 
 
@@ -183,7 +183,7 @@ void ModelBase::revProbs(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("revProbs");
+    // njm::timer.start("revProbs");
     if(ready == 1){
         expitRevProbs.resize(sD.numInfected);
         int i,j,k;
@@ -215,7 +215,7 @@ void ModelBase::revProbs(const SimData & sD,
     else{
         throw(1);
     }
-    njm::timer.stop("revProbs");
+    // njm::timer.stop("revProbs");
 }
 
 
@@ -230,7 +230,7 @@ void ModelBase::setFill(const SimData & sD,
         const FixedData & fD,
         const DynamicData & dD,
         const bool setPcPartial){
-    njm::timer.start("setFill");
+    // njm::timer.start("setFill");
     int i,parsSize = pars.size();
     probs = std::vector<double>(fD.numNodes*fD.numNodes,0.0);
 
@@ -249,7 +249,7 @@ void ModelBase::setFill(const SimData & sD,
 
     set = 1;
     ready = 0;
-    njm::timer.stop("setFill");
+    // njm::timer.stop("setFill");
 }
 
 
@@ -258,7 +258,7 @@ void ModelBase::modFill(const SimData & sD,
         const FixedData & fD,
         const DynamicData & dD,
         const bool setPcPartial){
-    njm::timer.start("modFill");
+    // njm::timer.start("modFill");
     if(set == 1){
         int i,parsSize = pars.size();
 
@@ -276,7 +276,7 @@ void ModelBase::modFill(const SimData & sD,
         setFill(sD,tD,fD,dD,setPcPartial);
     }
     ready = 0;
-    njm::timer.stop("modFill");
+    // njm::timer.stop("modFill");
 }
 
 
@@ -284,7 +284,7 @@ void ModelBase::setQuick(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("setQuick");
+    // njm::timer.start("setQuick");
     int i,j,k,pK;
     quick.resize(sD.numNotInfec * sD.numInfected);
     for(i = 0,k = 0; i < sD.numNotInfec; ++i){
@@ -301,7 +301,7 @@ void ModelBase::setQuick(const SimData & sD,
         }
     }
     ready = 1;
-    njm::timer.stop("setQuick");
+    // njm::timer.stop("setQuick");
 }
 
 
@@ -388,7 +388,7 @@ std::vector<double> ModelBase::partial(const int notNode,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("partial");
+    // njm::timer.start("partial");
     std::vector<double> p,pi;
     p.reserve(numPars);
     int i,parsSize = pars.size();
@@ -397,7 +397,7 @@ std::vector<double> ModelBase::partial(const int notNode,
         p.insert(p.end(),pi.begin(),pi.end());
     }
 
-    njm::timer.stop("partial");
+    // njm::timer.stop("partial");
     return p;
 }
 
@@ -408,7 +408,7 @@ std::vector<double> ModelBase::partial2(const int notNode,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("partial2");
+    // njm::timer.start("partial2");
     std::vector<double> p,pi;
     std::vector<int> parsLen;
     int i,parsSize = pars.size(),totLen = 0;
@@ -438,7 +438,7 @@ std::vector<double> ModelBase::partial2(const int notNode,
 
     }
 
-    njm::timer.stop("partial2");
+    // njm::timer.stop("partial2");
     return p;
 }
 
@@ -447,7 +447,7 @@ void ModelBase::setFisher(const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
         const DynamicData & dD){
-    njm::timer.start("setFisher");
+    // njm::timer.start("setFisher");
     std::vector<double> hess = logllHess(sD,tD,fD,dD);
     arma::mat I(hess.data(),numPars,numPars);
 
@@ -486,7 +486,7 @@ void ModelBase::setFisher(const SimData & sD,
         }
     }
     varHit = eigvec * arma::diagmat(eigval);
-    njm::timer.stop("setFisher");
+    // njm::timer.stop("setFisher");
 }
 
 
@@ -768,7 +768,7 @@ double ModelBase::logll(const SimData & sD,
             throw(1);
         }
 
-        njm::timer.start("logll_computation");
+        // njm::timer.start("logll_computation");
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
             double prob = expitInfProbs.at(nN);
@@ -786,7 +786,7 @@ double ModelBase::logll(const SimData & sD,
                     logllVal += std::log(1.0 - prob);
             }
         }
-        njm::timer.stop("logll_computation");
+        // njm::timer.stop("logll_computation");
     }
     return logllVal;
 }
@@ -823,7 +823,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
             throw(1);
         }
 
-        njm::timer.start("logllGrad_computation");
+        // njm::timer.start("logllGrad_computation");
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
             const int nNode = sDi.notInfec[nN];
@@ -852,7 +852,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                 }
             }
         }
-        njm::timer.stop("logllGrad_computation");
+        // njm::timer.stop("logllGrad_computation");
     }
     return logllGradVal;
 }
@@ -896,7 +896,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
-            njm::timer.start("logll_computation");
+            // njm::timer.start("logll_computation");
             const int nNode = sDi.notInfec[nN];
             const double prob = expitInfProbs.at(nN);
             const int next = (hist[t+1][nNode] < 2) ? 0 : 1;
@@ -914,9 +914,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                 else
                     logllVal += std::log(1.0 - prob);
             }
-            njm::timer.stop("logll_computation");
+            // njm::timer.stop("logll_computation");
 
-            njm::timer.start("logllGrad_computation");
+            // njm::timer.start("logllGrad_computation");
             // log likelihood gradient
             if(prob > 0.0){
                 const double beg = double(next)/prob - 1.0;
@@ -940,7 +940,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                     }
                 }
             }
-            njm::timer.stop("logllGrad_computation");
+            // njm::timer.stop("logllGrad_computation");
         }
     }
     return std::pair<double,std::vector<double> >(logllVal,logllGradVal);
@@ -1056,7 +1056,7 @@ ModelBaseFitObj::ModelBaseFitObj(ModelBase * const mb,
 
 
 double objFn(const gsl_vector * x, void * params){
-    njm::timer.start("objFn");
+    // njm::timer.start("objFn");
     ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
     std::vector<double> par;
     int pi;
@@ -1069,12 +1069,12 @@ double objFn(const gsl_vector * x, void * params){
     // return negative since GSL minimizes the function
     double ll = fitObj->mb->logll(fitObj->sD,fitObj->tD,fitObj->fD,fitObj->dD);
     CHECK(std::isfinite(ll)) << "Likelihood value is not finite";
-    njm::timer.stop("objFn");
+    // njm::timer.stop("objFn");
     return - ll;
 }
 
 void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
-    njm::timer.start("objFnGrad");
+    // njm::timer.start("objFnGrad");
     ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
     std::vector<double> par;
     int pi;
@@ -1094,12 +1094,12 @@ void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
             << pi << " for model " << fitObj->mb->name;
         gsl_vector_set(g,pi,-llGrad.at(pi));
     }
-    njm::timer.stop("objFnGrad");
+    // njm::timer.stop("objFnGrad");
 }
 
 
 void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
-    njm::timer.start("objFnBoth");
+    // njm::timer.start("objFnBoth");
     ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
     std::vector<double> par;
     int pi;
@@ -1126,5 +1126,5 @@ void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
             << pi << " for model " << fitObj->mb->name;
         gsl_vector_set(g,pi,-both.second.at(pi));
     }
-    njm::timer.stop("objFnBoth");
+    // njm::timer.stop("objFnBoth");
 }
