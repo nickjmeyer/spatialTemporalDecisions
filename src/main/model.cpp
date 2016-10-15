@@ -735,9 +735,9 @@ double ModelBase::logll(const SimData & sD,
     int t,nN;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
-        SimData sDi = std::get<0>(db[t]);
-        TrtData tDi = std::get<1>(db[t]);
-        DynamicData dDi = std::get<2>(db[t]);
+        const SimData & sDi = std::get<0>(db[t]);
+        const TrtData & tDi = std::get<1>(db[t]);
+        const DynamicData & dDi = std::get<2>(db[t]);
 
         setFill(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
@@ -749,6 +749,7 @@ double ModelBase::logll(const SimData & sD,
             throw(1);
         }
 
+        njm::timer.start("logll_computation");
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
             double prob = expitInfProbs.at(nN);
@@ -766,6 +767,7 @@ double ModelBase::logll(const SimData & sD,
                     logllVal += std::log(1.0 - prob);
             }
         }
+        njm::timer.stop("logll_computation");
     }
     return logllVal;
 }
@@ -785,9 +787,9 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
-        SimData sDi = std::get<0>(db[t]);
-        TrtData tDi = std::get<1>(db[t]);
-        DynamicData dDi = std::get<2>(db[t]);
+        const SimData & sDi = std::get<0>(db[t]);
+        const TrtData & tDi = std::get<1>(db[t]);
+        const DynamicData & dDi = std::get<2>(db[t]);
 
         setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
@@ -800,6 +802,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
             throw(1);
         }
 
+        njm::timer.start("logllGrad_computation");
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
             const int nNode = sDi.notInfec[nN];
@@ -825,6 +828,7 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                 }
             }
         }
+        njm::timer.stop("logllGrad_computation");
     }
     return logllGradVal;
 }
@@ -849,9 +853,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
     int t,nN,iN,pi;
     // loop over time points
     for(t = 0; t < sD.time; ++t){
-        SimData sDi = std::get<0>(db[t]);
-        TrtData tDi = std::get<1>(db[t]);
-        DynamicData dDi = std::get<2>(db[t]);
+        const SimData & sDi = std::get<0>(db[t]);
+        const TrtData & tDi = std::get<1>(db[t]);
+        const DynamicData & dDi = std::get<2>(db[t]);
 
         setFill(sDi,tDi,fD,dDi);
         setQuick(sDi,tDi,fD,dDi);
@@ -864,8 +868,10 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
             throw(1);
         }
 
+
         // loop over uninfected nodes at time t
         for(nN = 0; nN < sDi.numNotInfec; ++nN){
+            njm::timer.start("logll_computation");
             const int nNode = sDi.notInfec[nN];
             const double prob = expitInfProbs.at(nN);
             const int next = (hist[t+1][nNode] < 2) ? 0 : 1;
@@ -883,7 +889,9 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                 else
                     logllVal += std::log(1.0 - prob);
             }
+            njm::timer.stop("logll_computation");
 
+            njm::timer.start("logllGrad_computation");
             //log likelihood gradient
             if(prob > 0.0){
                 double beg = double(next)/prob - 1.0;
@@ -903,6 +911,7 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                     }
                 }
             }
+            njm::timer.stop("logllGrad_computation");
         }
     }
     return std::pair<double,std::vector<double> >(logllVal,logllGradVal);
