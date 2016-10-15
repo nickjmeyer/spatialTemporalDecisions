@@ -752,13 +752,14 @@ double ModelBase::logll(const SimData & sD,
 
     int t,nN;
     // loop over time points
-    setFill(sD,tD,fD,dD);
+    // setFill(sD,tD,fD,dD);
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
         const DynamicData & dDi = std::get<2>(db[t]);
 
-        modFill(sDi,tDi,fD,dDi);
+        // modFill(sDi,tDi,fD,dDi);
+        setFill(sDi,tDi,fD,dDi);
         infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
