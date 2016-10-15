@@ -1061,6 +1061,30 @@ void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
 
 
 void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
-    *f = objFn(x,params);
-    objFnGrad(x,params,g);
+    ModelBaseFitObj * fitObj = static_cast<ModelBaseFitObj*>(params);
+    std::vector<double> par;
+    int pi;
+    for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
+        par.push_back(gsl_vector_get(x,pi));
+    }
+
+    fitObj->mb->putPar(par.begin());
+
+    std::pair<double,std::vector<double> > both =
+        fitObj->mb->logllBoth(fitObj->sD,fitObj->tD,
+                fitObj->fD,fitObj->dD);
+
+    // log ll
+    CHECK(std::isfinite(both.first));
+    *f = -both.first;
+
+    // log ll grad
+    for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
+        // assign the negative of the gradient value
+        // GSL minimizes the function, need to adjust the gradient too
+        CHECK(std::isfinite(both.second.at(pi)))
+            << "Likelihood gradient value is not finite for parameter index "
+            << pi << " for model " << fitObj->mb->name;
+        gsl_vector_set(g,pi,-both.second.at(pi));
+    }
 }
