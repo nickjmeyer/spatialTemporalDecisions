@@ -754,6 +754,7 @@ double ModelBase::logll(const SimData & sD,
     // loop over time points
     // setFill(sD,tD,fD,dD);
     std::vector<double> testProbs;
+    std::vector<double> testInfProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -761,14 +762,20 @@ double ModelBase::logll(const SimData & sD,
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
+
             testProbs = this->probs;
         } else {
             this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
             testProbs = this->probs;
+            testInfProbs = this->expitInfProbs;
 
             setFill(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
 
+            // test probs
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
             double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
@@ -778,11 +785,21 @@ double ModelBase::logll(const SimData & sD,
                 CHECK_LT(diff, 1e-10);
             }
             CHECK_LT(totDiff,1e-10);
-        }
 
+            // test infProbs
+            CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
+            totDiff = 0.0;
+            for (int testInd; testInd < testInfProbs.size(); ++testInd) {
+                const double diff = std::abs(testInfProbs.at(testInd)
+                        - this->expitInfProbs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-10);
+            }
+            CHECK_LT(totDiff,1e-10);
+        }
         // modFill(sDi,tDi,fD,dDi);
         // setFill(sDi,tDi,fD,dDi);
-        infProbs(sDi,tDi,fD,dDi);
+        // infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
             std::cout << "ModelBase::logll(): length of expitInfProbs is not same as"
@@ -830,6 +847,8 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
     int t,nN,iN,pi;
     // loop over time points
     std::vector<double> testProbs;
+    std::vector<double> testQuick;
+    std::vector<double> testInfProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -838,14 +857,24 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
+
             testProbs = this->probs;
         } else {
             this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
             testProbs = this->probs;
+            testQuick = this->quick;
+            testInfProbs = this->expitInfProbs;
 
             setFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
 
+            // test probs
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
             double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
@@ -855,12 +884,34 @@ std::vector<double> ModelBase::logllGrad(const SimData & sD,
                 CHECK_LT(diff, 1e-10);
             }
             CHECK_LT(totDiff,1e-10);
+
+            // test quick
+            CHECK_EQ(testQuick.size(),sDi.numNotInfec*sDi.numInfected);
+            totDiff = 0.0;
+            for (int testInd; testInd < testQuick.size(); ++testInd) {
+                const double diff = std::abs(testQuick.at(testInd)
+                        - this->quick.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-10);
+            }
+            CHECK_LT(totDiff,1e-10);
+
+            // test infProbs
+            CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
+            totDiff = 0.0;
+            for (int testInd; testInd < testInfProbs.size(); ++testInd) {
+                const double diff = std::abs(testInfProbs.at(testInd)
+                        - this->expitInfProbs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-10);
+            }
+            CHECK_LT(totDiff,1e-10);
         }
 
 
         // setFill(sDi,tDi,fD,dDi);
-        setQuick(sDi,tDi,fD,dDi);
-        infProbs(sDi,tDi,fD,dDi);
+        // setQuick(sDi,tDi,fD,dDi);
+        // infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
             std::cout << "ModelBase::logll(): length of "
@@ -932,6 +983,8 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
     int t,nN,iN,pi;
     // loop over time points
     std::vector<double> testProbs;
+    std::vector<double> testQuick;
+    std::vector<double> testInfProbs;
     for(t = 0; t < sD.time; ++t){
         const SimData & sDi = std::get<0>(db[t]);
         const TrtData & tDi = std::get<1>(db[t]);
@@ -939,13 +992,24 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
 
         if (t == 0) {
             setFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
+
             testProbs = this->probs;
         } else {
             this->probs = testProbs;
             modFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
             testProbs = this->probs;
+            testQuick = this->quick;
+            testInfProbs = this->expitInfProbs;
 
             setFill(sDi,tDi,fD,dDi);
+            setQuick(sDi,tDi,fD,dDi);
+            infProbs(sDi,tDi,fD,dDi);
+
+            // test probs
             CHECK_EQ(testProbs.size(),fD.numNodes*fD.numNodes);
             double totDiff = 0.0;
             for (int testInd = 0; testInd < testProbs.size(); ++testInd) {
@@ -955,11 +1019,33 @@ std::pair<double, std::vector<double> > ModelBase::logllBoth(
                 CHECK_LT(diff, 1e-10);
             }
             CHECK_LT(totDiff,1e-10);
+
+            // test quick
+            CHECK_EQ(testQuick.size(),sDi.numNotInfec*sDi.numInfected);
+            totDiff = 0.0;
+            for (int testInd; testInd < testQuick.size(); ++testInd) {
+                const double diff = std::abs(testQuick.at(testInd)
+                        - this->quick.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-10);
+            }
+            CHECK_LT(totDiff,1e-10);
+
+            // test infProbs
+            CHECK_EQ(testInfProbs.size(),sDi.numNotInfec);
+            totDiff = 0.0;
+            for (int testInd; testInd < testInfProbs.size(); ++testInd) {
+                const double diff = std::abs(testInfProbs.at(testInd)
+                        - this->expitInfProbs.at(testInd));
+                totDiff += diff;
+                CHECK_LT(diff, 1e-10);
+            }
+            CHECK_LT(totDiff,1e-10);
         }
 
         // setFill(sDi,tDi,fD,dDi);
-        setQuick(sDi,tDi,fD,dDi);
-        infProbs(sDi,tDi,fD,dDi);
+        // setQuick(sDi,tDi,fD,dDi);
+        // infProbs(sDi,tDi,fD,dDi);
 
         if(int(expitInfProbs.size()) != sDi.numNotInfec){
             std::cout << "ModelBase::logll(): length of expitInfProbs "
