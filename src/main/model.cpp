@@ -840,7 +840,7 @@ double ModelBase::logll(const SimData & sD,
         }
     }
 
-    CHECK_LT(std::abs(logllVal-logllValMod), 1e-12)
+    CHECK_LT(std::abs(logllVal-logllValMod), 1e-10)
         << "difference between " << logllVal << " and " << logllValMod
         << " is " << std::abs(logllVal - logllValMod);
     return logllValMod;
