@@ -239,7 +239,7 @@ void ModelBase::setFill(const SimData & sD,
         std::fill(this->pcPartial.begin(),this->pcPartial.end(),0.);
 
         for(i = 0; i < parsSize; ++i){
-            pars[i]->setFill(probs,pcPartial,sD,tD,fD,dD);
+            pars[i]->setFill(probs,this->pcPartial,sD,tD,fD,dD);
         }
     } else {
         for(i = 0; i < parsSize; ++i){
