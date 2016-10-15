@@ -145,14 +145,16 @@ void ParamTrt::modFill(std::vector<double> & probs,
             k = i*numNodes;
             for(j = 0; j < numNodes; ++j){
                 probs.at(k + j) -= trtPre;
-                pcPartial.at(k*totNumPars + j*totNumPars) -= trtPre;
+                // pre is second, hence offset + 1
+                pcPartial.at(k*totNumPars + j*totNumPars + offset + 1) -= 1;
             }
         }
         else if(tD.p.at(i) == 0 && p.at(i) == 1){ // remove pre
             k = i*numNodes;
             for(j = 0; j < numNodes; ++j){
                 probs.at(k + j) += trtPre;
-                pcPartial.at(k*totNumPars + j*totNumPars) += trtPre;
+                // pre is second, hence offset + 1
+                pcPartial.at(k*totNumPars + j*totNumPars + offset + 1) += 1;
             }
         }
     }
@@ -162,16 +164,16 @@ void ParamTrt::modFill(std::vector<double> & probs,
             k = i;
             for(j = 0; j < numNodes; ++j){
                 probs.at(k + j*numNodes) -= trtAct;
-                pcPartial.at(k*totNumPars + j*numNodes*totNumPars + 1) -=
-                    trtAct;
+                pcPartial.at(k*totNumPars + j*numNodes*totNumPars +
+                        offset) -= 1; // act is first, hence offset + 0
             }
         }
         if(tD.a.at(i) == 0 && a.at(i) == 1){ // remove act
             k = i;
             for(j = 0; j < numNodes; ++j){
                 probs.at(k + j*numNodes) += trtAct;
-                pcPartial.at(k*totNumPars + j*numNodes*totNumPars + 1) +=
-                    trtAct;
+                pcPartial.at(k*totNumPars + j*numNodes*totNumPars +
+                        offset) += 1; // act is first, hence offset + 0
             }
         }
     }
