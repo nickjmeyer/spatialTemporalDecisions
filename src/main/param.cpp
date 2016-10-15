@@ -45,6 +45,16 @@ void ParamBase::setTotNumPars(const unsigned int totNumPars) {
 }
 
 
+unsigned int ParamBase::getOffset() const {
+    return this->offset;
+}
+
+
+unsigned int ParamBase::getTotNumPars() const {
+    return this->totNumPars;
+}
+
+
 std::vector<bool> ParamBase::initToScale(){
     return std::vector<bool>(parsSize,true);
 }

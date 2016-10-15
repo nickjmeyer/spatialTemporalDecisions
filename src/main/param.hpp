@@ -55,6 +55,9 @@ public:
     void setOffset(const unsigned int offset);
     void setTotNumPars(const unsigned int totNumPars);
 
+    unsigned int getOffset() const;
+    unsigned int getTotNumPars() const;
+
     // retrieve pars
     std::vector<double> getPar() const;
     std::vector<double> getPar(const std::vector<std::string> & name) const;
