@@ -196,7 +196,7 @@ int main(int argc, char ** argv){
             njm::message("   No treatment: "
                     + njm::toString(rs.sMean(),"")
                     + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.sMean(),"") =
+            njm::toFile("none, "+ njm::toString(rs.sMean(),"") +
                     ", " + njm::toString(rs.seMean(),"") + "\n",
                     njm::sett.datExt("results_",".txt"),
                     std::ios_base::app);
