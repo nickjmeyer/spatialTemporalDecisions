@@ -28,7 +28,7 @@ TEST(TestRunStats,TestSampleValues) {
 
 
 int main(int argc, char **argv) {
-    :;google::ParseCommandLineFlags(&argc,&argv,true);
+    ::google::ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
 
     int ret = RUN_ALL_TESTS();
