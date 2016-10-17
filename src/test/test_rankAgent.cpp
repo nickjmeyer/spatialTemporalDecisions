@@ -4,6 +4,6 @@
 #include <iostream>
 
 int main(){
-  std::cout << "test_rankAgent: main()" << std::endl;
-  return 0;
+    std::cout << "test_rankAgent: main()" << std::endl;
+    return 0;
 }

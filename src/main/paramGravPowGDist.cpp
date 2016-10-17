@@ -94,7 +94,7 @@ void ParamGravPowGDist::setFill(std::vector<double> & probs,
 
         pcPartial.at(i*totNumPars + offset + 2) =
             -alpha*std::pow(dist[i],gPow)*std::log(dist[i])/
-                std::pow(cc[i],std::exp(power));
+            std::pow(cc[i],std::exp(power));
     }
 }
 
