@@ -114,7 +114,7 @@ TEST(TestPreCompData,TestExpDistWeightNear) {
 
 
 int main(int argc, char **argv) {
-  gflags::ParseCommandLineFlags(&argc,&argv,true);
+    ::google::ParseCommandLineFlags(&argc,&argv,true);
   ::testing::InitGoogleTest(&argc, argv);
   const std::string fileName = "test_preCompData";
   const std::string srcDir("./data/wns");

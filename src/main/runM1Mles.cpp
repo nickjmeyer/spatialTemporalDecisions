@@ -8,7 +8,7 @@ DEFINE_bool(dryRun,false,"Do not execute main");
 
 int main(int argc, char ** argv){
     ::google::InitGoogleLogging(argv[0]);
-    ::gflags::ParseCommandLineFlags(&argc,&argv,true);
+    ::google::ParseCommandLineFlags(&argc,&argv,true);
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 

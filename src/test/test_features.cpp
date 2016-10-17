@@ -259,7 +259,7 @@ void fakeNetworkSetup() {
 
 
 int main(int argc, char **argv) {
-  gflags::ParseCommandLineFlags(&argc,&argv,true);
+    ::google::ParseCommandLineFlags(&argc,&argv,true);
   ::testing::InitGoogleTest(&argc, argv);
   const std::string fileName = "test_features";
   boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();

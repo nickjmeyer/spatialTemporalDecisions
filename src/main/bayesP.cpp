@@ -327,7 +327,7 @@ void runBayesP(const std::string & file, const int obs,
 
 int main(int argc, char ** argv){
     ::google::InitGoogleLogging(argv[0]);
-    ::gflags::ParseCommandLineFlags(&argc,&argv,true);
+    ::google::ParseCommandLineFlags(&argc,&argv,true);
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
