@@ -87,17 +87,21 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             // result in small negative numbers due to instability
             jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
 
-            std::cout << "jitter before: " <<
-                njm::toString(
-                        arma::conv_to<std::vector<double> >::from(jitter),
-                        " ","",18.12) << std::endl;
+            if (this->disect) {
+                std::cout << "jitter before: " <<
+                    njm::toString(
+                            arma::conv_to<std::vector<double> >::from(jitter),
+                            " ","",18.12) << std::endl;
+            }
             for(j = 0; j < f.numFeatures; j++)
                 jitter(j) *= njm::rnorm01();
 
-            std::cout << "jitter after: " <<
-                njm::toString(
-                        arma::conv_to<std::vector<double> >::from(jitter),
-                        " ","",18.12) << std::endl;
+            if (this->disect) {
+                std::cout << "jitter after: " <<
+                    njm::toString(
+                            arma::conv_to<std::vector<double> >::from(jitter),
+                            " ","",18.12) << std::endl;
+            }
 
             // calculate ranks
             infRanks = f.infFeat * (tp.weights + jitter);

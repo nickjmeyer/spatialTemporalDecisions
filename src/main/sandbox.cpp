@@ -43,33 +43,37 @@ int main(int argc, char ** argv){
             int t;
 
             njm::resetSeed(r);
-            s.reset(starts[r]);
-            for(t=s.sD.time; t<s.fD.finalT; t++){
-                if (t == 9) {
-                    ra.disect = true;
-                } else {
-                    ra.disect = false;
-                }
-                if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
-                    ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
-                            s.modelEst);
+            for (int i = 0; i < 50; i++) {
 
-                int sumP = 0, sumA = 0;
-                for (int i = 0; i < s.fD.numNodes; ++i) {
-                    if (s.tD.p.at(i))
-                        sumP += i;
-                    if (s.tD.a.at(i))
-                        sumA += i;
-                }
-
-                s.updateStatus();
-
-                s.nextPoint();
-                njm::message("\nt: " + njm::toString(t,"",0) +
-                        "\nvalue: " + njm::toString(s.value(),"",32,28) +
-                        "\np: " + njm::toString(sumP,"",0) +
-                        "\na: " + njm::toString(sumA,"",0));
             }
+            std::cout << i << ": " << njm::rnorm01 << std::endl
+            // s.reset(starts[r]);
+            // for(t=s.sD.time; t<s.fD.finalT; t++){
+            //     // if (t == 9) {
+            //     //     ra.disect = true;
+            //     // } else {
+            //     ra.disect = false;
+            //     // }
+            //     if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
+            //         ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
+            //                 s.modelEst);
+
+            //     int sumP = 0, sumA = 0;
+            //     for (int i = 0; i < s.fD.numNodes; ++i) {
+            //         if (s.tD.p.at(i))
+            //             sumP += i;
+            //         if (s.tD.a.at(i))
+            //             sumA += i;
+            //     }
+
+            //     s.updateStatus();
+
+            //     s.nextPoint();
+            //     njm::message("\nt: " + njm::toString(t,"",0) +
+            //             "\nvalue: " + njm::toString(s.value(),"",32,28) +
+            //             "\np: " + njm::toString(sumP,"",0) +
+            //             "\na: " + njm::toString(sumA,"",0));
+            // }
 
 
         } else {
