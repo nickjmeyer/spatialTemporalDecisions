@@ -51,11 +51,10 @@ int main(int argc, char ** argv){
                 s.updateStatus();
 
                 s.nextPoint();
-
+                njm::message("t = " + njm::toString(t,"") + " -> " +
+                        njm::toString(s.value(),"",32,28));
             }
-            s.value();
 
-            njm::message("value: " + njm::toString(s.value(),"",32,28));
 
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
