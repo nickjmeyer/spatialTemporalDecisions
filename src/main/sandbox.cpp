@@ -12,249 +12,141 @@ int main(int argc, char ** argv){
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-        njm::toFile(FLAGS_edgeToEdge,
-                njm::sett.datExt("edgeToEdge_flag_",".txt"));
-
         if(FLAGS_edgeToEdge) {
-            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
+            // typedef ModelTimeExpCavesGDistTrendPowCon MG;
             typedef Model2EdgeToEdge MG;
 
             typedef MG ME;
 
             typedef System<MG,ME> S;
-
             typedef NoTrt<ME> NT;
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
+
             typedef AllAgent<ME> AA;
 
-            typedef ToyFeatures5<ME> F;
+            typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
-            typedef M1SpOptim<S,RA,ME> SPO;
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
 
-            typedef VanillaRunner<S,NT> R_NT;
-            typedef VanillaRunner<S,PA> R_PA;
-            typedef FitOnlyRunner<S,MA> R_MA;
-            typedef VanillaRunner<S,AA> R_AA;
-            typedef OptimRunner<S,RA,SPO> R_RA;
+            typedef VanillaRunnerNS<S,AA> R_AA;
 
-
-            S s;
+            S s("obsData.txt");
             s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelGen_r.setType(MLES);
-            s.modelEst_r.setType(MLES);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-            int numReps = 50;
-            Starts starts(numReps,s.fD.numNodes);
+            int numReps = 500;
+            Starts starts("startingLocations.txt");
 
             NT nt;
-            PA pa;
             MA ma;
-            AA aa;
+            PA pa;
+            RP rp;
+
+            RN rn;
             RA ra;
+            RM rm;
+            RR rr;
 
             pa.setEdgeToEdge(FLAGS_edgeToEdge);
-
-            ra.tp.jitterScale = -1;
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
-
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
-            SPO spo;
-            spo.tp.fixSample = 1;
+            double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
 
-            R_NT r_nt;
-            R_PA r_pa;
-            R_MA r_ma;
-            R_AA r_aa;
-            R_RA r_ra;
+            njm::message("Tuning Treatment");
 
-            RunStats rs;
+            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-            // no treatment
-            // njm::timer.start("no treatment");
-            rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-            njm::message("   No treatment: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("no treatment");
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-            // proximal
-            // njm::timer.start("proximal");
-            rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-            njm::message("       Proximal: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("proximal, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("proximal");
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-            // myopic
-            // njm::timer.start("myopic");
-            rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
-            njm::message("         Myopic: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("myopic");
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
 
-            // all agent
-            // njm::timer.start("all agent");
-            rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
-            njm::message("      All Agent: "
-                    + njm::toString(rs.sMean(),"")
-                    + " (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("all, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("all agent");
-
-            // policy search
-            // njm::timer.start("policy search");
-            rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
-            njm::message("  Policy Search: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("policy search");
 
         } else {
-            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
+            // typedef ModelTimeExpCavesGDistTrendPowCon MG;
             typedef Model2GravityEDist MG;
 
             typedef MG ME;
 
             typedef System<MG,ME> S;
-
             typedef NoTrt<ME> NT;
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
-            typedef AllAgent<ME> AA;
 
-            typedef ToyFeatures5<ME> F;
+            typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
-            typedef M1SpOptim<S,RA,ME> SPO;
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
 
-            typedef VanillaRunner<S,NT> R_NT;
-            typedef VanillaRunner<S,PA> R_PA;
-            typedef FitOnlyRunner<S,MA> R_MA;
-            typedef VanillaRunner<S,AA> R_AA;
-            typedef OptimRunner<S,RA,SPO> R_RA;
-
-
-            S s;
+            S s("obsData.txt");
             s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelGen_r.setType(MLES);
-            s.modelEst_r.setType(MLES);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-            int numReps = 50;
-            Starts starts(numReps,s.fD.numNodes);
+            int numReps = 1;
+            Starts starts("startingLocations.txt");
 
             NT nt;
-            PA pa;
             MA ma;
-            AA aa;
+            PA pa;
+            RP rp;
+
+            RN rn;
             RA ra;
+            RM rm;
+            RR rr;
 
             pa.setEdgeToEdge(FLAGS_edgeToEdge);
-
-            ra.tp.jitterScale = -1;
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
-
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
-            SPO spo;
-            spo.tp.fixSample = 1;
+            double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
 
-            R_NT r_nt;
-            R_PA r_pa;
-            R_MA r_ma;
-            R_AA r_aa;
-            R_RA r_ra;
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-            RunStats rs;
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-            // no treatment
-            // njm::timer.start("no treatment");
-            rs = r_nt.run(s,nt,numReps,s.fD.finalT,starts);
-            njm::message("   No treatment: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("none, "+ njm::toString(rs.sMean(),"") =
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("no treatment");
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-
-            // proximal
-            // njm::timer.start("proximal");
-            rs = r_pa.run(s,pa,numReps,s.fD.finalT,starts);
-            njm::message("       Proximal: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("proximal, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("proximal");
-
-
-            // myopic
-            // njm::timer.start("myopic");
-            rs = r_ma.run(s,ma,numReps,s.fD.finalT,starts);
-            njm::message("         Myopic: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("myopic, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("myopic");
-
-
-            // all agent
-            // njm::timer.start("all agent");
-            rs = r_aa.run(s,aa,numReps,s.fD.finalT,starts);
-            njm::message("      All Agent: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("all, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("all agent");
-
-
-            // policy search
-            // njm::timer.start("policy search");
-            rs = r_ra.run(s,ra,spo,numReps,s.fD.finalT,starts);
-            njm::message("  Policy Search: "
-                    + njm::toString(rs.sMean(),"")
-                    + "  (" + njm::toString(rs.seMean(),"") + ")");
-            njm::toFile("ps, "+ njm::toString(rs.sMean(),"") +
-                    ", " + njm::toString(rs.seMean(),"") + "\n",
-                    njm::sett.datExt("results_",".txt"),
-                    std::ios_base::app);
-            // njm::timer.stop("policy search");
-
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
         }
+
+        njm::sett.clean();
     }
+
     return 0;
 }
