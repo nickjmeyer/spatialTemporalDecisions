@@ -31,8 +31,7 @@ std::string toString(const std::vector<T> & n,
     typename
         std::vector<T>::const_iterator it;
     for(it = n.begin(); it!=n.end(); it++)
-        ss << std::setw(w) << std::setprecision(p) << std::fixed
-           << njm::toString(*it) << sep;
+        ss << njm::toString(*it,sep,w,p);
     ss << end;
     return ss.str();
 };
