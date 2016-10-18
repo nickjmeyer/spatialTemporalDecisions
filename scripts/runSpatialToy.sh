@@ -31,9 +31,6 @@ ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand100 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand500 ${SPATIAL}
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/rand1000 ${SPATIAL}
 
-## wns spatial spread
-${EXEC_PATH}/runM1MlesWns --srcDir ${WNS} ${SPATIAL}
-
 
 ########################################
 ## run sims {incorrectly specified}
@@ -50,6 +47,3 @@ ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/grid1000 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand100 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand500 ${SPATIAL}
 ${EXEC_PATH}/runM1MlesMiss --srcDir ${TOY}/rand1000 ${SPATIAL}
-
-## wns spatial spread
-${EXEC_PATH}/runM1MlesWnsMiss --srcDir ${WNS} ${SPATIAL}
