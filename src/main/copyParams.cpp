@@ -5,6 +5,9 @@
 #include "model2GravityEDist.hpp"
 #include "model2EdgeToEdge.hpp"
 
+using namespace google;
+using namespace gflags;
+
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
 DEFINE_string(outDir,"","Path to save parameters");
@@ -19,8 +22,9 @@ void copyParams(const boost::filesystem::path path) {
 
 
 int main(int argc, char ** argv) {
-    ::google::InitGoogleLogging(argv[0]);
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    InitGoogleLogging(argv[0]);
+    ParseCommandLineFlags(&argc,&argv,true);
+
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
