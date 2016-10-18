@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 100;
+            int numReps = 50;
             Starts starts("startingLocations.txt");
 
             NT nt;
@@ -95,7 +95,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 100;
+            int numReps = 50;
             Starts starts("startingLocations.txt");
 
             NT nt;
