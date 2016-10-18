@@ -101,11 +101,23 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         }
 
         if (this->disect) {
+            std::vector<double> infFeatVec =
+                arma::conv_to<std::vector<double> >::from(
+                        arma::sum(f.infFeat,0));
+            std::vector<double> notFeatVec =
+                arma::conv_to<std::vector<double> >::from(
+                        arma::sum(f.notFeat,0));
+            std::vector<double> weightsVec =
+                arma::conv_to<std::vector<double> >::from(
+                        arma::sum(tp.weights,0));
+
             njm::message(
                     "\ninfFeat: " +
-                    njm::toString(arma::sum(f.infFeat,0),"",32) +
+                    njm::toString(infFeatVec,"","",32,28) +
                     "\nnotFeat: " +
-                    njm::toString(arma::sum(f.notFeat,0),"",32));
+                    njm::toString(notFeatVec,"","",32,28) +
+                    "\nweights: " +
+                    njm::toString(weightsVec,"","",32,28));
         }
 
 
