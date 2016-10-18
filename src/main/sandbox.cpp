@@ -23,7 +23,7 @@ int main(int argc, char ** argv){
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef ToyFeatures3<ME> F;
+            typedef ToyFeatures5<ME> F;
             typedef RankAgent<F,ME> RA;
 
             typedef VanillaRunnerNS<S,NT> RN;
@@ -82,7 +82,7 @@ int main(int argc, char ** argv){
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef ToyFeatures3<ME> F;
+            typedef ToyFeatures5<ME> F;
             typedef RankAgent<F,ME> RA;
 
             typedef VanillaRunnerNS<S,NT> RN;
