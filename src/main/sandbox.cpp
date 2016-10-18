@@ -95,7 +95,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 8;
+            int numReps = 7;
             Starts starts("startingLocations.txt");
 
             NT nt;
