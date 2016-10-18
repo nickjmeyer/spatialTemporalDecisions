@@ -42,8 +42,15 @@ int main(int argc, char ** argv){
             int r = numReps;
             int t;
 
+            std::cout << "-----" << std::endl;
             njm::resetSeed(r);
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 2; i++) {
+                std::cout << i << ": " << njm::rnorm01()
+                          << " " << njm::runif01() << std::endl;
+            }
+            std::cout << "-----" << std::endl;
+            njm::resetSeed(r);
+            for (int i = 0; i < 2; i++) {
                 std::cout << i << ": " << njm::rnorm01()
                           << " " << njm::runif01() << std::endl;
             }
