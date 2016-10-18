@@ -118,6 +118,13 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                     njm::toString(notFeatVec,"","",18,12) +
                     "\nweights: " +
                     njm::toString(weightsVec,"","",18,12));
+
+            for (int testI; testI < sD.numInfected; ++testI) {
+                std::cout << testI << ": " << infRanks(testI) << std::endl;
+            }
+            for (int testI; testI < sD.numNotInfec; ++testI) {
+                std::cout << testI << ": " << notRanks(testI) << std::endl;
+            }
         }
 
 
