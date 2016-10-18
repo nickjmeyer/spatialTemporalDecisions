@@ -44,6 +44,11 @@ int main(int argc, char ** argv){
             njm::resetSeed(r);
             s.reset(starts[r]);
             for(t=s.sD.time; t<s.fD.finalT; t++){
+                if (t == 9) {
+                    ra.disect = true;
+                } else {
+                    ra.disect = false;
+                }
                 if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
                     ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
                             s.modelEst);
