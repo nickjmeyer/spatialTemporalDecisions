@@ -23,7 +23,7 @@ int main(int argc, char ** argv){
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef ToyFeatures5<ME> F;
+            typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
             typedef VanillaRunnerNS<S,NT> RN;
@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 500;
+            int numReps = 250;
             Starts starts("startingLocations.txt");
 
             NT nt;
@@ -82,7 +82,7 @@ int main(int argc, char ** argv){
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef ToyFeatures5<ME> F;
+            typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
             typedef VanillaRunnerNS<S,NT> RN;
@@ -95,7 +95,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 500;
+            int numReps = 250;
             Starts starts("startingLocations.txt");
 
             NT nt;
