@@ -264,6 +264,8 @@ int main(int argc, char ** argv){
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
 
+            ra.tp.jitterScale = -1.;
+
             njm::message("Tuning Intercept");
 
             double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
@@ -332,10 +334,13 @@ int main(int argc, char ** argv){
             RA ra;
             RM rm;
             RR rr;
+
             pa.setEdgeToEdge(FLAGS_edgeToEdge);
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
+
+            ra.tp.jitterScale = -1.;
 
             njm::message("Tuning Intercept");
 

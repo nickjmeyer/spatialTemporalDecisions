@@ -170,6 +170,8 @@ int main(int argc, char ** argv){
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
 
+            ra.tp.jitterScale = -1.;
+
             double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
 
             njm::message("Tuning Treatment");
@@ -241,6 +243,8 @@ int main(int argc, char ** argv){
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
+
+            ra.tp.jitterScale = -1.;
 
             double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
 
