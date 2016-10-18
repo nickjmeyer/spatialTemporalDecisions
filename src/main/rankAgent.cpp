@@ -102,10 +102,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
 
         if (this->disect) {
             njm::message(
-                    "\ninfRanks: " +
-                    njm::toString(arma::sum(infRanks,0),"",32) +
-                    "\nnotRanks: " +
-                    njm::toString(arma::sum(notRanks,0),"",32));
+                    "\ninfFeat: " +
+                    njm::toString(arma::sum(f.infFeat,0),"",32) +
+                    "\nnotFeat: " +
+                    njm::toString(arma::sum(f.notFeat,0),"",32));
         }
 
 
