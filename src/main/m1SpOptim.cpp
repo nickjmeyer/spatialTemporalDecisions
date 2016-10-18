@@ -60,12 +60,14 @@ void M1SpOptim<S,A,M>
         tune(s,agent);
 
     if(tp.fixSample != 0){
+        s.modelGen_r.sample(true);
+        s.modelEst_r = s.modelGen_r;
+
         s.modelGen_r.setFixSample(1);
         s.modelEst_r.setFixSample(1);
 
         s.revert();
     }
-
 
     PlainRunner<System<M,M>,A> runner;
 
@@ -89,14 +91,6 @@ void M1SpOptim<S,A,M>
             parPH.at(i) = par.at(i) + h.at(i);
             parMH.at(i) = par.at(i) - h.at(i);
         }
-
-        if(tp.fixSample != 0){
-            s.modelGen_r.sample(true);
-            s.modelEst_r = s.modelGen_r;
-
-            s.revert();
-        }
-
 
         // njm::timer.start("optim run");
         agent.tp.putPar(parPH);
