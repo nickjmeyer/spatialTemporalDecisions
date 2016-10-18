@@ -13,8 +13,6 @@ RankAgent<F,M>::RankAgent(){
     setEdgeToEdge(false);
 
     name="rank";
-
-    disect = false;
 }
 
 template <class F, class M>
@@ -98,12 +96,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             // calculate ranks
             infRanks = f.infFeat * tp.weights;
             notRanks = f.notFeat * tp.weights;
-        }
-
-        if (this->disect) {
-            njm::message(
-                    "\ninfRanks: " + njm::toString(arma::sum(infRanks),"",32) +
-                    "\nnotRanks: " + njm::toString(arma::sum(notRanks),"",32));
         }
 
 

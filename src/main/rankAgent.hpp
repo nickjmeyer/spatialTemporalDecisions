@@ -54,8 +54,6 @@ public:
     int numAct;
     int numPre;
 
-    bool disect;
-
     RankTuneParam tp;
 
     std::string name;
