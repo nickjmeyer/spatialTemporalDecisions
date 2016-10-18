@@ -62,13 +62,13 @@ int main(int argc, char ** argv){
 
             double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-            njm::message(" valNT: " + njm::toString(valNT,"") +
+            njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
                     "\n" +
-                    " valPA: " + njm::toString(valPA,"") +
+                    " valPA: " + njm::toString(valPA,"",32,28) +
                     "\n" +
-                    " valMA: " + njm::toString(valMA,"") +
+                    " valMA: " + njm::toString(valMA,"",32,28) +
                     "\n" +
-                    " valRA: " + njm::toString(valRA,""));
+                    " valRA: " + njm::toString(valRA,"",32,28));
 
 
         } else {
@@ -121,13 +121,13 @@ int main(int argc, char ** argv){
 
             double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-            njm::message(" valNT: " + njm::toString(valNT,"") +
+            njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
                     "\n" +
-                    " valPA: " + njm::toString(valPA,"") +
+                    " valPA: " + njm::toString(valPA,"",32,28) +
                     "\n" +
-                    " valMA: " + njm::toString(valMA,"") +
+                    " valMA: " + njm::toString(valMA,"",32,28) +
                     "\n" +
-                    " valRA: " + njm::toString(valRA,""));
+                    " valRA: " + njm::toString(valRA,"",32,28));
         }
 
         njm::sett.clean();
