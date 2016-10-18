@@ -50,8 +50,10 @@ int main(int argc, char ** argv){
 
                 int sumP = 0, sumA = 0;
                 for (int i = 0; i < s.fD.numNodes; ++i) {
-                    sumP += s.tD.p.at(i);
-                    sumA += s.tD.a.at(i);
+                    if (s.tD.p.at(i))
+                        sumP += i;
+                    if (s.tD.a.at(i))
+                        sumA += i;
                 }
 
                 s.updateStatus();
