@@ -123,7 +123,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 std::vector<double> featRow =
                     arma::conv_to<std::vector<double> >::from(
                             f.infFeat.row(testI));
-                std::cout << testI << ": " << infRanks(testI)
+                std::cout << testI << ": "
+                          << njm::toString(infRanks(testI),"",16,12)
                           << " -> " << njm::toString(
                                   featRow," ","",16,12) << std::endl;
             }
@@ -131,7 +132,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 std::vector<double> featRow =
                     arma::conv_to<std::vector<double> >::from(
                             f.notFeat.row(testI));
-                std::cout << testI << ": " << notRanks(testI)
+                std::cout << testI << ": "
+                          << njm::toString(notRanks(testI),"",16,12)
                           << " -> " << njm::toString(
                                   featRow," ","",16,12) << std::endl;
             }
