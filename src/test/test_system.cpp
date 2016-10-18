@@ -10,6 +10,10 @@
 #include "proximalAgent.hpp"
 #include "paramIntercept.hpp"
 
+using namespace google;
+using namespace gflags;
+
+
 TEST(TestModel,TestModFill) {
     System<ModelIntercept,ModelIntercept> s;
     s.modelEst_r = s.modelGen_r;
@@ -200,7 +204,7 @@ void fakeNetworkSetup() {
 
 
 int main(int argc, char **argv) {
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
     const std::string fileName = "test_model";
     boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();

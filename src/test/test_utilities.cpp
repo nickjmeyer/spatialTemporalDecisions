@@ -6,6 +6,10 @@
 #include <gsl/gsl_deriv.h>
 #include "utilities.hpp"
 
+using namespace google;
+using namespace gflags;
+
+
 const float eps = 1e-6;
 
 
@@ -17,7 +21,7 @@ TEST(TestUtilities,TestSampVar) {
 
 
 int main(int argc, char **argv) {
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
 
     int ret = RUN_ALL_TESTS();

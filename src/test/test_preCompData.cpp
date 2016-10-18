@@ -6,6 +6,10 @@
 #include <algorithm>
 #include "tuneGenWNS.hpp"
 
+using namespace google;
+using namespace gflags;
+
+
 DEFINE_string(srcDir,"","Path to source directory");
 
 TEST(TestPrecompData,TestExpDistWeightGradient) {
@@ -114,7 +118,7 @@ TEST(TestPreCompData,TestExpDistWeightNear) {
 
 
 int main(int argc, char **argv) {
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
     const std::string fileName = "test_preCompData";
     const std::string srcDir("./data/wns");

@@ -9,6 +9,10 @@
 #include "system.hpp"
 #include "paramIntercept.hpp"
 
+using namespace google;
+using namespace gflags;
+
+
 const float eps = 1e-6;
 
 const std::vector<std::string> modNames = {
@@ -648,7 +652,7 @@ void fakeNetworkSetup() {
 
 
 int main(int argc, char **argv) {
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
     const std::string fileName = "test_model";
     boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();

@@ -12,6 +12,10 @@
 #include "paramIntercept.hpp"
 #include "modelIntercept.hpp"
 
+using namespace google;
+using namespace gflags;
+
+
 const float eps = 1e-6;
 
 template <typename T>
@@ -259,7 +263,7 @@ void fakeNetworkSetup() {
 
 
 int main(int argc, char **argv) {
-    ::google::ParseCommandLineFlags(&argc,&argv,true);
+    ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
     const std::string fileName = "test_features";
     boost::filesystem::path tempModel = boost::filesystem::temp_directory_path();
