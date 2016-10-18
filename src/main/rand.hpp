@@ -43,8 +43,8 @@ double pnormal(double quan);
 typedef boost::variate_generator<boost::mt19937,
                                  boost::uniform_real<> > VGRunif01;
 
-typedef boost::variate_generator<boost::mt19937,
-                                 boost::normal_distribution<> > VGRnorm01;
+// typedef boost::variate_generator<boost::mt19937,
+//                                  boost::normal_distribution<> > VGRnorm01;
 
 class RandParr{
 public:
@@ -54,7 +54,7 @@ public:
 protected:
 
     void fillRunif01(const int source);
-    void fillRnorm01(const int source);
+    // void fillRnorm01(const int source);
 
     void reset();
     void reset(const int source);
@@ -62,7 +62,7 @@ protected:
     void setSeed(const int source, const int seed);
 
     double genRunif01(const int source);
-    double genRnorm01(const int source);
+    // double genRnorm01(const int source);
 
 
     int numSource;
@@ -70,15 +70,15 @@ protected:
 
     std::vector<int> seeds;
     std::vector<VGRunif01> vgRunif01;
-    std::vector<VGRnorm01> vgRnorm01;
+    // std::vector<VGRnorm01> vgRnorm01;
 
     std::vector< std::vector<double>::iterator > runif01Iter;
     std::vector< std::vector<double>::iterator > runif01End;
     std::vector< std::vector<double> > runif01Vals;
 
-    std::vector< std::vector<double>::iterator > rnorm01Iter;
-    std::vector< std::vector<double>::iterator > rnorm01End;
-    std::vector< std::vector<double> > rnorm01Vals;
+    // std::vector< std::vector<double>::iterator > rnorm01Iter;
+    // std::vector< std::vector<double>::iterator > rnorm01End;
+    // std::vector< std::vector<double> > rnorm01Vals;
 
 
     friend void njm::resetSeed();

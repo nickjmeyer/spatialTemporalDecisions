@@ -1,4 +1,5 @@
 #include "rand.hpp"
+#include <boost/math/special_functions/erf.hpp>
 
 RandParr randParr(omp_get_max_threads(),1000000);
 
@@ -9,15 +10,15 @@ RandParr::RandParr(const int numSource, const int numRand){
 
 
     vgRunif01.clear();
-    vgRnorm01.clear();
+    // vgRnorm01.clear();
     seeds.resize(numSource);
 
     int i;
     for(i = 0; i < numSource; ++i){
         vgRunif01.push_back(VGRunif01(boost::mt19937(i),
                         boost::uniform_real<>(0.0,1.0)));
-        vgRnorm01.push_back(VGRnorm01(boost::mt19937(i),
-                        boost::normal_distribution<>(0.0,1.0)));
+        // vgRnorm01.push_back(VGRnorm01(boost::mt19937(i),
+        //                 boost::normal_distribution<>(0.0,1.0)));
         setSeed(i,i);
     }
 
@@ -25,10 +26,10 @@ RandParr::RandParr(const int numSource, const int numRand){
     runif01End.resize(numSource);
     runif01Vals = std::vector<std::vector<double>
                               >(numSource,std::vector<double>(numRand,0));
-    rnorm01Iter.resize(numSource);
-    rnorm01End.resize(numSource);
-    rnorm01Vals = std::vector<std::vector<double>
-                              >(numSource,std::vector<double>(numRand,0));
+    // rnorm01Iter.resize(numSource);
+    // rnorm01End.resize(numSource);
+    // rnorm01Vals = std::vector<std::vector<double>
+    //                           >(numSource,std::vector<double>(numRand,0));
 
     reset();
 }
@@ -50,11 +51,11 @@ void RandParr::reset(const int source){
     vgRunif01.at(source).engine().seed(seeds.at(source));
     vgRunif01.at(source).distribution().reset();
 
-    vgRnorm01.at(source).engine().seed(seeds.at(source));
-    vgRnorm01.at(source).distribution().reset();
+    // vgRnorm01.at(source).engine().seed(seeds.at(source));
+    // vgRnorm01.at(source).distribution().reset();
 
     fillRunif01(source);
-    fillRnorm01(source);
+    // fillRnorm01(source);
 }
 
 
@@ -71,17 +72,17 @@ void RandParr::fillRunif01(const int source){
 }
 
 
-void RandParr::fillRnorm01(const int source){
-    std::vector<double>::iterator it,beg,end;
+// void RandParr::fillRnorm01(const int source){
+//     std::vector<double>::iterator it,beg,end;
 
-    beg = rnorm01Vals.at(source).begin();
-    end = rnorm01Vals.at(source).end();
+//     beg = rnorm01Vals.at(source).begin();
+//     end = rnorm01Vals.at(source).end();
 
-    rnorm01Iter.at(source) = beg;
-    rnorm01End.at(source) = end;
-    for(it = beg; it != end; ++it)
-        *it = vgRnorm01.at(source)(); // gen rnorm01 values
-}
+//     rnorm01Iter.at(source) = beg;
+//     rnorm01End.at(source) = end;
+//     for(it = beg; it != end; ++it)
+//         *it = vgRnorm01.at(source)(); // gen rnorm01 values
+// }
 
 
 double RandParr::genRunif01(const int source){
@@ -91,11 +92,11 @@ double RandParr::genRunif01(const int source){
 }
 
 
-double RandParr::genRnorm01(const int source){
-    if(rnorm01Iter.at(source) == rnorm01End.at(source))
-        fillRnorm01(source);
-    return *rnorm01Iter.at(source)++;
-}
+// double RandParr::genRnorm01(const int source){
+//     if(rnorm01Iter.at(source) == rnorm01End.at(source))
+//         fillRnorm01(source);
+//     return *rnorm01Iter.at(source)++;
+// }
 
 
 void njm::resetSeed(){
@@ -140,7 +141,9 @@ int njm::rber(double p){
 
 
 double njm::rnorm01(){
-    return(randParr.genRnorm01(omp_get_thread_num()));
+    // http://www.johndcook.com/erf_and_normal_cdf.pdf
+    return std::sqrt(2.)*boost::math::erf_inv(2.*njm::runif01() - 1.);
+    // return(randParr.genRnorm01(omp_get_thread_num()));
 }
 
 
