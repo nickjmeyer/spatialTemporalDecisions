@@ -174,6 +174,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
         for(j = 0; j < (numAct - cI); j++){
             if(tp.shuffle){
+                LOG_IF(ERROR,this->disect);
                 selInfected.push(std::pair<double,int>(njm::runif01(),
                                 sortInfected.top().second));
             }
@@ -181,17 +182,32 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 selInfected.push(std::pair<double,int>(sortInfected.top().first,
                                 sortInfected.top().second));
             }
+            if (this->disect) {
+                std::cout << "j: " << j << std::endl
+                          << "sortVal: "
+                          << sortInfected.top().first << std::endl
+                          << "sortInd: "
+                          << sortInfected.top().second << std::endl;
+            }
             sortInfected.pop();
         }
 
         for(j = 0; j < (numPre - cN); j++){
             if(tp.shuffle){
+                LOG_IF(ERROR,this->disect);
                 selNotInfec.push(std::pair<double,int>(njm::runif01(),
                                 sortNotInfec.top().second));
             }
             else{
                 selNotInfec.push(std::pair<double,int>(sortNotInfec.top().first,
                                 sortNotInfec.top().second));
+            }
+            if (this->disect) {
+                std::cout << "j: " << j << std::endl
+                          << "sortVal: "
+                          << sortInfected.top().first << std::endl
+                          << "sortInd: "
+                          << sortInfected.top().second << std::endl;
             }
             sortNotInfec.pop();
         }
@@ -206,6 +222,12 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         if(numAct > 0)
             addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
                 (int)(i*numAct/std::min(numChunks,numAct));
+
+        if (this->disect) {
+            njm::message(
+                    "\naddAct: " + njm::toString(addAct,"") +
+                    "\naddPre: " + njm::toString(addPre,""));
+        }
 
         int sumA = 0;
         int sumP = 0;
