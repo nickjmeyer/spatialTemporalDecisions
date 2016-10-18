@@ -13,8 +13,6 @@ RankAgent<F,M>::RankAgent(){
     setEdgeToEdge(false);
 
     name="rank";
-
-    disect = false;
 }
 
 template <class F, class M>
@@ -87,21 +85,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             // result in small negative numbers due to instability
             jitter = arma::sqrt(arma::abs(featStddev.diag()))*calcJitter();
 
-            if (this->disect) {
-                std::cout << "jitter before: " <<
-                    njm::toString(
-                            arma::conv_to<std::vector<double> >::from(jitter),
-                            " ","",18.12) << std::endl;
-            }
             for(j = 0; j < f.numFeatures; j++)
                 jitter(j) *= njm::rnorm01();
-
-            if (this->disect) {
-                std::cout << "jitter after: " <<
-                    njm::toString(
-                            arma::conv_to<std::vector<double> >::from(jitter),
-                            " ","",18.12) << std::endl;
-            }
 
             // calculate ranks
             infRanks = f.infFeat * (tp.weights + jitter);
@@ -110,45 +95,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             // calculate ranks
             infRanks = f.infFeat * tp.weights;
             notRanks = f.notFeat * tp.weights;
-        }
-
-        if (this->disect) {
-            std::vector<double> infFeatVec =
-                arma::conv_to<std::vector<double> >::from(
-                        arma::sum(f.infFeat,0));
-            std::vector<double> notFeatVec =
-                arma::conv_to<std::vector<double> >::from(
-                        arma::sum(f.notFeat,0));
-            std::vector<double> weightsVec =
-                arma::conv_to<std::vector<double> >::from(
-                        tp.weights);
-
-            njm::message(
-                    "\ninfFeat: " +
-                    njm::toString(infFeatVec,"","",18,12) +
-                    "\nnotFeat: " +
-                    njm::toString(notFeatVec,"","",18,12) +
-                    "\nweights: " +
-                    njm::toString(weightsVec,"","",18,12));
-
-            for (int testI = 0; testI < sD.numInfected; ++testI) {
-                std::vector<double> featRow =
-                    arma::conv_to<std::vector<double> >::from(
-                            f.infFeat.row(testI));
-                std::cout << testI << ": "
-                          << njm::toString(infRanks(testI),"",16,12)
-                          << " -> " << njm::toString(
-                                  featRow," ","",16,12) << std::endl;
-            }
-            for (int testI = 0; testI < sD.numNotInfec; ++testI) {
-                std::vector<double> featRow =
-                    arma::conv_to<std::vector<double> >::from(
-                            f.notFeat.row(testI));
-                std::cout << testI << ": "
-                          << njm::toString(notRanks(testI),"",16,12)
-                          << " -> " << njm::toString(
-                                  featRow," ","",16,12) << std::endl;
-            }
         }
 
 
@@ -205,7 +151,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
         std::priority_queue<std::pair<double,int> > selInfected,selNotInfec;
         for(j = 0; j < (numAct - cI); j++){
             if(tp.shuffle){
-                LOG_IF(ERROR,this->disect);
                 selInfected.push(std::pair<double,int>(njm::runif01(),
                                 sortInfected.top().second));
             }
@@ -213,32 +158,17 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 selInfected.push(std::pair<double,int>(sortInfected.top().first,
                                 sortInfected.top().second));
             }
-            if (this->disect) {
-                std::cout << "j: " << j << std::endl
-                          << "sortVal: "
-                          << sortInfected.top().first << std::endl
-                          << "sortInd: "
-                          << sortInfected.top().second << std::endl;
-            }
             sortInfected.pop();
         }
 
         for(j = 0; j < (numPre - cN); j++){
             if(tp.shuffle){
-                LOG_IF(ERROR,this->disect);
                 selNotInfec.push(std::pair<double,int>(njm::runif01(),
                                 sortNotInfec.top().second));
             }
             else{
                 selNotInfec.push(std::pair<double,int>(sortNotInfec.top().first,
                                 sortNotInfec.top().second));
-            }
-            if (this->disect) {
-                std::cout << "j: " << j << std::endl
-                          << "sortVal: "
-                          << sortInfected.top().first << std::endl
-                          << "sortInd: "
-                          << sortInfected.top().second << std::endl;
             }
             sortNotInfec.pop();
         }
@@ -254,14 +184,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
                 (int)(i*numAct/std::min(numChunks,numAct));
 
-        if (this->disect) {
-            njm::message(
-                    "\naddAct: " + njm::toString(addAct,"") +
-                    "\naddPre: " + njm::toString(addPre,""));
-        }
-
-        int sumA = 0;
-        int sumP = 0;
 
         // add active treatment
         for(j = 0; j < addAct && cI < numAct; cI++,j++){
@@ -274,7 +196,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             }
             tD.a.at(sD.infected.at(node0)) = 1;
             selInfected.pop();
-            sumA += sD.infected.at(node0);
         }
 
         // add preventative treatment
@@ -288,13 +209,6 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             }
             tD.p.at(sD.notInfec.at(node0)) = 1;
             selNotInfec.pop();
-            sumP += sD.notInfec.at(node0);
-        }
-
-        if (this->disect) {
-            njm::message(
-                    "\na: " + njm::toString(sumA,"") +
-                    "\np: " + njm::toString(sumP,""));
         }
 
         // njm::timer.stop("rank");
