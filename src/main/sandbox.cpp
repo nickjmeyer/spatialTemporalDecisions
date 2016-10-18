@@ -19,16 +19,10 @@ int main(int argc, char ** argv){
             typedef MG ME;
 
             typedef System<MG,ME> S;
-            typedef NoTrt<ME> NT;
-            typedef ProximalAgent<ME> PA;
-            typedef MyopicAgent<ME> MA;
 
             typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
-            typedef VanillaRunnerNS<S,NT> RN;
-            typedef VanillaRunnerNS<S,PA> RP;
-            typedef VanillaRunnerNS<S,MA> RM;
             typedef VanillaRunnerNS<S,RA> RR;
 
             S s("obsData.txt");
@@ -39,95 +33,81 @@ int main(int argc, char ** argv){
             int numReps = 8;
             Starts starts("startingLocations.txt");
 
-            NT nt;
-            MA ma;
-            PA pa;
-            RP rp;
-
-            RN rn;
             RA ra;
-            RM rm;
-            RR rr;
 
-            pa.setEdgeToEdge(FLAGS_edgeToEdge);
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            ma.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
 
-            double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
+            int r = numReps;
+            int t;
 
-            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
+            njm::resetSeed(r);
+            s.reset(starts[r]);
+            for(t=s.sD.time; t<s.fD.finalT; t++){
+                if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
+                    ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
+                            s.modelEst);
 
-            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
+                s.updateStatus();
 
-            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
+                s.nextPoint();
 
-            njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
-                    "\n" +
-                    " valPA: " + njm::toString(valPA,"",32,28) +
-                    "\n" +
-                    " valMA: " + njm::toString(valMA,"",32,28) +
-                    "\n" +
-                    " valRA: " + njm::toString(valRA,"",32,28));
+            }
+            s.value();
 
+            njm::message("value: " + njm::toString(s.value(),"",32,28));
 
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-            typedef Model2GravityEDist MG;
+            // typedef Model2GravityEDist MG;
 
-            typedef MG ME;
+            // typedef MG ME;
 
-            typedef System<MG,ME> S;
-            typedef NoTrt<ME> NT;
-            typedef ProximalAgent<ME> PA;
-            typedef MyopicAgent<ME> MA;
+            // typedef System<MG,ME> S;
+            // typedef NoTrt<ME> NT;
+            // typedef ProximalAgent<ME> PA;
+            // typedef MyopicAgent<ME> MA;
 
-            typedef WnsFeatures3<ME> F;
-            typedef RankAgent<F,ME> RA;
+            // typedef WnsFeatures3<ME> F;
+            // typedef RankAgent<F,ME> RA;
 
-            typedef VanillaRunnerNS<S,NT> RN;
-            typedef VanillaRunnerNS<S,PA> RP;
-            typedef VanillaRunnerNS<S,MA> RM;
-            typedef VanillaRunnerNS<S,RA> RR;
+            // typedef VanillaRunnerNS<S,NT> RN;
+            // typedef VanillaRunnerNS<S,PA> RP;
+            // typedef VanillaRunnerNS<S,MA> RM;
+            // typedef VanillaRunnerNS<S,RA> RR;
 
-            S s("obsData.txt");
-            s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelEst_r = s.modelGen_r;
-            s.revert();
+            // S s("obsData.txt");
+            // s.setEdgeToEdge(FLAGS_edgeToEdge);
+            // s.modelEst_r = s.modelGen_r;
+            // s.revert();
 
-            int numReps = 7;
-            Starts starts("startingLocations.txt");
+            // int numReps = 7;
+            // Starts starts("startingLocations.txt");
 
-            NT nt;
-            MA ma;
-            PA pa;
-            RP rp;
+            // NT nt;
+            // MA ma;
+            // PA pa;
+            // RP rp;
 
-            RN rn;
-            RA ra;
-            RM rm;
-            RR rr;
+            // RN rn;
+            // RA ra;
+            // RM rm;
+            // RR rr;
 
-            pa.setEdgeToEdge(FLAGS_edgeToEdge);
-            ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            ma.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ra.reset();
+            // pa.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // // ra.reset();
 
-            double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
+            // double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
-
-            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
-
-            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
-
-            njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
-                    "\n" +
-                    " valPA: " + njm::toString(valPA,"",32,28) +
-                    "\n" +
-                    " valMA: " + njm::toString(valMA,"",32,28) +
-                    "\n" +
-                    " valRA: " + njm::toString(valRA,"",32,28));
+            // njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
+            //         "\n" +
+            //         " valPA: " + njm::toString(valPA,"",32,28) +
+            //         "\n" +
+            //         " valMA: " + njm::toString(valMA,"",32,28) +
+            //         "\n" +
+            //         " valRA: " + njm::toString(valRA,"",32,28));
         }
 
         njm::sett.clean();
