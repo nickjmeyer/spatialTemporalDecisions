@@ -14,7 +14,7 @@ namespace njm{
 template<class T>
 std::string toString(const T n,
         const std::string end = "",
-        const int w = 16, const int p = 8){
+        const int w = 16, const int p = 12){
     std::stringstream ss;
     ss << std::setw(w) << std::setprecision(p) << std::fixed
        << n << end;
@@ -26,12 +26,12 @@ template<class T>
 std::string toString(const std::vector<T> & n,
         const std::string sep = " ",
         const std::string end = "",
-        const int w = 16, const int p = 8){
+        const int w = 16, const int p = 12){
     std::stringstream ss;
     typename
         std::vector<T>::const_iterator it;
     for(it = n.begin(); it!=n.end(); it++)
-        ss << njm::toString(*it,sep,w,p);
+        ss << njm::toString(*it) << sep;
     ss << end;
     return ss.str();
 };
