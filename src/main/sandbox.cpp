@@ -48,11 +48,19 @@ int main(int argc, char ** argv){
                     ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
                             s.modelEst);
 
+                int sumP = 0, sumA = 0;
+                for (int i = 0; i < s.fD.numNodes; ++i) {
+                    sumP += s.tD.p.at(i);
+                    sumA += s.tD.a.at(i);
+                }
+
                 s.updateStatus();
 
                 s.nextPoint();
-                njm::message("t = " + njm::toString(t,"") + " -> " +
-                        njm::toString(s.value(),"",32,28));
+                njm::message("\nt: " + njm::toString(t,"",0) +
+                        "\nvalue: " + njm::toString(s.value(),"",32,28) +
+                        "\np: " + njm::toString(sumP,"",0) +
+                        "\na: " + njm::toString(sumA,"",0));
             }
 
 
