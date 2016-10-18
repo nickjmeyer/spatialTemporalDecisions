@@ -23,8 +23,6 @@ int main(int argc, char ** argv){
             typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef AllAgent<ME> AA;
-
             typedef WnsFeatures3<ME> F;
             typedef RankAgent<F,ME> RA;
 
@@ -33,14 +31,12 @@ int main(int argc, char ** argv){
             typedef VanillaRunnerNS<S,MA> RM;
             typedef VanillaRunnerNS<S,RA> RR;
 
-            typedef VanillaRunnerNS<S,AA> R_AA;
-
             S s("obsData.txt");
             s.setEdgeToEdge(FLAGS_edgeToEdge);
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 500;
+            int numReps = 1;
             Starts starts("startingLocations.txt");
 
             NT nt;
@@ -59,13 +55,6 @@ int main(int argc, char ** argv){
             // ra.reset();
 
             double valNT = rn.run(s,nt,numReps,s.fD.finalT,starts).sMean();
-
-            njm::message("Tuning Treatment");
-
-            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
-            s.modelGen_r.read();
-            s.modelEst_r.read();
-            s.revert();
 
             double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
