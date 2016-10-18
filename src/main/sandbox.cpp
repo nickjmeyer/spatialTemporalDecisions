@@ -68,9 +68,7 @@ int main(int argc, char ** argv){
                     "\n" +
                     " valMA: " + njm::toString(valMA,"") +
                     "\n" +
-                    " valRA: " + njm::toString(valRA,"") +
-                    "\n" +
-                    " valAA: " + njm::toString(valAA,""));
+                    " valRA: " + njm::toString(valRA,""));
 
 
         } else {
@@ -129,9 +127,7 @@ int main(int argc, char ** argv){
                     "\n" +
                     " valMA: " + njm::toString(valMA,"") +
                     "\n" +
-                    " valRA: " + njm::toString(valRA,"") +
-                    "\n" +
-                    " valAA: " + njm::toString(valAA,""));
+                    " valRA: " + njm::toString(valRA,""));
         }
 
         njm::sett.clean();
