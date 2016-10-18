@@ -130,7 +130,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             for (int testI = 0; testI < sD.numNotInfec; ++testI) {
                 std::vector<double> featRow =
                     arma::conv_to<std::vector<double> >::from(
-                            f.infFeat.row(testI));
+                            f.notFeat.row(testI));
                 std::cout << testI << ": " << notRanks(testI)
                           << " -> " << njm::toString(
                                   featRow," ","",16,12) << std::endl;
