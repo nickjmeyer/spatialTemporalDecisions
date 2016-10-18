@@ -109,15 +109,15 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                         arma::sum(f.notFeat,0));
             std::vector<double> weightsVec =
                 arma::conv_to<std::vector<double> >::from(
-                        arma::sum(tp.weights,0));
+                        tp.weights);
 
             njm::message(
                     "\ninfFeat: " +
-                    njm::toString(infFeatVec,"","",32,28) +
+                    njm::toString(infFeatVec,"","",18,12) +
                     "\nnotFeat: " +
-                    njm::toString(notFeatVec,"","",32,28) +
+                    njm::toString(notFeatVec,"","",18,12) +
                     "\nweights: " +
-                    njm::toString(weightsVec,"","",32,28));
+                    njm::toString(weightsVec,"","",18,12));
         }
 
 
@@ -144,8 +144,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 << "featStddev: " << featStddev.diag().t()
                 << "calcjitter: " << calcJitter();
             if(tD.a.at(sD.infected.at(node0)))
-                sortInfected.push(std::pair<double,int>(std::numeric_limits<double>
-                                ::lowest(),node0));
+                sortInfected.push(std::pair<double,int>(
+                                std::numeric_limits<double>::lowest(),node0));
             else
                 sortInfected.push(std::pair<double,int>(infRanks(node0),node0));
         }
@@ -163,8 +163,8 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
                 << "featStddev: " << featStddev.diag().t()
                 << "calcjitter: " << calcJitter();
             if(tD.p.at(sD.notInfec.at(node0)))
-                sortNotInfec.push(std::pair<double,int>(std::numeric_limits<double>
-                                ::lowest(),node0));
+                sortNotInfec.push(std::pair<double,int>(
+                                std::numeric_limits<double>::lowest(),node0));
             else
                 sortNotInfec.push(std::pair<double,int>(notRanks(node0),node0));
         }
@@ -207,6 +207,9 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             addAct = (int)((i+1)*numAct/std::min(numChunks,numAct)) -
                 (int)(i*numAct/std::min(numChunks,numAct));
 
+        int sumA = 0;
+        int sumP = 0;
+
         // add active treatment
         for(j = 0; j < addAct && cI < numAct; cI++,j++){
             node0=selInfected.top().second;
@@ -218,6 +221,7 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             }
             tD.a.at(sD.infected.at(node0)) = 1;
             selInfected.pop();
+            sumA += sD.infected.at(node0);
         }
 
         // add preventative treatment
@@ -231,6 +235,13 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
             }
             tD.p.at(sD.notInfec.at(node0)) = 1;
             selNotInfec.pop();
+            sumP += sD.notInfec.at(node0);
+        }
+
+        if (this->disect) {
+            njm::message(
+                    "\na: " + njm::toString(sumA,"") +
+                    "\np: " + njm::toString(sumP,""));
         }
 
         // njm::timer.stop("rank");
