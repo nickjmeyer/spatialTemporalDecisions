@@ -44,7 +44,8 @@ int main(int argc, char ** argv){
 
             njm::resetSeed(r);
             for (int i = 0; i < 50; i++) {
-                std::cout << i << ": " << njm::rnorm01() << std::endl;
+                std::cout << i << ": " << njm::rnorm01()
+                          << " " << njm::runif01() << std::endl;
             }
             // s.reset(starts[r]);
             // for(t=s.sD.time; t<s.fD.finalT; t++){
