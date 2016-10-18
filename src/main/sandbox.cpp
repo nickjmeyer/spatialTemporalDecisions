@@ -35,7 +35,7 @@ int main(int argc, char ** argv){
 
             RA ra;
 
-            ra.tp.jitterScale = -1;
+            ra.tp.jitterScale = 1.0;
             ra.setEdgeToEdge(FLAGS_edgeToEdge);
             // ra.reset();
 
