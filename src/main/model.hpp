@@ -149,11 +149,12 @@ public:
     virtual void setEdgeToEdge(const bool edgeToEdge);
     virtual bool getEdgeToEdge() const;
 
-    virtual void estimateMle(const std::vector<double> & startingVals,
+    virtual int estimateMle(const std::vector<double> & startingVals,
             const SimData & sD,
             const TrtData & tD,
             const FixedData & fD,
-            const DynamicData & dD);
+            const DynamicData & dD,
+            const bool raiseError);
 
     virtual double logll(const SimData & sD,
             const TrtData & tD,

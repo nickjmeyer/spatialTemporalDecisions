@@ -562,7 +562,11 @@ void ModelBase::fit(const std::vector<double> & startingVals,
     if(fitType == MLE || fitType == MLES){
 
         // estimate the MLE
-        estimateMle(startingVals,sD,tD,fD,dD);
+        int errorCode = estimateMle(startingVals,sD,tD,fD,dD,false);
+        if (errorCode) {
+            std::vector<double> zeroVec(this->numPars,0.0);
+            errorCode = estimateMle(zeroVec,sD,tD,fD,dD,true);
+        }
 
 
         if(sD.time <= fD.trtStart){
@@ -596,11 +600,12 @@ void ModelBase::fit(const std::vector<double> & startingVals,
 
 
 
-void ModelBase::estimateMle(const std::vector<double> & startingVals,
+int ModelBase::estimateMle(const std::vector<double> & startingVals,
         const SimData & sD,
         const TrtData & tD,
         const FixedData & fD,
-        const DynamicData & dD){
+        const DynamicData & dD,
+        const bool raiseError){
 
     if(fitType != MLE && fitType != MLES){
         std::cout << "ModelBase::estimateMLE is called for non MLE or MLES type"
@@ -651,28 +656,36 @@ void ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
-    CHECK(status == GSL_SUCCESS || status == GSL_CONTINUE)
-        << std::endl
-        << "status: " << status << std::endl
-        << "iter: " << iter << std::endl
-        << "numInfected: " << sD.numInfected << std::endl
-        << "time: " << sD.time << std::endl
-        << "gradient check: "
-        << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
-        << "f: " << s->f << std::endl
-        << "gradient: " << njm::toString(gradVals," ","") << std::endl
-        << "starting: " << njm::toString(startingVals," ","") << std::endl;
+    if (status != GSL_SUCCESS && status != GSL_CONTINUE && raiseError) {
+        // not successful and should raise an error
+        LOG(ERROR)
+            << std::endl
+            << "status: " << status << std::endl
+            << "iter: " << iter << std::endl
+            << "numInfected: " << sD.numInfected << std::endl
+            << "time: " << sD.time << std::endl
+            << "gradient check: "
+            << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+            << "f: " << s->f << std::endl
+            << "gradient: " << njm::toString(gradVals," ","") << std::endl
+            << "starting: " << njm::toString(startingVals," ","") << std::endl;
+    } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
+        // not successful and should not raise an error
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
+    } else {
+        // successful
+        std::vector<double> mle;
+        for(pi = 0; pi < int(numPars); ++pi){
+            mle.push_back(gsl_vector_get(s->x,pi));
+        }
 
-    std::vector<double> mle;
-    for(pi = 0; pi < int(numPars); ++pi){
-        mle.push_back(gsl_vector_get(s->x,pi));
+        this->putPar(mle.begin());
+
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
     }
-
-    this->putPar(mle.begin());
-
-
-    gsl_multimin_fdfminimizer_free(s);
-    gsl_vector_free(x);
+    return status
 }
 
 
