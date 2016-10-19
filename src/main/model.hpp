@@ -193,6 +193,7 @@ public:
     TrtData tD;
     FixedData fD;
     DynamicData dD;
+    double normalizer;
 };
 
 

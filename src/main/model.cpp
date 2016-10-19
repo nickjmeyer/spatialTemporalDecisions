@@ -1084,6 +1084,7 @@ ModelBaseFitObj::ModelBaseFitObj(ModelBase * const mb,
     this->tD = tD;
     this->fD = fD;
     this->dD = dD;
+    this->normalizer = fD.numNodes * sD.time;
 }
 
 
