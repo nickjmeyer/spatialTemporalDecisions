@@ -1103,7 +1103,7 @@ double objFn(const gsl_vector * x, void * params){
     double ll = fitObj->mb->logll(fitObj->sD,fitObj->tD,fitObj->fD,fitObj->dD);
     CHECK(std::isfinite(ll)) << "Likelihood value is not finite";
     // njm::timer.stop("objFn");
-    return - ll;
+    return - ll / fitObj->normalizer;
 }
 
 void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
@@ -1125,7 +1125,7 @@ void objFnGrad(const gsl_vector * x, void * params, gsl_vector * g){
         CHECK(std::isfinite(llGrad.at(pi)))
             << "Likelihood gradient value is not finite for parameter index "
             << pi << " for model " << fitObj->mb->name;
-        gsl_vector_set(g,pi,-llGrad.at(pi));
+        gsl_vector_set(g,pi,-llGrad.at(pi) / fitObj->normalizer);
     }
     // njm::timer.stop("objFnGrad");
 }
@@ -1148,7 +1148,7 @@ void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
 
     // log ll
     CHECK(std::isfinite(both.first));
-    *f = -both.first;
+    *f = -both.first / fitObj->normalizer;
 
     // log ll grad
     for(pi = 0; pi < int(fitObj->mb->numPars); ++pi){
@@ -1157,7 +1157,7 @@ void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g){
         CHECK(std::isfinite(both.second.at(pi)))
             << "Likelihood gradient value is not finite for parameter index "
             << pi << " for model " << fitObj->mb->name;
-        gsl_vector_set(g,pi,-both.second.at(pi));
+        gsl_vector_set(g,pi,-both.second.at(pi) / fitObj->normalizer);
     }
     // njm::timer.stop("objFnBoth");
 }
