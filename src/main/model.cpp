@@ -567,7 +567,7 @@ void ModelBase::fit(const std::vector<double> & startingVals,
             std::vector<double> newStartVec(this->numPars,0.2);
             // set the intercept (all models have intercept first)
             newStartVec.at(0) = -3.;
-            errorCode = estimateMle(zeroVec,sD,tD,fD,dD,true);
+            errorCode = estimateMle(newStartVec,sD,tD,fD,dD,true);
         }
 
 
