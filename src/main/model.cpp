@@ -685,7 +685,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
     }
-    return status
+    return status;
 }
 
 
