@@ -563,7 +563,7 @@ void ModelBase::fit(const std::vector<double> & startingVals,
 
         // estimate the MLE
         int errorCode = estimateMle(startingVals,sD,tD,fD,dD,false);
-        if (errorCode) {
+        if (errorCode != 0) {
             std::vector<double> newStartVec(this->numPars,0.2);
             // set the intercept (all models have intercept first)
             newStartVec.at(0) = -3.;
@@ -658,6 +658,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
+    int errorCode = 0;
     if (status != GSL_SUCCESS && status != GSL_CONTINUE && raiseError) {
         // not successful and should raise an error
         LOG(ERROR)
@@ -671,10 +672,12 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
             << "f: " << s->f << std::endl
             << "gradient: " << njm::toString(gradVals," ","") << std::endl
             << "starting: " << njm::toString(startingVals," ","") << std::endl;
+        errorCode = 1;
     } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
         // not successful and should not raise an error
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
+        errorCode = 2;
     } else {
         // successful
         std::vector<double> mle;
@@ -686,8 +689,9 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
 
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
+        errorCode = 0;
     }
-    return status;
+    return errorCode;
 }
 
 
