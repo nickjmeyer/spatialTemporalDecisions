@@ -8,6 +8,7 @@ using namespace gflags;
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(dryRun,false,"Do not execute main");
+DEFINE_bool(save,false,"Save parameter estimates for simluation");
 
 std::vector<double> getStats(const std::vector<std::vector<int> > & h,
         const SimData & sD,
@@ -67,7 +68,7 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
         sDist += fD.eDist.at(sD.infected.at(i)*fD.numNodes + start);
     }
     sDist/=(double)sD.numInfected;
-    stats.push_back(sDist);
+    stats.push_back(sDist*fD.eDistSd);
 
     // min lat long for infected
     cLong = std::numeric_limits<double>::max();
@@ -100,7 +101,141 @@ std::vector<double> getStats(const std::vector<std::vector<int> > & h,
     for(i = 0; i < sD.numInfected; ++i)
         if(fD.eDist.at(sD.infected.at(i)*fD.numNodes + start) > sDist)
             sDist = fD.eDist.at(sD.infected.at(i)*fD.numNodes + start);
-    stats.push_back(sDist);
+    stats.push_back(sDist*fD.eDistSd);
+
+
+    return stats;
+}
+
+
+std::vector<double> getStatsOos(
+        const std::vector<std::vector<int> > & baseH,
+        const std::vector<std::vector<int> > & newH,
+        const FixedData & fD){
+    std::vector<double> stats;
+    // total infected
+    int i,cnt = 0;
+    for (i = 0; i < fD.numNodes; ++i) {
+        if (newH.at(newH.size()-1).at(i) >= 2)
+            ++cnt;
+    }
+    stats.push_back(cnt);
+
+    int j,sum = 0;
+    for(i = 0; i < (int)newH.size(); ++i){
+        sum = 0;
+        for(j = 0; j < fD.numNodes; ++j) {
+            if(i == 0) {
+                if(newH.at(i).at(j) >= 2 && baseH.at(baseH.size()-1).at(j) < 2)
+                    ++sum;
+            }
+            else {
+                if(newH.at(i).at(j) >= 2 && newH.at(i-1).at(j) < 2)
+                    ++sum;
+            }
+        }
+
+        stats.push_back(sum);
+    }
+
+
+    // average year of new infections
+    sum = 0;
+    cnt = 0;
+    for(i = 0; i < (int)newH.size(); ++i){
+        for(j = 0; j < fD.numNodes; ++j){
+            if(i == 0) {
+                if(newH.at(i).at(j) >= 2 && baseH.at(baseH.size()-1).at(j) < 2){
+                    sum += baseH.size() + i;
+                    ++cnt;
+                }
+            }
+            else {
+                if(newH.at(i).at(j) >= 2 && newH.at(i-1).at(j) < 2){
+                    sum += baseH.size() + i;
+                    ++cnt;
+                }
+            }
+        }
+    }
+    stats.push_back(((double)sum)/((double)cnt));
+
+
+    // average lat long for infected
+    double cLong,cLat;
+    cLong = cLat = 0;
+    cnt = 0;
+    for(i = 0 ; i < fD.numNodes; ++i){
+        if(newH.at(newH.size()-1).at(i) >= 2 &&
+                baseH.at(baseH.size()-1).at(i) < 2) {
+            cLong += fD.centroidsLong.at(i);
+            cLat += fD.centroidsLat.at(i);
+            ++cnt;
+        }
+    }
+    stats.push_back(cLong/((double)cnt));
+    stats.push_back(cLat/((double)cnt));
+
+    // average spread distance from start for infected
+    std::vector<double> distFromStart;
+    for (i = 0; i < fD.numNodes; ++i) {
+        if (newH.at(newH.size()-1).at(i) >= 2 &&
+                baseH.at(baseH.size()-1).at(i) < 2) {
+            double minDistToStat = std::numeric_limits<double>::max();
+            for (j = 0; j < fD.numNodes; ++j) {
+                if(newH.at(newH.size()-1).at(j) >= 2 &&
+                        baseH.at(baseH.size()-1).at(j) >= 2) {
+                    minDistToStat = std::min(minDistToStat,
+                            fD.eDist.at(i*fD.numNodes + j));
+                }
+            }
+            distFromStart.push_back(minDistToStat);
+        }
+    }
+    CHECK_EQ(distFromStart.size(),stats.at(1) + stats.at(2));
+
+    double sumDist = 0;
+    sumDist = std::accumulate(distFromStart.begin(),distFromStart.end(),0.);
+    sumDist/=(double)distFromStart.size();
+    stats.push_back(sumDist*fD.eDistSd);
+
+
+    // min lat long for infected
+    cLong = std::numeric_limits<double>::max();
+    cLat = std::numeric_limits<double>::max();
+    for(i = 0; i < fD.numNodes; ++i){
+        if(newH.at(newH.size()-1).at(i) >= 2 &&
+                baseH.at(baseH.size()-1).at(i) < 2) {
+            if(fD.centroidsLong.at(i) < cLong)
+                cLong = fD.centroidsLong.at(i);
+            if(fD.centroidsLat.at(i) < cLat)
+                cLat = fD.centroidsLat.at(i);
+        }
+    }
+    stats.push_back(cLong);
+    stats.push_back(cLat);
+
+
+    // max lat long for infected
+    cLong = std::numeric_limits<double>::lowest();
+    cLat = std::numeric_limits<double>::lowest();
+    for(i = 0; i < fD.numNodes; ++i){
+        if(newH.at(newH.size()-1).at(i) >= 2 &&
+                baseH.at(baseH.size()-1).at(i) < 2) {
+            if(fD.centroidsLong.at(i) > cLong)
+                cLong = fD.centroidsLong.at(i);
+            if(fD.centroidsLat.at(i) > cLat)
+                cLat = fD.centroidsLat.at(i);
+        }
+    }
+    stats.push_back(cLong);
+    stats.push_back(cLat);
+
+
+    // max dist from starting location
+    stats.push_back(
+            (*std::max_element(distFromStart.begin(),distFromStart.end()))
+            * fD.eDistSd);
 
 
     return stats;
@@ -185,52 +320,12 @@ void runBayesP(const std::string & file, const int obs,
             stats.push_back(getStats(h,s.sD,s.fD));
         }
 
-        njm::toFile(names,njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",
-                        ".txt"),std::ios_base::out);
+        njm::toFile(names,njm::sett.datExt("sampStats_mean_"+file+"_"
+                        +edgeExt+"_",".txt"),std::ios_base::out);
         njm::toFile(njm::toString(stats,"\n",""),
-                njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",".txt"));
+                njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",
+                        ".txt"));
     }
-
-
-    // { // mode
-    //   sObs.modelGen_r.mcmc.samples.setMode();
-    //   std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
-    //   sObs.modelGen_r.putPar(par.begin());
-
-    //   /////////////
-    //   // don't save mode to file (only save mean above)
-    //   /////////////
-
-    //   std::vector< std::vector<double> > stats;
-
-    //   S s;
-    //   Starts starts("startingLocations.txt");
-    //   s.modelGen_r = sObs.modelGen_r;
-    //   s.modelEst_r = s.modelGen_r;
-    //   int r,t,R,T;
-    //   R = numStats;
-    //   T = sObs.sD.time;
-    //   for(r = 0; r < R; ++r){
-    //     s.modelGen_r.mcmc.samples.setRand();
-    //     par = s.modelGen_r.mcmc.samples.getPar();
-    //     s.modelGen_r.putPar(par.begin());
-    //     s.modelEst_r.putPar(par.begin());
-
-    //     s.reset(starts[r]);
-
-    //     for(t = 0; t < T; ++t)
-    // 	s.nextPoint();
-    //     h = s.sD.history;
-    //     h.push_back(s.sD.status);
-
-    //     stats.push_back(getStats(h,s.sD,s.fD));
-    //   }
-
-    //   njm::toFile(names,njm::sett.datExt("sampStats_mode_"+file+"_",".txt"),
-    // 		std::ios_base::out);
-    //   njm::toFile(njm::toString(stats,"\n",""),
-    // 		njm::sett.datExt("sampStats_mode_"+file+"_",".txt"));
-    // }
 
 
     { // mle
@@ -268,8 +363,8 @@ void runBayesP(const std::string & file, const int obs,
             stats.push_back(getStats(h,s.sD,s.fD));
         }
 
-        njm::toFile(names,njm::sett.datExt("sampStats_mle_"+file+"_"+edgeExt+"_",
-                        ".txt"),std::ios_base::out);
+        njm::toFile(names,njm::sett.datExt("sampStats_mle_"+file+"_"
+                        +edgeExt+"_",".txt"),std::ios_base::out);
         njm::toFile(njm::toString(stats,"\n",""),
                 njm::sett.datExt("sampStats_mle_"+file+"_"+edgeExt+"_",".txt"));
     }
@@ -283,7 +378,8 @@ void runBayesP(const std::string & file, const int obs,
         sObs.modelGen_r.mcmc.samples.setPar(i);
         njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
                         " ","\n"),
-                njm::sett.datExt("sampStats_"+file+"_param_"+edgeExt+"_",".txt"),
+                njm::sett.datExt("sampStats_"+file+"_param_"+edgeExt+"_",
+                        ".txt"),
                 std::ios_base::app);
     }
 
@@ -291,19 +387,22 @@ void runBayesP(const std::string & file, const int obs,
         sObs.modelGen_r.mcmc.samples.setPar(i,true);
         njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
                         " ","\n"),
-                njm::sett.datExt("sampStats_"+file+"_paramBurn_"+edgeExt+"_",".txt"),
+                njm::sett.datExt("sampStats_"+file+"_paramBurn_"+edgeExt+"_",
+                        ".txt"),
                 std::ios_base::app);
     }
 
     // posterior mode
     sObs.modelGen_r.mcmc.samples.setMode();
     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
-            njm::sett.datExt("sampStats_"+file+"_paramMode_"+edgeExt+"_",".txt"));
+            njm::sett.datExt("sampStats_"+file+"_paramMode_"+edgeExt+"_",
+                    ".txt"));
 
     // posterior mean
     sObs.modelGen_r.mcmc.samples.setMean();
     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
-            njm::sett.datExt("sampStats_"+file+"_paramMean_"+edgeExt+"_",".txt"));
+            njm::sett.datExt("sampStats_"+file+"_paramMean_"+edgeExt+"_",
+                    ".txt"));
 
     // likelihood
     njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
@@ -329,6 +428,251 @@ void runBayesP(const std::string & file, const int obs,
 
 
 
+template <class M>
+void runBayesPOos(const std::string & file, const int obs,
+        const int numSamples,const int numBurn,
+        const int numStats,
+        const bool edgeToEdge){
+    // bayes P out of sample
+
+    std::string edgeExt;
+    if(edgeToEdge) {
+        edgeExt = "edge";
+    } else {
+        edgeExt = "spatial";
+    }
+
+    njm::resetSeed(0);
+
+    typedef System<M,M> S;
+
+    S sObs("obsData_0-5.txt");
+    sObs.setEdgeToEdge(edgeToEdge);
+
+    std::vector<std::string> names = {"n_inf","n_inf_2012",
+                                      "n_inf_2013","mean_year",
+                                      "mean_long","mean_lat",
+                                      "average_dist_from_start",
+                                      "min_long","min_lat",
+                                      "max_long","max_lat",
+                                      "max_dist_from_start"};
+
+    std::vector<std::vector<int> > baseHObs;
+    {
+        std::vector<int> baseHObs_raw;
+        std::vector<int> add;
+        njm::fromFile(baseHObs_raw,njm::sett.srcExt("obsData_0-5.txt"));
+        std::vector<int>::const_iterator it,end;
+        it = baseHObs_raw.begin();
+        end = baseHObs_raw.end();
+
+        CHECK_EQ(baseHObs_raw.size(),6*sObs.fD.numNodes);
+
+        int count = 0;
+        while(it != end) {
+            add.push_back(*it);
+            ++it;
+            ++count;
+            if(count == sObs.fD.numNodes) {
+                baseHObs.push_back(add);
+                add.clear();
+                count = 0;
+            }
+        }
+        CHECK_EQ(count,0);
+        CHECK_EQ(baseHObs.size(),6);
+    }
+
+    std::vector< std::vector<int> > newHObs;
+    {
+        std::vector<int> newHObs_raw;
+        std::vector<int> add;
+        njm::fromFile(newHObs_raw,njm::sett.srcExt("obsData_6-7.txt"));
+        std::vector<int>::const_iterator it,end;
+        it = newHObs_raw.begin();
+        end = newHObs_raw.end();
+
+        int count = 0;
+        while(it != end) {
+            add.push_back(*it);
+            ++it;
+            ++count;
+            if(count == sObs.fD.numNodes) {
+                newHObs.push_back(add);
+                add.clear();
+                count = 0;
+            }
+        }
+        CHECK_EQ(count,0);
+        CHECK_EQ(newHObs.size(),2);
+    }
+
+
+    if(obs){
+        njm::toFile(names,njm::sett.datExt("obsStats_Oos_"+edgeExt+"_",".txt"),
+                std::ios_base::out);
+        njm::toFile(getStatsOos(baseHObs,newHObs,sObs.fD),
+                njm::sett.datExt("obsStats_Oos_"+edgeExt+"_",".txt"));
+    }
+
+    sObs.modelGen_r.mcmc.load(sObs.sD.history,sObs.sD.status,sObs.fD);
+    sObs.modelGen_r.mcmc.sample(numSamples,numBurn,true);
+
+    { // mean
+        sObs.modelGen_r.mcmc.samples.setMean();
+        std::vector<double> par = sObs.modelGen_r.mcmc.samples.getPar();
+        sObs.modelGen_r.putPar(par.begin());
+
+        std::vector< std::vector<double> > stats;
+
+        S s;
+        s.setEdgeToEdge(edgeToEdge);
+        Starts starts(baseHObs.at(baseHObs.size()-1));
+        s.modelGen_r = sObs.modelGen_r;
+        s.modelEst_r = s.modelGen_r;
+        int r,t,R,T;
+        R = numStats;
+        T = newHObs.size();
+        for(r = 0; r < R; ++r){
+            s.modelGen_r.mcmc.samples.setRand();
+            par = s.modelGen_r.mcmc.samples.getPar();
+            s.modelGen_r.putPar(par.begin());
+            s.modelEst_r.putPar(par.begin());
+
+            s.reset(starts[r]);
+
+            // DON'T include current status in newHSim.  This should
+            // only include new observations.  The current status is
+            // included in baseHObs.
+            std::vector<std::vector<int> > newHSim;
+
+            for(t = 0; t < T; ++t){
+                s.nextPoint();
+                newHSim.push_back(s.sD.status);
+            }
+
+            CHECK_EQ(newHSim.size(),2);
+            stats.push_back(getStatsOos(baseHObs,newHSim,s.fD));
+        }
+
+        njm::toFile(names,njm::sett.datExt("sampStats_mean_Oos"+file+
+                        "_"+edgeExt+"_",".txt"),std::ios_base::out);
+        njm::toFile(njm::toString(stats,"\n",""),
+                njm::sett.datExt("sampStats_mean_Oos"+file+"_"+edgeExt+"_",
+                        ".txt"));
+    }
+
+
+    { // mle
+        sObs.modelGen_r.setType(MLE);
+        sObs.modelGen_r.fit(sObs.sD,sObs.tD,sObs.fD,sObs.dD,0);
+
+        njm::toFile(njm::toString(sObs.modelGen_r.getPar()," ","\n"),
+                njm::sett.datExt("sampStats_Oos"+file+"_MLE_"+edgeExt+"_",
+                        ".txt"));
+
+        std::vector<double> par;
+
+        std::vector< std::vector<double> > stats;
+
+        S s;
+        s.setEdgeToEdge(edgeToEdge);
+        Starts starts(baseHObs.at(baseHObs.size() - 1));
+        s.modelGen_r = sObs.modelGen_r;
+        s.modelGen_r.setFisher(sObs.sD,sObs.tD,sObs.fD,sObs.dD);
+        s.modelEst_r = s.modelGen_r;
+        int r,t,R,T;
+        R = numStats;
+        T = newHObs.size();
+        for(r = 0; r < R; ++r){
+            s.modelGen_r.sample(true);
+            std::vector<double> par = s.modelGen_r.getPar();
+            s.modelEst_r.putPar(par.begin());
+
+            s.reset(starts[r]);
+
+            // DON'T include current status in newHSim.  This should
+            // only include new observations.  The current status is
+            // included in baseHObs.
+            std::vector<std::vector<int> > newHSim;
+
+            for(t = 0; t < T; ++t){
+                s.nextPoint();
+                newHSim.push_back(s.sD.status);
+            }
+
+            CHECK_EQ(newHSim.size(),2);
+            stats.push_back(getStatsOos(baseHObs,newHSim,s.fD));
+        }
+
+        njm::toFile(names,njm::sett.datExt("sampStats_mle_Oos"+file+"_"
+                        +edgeExt+"_",".txt"),std::ios_base::out);
+        njm::toFile(njm::toString(stats,"\n",""),
+                njm::sett.datExt("sampStats_mle_Oos"+file+"_"+edgeExt+"_",
+                        ".txt"));
+    }
+
+
+
+    // param estimates
+    std::vector<std::vector<double> > parSamp;
+    int i;
+    for(i = 0; i < (numSamples-numBurn); ++i){
+        sObs.modelGen_r.mcmc.samples.setPar(i);
+        njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+                        " ","\n"),
+                njm::sett.datExt("sampStats_Oos"+file+"_param_"+edgeExt+"_",
+                        ".txt"),
+                std::ios_base::app);
+    }
+
+    for(i = 0; i < numBurn; ++i){
+        sObs.modelGen_r.mcmc.samples.setPar(i,true);
+        njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar(),
+                        " ","\n"),
+                njm::sett.datExt("sampStats_Oos"+file+"_paramBurn_"+edgeExt+"_",
+                        ".txt"),
+                std::ios_base::app);
+    }
+
+    // posterior mode
+    sObs.modelGen_r.mcmc.samples.setMode();
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_paramMode_"+edgeExt+"_",
+                    ".txt"));
+
+    // posterior mean
+    sObs.modelGen_r.mcmc.samples.setMean();
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.getPar()," ","\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_paramMean_"+edgeExt+"_",
+                    ".txt"));
+
+    // likelihood
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.ll,"\n",""),
+            njm::sett.datExt("sampStats_Oos"+file+"_ll_"+edgeExt+"_",
+                    ".txt"));
+
+    // likelihood at mean
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.llPt,"\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_llPt_"+edgeExt+"_",
+                    ".txt"));
+
+    // pD
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.pD,"\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_pD_"+edgeExt+"_",".txt"));
+
+    // Dbar
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.Dbar,"\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_Dbar_"+edgeExt+"_",".txt"));
+
+    // DIC
+    njm::toFile(njm::toString(sObs.modelGen_r.mcmc.samples.DIC,"\n"),
+            njm::sett.datExt("sampStats_Oos"+file+"_DIC_"+edgeExt+"_",".txt"));
+
+}
+
+
+
 int main(int argc, char ** argv){
     InitGoogleLogging(argv[0]);
     ParseCommandLineFlags(&argc,&argv,true);
@@ -342,8 +686,7 @@ int main(int argc, char ** argv){
         // int numSamples = 100, numBurn = 50, numStats = 50;
         // int numSamples = 10, numBurn = 5, numStats = 5;
 
-        bool save = true;
-        if(save){
+        if(FLAGS_save){
             std::cout << "Setup to SAVE parameters." << std::endl;
         }
         else{
@@ -364,14 +707,28 @@ int main(int argc, char ** argv){
             {
                 runBayesP<Model2GravityEDist
                           >("gravity2",1,
-                                  numSamples,numBurn,numStats,save,false);
+                                  numSamples,numBurn,numStats,FLAGS_save,false);
             }
 
 #pragma omp section
             {
                 runBayesP<Model2EdgeToEdge
                           >("edgeToEdge2",0,
-                                  numSamples,numBurn,numStats,save,true);
+                                  numSamples,numBurn,numStats,FLAGS_save,true);
+            }
+
+#pragma omp section
+            {
+                runBayesPOos<Model2GravityEDist
+                             >("gravity2",1,
+                                     numSamples,numBurn,numStats,false);
+            }
+
+#pragma omp section
+            {
+                runBayesPOos<Model2EdgeToEdge
+                             >("edgeToEdge2",0,
+                                     numSamples,numBurn,numStats,true);
             }
 
 // #pragma omp section

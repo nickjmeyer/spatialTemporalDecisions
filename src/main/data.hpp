@@ -86,6 +86,7 @@ struct FixedData {
     double priorTrtMean;
 
     std::vector<double> eDist; // euclidean distance
+    double eDistSd;
     std::vector<double> gDist; // geodesic distance
 
     std::vector<double> caves;

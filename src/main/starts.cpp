@@ -9,6 +9,13 @@ Starts::Starts(const std::string & file){
     ind.push_back(start);
 }
 
+Starts::Starts(const std::vector<int> & start) {
+    dynamic = 0;
+
+    ind.clear();
+    ind.push_back(start);
+}
+
 Starts::Starts(const int numReps, const int numNodes){
     njm::resetSeed(0);
 

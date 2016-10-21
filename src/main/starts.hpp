@@ -11,6 +11,7 @@
 
 class Starts {
 public:
+    Starts(const std::vector<int> & start);
     Starts(const std::string & file);
     Starts(const int numReps, const int numNodes);
 

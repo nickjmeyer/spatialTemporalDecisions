@@ -274,24 +274,36 @@ void System<MG,
     njm::fromFile(fD.fips,njm::sett.srcExt("fips.txt"));
     fD.numNodes = fD.fips.size();
     njm::fromFile(fD.eDist,njm::sett.srcExt("eDist.txt"));
+    CHECK_EQ(fD.eDist.size(),fD.numNodes*fD.numNodes);
     const double eDistVar = njm::sampVar(fD.eDist);
+    fD.eDistSd = std::sqrt(eDistVar);
     CHECK_GT(eDistVar,1e-5);
     for (int i = 0; i < fD.numNodes*fD.numNodes; ++i) {
-        fD.eDist.at(i) /= std::sqrt(eDistVar);
+        fD.eDist.at(i) /= fD.eDistSd;
     }
     njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
+    CHECK_EQ(fD.gDist.size(),fD.numNodes*fD.numNodes);
     njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
+    CHECK_EQ(fD.caves.size(),fD.numNodes);
     njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
     fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
+    CHECK_EQ(fD.numCovar*fD.numNodes,fD.covar.size());
     njm::fromFile(fD.network,njm::sett.srcExt("network.txt"));
+    CHECK_EQ(fD.network.size(),fD.numNodes*fD.numNodes);
 
     njm::fromFile(fD.centroidsLong,njm::sett.srcExt("centroidsLong.txt"));
+    CHECK_EQ(fD.centroidsLong.size(),fD.numNodes);
     njm::fromFile(fD.centroidsLat,njm::sett.srcExt("centroidsLat.txt"));
+    CHECK_EQ(fD.centroidsLat.size(),fD.numNodes);
     njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsMdsLong.txt"));
+    CHECK_EQ(fD.centroidsMdsLong.size(),fD.numNodes);
     njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsMdsLat.txt"));
+    CHECK_EQ(fD.centroidsMdsLat.size(),fD.numNodes);
 
     njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
+    CHECK_EQ(fD.subGraph.size(),fD.numNodes);
     njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
+    CHECK_EQ(fD.betweenness.size(),fD.numNodes);
 
     njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
 

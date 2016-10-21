@@ -6,141 +6,46 @@ using namespace google;
 using namespace gflags;
 
 
-DEFINE_string(srcDir,"","Path to source directory");
-DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
-DEFINE_bool(dryRun,false,"Do not execute main");
-
 int main(int argc, char ** argv){
     InitGoogleLogging(argv[0]);
     ParseCommandLineFlags(&argc,&argv,true);
-    if(!FLAGS_dryRun) {
-        njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-        if(FLAGS_edgeToEdge) {
-            // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-            typedef Model2EdgeToEdge MG;
+    std::vector<int> fips;
+    njm::fromFile(fips,"data/wns/fips.txt");
+    const int numNodes = fips.size();
+    CHECK_EQ(1128,numNodes);
 
-            typedef MG ME;
+    std::vector< std::vector<int> > obsData;
+    {
+        std::vector<int> obsData_raw;
+        njm::fromFile(obsData_raw,"data/wns/obsData.txt");
 
-            typedef System<MG,ME> S;
-
-            typedef WnsFeatures3<ME> F;
-            typedef RankAgent<F,ME> RA;
-
-            typedef VanillaRunnerNS<S,RA> RR;
-
-            S s("obsData.txt");
-            s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelEst_r = s.modelGen_r;
-            s.revert();
-
-            int numReps = 8;
-            Starts starts("startingLocations.txt");
-
-            RA ra;
-
-            ra.tp.jitterScale = 1.0;
-            ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ra.reset();
-
-            int r = numReps;
-            int t;
-
-            std::cout << "-----" << std::endl;
-            njm::resetSeed(r);
-            for (int i = 0; i < 2; i++) {
-                std::cout << i << ": " << njm::rnorm01()
-                          << " " << njm::runif01() << std::endl;
+        std::vector<int> add;
+        std::vector<int>::const_iterator it,end;
+        it = obsData_raw.begin();
+        end = obsData_raw.end();
+        int count = 0;
+        while(it != end) {
+            add.push_back(*it);
+            ++it;
+            ++count;
+            if (count == numNodes) {
+                obsData.push_back(add);
+                add.clear();
+                count = 0;
             }
-            std::cout << "-----" << std::endl;
-            njm::resetSeed(r);
-            for (int i = 0; i < 2; i++) {
-                std::cout << i << ": " << njm::rnorm01()
-                          << " " << njm::runif01() << std::endl;
-            }
-            // s.reset(starts[r]);
-            // for(t=s.sD.time; t<s.fD.finalT; t++){
-            //     // if (t == 9) {
-            //     //     ra.disect = true;
-            //     // } else {
-            //     ra.disect = false;
-            //     // }
-            //     if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
-            //         ra.applyTrt(s.sD,s.tD,s.fD,s.dD,
-            //                 s.modelEst);
-
-            //     int sumP = 0, sumA = 0;
-            //     for (int i = 0; i < s.fD.numNodes; ++i) {
-            //         if (s.tD.p.at(i))
-            //             sumP += i;
-            //         if (s.tD.a.at(i))
-            //             sumA += i;
-            //     }
-
-            //     s.updateStatus();
-
-            //     s.nextPoint();
-            //     njm::message("\nt: " + njm::toString(t,"",0) +
-            //             "\nvalue: " + njm::toString(s.value(),"",32,28) +
-            //             "\np: " + njm::toString(sumP,"",0) +
-            //             "\na: " + njm::toString(sumA,"",0));
-            // }
-
-
-        } else {
-            // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-            // typedef Model2GravityEDist MG;
-
-            // typedef MG ME;
-
-            // typedef System<MG,ME> S;
-            // typedef NoTrt<ME> NT;
-            // typedef ProximalAgent<ME> PA;
-            // typedef MyopicAgent<ME> MA;
-
-            // typedef WnsFeatures3<ME> F;
-            // typedef RankAgent<F,ME> RA;
-
-            // typedef VanillaRunnerNS<S,NT> RN;
-            // typedef VanillaRunnerNS<S,PA> RP;
-            // typedef VanillaRunnerNS<S,MA> RM;
-            // typedef VanillaRunnerNS<S,RA> RR;
-
-            // S s("obsData.txt");
-            // s.setEdgeToEdge(FLAGS_edgeToEdge);
-            // s.modelEst_r = s.modelGen_r;
-            // s.revert();
-
-            // int numReps = 7;
-            // Starts starts("startingLocations.txt");
-
-            // NT nt;
-            // MA ma;
-            // PA pa;
-            // RP rp;
-
-            // RN rn;
-            // RA ra;
-            // RM rm;
-            // RR rr;
-
-            // pa.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ma.setEdgeToEdge(FLAGS_edgeToEdge);
-            // // ra.reset();
-
-            // double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
-
-            // njm::message(" valNT: " + njm::toString(valNT,"",32,28) +
-            //         "\n" +
-            //         " valPA: " + njm::toString(valPA,"",32,28) +
-            //         "\n" +
-            //         " valMA: " + njm::toString(valMA,"",32,28) +
-            //         "\n" +
-            //         " valRA: " + njm::toString(valRA,"",32,28));
         }
+        CHECK_EQ(0,count);
+    }
 
-        njm::sett.clean();
+    for (int i = 0; i < (obsData.size() - 1); ++i) {
+        for (int j = 0; j < numNodes; ++j) {
+            const int before = obsData.at(i).at(j)/2;
+            const int after = obsData.at(i+1).at(j)/2;
+            CHECK_LE(before,after)
+                << "node " << j << " failed for time point "
+                << i << " to " << i+1;
+        }
     }
 
     return 0;
