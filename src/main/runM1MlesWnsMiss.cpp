@@ -82,9 +82,9 @@ int main(int argc, char ** argv){
                     std::ios_base::app);
         } else {
             // typedef ModelTimeExpCavesGDistTrendPowCon MG;
-            typedef Model2EdgeToEdge MG;
+            typedef Model2GravityEDist MG;
 
-            typedef ModelIntercept ME;
+            typedef ModelEDist ME;
 
             typedef System<MG,ME> S;
 
