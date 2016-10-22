@@ -299,14 +299,19 @@ void System<MG,
     njm::fromFile(fD.centroidsLat,njm::sett.srcExt("centroidsLat.txt"));
     CHECK_EQ(fD.centroidsLat.size(),fD.numNodes);
     njm::fromFile(fD.centroidsMdsLong,njm::sett.srcExt("centroidsMdsLong.txt"));
-    CHECK_EQ(fD.centroidsMdsLong.size(),fD.numNodes);
+    CHECK(fD.centroidsMdsLong.size() == fD.numNodes
+            || fD.centroidsMdsLong.size() == 0);
+
     njm::fromFile(fD.centroidsMdsLat,njm::sett.srcExt("centroidsMdsLat.txt"));
-    CHECK_EQ(fD.centroidsMdsLat.size(),fD.numNodes);
+    CHECK(fD.centroidsMdsLat.size() == fD.numNodes
+            || fD.centroidsMdsLat.size() == 0);
 
     njm::fromFile(fD.subGraph,njm::sett.srcExt("subGraph.txt"));
-    CHECK_EQ(fD.subGraph.size(),fD.numNodes);
+    CHECK(fD.subGraph.size() == fD.numNodes
+            || fD.subGraph.size() == 0);
     njm::fromFile(fD.betweenness,njm::sett.srcExt("betweenness.txt"));
-    CHECK_EQ(fD.betweenness.size(),fD.numNodes);
+    CHECK(fD.betweenness.size() == fD.numNodes
+            || fD.betweenness.size() == 0);
 
     njm::fromFile(fD.priorTrtMean,njm::sett.srcExt("priorTrtMean.txt"));
 
