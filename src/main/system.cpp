@@ -284,13 +284,15 @@ void System<MG,
     njm::fromFile(fD.gDist,njm::sett.srcExt("gDist.txt"));
     CHECK(fD.gDist.size() == fD.numNodes*fD.numNodes
             || fD.gDist.size() == 0); // could be 0 for edge to edge spread
+
     njm::fromFile(fD.caves,njm::sett.srcExt("caves.txt"));
     CHECK_EQ(fD.caves.size(),fD.numNodes);
     njm::fromFile(fD.covar,njm::sett.srcExt("xcov.txt"));
     fD.numCovar = ((int)fD.covar.size())/fD.numNodes;
     CHECK_EQ(fD.numCovar*fD.numNodes,fD.covar.size());
     njm::fromFile(fD.network,njm::sett.srcExt("network.txt"));
-    CHECK_EQ(fD.network.size(),fD.numNodes*fD.numNodes);
+    CHECK(fD.network.size() == fD.numNodes*fD.numNodes
+            || fD.network.size() == 0); // could be 0 for edge to edge spread
 
     njm::fromFile(fD.centroidsLong,njm::sett.srcExt("centroidsLong.txt"));
     CHECK_EQ(fD.centroidsLong.size(),fD.numNodes);
