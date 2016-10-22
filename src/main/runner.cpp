@@ -807,6 +807,18 @@ OptimRunner<System<Model2EdgeToEdge,
 
 
 template class
+OptimRunner<System<Model2GravityEDist,
+                   ModelEDist>,
+            RankAgent<WnsFeatures3<ModelEDist>,
+                      ModelEDist>,
+            M1SpOptim<System<Model2GravityEDist,
+                             ModelEDist>,
+                      RankAgent<WnsFeatures3<ModelEDist>,
+                                ModelEDist>,
+                      ModelEDist> >;
+
+
+template class
 OptimRunner<System<Model2EdgeToEdge,
                    Model2EdgeToEdge>,
             RankAgent<WnsFeatures3<Model2EdgeToEdge>,
