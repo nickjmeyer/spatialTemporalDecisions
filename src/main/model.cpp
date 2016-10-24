@@ -655,9 +655,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-6);
 
     int errorCode = 0;
-    if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE
-            && !(status == GSL_ENOPROG && gradCheck == GSL_SUCCESS
-                    && sD.numInfected == 1)) {
+    if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE) {
         // not successful and should raise an error
         LOG(FATAL)
             << std::endl
