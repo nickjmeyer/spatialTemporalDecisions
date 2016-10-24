@@ -563,7 +563,14 @@ void ModelBase::fit(const std::vector<double> & startingVals,
     if(fitType == MLE || fitType == MLES){
 
         // estimate the MLE
-        estimateMle(startingVals,sD,tD,fD,dD,true);
+        int errorCode = estimateMle(startingVals,sD,tD,fD,dD,false);
+        if (errorCode != 0) {
+            std::vector<double> newStartVec(this->numPars,0.2);
+            // set the intercept (all models have intercept first)
+            newStartVec.at(0) = -3.;
+            errorCode = estimateMle(newStartVec,sD,tD,fD,dD,true);
+        }
+
 
         if(sD.time <= fD.trtStart){
             // if before trt starts, set trt values to prior
