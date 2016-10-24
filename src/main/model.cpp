@@ -668,6 +668,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
             << std::endl
             << "status: " << status << std::endl
             << "iter: " << iter << std::endl
+            << "seed: " << njm::getSeed() << std::endl
             << "numInfected: " << sD.numInfected << std::endl
             << "time: " << sD.time << std::endl
             << "gradient check: "
