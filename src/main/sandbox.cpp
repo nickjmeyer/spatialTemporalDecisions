@@ -127,7 +127,7 @@ int main(int argc, char ** argv){
             T = gsl_multimin_fdfminimizer_vector_bfgs2;
             sfdf = gsl_multimin_fdfminimizer_alloc(T,s.modelEst.numPars);
 
-            gsl_multimin_fdfminimizer_set(sfdf,&my_func,x,0.1,0.05);
+            gsl_multimin_fdfminimizer_set(sfdf,&my_func,x,0.001,0.05);
 
             int iter = 0;
             int status;
@@ -184,6 +184,7 @@ int main(int argc, char ** argv){
             CHECK_EQ(val,both.first);
 
             for (int i = 0; i < s.modelEst.numPars; ++i) {
+                LOG(INFO) << "Checking par " << i;
                 s.modelEst.putPar(par.begin());
 
                 GradientChecker<ME> gc;
