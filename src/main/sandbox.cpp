@@ -107,8 +107,7 @@ int main(int argc, char ** argv){
             }
 
             ////// debug model fitting
-            std::vector<double> startingVals(s.modelEst.numPars,0.2);
-            startingVals.at(0) = -3.0;
+            std::vector<double> startingVals(s.modelEst.getPar());
 
             ModelBaseFitObj fitObj(&s.modelEst,s.sD,s.tD,s.fD,s.dD);
 
