@@ -102,6 +102,31 @@ int main(int argc, char ** argv){
 
             }while(status == GSL_CONTINUE && iter < maxIter);
 
+            std::vector<double> gradVals;
+            for (pi = 0; pi < int(s.modelEst.numPars); ++pi) {
+                gradVals.push_back(gsl_vector_get(sfdf->gradient,pi));
+            }
+
+
+            if (status != GSL_CONTINUE || status != GSL_SUCCESS) {
+                LOG(ERROR)
+                    << std::endl
+                    << "status: " << status << std::endl
+                    << "iter: " << iter << std::endl
+                    << "seed: " << njm::getSeed() << std::endl
+                    << "numInfected: " << s.sD.numInfected << std::endl
+                    << "time: " << s.sD.time << std::endl
+                    << "gradient check: "
+                    << gsl_multimin_test_gradient(sfdf->gradient,0.1)
+                    << std::endl
+                    << "f: " << sfdf->f << std::endl
+                    << "gradient: " << njm::toString(gradVals," ","")
+                    << std::endl
+                    << "starting: " << njm::toString(startingVals," ","")
+                    << std::endl;
+            }
+
+
         }
 
         njm::sett.clean();
