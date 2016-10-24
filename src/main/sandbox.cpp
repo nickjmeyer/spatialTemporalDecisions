@@ -139,6 +139,13 @@ int main(int argc, char ** argv){
                 if(status)
                     break;
 
+                std::vector<double> currentX;
+                for (pi = 0; pi < int(s.modelEst.numPars); ++pi) {
+                    currentX.push_back(gsl_vector_get(sfdf->x,pi));
+                }
+                LOG(INFO) << std::endl
+                          << "par: " << njm::toString(currentX," ","");
+
                 status = gsl_multimin_test_gradient(sfdf->gradient,1e-6);
 
             }while(status == GSL_CONTINUE && iter < maxIter);
