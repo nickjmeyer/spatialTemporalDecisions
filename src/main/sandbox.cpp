@@ -1,9 +1,50 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
+
 #include "runM1Mles.hpp"
+
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_deriv.h>
 
 using namespace google;
 using namespace gflags;
+
+template <typename T>
+class GradientChecker {
+public:
+    System<T,T> * system;
+    T * m;
+    int gradientVar;
+};
+
+template <typename T>
+class HessianChecker {
+public:
+    System<T,T> * system;
+    T * m;
+    int gradientVar;
+    int hessianVar;
+};
+
+template <typename T>
+double f (double x, void * params) {
+    GradientChecker<T> * gc = static_cast<GradientChecker<T>*>(params);
+    std::vector<double> par = gc->m->getPar();
+    par.at(gc->gradientVar) = x;
+    gc->m->putPar(par.begin());
+    return gc->m->logll(gc->system->sD,gc->system->tD,
+            gc->system->fD,gc->system->dD);
+}
+
+template <typename T>
+double fGrad (double x, void * params) {
+    HessianChecker<T> * hc = static_cast<HessianChecker<T>*>(params);
+    std::vector<double> par = hc->m->getPar();
+    par.at(hc->hessianVar) = x;
+    hc->m->putPar(par.begin());
+    return hc->m->logllGrad(hc->system->sD,hc->system->tD,
+            hc->system->fD,hc->system->dD).at(hc->gradientVar);
+}
 
 
 DEFINE_string(srcDir,"","Path to source directory");
@@ -125,6 +166,44 @@ int main(int argc, char ** argv){
                     << "starting: " << njm::toString(startingVals," ","")
                     << std::endl;
             }
+
+
+            /// check gradient
+            std::vector<double> par = s.modelEst.getPar();
+
+            const double val = s.modelEst.logll(s.sD,s.tD,s.fD,s.dD);
+
+            const std::vector<double> gradVal = s.modelEst.logllGrad(
+                    s.sD,s.tD,s.fD,s.dD);
+
+            const std::pair<double,std::vector<double> > both =
+                s.modelEst.logllBoth(s.sD,s.tD,s.fD,s.dD);
+
+            const double eps = 1e-6;
+
+            CHECK_EQ(val,both.first);
+
+            for (int i = 0; i < s.modelEst.numPars; ++i) {
+                s.modelEst.putPar(par.begin());
+
+                GradientChecker<ME> gc;
+                gc.system = &s;
+                gc.m = &s.modelEst;
+                gc.gradientVar = i;
+
+                gsl_function F;
+                F.function = &f<ME>;
+                F.params = &gc;
+
+                double result;
+                double abserr;
+                gsl_deriv_central(&F,par.at(i),1e-8,&result,&abserr);
+
+                CHECK_EQ(gradVal.at(i),both.second.at(i));
+                CHECK_LT(std::abs(result-gradVal.at(i)),eps);
+                CHECK_LT(std::abs(result-both.second.at(i)),eps);
+            }
+
 
 
         }
