@@ -91,11 +91,19 @@ int main(int argc, char ** argv){
 
             int r,t;
 
-            r = 65;
+            r = 6;
             njm::resetSeed(r);
             s.reset(starts[r]);
 
-            for(t=s.sD.time; t<s.fD.trtStart; ++t) {
+            for(t=s.sD.time; t<12; ++t) {
+                if(t>=s.fD.trtStart && s.sD.numNotInfec > 0){
+                    s.modelEst.fit(s.sD,s.tD,s.fD,s.dD,
+                            t > s.fD.trtStart);
+
+                    ma.applyTrt(s.sD,s.tD,s.fD,s.dD,
+                            s.modelEst);
+                }
+
                 s.updateStatus();
 
                 s.nextPoint();
