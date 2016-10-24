@@ -647,8 +647,12 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
+    int gradCheck = gsl_multimin_test_gradient(s->gradient,0.1);
+
     int errorCode = 0;
-    if (status != GSL_SUCCESS && status != GSL_CONTINUE && raiseError) {
+    if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE
+            && !(status == GSL_ENOPROG && gradCheck == GSL_SUCCESS
+                    && sD.numInfected == 1)) {
         // not successful and should raise an error
         LOG(FATAL)
             << std::endl
@@ -657,8 +661,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
             << "seed: " << njm::getSeed() << std::endl
             << "numInfected: " << sD.numInfected << std::endl
             << "time: " << sD.time << std::endl
-            << "gradient check: "
-            << gsl_multimin_test_gradient(s->gradient,0.1) << std::endl
+            << "gradient check: " << gradCheck << std::endl
             << "f: " << s->f << std::endl
             << "gradient: " << njm::toString(gradVals," ","") << std::endl
             << "starting: " << njm::toString(startingVals," ","") << std::endl;
