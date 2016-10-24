@@ -200,8 +200,10 @@ int main(int argc, char ** argv){
                 gsl_deriv_central(&F,par.at(i),1e-8,&result,&abserr);
 
                 CHECK_EQ(gradVal.at(i),both.second.at(i));
-                CHECK_LT(std::abs(result-gradVal.at(i)),eps);
-                CHECK_LT(std::abs(result-both.second.at(i)),eps);
+                CHECK_LT(std::abs(result-gradVal.at(i)),eps)
+                    << "par: " << i << std::endl
+                    << "result: " << result << std::endl
+                    << "gradVal: " << gradVal.at(i) << std::endl;
             }
 
 
