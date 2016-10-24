@@ -650,9 +650,6 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     int errorCode = 0;
     if (status != GSL_SUCCESS && status != GSL_CONTINUE && raiseError) {
         // not successful and should raise an error
-        std::vector< std::vector<int> > h = sD.history;
-        h.push_back(sD.status);
-        njm::toFile(h,njm::sett.datExt("error_history_",".txt"));
         LOG(FATAL)
             << std::endl
             << "status: " << status << std::endl
