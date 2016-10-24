@@ -60,8 +60,47 @@ int main(int argc, char ** argv){
                 s.nextPoint();
             }
 
-            s.modelEst.fit(s.sD,s.tD,s.fD,s.dD,
-                    t > s.fD.trtStart);
+            ////// debug model fitting
+            std::vector<double> startingVals(s.modelEst.numPars,0.2);
+            startingVals.at(0) = -3.0;
+
+            ModelBaseFitObj fitObj(&s.modelEst,s.sD,s.tD,s.fD,s.dD);
+
+            const gsl_multimin_fdfminimizer_type * T;
+            gsl_multimin_fdfminimizer *sfdf;
+
+            gsl_vector * x;
+            x = gsl_vector_alloc(s.modelEst.numPars);
+            int pi;
+            for(pi = 0; pi < int(s.modelEst.numPars); ++pi){
+                gsl_vector_set(x,pi,startingVals.at(pi));
+            }
+
+            gsl_multimin_function_fdf my_func;
+            my_func.n = s.modelEst.numPars;
+            my_func.f = objFn;
+            my_func.df = objFnGrad;
+            my_func.fdf = objFnBoth;
+            my_func.params = &fitObj;
+
+            T = gsl_multimin_fdfminimizer_vector_bfgs2;
+            sfdf = gsl_multimin_fdfminimizer_alloc(T,s.modelEst.numPars);
+
+            gsl_multimin_fdfminimizer_set(sfdf,&my_func,x,0.1,0.05);
+
+            int iter = 0;
+            int status;
+            const int maxIter = 100;
+            do{
+                iter++;
+                status = gsl_multimin_fdfminimizer_iterate(sfdf);
+
+                if(status)
+                    break;
+
+                status = gsl_multimin_test_gradient(sfdf->gradient,1e-6);
+
+            }while(status == GSL_CONTINUE && iter < maxIter);
 
         }
 
