@@ -13,6 +13,7 @@ namespace njm{
 void resetSeed();
 void resetSeed(const int seed);
 void resetSeedAll();
+int getSeed();
 
 
 double runif01();
@@ -61,6 +62,8 @@ protected:
 
     void setSeed(const int source, const int seed);
 
+    int getSeed(const int source);
+
     double genRunif01(const int source);
     // double genRnorm01(const int source);
 
@@ -84,6 +87,7 @@ protected:
     friend void njm::resetSeed();
     friend void njm::resetSeed(const int seed);
     friend void njm::resetSeedAll();
+    friend int njm::getSeed();
 
     friend double njm::runif01();
     friend double njm::rnorm01();

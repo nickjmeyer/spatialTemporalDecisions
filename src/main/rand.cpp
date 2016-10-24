@@ -40,6 +40,11 @@ void RandParr::setSeed(const int source, const int seed){
 }
 
 
+int RandParr::getSeed(const int source){
+    return seeds.at(source);
+}
+
+
 void RandParr::reset(){
     int i;
     for(i = 0; i < numSource; ++i)
@@ -113,6 +118,11 @@ void njm::resetSeed(const int seed){
 
 void njm::resetSeedAll(){
     randParr.reset();
+}
+
+
+int njm::getSeed() {
+    return randParr.getSeed(omp_get_thread_num());
 }
 
 
