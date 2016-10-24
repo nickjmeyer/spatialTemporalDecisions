@@ -643,7 +643,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         if(status)
             break;
 
-        status = gsl_multimin_test_gradient(s->gradient,1e-6);
+        status = gsl_multimin_test_gradient(s->gradient,1e-4);
 
     }while(status == GSL_CONTINUE && iter < maxIter);
 
@@ -652,7 +652,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
-    int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-6);
+    int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-4);
 
     int errorCode = 0;
     if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE) {
