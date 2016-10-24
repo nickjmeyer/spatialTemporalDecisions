@@ -61,10 +61,7 @@ int main(int argc, char ** argv){
                 njm::sett.datExt("edgeToEdge_flag_",".txt"));
 
         if(FLAGS_edgeToEdge) {
-            LOG(FATAL) << "Supposed to debug spatial spread.";
-        } else {
-            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
-            typedef Model2GravityEDist MG;
+            typedef Model2EdgeToEdge MG;
 
             typedef MG ME;
 
@@ -224,6 +221,8 @@ int main(int argc, char ** argv){
             }
 
 
+        } else {
+            LOG(FATAL) << "Supposed to debug edge-to-edge spread.";
 
         }
 
