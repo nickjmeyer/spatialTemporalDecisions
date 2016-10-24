@@ -465,9 +465,10 @@ FitOnlyRunner<S,A>
 
     RunStats rs;
     std::vector<std::vector<double> > valueAll(numReps);
+    std::vector< std::vector<double> > pars;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-    shared(valueAll,starts,rs)                              \
-    firstprivate(system,agent)                              \
+    shared(valueAll,starts,rs)                      \
+    firstprivate(pars,system,agent)                 \
     private(r,t)
     for(r=0; r<numReps; r++){
         njm::resetSeed(r);
@@ -478,10 +479,15 @@ FitOnlyRunner<S,A>
             valueAll.at(r).clear();
             valueAll.at(r).push_back(system.value());
         }
+        pars.clear();
+
         for(t=system.sD.time; t<numPoints; t++){
             if(t>=system.fD.trtStart && system.sD.numNotInfec > 0){
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
+
+                // only save pars after estimating
+                pars.push_back(system.modelEst.getPar());
 
                 agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
                         system.modelEst);
@@ -509,6 +515,14 @@ FitOnlyRunner<S,A>
                         "_history_"+
                         njm::toString(r,"",0,0)
                         +"_",".txt"));
+
+        // write estimated pars to file
+        njm::toFile(njm::toString(pars,"\n","")
+                ,njm::sett.datExt(agent.name+
+                        "_pars_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+
     }
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+
@@ -571,6 +585,7 @@ OptimRunner<S,A,Optim>
     // double value=0;
     int r,t;
     std::vector<std::vector<double> > valueAll(numReps);
+    std::vector<std::vector<double> > pars;
     std::vector<std::vector<double> > weights;
 
     std::vector<int> times(numReps);
@@ -578,9 +593,9 @@ OptimRunner<S,A,Optim>
     // int threads = (omp_get_max_threads() < 16 ? 1 : omp_get_max_threads());
     int threads = omp_get_max_threads();
 
-#pragma omp parallel for num_threads(threads)   \
-    shared(valueAll,tock,tick,starts,rs)        \
-    firstprivate(system,agent,optim,weights)    \
+#pragma omp parallel for num_threads(threads)     \
+    shared(valueAll,tock,tick,starts,rs)          \
+    firstprivate(system,agent,optim,pars,weights) \
     private(r,t,tockR,tickR)
     for(r=0; r<numReps; r++){
         njm::resetSeed(r);
@@ -596,6 +611,7 @@ OptimRunner<S,A,Optim>
             valueAll.at(r).clear();
             valueAll.at(r).push_back(system.value());
         }
+        pars.clear();
         weights.clear();
 
         // begin rep r
@@ -605,6 +621,9 @@ OptimRunner<S,A,Optim>
                 system.modelEst.fit(system.sD,system.tD,system.fD,system.dD,
                         t > system.fD.trtStart);
                 // njm::timer.stop("fit");
+
+                // only save pars after estimating
+                pars.push_back(system.modelEst.getPar());
 
                 // njm::timer.start("optim");
                 optim.optim(system,agent);
@@ -649,6 +668,14 @@ OptimRunner<S,A,Optim>
                         "_history_"+
                         njm::toString(r,"",0,0)
                         +"_",".txt"));
+
+        // write estimated pars to file
+        njm::toFile(njm::toString(pars,"\n","")
+                ,njm::sett.datExt(agent.name+"_"+optim.name+
+                        "_pars_"+
+                        njm::toString(r,"",0,0)
+                        +"_",".txt"));
+
         // write weights
         njm::toFile(njm::toString(weights,"\n","")
                 ,njm::sett.datExt(agent.name+"_"+optim.name+
