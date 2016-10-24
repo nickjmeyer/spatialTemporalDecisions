@@ -533,6 +533,11 @@ void ModelBase::fit(const SimData & sD, const TrtData & tD,
         const bool init){
     if(init){
         std::vector<double> currPar = getPar();
+        // penalize pars
+        std::for_each(currPar.begin(),currPar.end(),
+                [](double & x){
+                    x *= 0.25;
+                });
         fit(currPar,sD,tD,fD,dD);
     }
     else{
