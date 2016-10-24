@@ -201,7 +201,8 @@ int main(int argc, char ** argv){
 
                 CHECK_EQ(gradVal.at(i),both.second.at(i));
                 CHECK_LT(std::abs(result-gradVal.at(i)),eps)
-                    << "par: " << i << std::endl
+                    << "index: " << i << std::endl
+                    << "par: " << njm::toString(par," ","") << std::endl
                     << "result: " << result << std::endl
                     << "gradVal: " << gradVal.at(i) << std::endl;
             }
