@@ -638,11 +638,11 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     T = gsl_multimin_fdfminimizer_vector_bfgs2;
     s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
 
-    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.005,0.1);
+    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.01,0.1);
 
     int iter = 0;
     int status;
-    const int maxIter = 200;
+    const int maxIter = 100;
     do{
         iter++;
         status = gsl_multimin_fdfminimizer_iterate(s);
