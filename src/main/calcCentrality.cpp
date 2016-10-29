@@ -54,33 +54,33 @@ void getSubGraph(int nodes, std::vector<int> const * const network,
 }
 
 
-void getSubGraphEig(int nodes, std::vector<int> const * const network,
-		    std::vector<double> * const subGraph, int const deg){
-    Eigen::SparseMatrix<double> armaNet(nodes,nodes);
-    int i,j;
-    for(i=0; i<nodes; i++)
-        for(j=i; j<nodes; j++)
-            if(network->at(i*nodes + j)){
-                armaNet.insert(i,j)=1;
-                if(i!=j)
-                    armaNet.insert(j,i)=1;
-            }
+// void getSubGraphEig(int nodes, std::vector<int> const * const network,
+// 		    std::vector<double> * const subGraph, int const deg){
+//     Eigen::SparseMatrix<double> armaNet(nodes,nodes);
+//     int i,j;
+//     for(i=0; i<nodes; i++)
+//         for(j=i; j<nodes; j++)
+//             if(network->at(i*nodes + j)){
+//                 armaNet.insert(i,j)=1;
+//                 if(i!=j)
+//                     armaNet.insert(j,i)=1;
+//             }
 
-    Eigen::SparseMatrix<double> prod(nodes,nodes);
-    Eigen::VectorXd diag;
-    prod.setIdentity();
+//     Eigen::SparseMatrix<double> prod(nodes,nodes);
+//     Eigen::VectorXd diag;
+//     prod.setIdentity();
 
-    subGraph->resize(nodes);
-    std::fill(subGraph->begin(),subGraph->end(),0);
-    for(i=0; i<deg; i++){
-        prod=prod*armaNet;
-        prod/=(double(i+1));
+//     subGraph->resize(nodes);
+//     std::fill(subGraph->begin(),subGraph->end(),0);
+//     for(i=0; i<deg; i++){
+//         prod=prod*armaNet;
+//         prod/=(double(i+1));
 
-        diag=prod.diagonal();
-        for(j=0; j<nodes; j++)
-            subGraph->at(j)+=diag(j);
-    }
-}
+//         diag=prod.diagonal();
+//         for(j=0; j<nodes; j++)
+//             subGraph->at(j)+=diag(j);
+//     }
+// }
 
 
 

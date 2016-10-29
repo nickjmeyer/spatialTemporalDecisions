@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <numeric>
-#include <eigen3/Eigen/Sparse>
 #include <gsl/gsl_multimin.h>
 #include "utilities.hpp"
 #include "rand.hpp"

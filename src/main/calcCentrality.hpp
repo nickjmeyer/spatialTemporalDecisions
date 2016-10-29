@@ -7,14 +7,14 @@
 #include <string>
 #include <list>
 #include <armadillo>
-#include <eigen3/Eigen/Sparse>
+// #include <eigen3/Eigen/Sparse>
 
 void getSubGraph(int nodes, std::vector<int> const * const network,
         std::vector<double> * const subGraph);
 void getSubGraph(int nodes, std::vector<int> const * const network,
         std::vector<double> * const subGraph, int const deg);
-void getSubGraphEig(int nodes, std::vector<int> const * const network,
-		    std::vector<double> * const subGraph, int const deg);
+// void getSubGraphEig(int nodes, std::vector<int> const * const network,
+// 		    std::vector<double> * const subGraph, int const deg);
 void getBetweenness(int nodes, std::vector<int> const * const network,
         std::vector<double> * const btwn);
 

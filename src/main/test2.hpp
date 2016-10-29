@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <numeric>
-#include <eigen3/Eigen/Sparse>
 #include "utilities.hpp"
 #include "rand.hpp"
 #include "data.hpp"

@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <algorithm>
-#include <eigen3/Eigen/Eigen>
 #include <string>
 #include <boost/filesystem.hpp>
 #include "data.hpp"
