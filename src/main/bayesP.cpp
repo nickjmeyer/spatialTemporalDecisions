@@ -527,7 +527,12 @@ void runBayesPOos(const std::string & file, const int obs,
 
         S s;
         s.setEdgeToEdge(edgeToEdge);
-        Starts starts(baseHObs.at(baseHObs.size()-1));
+        std::vector<int> startVec;
+        for (int i = 0; i < sObs.fD.numNodes; ++i) {
+            if(baseHObs.at(baseHObs.size() - 1).at(i) >= 2)
+                startVec.push_back(i);
+        }
+        Starts starts(startVec);
         s.modelGen_r = sObs.modelGen_r;
         s.modelEst_r = s.modelGen_r;
         int r,t,R,T;
@@ -577,7 +582,12 @@ void runBayesPOos(const std::string & file, const int obs,
 
         S s;
         s.setEdgeToEdge(edgeToEdge);
-        Starts starts(baseHObs.at(baseHObs.size() - 1));
+        std::vector<int> startVec;
+        for (int i = 0; i < sObs.fD.numNodes; ++i) {
+            if(baseHObs.at(baseHObs.size() - 1).at(i) >= 2)
+                startVec.push_back(i);
+        }
+        Starts starts(startVec);
         s.modelGen_r = sObs.modelGen_r;
         s.modelGen_r.setFisher(sObs.sD,sObs.tD,sObs.fD,sObs.dD);
         s.modelEst_r = s.modelGen_r;
