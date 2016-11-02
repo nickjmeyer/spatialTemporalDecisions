@@ -5,13 +5,10 @@
 #include <armadillo>
 #include <cmath>
 #include <gsl/gsl_multimin.h>
-#include <dlib/optimization.h>
 #include <boost/filesystem.hpp>
 #include "data.hpp"
 #include "settings.hpp"
 #include "param.hpp"
-
-typedef dlib::matrix<double,0,1> dlib_column_vector;
 
 enum Estimation {INVALID = -1, MLE = 0, MLES = 1, MCMC = 2};
 
@@ -206,32 +203,6 @@ double objFn(const gsl_vector * x, void * params);
 void objFnGrad(const gsl_vector * x, void * params,gsl_vector * g);
 
 void objFnBoth(const gsl_vector * x, void * params, double * f, gsl_vector * g);
-
-
-
-class ModelBaseFitObjDlib {
-public:
-
-    ModelBaseFitObjDlib(ModelBase * const mb,
-            const SimData sD,
-            const TrtData tD,
-            const FixedData fD,
-            const DynamicData dD);
-
-    ModelBase * mb;
-    SimData sD;
-    TrtData tD;
-    FixedData fD;
-    DynamicData dD;
-    double normalizer;
-
-    double objFn(const dlib_column_vector & x);
-
-    const dlib_column_vector objFnGrad(
-            const dlib_column_vector & x);
-};
-
-
 
 
 
