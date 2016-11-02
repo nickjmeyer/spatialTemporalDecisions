@@ -621,138 +621,84 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         throw(1);
     }
 
-    ModelBaseFitObjDlib fitObj(this,sD,tD,fD,dD);
+    ModelBaseFitObj fitObj(this,sD,tD,fD,dD);
 
-    dlib_column_vector x_init(this->numPars);
-    for (unsigned int i = 0; i < this->numPars; ++i) {
-        x_init(i) = startingVals.at(i);
+    const gsl_multimin_fdfminimizer_type * T;
+    gsl_multimin_fdfminimizer *s;
+
+    gsl_vector * x;
+    x = gsl_vector_alloc(this->numPars);
+    int pi;
+    for(pi = 0; pi < int(this->numPars); ++pi){
+        gsl_vector_set(x,pi,startingVals.at(pi));
     }
 
-    const double min_init = dlib::find_min(dlib::bfgs_search_strategy(),
-            dlib::objective_delta_stop_strategy(1e-8,100).be_verbose(),
-            [&](const dlib_column_vector & x) {
-                return fitObj.objFn(x);
-            },
-            [&](const dlib_column_vector & x) {
-                return fitObj.objFnGrad(x);
-            },
-            x_init,-1);
+    gsl_multimin_function_fdf my_func;
+    my_func.n = this->numPars;
+    my_func.f = objFn;
+    my_func.df = objFnGrad;
+    my_func.fdf = objFnBoth;
+    my_func.params = &fitObj;
 
-    dlib_column_vector x_raw(this->numPars);
+    T = gsl_multimin_fdfminimizer_vector_bfgs2;
+    s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
 
-    for (unsigned int i = 0; i < this->numPars; ++i) {
-        x_raw(i) = 0.2;
-    }
-    x_raw(0) = -3.0;
+    gsl_multimin_fdfminimizer_set(s,&my_func,x,0.005,0.1);
 
-    const double min_raw = dlib::find_min(dlib::bfgs_search_strategy(),
-            dlib::objective_delta_stop_strategy(1e-8,100).be_verbose(),
-            [&](const dlib_column_vector & x) {
-                return fitObj.objFn(x);
-            },
-            [&](const dlib_column_vector & x) {
-                return fitObj.objFnGrad(x);
-            },
-            x_raw,-1);
+    int iter = 0;
+    int status;
+    const int maxIter = 100;
+    do{
+        iter++;
+        status = gsl_multimin_fdfminimizer_iterate(s);
 
-    std::vector<double> best_par(this->numPars);
-    if (min_raw < min_init) {
-        // raw is better
-        for (unsigned int i = 0; i < this->numPars; ++i) {
-            best_par.at(i) = x_raw(i);
-        }
-    } else {
-        // init is better
-        for (unsigned int i = 0; i < this->numPars; ++i) {
-            best_par.at(i) = x_init(i);
-        }
+        if(status)
+            break;
+
+        status = gsl_multimin_test_gradient(s->gradient,1e-3);
+
+    }while(status == GSL_CONTINUE && iter < maxIter);
+
+    std::vector<double> gradVals;
+    for (pi = 0; pi < int(numPars); ++pi) {
+        gradVals.push_back(gsl_vector_get(s->gradient,pi));
     }
 
-    // for dlib, no need to pass up errors
+    int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-6);
+
     int errorCode = 0;
+    if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE) {
+        // not successful and should raise an error
+        LOG(FATAL)
+            << std::endl
+            << "status: " << status << std::endl
+            << "iter: " << iter << std::endl
+            << "seed: " << njm::getSeed() << std::endl
+            << "numInfected: " << sD.numInfected << std::endl
+            << "time: " << sD.time << std::endl
+            << "gradient check: " << gradCheck << std::endl
+            << "f: " << s->f << std::endl
+            << "gradient: " << njm::toString(gradVals," ","") << std::endl
+            << "starting: " << njm::toString(startingVals," ","") << std::endl;
+        errorCode = 1;
+    } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
+        // not successful and should not raise an error
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
+        errorCode = 2;
+    } else {
+        // successful
+        std::vector<double> mle;
+        for(pi = 0; pi < int(numPars); ++pi){
+            mle.push_back(gsl_vector_get(s->x,pi));
+        }
 
+        this->putPar(mle.begin());
 
-    ///////////////////////////////////
-    // old GSL code
-    ///////////////////////////////////
-    // ModelBaseFitObj fitObj(this,sD,tD,fD,dD);
-
-    // const gsl_multimin_fdfminimizer_type * T;
-    // gsl_multimin_fdfminimizer *s;
-
-    // gsl_vector * x;
-    // x = gsl_vector_alloc(this->numPars);
-    // int pi;
-    // for(pi = 0; pi < int(this->numPars); ++pi){
-    //     gsl_vector_set(x,pi,startingVals.at(pi));
-    // }
-
-    // gsl_multimin_function_fdf my_func;
-    // my_func.n = this->numPars;
-    // my_func.f = objFn;
-    // my_func.df = objFnGrad;
-    // my_func.fdf = objFnBoth;
-    // my_func.params = &fitObj;
-
-    // T = gsl_multimin_fdfminimizer_vector_bfgs2;
-    // s = gsl_multimin_fdfminimizer_alloc(T,this->numPars);
-
-    // gsl_multimin_fdfminimizer_set(s,&my_func,x,0.005,0.1);
-
-    // int iter = 0;
-    // int status;
-    // const int maxIter = 100;
-    // do{
-    //     iter++;
-    //     status = gsl_multimin_fdfminimizer_iterate(s);
-
-    //     if(status)
-    //         break;
-
-    //     status = gsl_multimin_test_gradient(s->gradient,1e-6);
-
-    // }while(status == GSL_CONTINUE && iter < maxIter);
-
-    // std::vector<double> gradVals;
-    // for (pi = 0; pi < int(numPars); ++pi) {
-    //     gradVals.push_back(gsl_vector_get(s->gradient,pi));
-    // }
-
-    // int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-6);
-
-    // int errorCode = 0;
-    // if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE) {
-    //     // not successful and should raise an error
-    //     LOG(FATAL)
-    //         << std::endl
-    //         << "status: " << status << std::endl
-    //         << "iter: " << iter << std::endl
-    //         << "seed: " << njm::getSeed() << std::endl
-    //         << "numInfected: " << sD.numInfected << std::endl
-    //         << "time: " << sD.time << std::endl
-    //         << "gradient check: " << gradCheck << std::endl
-    //         << "f: " << s->f << std::endl
-    //         << "gradient: " << njm::toString(gradVals," ","") << std::endl
-    //         << "starting: " << njm::toString(startingVals," ","") << std::endl;
-    //     errorCode = 1;
-    // } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
-    //     // not successful and should not raise an error
-    //     gsl_multimin_fdfminimizer_free(s);
-    //     gsl_vector_free(x);
-    //     errorCode = 2;
-    // } else {
-    //     // successful
-    //     std::vector<double> mle;
-    //     for(pi = 0; pi < int(numPars); ++pi){
-    //         mle.push_back(gsl_vector_get(s->x,pi));
-    //     }
-
-    //     this->putPar(mle.begin());
-
-    //     gsl_multimin_fdfminimizer_free(s);
-    //     gsl_vector_free(x);
-    //     errorCode = 0;
-    // }
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
+        errorCode = 0;
+    }
     return errorCode;
 }
 
