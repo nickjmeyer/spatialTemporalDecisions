@@ -624,7 +624,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     }
 
     const double min_init = dlib::find_min(dlib::bfgs_search_strategy(),
-            dlib::objective_delta_stop_strategy(1e-8,100).be_verbose(),
+            dlib::objective_delta_stop_strategy(1e-8,100),
             [&](const dlib_column_vector & x) {
                 return fitObj.objFn(x);
             },
@@ -641,7 +641,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     x_raw(0) = -3.0;
 
     const double min_raw = dlib::find_min(dlib::bfgs_search_strategy(),
-            dlib::objective_delta_stop_strategy(1e-8,100).be_verbose(),
+            dlib::objective_delta_stop_strategy(1e-8,100),
             [&](const dlib_column_vector & x) {
                 return fitObj.objFn(x);
             },
