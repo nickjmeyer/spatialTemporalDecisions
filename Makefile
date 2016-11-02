@@ -70,7 +70,7 @@ CPP_FLAGS+= -O3
 endif
 
 LD_FLAGS:=$(LD_FLAGS) -L$(BUILDDIR) -lgsl -larmadillo -lgtest -lglog -lpthread \
--lboost_system -lboost_filesystem -lgit2 -lgflags
+-lboost_system -lboost_filesystem -lgit2 -lgflags -ldlib -lblas
 
 ## rules
 
