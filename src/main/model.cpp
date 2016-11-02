@@ -162,9 +162,11 @@ void ModelBase::infProbs(const SimData & sD,
             prob=1.0;
             for(j = 0; j < sD.numInfected; ++j){
                 const int jNode = sD.infected[j];
-                if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+                if((this->getEdgeToEdge()
+                                && fD.network.at(iNode*fD.numNodes + jNode))
                         || !this->getEdgeToEdge()) {
-                    prob *= 1.0 / (1.0 + std::exp(probs[iNode*fD.numNodes + jNode]));
+                    prob *= 1.0 / (1.0 +
+                            std::exp(probs[iNode*fD.numNodes + jNode]));
                 }
             }
             expitInfProbs[i] = 1.0-prob;
@@ -204,9 +206,11 @@ void ModelBase::revProbs(const SimData & sD,
             prob=1.0;
             for(j = 0; j < sD.numNotInfec; ++j) {
                 const int jNode = sD.notInfec[j];
-                if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+                if((this->getEdgeToEdge()
+                                && fD.network.at(iNode*fD.numNodes + jNode))
                         || !this->getEdgeToEdge()){
-                    prob *= 1.0 / (1.0 + std::exp(probs[iNode*fD.numNodes + jNode]));
+                    prob *= 1.0 / (1.0 +
+                            std::exp(probs[iNode*fD.numNodes + jNode]));
                 }
             }
             expitRevProbs[i] = 1.0-prob;
@@ -292,7 +296,8 @@ void ModelBase::setQuick(const SimData & sD,
         pK = iNode*fD.numNodes;
         for(j = 0; j < sD.numInfected; ++j,++k){
             const int jNode = sD.infected[j];
-            if((this->getEdgeToEdge() && fD.network.at(iNode*fD.numNodes + jNode))
+            if((this->getEdgeToEdge()
+                            && fD.network.at(iNode*fD.numNodes + jNode))
                     || !this->getEdgeToEdge()){
                 quick[k] = 1.0/(1.0 + std::exp(probs[pK + jNode]));
             } else {
