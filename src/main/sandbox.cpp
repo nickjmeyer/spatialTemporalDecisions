@@ -259,20 +259,21 @@ int main(int argc, char ** argv){
             NT nt;
 
             int r,t;
-            r = 12;
 
-            njm::resetSeed();
-            s.reset(starts[r]);
-            for(t=s.sD.time; t<s.fD.finalT; t++){
-                if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
-                    nt.applyTrt(s.sD,s.tD,s.fD,s.dD,
-                            s.modelEst);
+            for(r=0; r<numReps; r++){
+                njm::resetSeed(r);
+                s.reset(starts[r]);
+                for(t=s.sD.time; t<s.fD.finalT; t++){
+                    if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
+                        nt.applyTrt(s.sD,s.tD,s.fD,s.dD,
+                                s.modelEst);
 
-                s.updateStatus();
+                    s.updateStatus();
 
-                s.nextPoint();
+                    s.nextPoint();
 
-                std::cout << t << ": "
+                }
+                std::cout << r << ": "
                           << std::setprecision(17) << s.value()
                           << std::endl;
             }
