@@ -252,7 +252,7 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 125;
+            int numReps = 1;
             Starts starts(numReps,s.fD.numNodes);
 
             RN rn;
