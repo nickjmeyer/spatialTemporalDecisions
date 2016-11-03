@@ -2,6 +2,7 @@ find_package(Boost COMPONENTS system filesystem thread REQUIRED)
 find_package(GSL REQUIRED)
 find_package(Armadillo REQUIRED)
 find_package(Glog REQUIRED)
+find_package(GFlags REQUIRED)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -18,10 +19,12 @@ add_library(spatioTemporalDecisions agent.cpp allAgent.cpp bayesP.cpp
    randomAgent.cpp rankAgent.cpp runM1Mles.cpp runM1MlesMiss.cpp
    runM1MlesWns.cpp runM1MlesWnsMiss.cpp runner.cpp runStats.cpp
    sandbox.cpp settings.cpp sortMerge.cpp starts.cpp system.cpp
-   test.cpp timer.cpp toyFeatures5.cpp tuneGen.cpp tuneGenWNS.cpp
+   timer.cpp toyFeatures5.cpp tuneGen.cpp tuneGenWNS.cpp
    tuneParam.cpp utilities.cpp wnsFeatures3.cpp)
 
 foreach(exec_var tuneGen tuneGenWNS)
   add_executable(${exec_var} ${exec_var}.cpp)
-  target_link_libraries(${exec_var} spatioTemporalDecisions)
+  target_link_libraries(${exec_var} spatioTemporalDecisions ${Boost_LIBRARIES}
+    ${GLOG_LIBRARIES} ${GFLAGS_LIBRARIES} ${GSL_LIBRARIES}
+    ${ARMADILLO_LIBRARIES})
 endforeach(exec_var)
