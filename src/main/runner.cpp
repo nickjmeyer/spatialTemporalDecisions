@@ -22,7 +22,7 @@ TrainRunner<S,A>
 
             system.nextPoint();
         }
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
     return rs;
@@ -69,7 +69,7 @@ PlainRunner<S,A>
             // njm::timer.stop("plain nextPoint");
         }
 
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
 
@@ -214,7 +214,7 @@ VanillaRunner<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -323,8 +323,8 @@ VanillaRunnerNS<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
             vals.at(r) = system.value();
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -521,7 +521,7 @@ FitOnlyRunner<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -666,7 +666,7 @@ OptimRunner<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -953,7 +953,7 @@ OptimRunnerNS<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -1004,7 +1004,7 @@ TuneRunner<S,A,Optim>
         }
         // end rep r
 
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
 
@@ -1241,7 +1241,7 @@ TestRunner<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
