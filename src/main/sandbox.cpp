@@ -8,15 +8,7 @@ using namespace gflags;
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
-DEFINE_string(outDir,"","Path to save parameters");
 DEFINE_bool(dryRun,false,"Do not execute main");
-
-template <typename T>
-void copyParams(const boost::filesystem::path path) {
-    System<T,T> s;
-    s.modelGen_r.read();
-    s.modelGen_r.save_to(path);
-}
 
 // double getDPow(const double & power, const double & alpha,
 //   const std::vector<double> & caves){
@@ -60,7 +52,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
     int above = int(val > goal);
     int iter = 0;
 
-    printf("Iter: %05d  >>>  Current value: %g\n",
+    printf("Iter: %05d  >>>  Current value: %.17g\n",
             ++iter, val);
 
     while(std::abs(val - goal) > tol){
@@ -102,7 +94,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
 
         val = rn.run(s,nt,numReps,numYears,starts).sMean();
-        printf("Iter: %05d  >>>  Current value: %g  (%g)\n",
+        printf("Iter: %05d  >>>  Current value: %.17g  (%.17g)\n",
                 ++iter, val, scale);
         // std::cout << std::endl
         //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
@@ -151,7 +143,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
     int iter = 0;
 
 
-    printf("Iter: %05d  >>>  Curr value: %g  ===  Curr Trt: %g\n",
+    printf("Iter: %05d  >>>  Curr value: %.17g  ===  Curr Trt: %.17g\n",
             ++iter, val, trt);
 
     while(std::abs(val - goal) > tol){
@@ -184,7 +176,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
 
         val = rm.run(s,ma,numReps,numYears,starts).sMean();
-        printf("Iter: %05d  >>>  Curr value: %g  ===  Curr Trt: %g\n",
+        printf("Iter: %05d  >>>  Curr value: %.17g  ===  Curr Trt: %.17g\n",
                 ++iter, val, trt);
         fflush(stdout);
     }
@@ -228,11 +220,7 @@ int main(int argc, char ** argv){
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-        const boost::filesystem::path path(FLAGS_outDir);
-
         if(FLAGS_edgeToEdge) {
-            copyParams<Model2EdgeToEdge>(path);
-
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
             typedef Model2EdgeToEdge MG;
@@ -309,8 +297,6 @@ int main(int argc, char ** argv){
                     " valAA: " + njm::toString(valAA,""));
 
         } else {
-            copyParams<Model2GravityEDist>(path);
-
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
             typedef Model2GravityEDist MG;
