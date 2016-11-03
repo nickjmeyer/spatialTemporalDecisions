@@ -304,6 +304,7 @@ void runBayesP(const std::string & file, const int obs,
         int r,t,R,T;
         R = numStats;
         T = sObs.sD.time;
+        std::vector< std::vector<double> > avgInf;
         for(r = 0; r < R; ++r){
             s.modelGen_r.mcmc.samples.setRand();
             par = s.modelGen_r.mcmc.samples.getPar();
@@ -317,6 +318,29 @@ void runBayesP(const std::string & file, const int obs,
             h = s.sD.history;
             h.push_back(s.sD.status);
 
+            // store average infections
+            if (avgInf.size() == 0) {
+                // init
+                avgInf.resize(h.size());
+                for (int i = 0; i < h.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (h.at(i).at(j) >= 2) {
+                            avgInf.at(i).push_back(1./R);
+                        } else {
+                            avgInf.at(i).push_back(0.);
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < h.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (h.at(i).at(j) >= 2) {
+                            avgInf.at(i).at(j) += 1./R;
+                        }
+                    }
+                }
+            }
+
             stats.push_back(getStats(h,s.sD,s.fD));
         }
 
@@ -324,6 +348,9 @@ void runBayesP(const std::string & file, const int obs,
                         +edgeExt+"_",".txt"),std::ios_base::out);
         njm::toFile(njm::toString(stats,"\n",""),
                 njm::sett.datExt("sampStats_mean_"+file+"_"+edgeExt+"_",
+                        ".txt"));
+        njm::toFile(njm::toString(avgInf,"\n",""),
+                njm::sett.datExt("sampStats_mean_avgInf_"+file+"_"+edgeExt+"_",
                         ".txt"));
     }
 
@@ -348,6 +375,7 @@ void runBayesP(const std::string & file, const int obs,
         int r,t,R,T;
         R = numStats;
         T = sObs.sD.time;
+        std::vector< std::vector<double> > avgInf;
         for(r = 0; r < R; ++r){
             s.modelGen_r.sample(true);
             std::vector<double> par = s.modelGen_r.getPar();
@@ -360,6 +388,31 @@ void runBayesP(const std::string & file, const int obs,
             h = s.sD.history;
             h.push_back(s.sD.status);
 
+
+            // store average infections
+            if (avgInf.size() == 0) {
+                // init
+                avgInf.resize(h.size());
+                for (int i = 0; i < h.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (h.at(i).at(j) >= 2) {
+                            avgInf.at(i).push_back(1./R);
+                        } else {
+                            avgInf.at(i).push_back(0.);
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < h.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (h.at(i).at(j) >= 2) {
+                            avgInf.at(i).at(j) += 1./R;
+                        }
+                    }
+                }
+            }
+
+
             stats.push_back(getStats(h,s.sD,s.fD));
         }
 
@@ -367,6 +420,10 @@ void runBayesP(const std::string & file, const int obs,
                         +edgeExt+"_",".txt"),std::ios_base::out);
         njm::toFile(njm::toString(stats,"\n",""),
                 njm::sett.datExt("sampStats_mle_"+file+"_"+edgeExt+"_",".txt"));
+        njm::toFile(njm::toString(avgInf,"\n",""),
+                njm::sett.datExt("sampStats_mle_avgInf_"+file+"_"+edgeExt+"_",
+                        ".txt"));
+
     }
 
 
@@ -538,6 +595,7 @@ void runBayesPOos(const std::string & file, const int obs,
         int r,t,R,T;
         R = numStats;
         T = newHObs.size();
+        std::vector< std::vector<double> > avgInf;
         for(r = 0; r < R; ++r){
             s.modelGen_r.mcmc.samples.setRand();
             par = s.modelGen_r.mcmc.samples.getPar();
@@ -556,6 +614,30 @@ void runBayesPOos(const std::string & file, const int obs,
                 newHSim.push_back(s.sD.status);
             }
 
+            // store average infections
+            if (avgInf.size() == 0) {
+                // init
+                avgInf.resize(newHSim.size());
+                for (int i = 0; i < newHSim.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (newHSim.at(i).at(j) >= 2) {
+                            avgInf.at(i).push_back(1./R);
+                        } else {
+                            avgInf.at(i).push_back(0.);
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < newHSim.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (newHSim.at(i).at(j) >= 2) {
+                            avgInf.at(i).at(j) += 1./R;
+                        }
+                    }
+                }
+            }
+
+
             CHECK_EQ(newHSim.size(),2);
             stats.push_back(getStatsOos(baseHObs,newHSim,s.fD));
         }
@@ -565,6 +647,11 @@ void runBayesPOos(const std::string & file, const int obs,
         njm::toFile(njm::toString(stats,"\n",""),
                 njm::sett.datExt("sampStats_mean_Oos_"+file+"_"+edgeExt+"_",
                         ".txt"));
+
+        njm::toFile(njm::toString(avgInf,"\n",""),
+                njm::sett.datExt("sampStats_mean_Oos_avgInf_"+file+"_"+
+                        edgeExt+"_",".txt"));
+
     }
 
 
@@ -594,6 +681,7 @@ void runBayesPOos(const std::string & file, const int obs,
         int r,t,R,T;
         R = numStats;
         T = newHObs.size();
+        std::vector< std::vector<double> > avgInf;
         for(r = 0; r < R; ++r){
             s.modelGen_r.sample(true);
             std::vector<double> par = s.modelGen_r.getPar();
@@ -611,6 +699,30 @@ void runBayesPOos(const std::string & file, const int obs,
                 newHSim.push_back(s.sD.status);
             }
 
+            // store average infections
+            if (avgInf.size() == 0) {
+                // init
+                avgInf.resize(newHSim.size());
+                for (int i = 0; i < newHSim.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (newHSim.at(i).at(j) >= 2) {
+                            avgInf.at(i).push_back(1./R);
+                        } else {
+                            avgInf.at(i).push_back(0.);
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < newHSim.size(); ++i) {
+                    for (int j = 0; j < s.fD.numNodes; ++j) {
+                        if (newHSim.at(i).at(j) >= 2) {
+                            avgInf.at(i).at(j) += 1./R;
+                        }
+                    }
+                }
+            }
+
+
             CHECK_EQ(newHSim.size(),2);
             stats.push_back(getStatsOos(baseHObs,newHSim,s.fD));
         }
@@ -620,6 +732,11 @@ void runBayesPOos(const std::string & file, const int obs,
         njm::toFile(njm::toString(stats,"\n",""),
                 njm::sett.datExt("sampStats_mle_Oos_"+file+"_"+edgeExt+"_",
                         ".txt"));
+
+        njm::toFile(njm::toString(avgInf,"\n",""),
+                njm::sett.datExt("sampStats_mle_Oos_avgInf_"+file+"_"
+                        +edgeExt+"_",".txt"));
+
     }
 
 
