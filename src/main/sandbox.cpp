@@ -1,57 +1,226 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
-
-#include "runM1Mles.hpp"
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_deriv.h>
-
-#include <dlib/optimization.h>
+#include "tuneGen.hpp"
 
 using namespace google;
 using namespace gflags;
 
-template <typename T>
-class GradientChecker {
-public:
-    System<T,T> * system;
-    T * m;
-    int gradientVar;
-};
-
-template <typename T>
-class HessianChecker {
-public:
-    System<T,T> * system;
-    T * m;
-    int gradientVar;
-    int hessianVar;
-};
-
-template <typename T>
-double f (double x, void * params) {
-    GradientChecker<T> * gc = static_cast<GradientChecker<T>*>(params);
-    std::vector<double> par = gc->m->getPar();
-    par.at(gc->gradientVar) = x;
-    gc->m->putPar(par.begin());
-    return gc->m->logll(gc->system->sD,gc->system->tD,
-            gc->system->fD,gc->system->dD);
-}
-
-template <typename T>
-double fGrad (double x, void * params) {
-    HessianChecker<T> * hc = static_cast<HessianChecker<T>*>(params);
-    std::vector<double> par = hc->m->getPar();
-    par.at(hc->hessianVar) = x;
-    hc->m->putPar(par.begin());
-    return hc->m->logllGrad(hc->system->sD,hc->system->tD,
-            hc->system->fD,hc->system->dD).at(hc->gradientVar);
-}
-
 
 DEFINE_string(srcDir,"","Path to source directory");
 DEFINE_bool(edgeToEdge,false,"Edge to edge transmission");
+DEFINE_string(outDir,"","Path to save parameters");
 DEFINE_bool(dryRun,false,"Do not execute main");
+
+template <typename T>
+void copyParams(const boost::filesystem::path path) {
+    System<T,T> s;
+    s.modelGen_r.read();
+    s.modelGen_r.save_to(path);
+}
+
+// double getDPow(const double & power, const double & alpha,
+//   const std::vector<double> & caves){
+//   double meanCaves = std::accumulate(caves.begin(),caves.end(),0);
+//   meanCaves /= double(caves.size());
+
+//   double dPow = std::log(2.0)*std::pow(meanCaves,2.0*std::exp(power))/alpha;
+//   dPow += 1.0;
+//   dPow = std::log(dPow);
+//   dPow /= std::log(2.0);
+
+//   return(dPow);
+// }
+
+
+
+
+
+template <class S, class NT,class RN, class MG>
+double TuneGenNT(S s, const int numReps, const Starts & starts){
+    NT nt;
+    RN rn;
+
+    double goal = 0.7;
+    njm::message("Goal: " + njm::toString(goal,""));
+
+    int numYears = s.fD.finalT;
+    double tol = 1e-3;
+
+    // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+    //     s.modelGen_r.getPar({"alpha"})[0],
+    //     s.fD.caves));
+
+    std::vector<double> par = s.modelGen_r.getPar();
+    s.modelEst_r.putPar(par.begin());
+    s.revert();
+
+
+    double val = rn.run(s,nt,numReps,numYears,starts).sMean();
+    double scale = 1.025, shrink = .9;
+    int above = int(val > goal);
+    int iter = 0;
+
+    printf("Iter: %05d  >>>  Current value: %08.6f\r",
+            ++iter, val);
+
+    while(std::abs(val - goal) > tol){
+        if(val > goal){
+            if(!above)
+                scale*=shrink;
+
+            // s.modelGen_r.linScale(1.0 + scale);
+
+            std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+            CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+            curIntcp.at(0) -= scale;
+            s.modelGen_r.setPar("intcp",curIntcp.at(0));
+
+            above = 1;
+        }
+        else{
+            if(above)
+                scale*=shrink;
+
+            std::vector<double> curIntcp = s.modelGen_r.getPar({"intcp"});
+            CHECK_EQ(curIntcp.size(),1) << "more than one intercept was returned";
+            curIntcp.at(0) += scale;
+            s.modelGen_r.setPar("intcp",curIntcp.at(0));
+            // s.modelGen_r.linScale(1.0/(1.0 + scale));
+
+            above = 0;
+        }
+
+        par = s.modelGen_r.getPar();
+        s.modelEst_r.putPar(par.begin());
+        s.revert();
+
+
+        // s.modelGen_r.setPar("gPow",getDPow(s.modelGen_r.getPar({"power"})[0],
+        //     s.modelGen_r.getPar({"alpha"})[0],
+        //     s.fD.caves));
+
+
+
+        val = rn.run(s,nt,numReps,numYears,starts).sMean();
+        printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\r",
+                ++iter, val, scale);
+        // std::cout << std::endl
+        //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
+        fflush(stdout);
+    }
+
+    s.modelGen_r.save();
+
+    njm::message("Est. goal: " + njm::toString(val,""));
+
+
+    njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
+    return(val);
+}
+
+
+template <class S, class MA, class RM, class NT, class RN>
+double TuneGenMA(S s, const int numReps, const Starts & starts){
+    NT nt;
+    RN rn;
+
+    MA ma;
+    RM rm;
+
+    int numYears = s.fD.finalT;
+
+    double atTrtStart = rn.run(s,nt,numReps,s.fD.trtStart,starts).sMean();
+    double atFinalT = rn.run(s,nt,numReps,numYears,starts).sMean();
+
+    double goal = atTrtStart + 0.05*(atFinalT - atTrtStart);
+    njm::message("Goal: " + njm::toString(goal,""));
+    double tol = 1e-3;
+
+    std::vector<double> par;
+    double trt = 1.0;
+
+    s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+    par = s.modelGen_r.getPar();
+    s.modelEst_r.putPar(par.begin());
+    s.revert();
+
+    double val = rm.run(s,ma,numReps,numYears,starts).sMean();
+    double scale = 1.1, shrink = .9;
+    int above = int(val > goal);
+    int iter = 0;
+
+
+    printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
+            ++iter, val, trt);
+
+    while(std::abs(val - goal) > tol){
+        if(val > goal){
+            if(!above)
+                scale*=shrink;
+
+            trt *= 1.0 + scale;
+
+            above = 1;
+        }
+        else{
+            if(above)
+                scale*=shrink;
+
+            trt *= 1.0/(1.0 + scale);
+
+            above = 0;
+        }
+
+
+        s.modelGen_r.setPar(std::vector<std::string>({"trtAct","trtPre"}),trt);
+        par = s.modelGen_r.getPar();
+        s.modelEst_r.putPar(par.begin());
+        s.revert();
+
+        // std::cout << "par: " << njm::toString(par," ","\n");
+        // par = s.modelGen.getPar({"trtAct","trtPre"});
+        // std::cout << "par: " << njm::toString(par," ","\n");
+
+
+        val = rm.run(s,ma,numReps,numYears,starts).sMean();
+        printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\r",
+                ++iter, val, trt);
+        fflush(stdout);
+    }
+
+    s.modelGen_r.save();
+
+    double priorMeanTrt = (s.modelGen_r.getPar({"trtAct"})[0]
+            + s.modelGen_r.getPar({"trtPre"})[0])/2.0;
+    priorMeanTrt *= 4.0;
+    njm::toFile(priorMeanTrt,njm::sett.srcExt("priorTrtMean.txt"),
+            std::ios_base::out);
+
+
+    njm::message("Est. goal: " + njm::toString(val,""));
+
+    njm::message("par: " + njm::toString(s.modelGen_r.getPar()," ",""));
+
+    return(val);
+}
+
+
+// template <class S, class PA, class RP>
+// double TuneGenPA(S & s,const int numReps, const Starts & starts){
+//   double trtSize = s.modelGen.tuneTrt(s.fD);
+
+//   putActTrt(trtSize,s.modelGen_r,s.fD);
+//   putPreTrt(trtSize,s.modelGen_r,s.fD);
+//   putActTrt(trtSize,s.modelEst_r,s.fD);
+//   putPreTrt(trtSize,s.modelEst_r,s.fD);
+
+//   PA pa;
+//   RP rp;
+
+//   return rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
+// }
+
 
 int main(int argc, char ** argv){
     InitGoogleLogging(argv[0]);
@@ -59,198 +228,168 @@ int main(int argc, char ** argv){
     if(!FLAGS_dryRun) {
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
-        njm::toFile(FLAGS_edgeToEdge,
-                njm::sett.datExt("edgeToEdge_flag_",".txt"));
+        const boost::filesystem::path path(FLAGS_outDir);
 
         if(FLAGS_edgeToEdge) {
-            LOG(FATAL) << "Supposed to debug spatial spread.";
+            copyParams<Model2EdgeToEdge>(path);
 
-        } else {
-            typedef Model2GravityEDist MG;
+            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
+            typedef Model2EdgeToEdge MG;
             typedef MG ME;
 
             typedef System<MG,ME> S;
-
+            typedef NoTrt<ME> NT;
+            typedef ProximalAgent<ME> PA;
             typedef MyopicAgent<ME> MA;
 
-            typedef FitOnlyRunner<S,MA> R_MA;
+            typedef AllAgent<ME> AA;
 
+            typedef ToyFeatures5<ME> F;
+            typedef RankAgent<F,ME> RA;
+
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
+
+            typedef VanillaRunnerNS<S,AA> R_AA;
 
             S s;
             s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelGen_r.setType(MLES);
-            s.modelEst_r.setType(MLES);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-            int numReps = 100;
+            int numReps = 500;
             Starts starts(numReps,s.fD.numNodes);
 
             MA ma;
+            PA pa;
+            RP rp;
 
+            RA ra;
+            RM rm;
+            RR rr;
+
+            pa.setEdgeToEdge(FLAGS_edgeToEdge);
+            ra.setEdgeToEdge(FLAGS_edgeToEdge);
             ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
-            R_MA r_ma;
+            ra.tp.jitterScale = -1.;
 
-            int r,t;
+            njm::message("Tuning Intercept");
 
-            r = 6;
-            njm::resetSeed(r);
-            s.reset(starts[r]);
+            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-            for(t=s.sD.time; t<7; ++t) {
-                if(t>=s.fD.trtStart && s.sD.numNotInfec > 0){
-                    s.modelEst.fit(s.sD,s.tD,s.fD,s.dD,
-                            t > s.fD.trtStart);
+            njm::message("Tuning Treatment");
 
-                    ma.applyTrt(s.sD,s.tD,s.fD,s.dD,
-                            s.modelEst);
-                }
+            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-                s.updateStatus();
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-                s.nextPoint();
-            }
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-            { // gsl
-                ////// debug model fitting
-                std::vector<double> startingVals(s.modelEst.getPar());
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-                ModelBaseFitObj fitObj(&s.modelEst,s.sD,s.tD,s.fD,s.dD);
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
 
-                const gsl_multimin_fdfminimizer_type * T;
-                gsl_multimin_fdfminimizer *sfdf;
+        } else {
+            copyParams<Model2GravityEDist>(path);
 
-                gsl_vector * x;
-                x = gsl_vector_alloc(s.modelEst.numPars);
-                int pi;
-                for(pi = 0; pi < int(s.modelEst.numPars); ++pi){
-                    gsl_vector_set(x,pi,startingVals.at(pi));
-                }
+            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
-                gsl_multimin_function_fdf my_func;
-                my_func.n = s.modelEst.numPars;
-                my_func.f = objFn;
-                my_func.df = objFnGrad;
-                my_func.fdf = objFnBoth;
-                my_func.params = &fitObj;
+            typedef Model2GravityEDist MG;
+            typedef MG ME;
 
-                T = gsl_multimin_fdfminimizer_vector_bfgs2;
-                sfdf = gsl_multimin_fdfminimizer_alloc(T,s.modelEst.numPars);
+            typedef System<MG,ME> S;
+            typedef NoTrt<ME> NT;
+            typedef ProximalAgent<ME> PA;
+            typedef MyopicAgent<ME> MA;
 
-                gsl_multimin_fdfminimizer_set(sfdf,&my_func,x,0.01,0.1);
+            typedef AllAgent<ME> AA;
 
-                int iter = 0;
-                int status;
-                const int maxIter = 100;
-                do{
-                    iter++;
-                    status = gsl_multimin_fdfminimizer_iterate(sfdf);
+            typedef ToyFeatures5<ME> F;
+            typedef RankAgent<F,ME> RA;
 
-                    if(status)
-                        break;
+            typedef VanillaRunnerNS<S,NT> RN;
+            typedef VanillaRunnerNS<S,PA> RP;
+            typedef VanillaRunnerNS<S,MA> RM;
+            typedef VanillaRunnerNS<S,RA> RR;
 
-                    std::vector<double> currentX;
-                    for (pi = 0; pi < int(s.modelEst.numPars); ++pi) {
-                        currentX.push_back(gsl_vector_get(sfdf->x,pi));
-                    }
-                    std::cout << std::endl
-                              << "par: " << njm::toString(currentX," ","");
+            typedef VanillaRunnerNS<S,AA> R_AA;
 
-                    status = gsl_multimin_test_gradient(sfdf->gradient,1e-6);
+            S s;
+            s.setEdgeToEdge(FLAGS_edgeToEdge);
+            s.modelEst_r = s.modelGen_r;
+            s.revert();
 
-                }while(status == GSL_CONTINUE && iter < maxIter);
+            int numReps = 500;
+            Starts starts(numReps,s.fD.numNodes);
 
-                std::vector<double> gradVals;
-                for (pi = 0; pi < int(s.modelEst.numPars); ++pi) {
-                    gradVals.push_back(gsl_vector_get(sfdf->gradient,pi));
-                }
+            MA ma;
+            PA pa;
+            RP rp;
 
+            RA ra;
+            RM rm;
+            RR rr;
 
-                if (status != GSL_CONTINUE || status != GSL_SUCCESS) {
-                    LOG(ERROR)
-                        << std::endl
-                        << "status: " << status << std::endl
-                        << "iter: " << iter << std::endl
-                        << "seed: " << njm::getSeed() << std::endl
-                        << "numInfected: " << s.sD.numInfected << std::endl
-                        << "time: " << s.sD.time << std::endl
-                        << "gradient check: "
-                        << gsl_multimin_test_gradient(sfdf->gradient,0.1)
-                        << std::endl
-                        << "f: " << sfdf->f << std::endl
-                        << "gradient: " << njm::toString(gradVals," ","")
-                        << std::endl
-                        << "starting: " << njm::toString(startingVals," ","")
-                        << std::endl;
-                }
+            pa.setEdgeToEdge(FLAGS_edgeToEdge);
+            ra.setEdgeToEdge(FLAGS_edgeToEdge);
+            ma.setEdgeToEdge(FLAGS_edgeToEdge);
+            // ra.reset();
 
+            ra.tp.jitterScale = -1.;
 
-                /// check gradient
-                std::vector<double> par = s.modelEst.getPar();
+            njm::message("Tuning Intercept");
 
-                const double val = s.modelEst.logll(s.sD,s.tD,s.fD,s.dD);
+            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-                const std::vector<double> gradVal = s.modelEst.logllGrad(
-                        s.sD,s.tD,s.fD,s.dD);
+            njm::message("Tuning Treatment");
 
-                const std::pair<double,std::vector<double> > both =
-                    s.modelEst.logllBoth(s.sD,s.tD,s.fD,s.dD);
+            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
+            s.modelGen_r.read();
+            s.modelEst_r.read();
+            s.revert();
 
-                const double eps = 1e-6;
+            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
 
-                CHECK_EQ(val,both.first);
+            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
 
-                for (int i = 0; i < s.modelEst.numPars; ++i) {
-                    LOG(INFO) << "Checking par " << i;
-                    s.modelEst.putPar(par.begin());
+            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
 
-                    GradientChecker<ME> gc;
-                    gc.system = &s;
-                    gc.m = &s.modelEst;
-                    gc.gradientVar = i;
-
-                    gsl_function F;
-                    F.function = &f<ME>;
-                    F.params = &gc;
-
-                    double result;
-                    double abserr;
-                    gsl_deriv_central(&F,par.at(i),1e-8,&result,&abserr);
-
-                    // CHECK_EQ(gradVal.at(i),both.second.at(i));
-                    // CHECK_LT(std::abs(result-gradVal.at(i)),eps)
-                    //     << "index: " << i << std::endl
-                    //     << "par: " << njm::toString(par," ","") << std::endl
-                    //     << "result: " << result << std::endl
-                    //     << "gradVal: " << gradVal.at(i) << std::endl;
-                }
-            }
-
-            { // dlib
-
-                ModelBaseFitObjDlib fitObj(&s.modelEst,s.sD,s.tD,s.fD,s.dD);
-
-                dlib_column_vector x(s.modelEst.numPars);
-                for (unsigned int i = 0; i < s.modelEst.numPars; ++i) {
-                    x(i) = 0.2;
-                }
-                x(0) = -3.0;
-
-                dlib::find_min(dlib::bfgs_search_strategy(),
-                        dlib::objective_delta_stop_strategy(1e-8,100).be_verbose(),
-                        [&](const dlib_column_vector & x) {
-                            return fitObj.objFn(x);
-                        },
-                        [&](const dlib_column_vector & x) {
-                            return fitObj.objFnGrad(x);
-                        },
-                        x,-1);
-
-            }
-
+            njm::message(" valNT: " + njm::toString(valNT,"") +
+                    "\n" +
+                    " valPA: " + njm::toString(valPA,"") +
+                    "\n" +
+                    " valMA: " + njm::toString(valMA,"") +
+                    "\n" +
+                    " valRA: " + njm::toString(valRA,"") +
+                    "\n" +
+                    " valAA: " + njm::toString(valAA,""));
         }
 
         njm::sett.clean();
+
     }
+
     return 0;
 }
