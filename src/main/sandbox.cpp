@@ -281,6 +281,10 @@ int main(int argc, char ** argv){
             std::cout << std::setprecision(17)
                       << rs.sMean() << std::endl;
 
+            std::cout << std::setprecision(17)
+                      << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
+                      << std::endl;
+
         }
 
         njm::sett.clean();
