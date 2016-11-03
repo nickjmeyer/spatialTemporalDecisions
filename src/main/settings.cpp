@@ -90,7 +90,7 @@ void Settings::setup(const std::string fileName, const std::string srcDir) {
     datDir = srcDir + "/" + datDir;
 
     info << "datDir: " << datDir << "\n";
-    info << "git-describe: " << buf.ptr << "\n";
+    info << "git-describe: " << TOSTRING(GIT_DESCRIBE) << "\n";
 
     boost::filesystem::create_directories(datDir);
 
