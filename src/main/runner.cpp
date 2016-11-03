@@ -300,9 +300,11 @@ VanillaRunnerNS<S,A>
     // double value=0;
     int r,t;
 
+    std::vector<double> vals(numReps);
+
     RunStats rs;
 #pragma omp parallel for num_threads(omp_get_max_threads())	\
-    shared(starts,rs)                                       \
+    shared(starts,rs,vals)                                  \
     firstprivate(system,agent)                              \
     private(r,t)
     for(r=0; r<numReps; r++){
@@ -322,10 +324,24 @@ VanillaRunnerNS<S,A>
 #pragma omp critical
         {
             rs(system.value());
+            vals.at(r) = system.value();
             // value += system.value();
         }
 
     }
+
+    std::cout << std::setprecision(17)
+              << std::accumulate(vals.begin(),vals.end(),0.)
+              << std::endl;
+
+    RunStats rs2;
+    std::for_each(vals.begin(),vals.end(),
+            [&rs2](const double & x) {
+                rs2(x);
+            });
+    std::cout << std::setprecision(17)
+              << rs2.sMean()
+              << std::endl;
     return rs;
 }
 
