@@ -60,19 +60,6 @@ void Settings::setup(const std::string fileName, const std::string srcDir) {
 
     timeStamp();
 
-    // check input arguments
-    // if(numInitVals!=numVals && numInitVals!=(numVals+1)){
-    //   std::cout << "In Settings::Settings, "
-    //       << "not the correct number of initial values.\n"
-    //       << "Program requires " << numVals << " values.  "
-    //       << "User provided " << numInitVals << " values.\n"
-    //       << "Did you forget to count the executable as an argument?\n"
-    //       << "Terminating program...\n";
-    //   clean();
-    //   exit(1);
-    // }
-
-
     int arg=0;
     std::stringstream info;
     // fileName = initVals[arg++];
