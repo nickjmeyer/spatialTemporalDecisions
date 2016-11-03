@@ -25,6 +25,7 @@ TrainRunner<S,A>
         rs.update(r,system.value());
         // value += system.value();
     }
+    rs.squash();
     return rs;
 }
 
@@ -73,6 +74,7 @@ PlainRunner<S,A>
         // value += system.value();
     }
 
+    rs.squash();
     return rs;
 }
 
@@ -228,6 +230,7 @@ VanillaRunner<S,A>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
 
@@ -327,6 +330,7 @@ VanillaRunnerNS<S,A>
 
     }
 
+    rs.squash();
     return rs;
 }
 
@@ -528,6 +532,7 @@ FitOnlyRunner<S,A>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
 
@@ -718,7 +723,7 @@ OptimRunner<S,A,Optim>
             njm::sett.datExt(agent.name+"_"+optim.name+
                     "_times_",".txt"));
 
-
+    rs.squash();
     return rs;
 }
 
@@ -943,7 +948,7 @@ OptimRunnerNS<S,A,Optim>
         }
 
     }
-
+    rs.squash();
     return rs;
 }
 
@@ -992,7 +997,7 @@ TuneRunner<S,A,Optim>
         rs.update(r,system.value());
         // value += system.value();
     }
-
+    rs.squash();
     return rs;
 }
 
@@ -1245,5 +1250,6 @@ TestRunner<S,A,Optim>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+"_"+optim.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
