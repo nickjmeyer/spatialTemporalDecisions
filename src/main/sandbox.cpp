@@ -2,6 +2,8 @@
 #include <glog/logging.h>
 #include "tuneGen.hpp"
 
+#include <iomanip>
+
 using namespace google;
 using namespace gflags;
 
@@ -54,6 +56,11 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
     printf("Iter: %05d  >>>  Current value: %.17g\n",
             ++iter, val);
+    std::cout << "Par: ";
+    for (int i = 0; i < par.size(); ++i) {
+        std::cout << std::setprecision(17) << par.at(i) << " ";
+    }
+    std::cout << std::endl;
 
     while(std::abs(val - goal) > tol){
         if(val > goal){
@@ -96,6 +103,12 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
         val = rn.run(s,nt,numReps,numYears,starts).sMean();
         printf("Iter: %05d  >>>  Current value: %.17g  (%.17g)\n",
                 ++iter, val, scale);
+        std::cout << "Par: ";
+        for (int i = 0; i < par.size(); ++i) {
+            std::cout << std::setprecision(17) << par.at(i) << " ";
+        }
+        std::cout << std::endl;
+
         // std::cout << std::endl
         //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
         fflush(stdout);
