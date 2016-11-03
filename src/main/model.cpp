@@ -667,7 +667,9 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
     int gradCheck = gsl_multimin_test_gradient(s->gradient,1e-3);
 
     int errorCode = 0;
-    if (raiseError && status != GSL_SUCCESS && status != GSL_CONTINUE) {
+    int errorOccurred = status != GSL_SUCCESS && status != GSL_CONTINUE
+        && status != GSL_ENOPROG;
+    if (raiseError && errorOccurred) {
         // not successful and should raise an error
         LOG(FATAL)
             << std::endl
@@ -684,7 +686,7 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
         errorCode = 1;
-    } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
+    } else if (errorOccurred) {
         // not successful and should not raise an error
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
