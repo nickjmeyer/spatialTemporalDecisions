@@ -258,11 +258,29 @@ int main(int argc, char ** argv){
             RN rn;
             NT nt;
 
-            std::cout << std::setprecision(17)
-                      << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
-                      << std::endl;
-
             int r,t;
+            RunStats rs;
+            for(r=0; r<numReps; r++){
+                njm::resetSeed(r);
+                system.reset(starts[r]);
+                for(t=system.sD.time; t<numPoints; t++){
+                    if(t>=system.fD.trtStart && system.sD.numNotInfec > 0)
+                        agent.applyTrt(system.sD,system.tD,system.fD,system.dD,
+                                system.modelEst);
+
+                    system.updateStatus();
+
+                    system.nextPoint();
+
+                }
+
+                rs(system.value());
+
+            }
+
+            std::cout << std::setprecision(17)
+                      << rs.sMean() << std::endl;
+
         }
 
         njm::sett.clean();
