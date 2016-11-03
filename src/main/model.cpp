@@ -680,6 +680,9 @@ int ModelBase::estimateMle(const std::vector<double> & startingVals,
             << "f: " << s->f << std::endl
             << "gradient: " << njm::toString(gradVals," ","") << std::endl
             << "starting: " << njm::toString(startingVals," ","") << std::endl;
+
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
         errorCode = 1;
     } else if (status != GSL_SUCCESS && status != GSL_CONTINUE) {
         // not successful and should not raise an error
