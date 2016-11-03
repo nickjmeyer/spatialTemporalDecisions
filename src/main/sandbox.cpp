@@ -252,31 +252,16 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 125;
+            int numReps = 500;
             Starts starts(numReps,s.fD.numNodes);
 
             RN rn;
             NT nt;
 
+            std::cout << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
+                      << std::endl;
+
             int r,t;
-
-            for(r=0; r<numReps; r++){
-                njm::resetSeed(r);
-                s.reset(starts[r]);
-                for(t=s.sD.time; t<s.fD.finalT; t++){
-                    if(t>=s.fD.trtStart && s.sD.numNotInfec > 0)
-                        nt.applyTrt(s.sD,s.tD,s.fD,s.dD,
-                                s.modelEst);
-
-                    s.updateStatus();
-
-                    s.nextPoint();
-
-                }
-                std::cout << r << ": "
-                          << std::setprecision(17) << s.value()
-                          << std::endl;
-            }
         }
 
         njm::sett.clean();
