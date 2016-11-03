@@ -234,81 +234,8 @@ int main(int argc, char ** argv){
         njm::sett.setup(std::string(argv[0]),FLAGS_srcDir);
 
         if(FLAGS_edgeToEdge) {
-            // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
-
-            typedef Model2EdgeToEdge MG;
-            typedef MG ME;
-
-            typedef System<MG,ME> S;
-            typedef NoTrt<ME> NT;
-            typedef ProximalAgent<ME> PA;
-            typedef MyopicAgent<ME> MA;
-
-            typedef AllAgent<ME> AA;
-
-            typedef ToyFeatures5<ME> F;
-            typedef RankAgent<F,ME> RA;
-
-            typedef VanillaRunnerNS<S,NT> RN;
-            typedef VanillaRunnerNS<S,PA> RP;
-            typedef VanillaRunnerNS<S,MA> RM;
-            typedef VanillaRunnerNS<S,RA> RR;
-
-            typedef VanillaRunnerNS<S,AA> R_AA;
-
-            S s;
-            s.setEdgeToEdge(FLAGS_edgeToEdge);
-            s.modelEst_r = s.modelGen_r;
-            s.revert();
-
-            int numReps = 500;
-            Starts starts(numReps,s.fD.numNodes);
-
-            MA ma;
-            PA pa;
-            RP rp;
-
-            RA ra;
-            RM rm;
-            RR rr;
-
-            pa.setEdgeToEdge(FLAGS_edgeToEdge);
-            ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            ma.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ra.reset();
-
-            ra.tp.jitterScale = -1.;
-
-            njm::message("Tuning Intercept");
-
-            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
-            s.modelGen_r.read();
-            s.modelEst_r.read();
-            s.revert();
-
-            njm::message("Tuning Treatment");
-
-            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
-            s.modelGen_r.read();
-            s.modelEst_r.read();
-            s.revert();
-
-            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
-
-            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
-
-            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
-
-            njm::message(" valNT: " + njm::toString(valNT,"") +
-                    "\n" +
-                    " valPA: " + njm::toString(valPA,"") +
-                    "\n" +
-                    " valMA: " + njm::toString(valMA,"") +
-                    "\n" +
-                    " valRA: " + njm::toString(valRA,"") +
-                    "\n" +
-                    " valAA: " + njm::toString(valAA,""));
-
+            LOG(FATAL) << "Supposed to be debugging spatial spread"
+                       << std::endl;
         } else {
             // typedef ModelTimeExpCavesGPowGDistTrendPowCon MG;
 
@@ -317,20 +244,8 @@ int main(int argc, char ** argv){
 
             typedef System<MG,ME> S;
             typedef NoTrt<ME> NT;
-            typedef ProximalAgent<ME> PA;
-            typedef MyopicAgent<ME> MA;
-
-            typedef AllAgent<ME> AA;
-
-            typedef ToyFeatures5<ME> F;
-            typedef RankAgent<F,ME> RA;
 
             typedef VanillaRunnerNS<S,NT> RN;
-            typedef VanillaRunnerNS<S,PA> RP;
-            typedef VanillaRunnerNS<S,MA> RM;
-            typedef VanillaRunnerNS<S,RA> RR;
-
-            typedef VanillaRunnerNS<S,AA> R_AA;
 
             S s;
             s.setEdgeToEdge(FLAGS_edgeToEdge);
@@ -340,50 +255,13 @@ int main(int argc, char ** argv){
             int numReps = 500;
             Starts starts(numReps,s.fD.numNodes);
 
-            MA ma;
-            PA pa;
-            RP rp;
+            RN rn;
+            NT nt;
 
-            RA ra;
-            RM rm;
-            RR rr;
+            std::cout << std::setprecision(17)
+                      << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
+                      << std::endl;
 
-            pa.setEdgeToEdge(FLAGS_edgeToEdge);
-            ra.setEdgeToEdge(FLAGS_edgeToEdge);
-            ma.setEdgeToEdge(FLAGS_edgeToEdge);
-            // ra.reset();
-
-            ra.tp.jitterScale = -1.;
-
-            njm::message("Tuning Intercept");
-
-            double valNT = TuneGenNT<S,NT,RN,MG>(s,numReps,starts);
-            s.modelGen_r.read();
-            s.modelEst_r.read();
-            s.revert();
-
-            njm::message("Tuning Treatment");
-
-            double valAA = TuneGenMA<S,AA,R_AA,NT,RN>(s,numReps,starts);
-            s.modelGen_r.read();
-            s.modelEst_r.read();
-            s.revert();
-
-            double valMA = rm.run(s,ma,numReps,s.fD.finalT,starts).sMean();
-
-            double valPA = rp.run(s,pa,numReps,s.fD.finalT,starts).sMean();
-
-            double valRA = rr.run(s,ra,numReps,s.fD.finalT,starts).sMean();
-
-            njm::message(" valNT: " + njm::toString(valNT,"") +
-                    "\n" +
-                    " valPA: " + njm::toString(valPA,"") +
-                    "\n" +
-                    " valMA: " + njm::toString(valMA,"") +
-                    "\n" +
-                    " valRA: " + njm::toString(valRA,"") +
-                    "\n" +
-                    " valAA: " + njm::toString(valAA,""));
         }
 
         njm::sett.clean();
