@@ -60,7 +60,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
     int above = int(val > goal);
     int iter = 0;
 
-    printf("Iter: %05d  >>>  Current value: %08.6f\n",
+    printf("Iter: %05d  >>>  Current value: %g\n",
             ++iter, val);
 
     while(std::abs(val - goal) > tol){
@@ -102,7 +102,7 @@ double TuneGenNT(S s, const int numReps, const Starts & starts){
 
 
         val = rn.run(s,nt,numReps,numYears,starts).sMean();
-        printf("Iter: %05d  >>>  Current value: %08.6f  (%08.6f)\n",
+        printf("Iter: %05d  >>>  Current value: %g  (%g)\n",
                 ++iter, val, scale);
         // std::cout << std::endl
         //           << njm::toString(s.modelGen_r.getPar()," ","") << std::endl;
@@ -151,7 +151,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
     int iter = 0;
 
 
-    printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\n",
+    printf("Iter: %05d  >>>  Curr value: %g  ===  Curr Trt: %g\n",
             ++iter, val, trt);
 
     while(std::abs(val - goal) > tol){
@@ -184,7 +184,7 @@ double TuneGenMA(S s, const int numReps, const Starts & starts){
 
 
         val = rm.run(s,ma,numReps,numYears,starts).sMean();
-        printf("Iter: %05d  >>>  Curr value: %08.6f  ===  Curr Trt: %08.6f\n",
+        printf("Iter: %05d  >>>  Curr value: %g  ===  Curr Trt: %g\n",
                 ++iter, val, trt);
         fflush(stdout);
     }
