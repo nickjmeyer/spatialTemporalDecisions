@@ -274,7 +274,7 @@ int main(int argc, char ** argv){
 
                 }
 
-                rs(s.value());
+                rs.update(s.value());
 
             }
 
