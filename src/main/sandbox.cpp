@@ -258,7 +258,8 @@ int main(int argc, char ** argv){
             RN rn;
             NT nt;
 
-            std::cout << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
+            std::cout << std::setprecision(17)
+                      << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
                       << std::endl;
 
             int r,t;
