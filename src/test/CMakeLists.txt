@@ -1,3 +1,5 @@
+enable_testing()
+
 find_package(Boost COMPONENTS system filesystem thread REQUIRED)
 find_package(GSL REQUIRED)
 find_package(Armadillo REQUIRED)
