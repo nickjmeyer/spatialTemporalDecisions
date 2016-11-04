@@ -19,6 +19,7 @@ include(GetGitRevisionDescription)
 
 git_describe(GIT_DESCRIBE_RESULT)
 add_definitions(-DGIT_DESCRIBE=${GIT_DESCRIBE_RESULT})
+add_definitions(-DPROJECT_ROOT_DIR=${CMAKE_SOURCE_DIR})
 
 
 add_subdirectory(src/main)
