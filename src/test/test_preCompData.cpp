@@ -10,6 +10,17 @@ using namespace google;
 using namespace gflags;
 
 
+#ifndef STRINGIFY
+#define STRINGIFY(x) #x
+#endif
+
+#ifndef TOSTRING
+#define TOSTRING(x) STRINGIFY(x)
+#endif
+
+
+
+
 DEFINE_string(srcDir,"","Path to source directory");
 
 TEST(TestPrecompData,TestExpDistWeightGradient) {
@@ -121,7 +132,7 @@ int main(int argc, char **argv) {
     ParseCommandLineFlags(&argc,&argv,true);
     ::testing::InitGoogleTest(&argc, argv);
     const std::string fileName = "test_preCompData";
-    const std::string srcDir("./data/wns");
+    const std::string srcDir(TOSTRING(PROJECT_ROOT_DIR) "/data/wns");
 
     njm::sett.setup(fileName,srcDir);
 
