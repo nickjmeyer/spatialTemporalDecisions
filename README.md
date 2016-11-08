@@ -24,7 +24,7 @@ Libraries needed to compile the code are
 
 In order to simulate the spread of the disease, a network structure is
 needed.  In the `src/` directory is an `R` script to generate
-networks.  Generate networks of size `n` use `Rscript genToyNets.R`.
+networks.  Generate networks of size `n` run `Rscript genToyNets.R n`.
 Before generating these networks, make sure a `data` directory exists
 in the project root directory.
 
