@@ -107,7 +107,7 @@ pAvgInf = pAvgInf +  scale_fill_manual(values=c("dodgerblue4","green"),
                                           name = "Probability of Infection\n")
 pAvgInf = pAvgInf + ggtitle("Observed Average Infection")
 print(pAvgInf)
-ggsave("average_observed_col.pdf",plot=pAvgInf,width=width,height=height)
+ggsave("../../data/plotting/average_observed_col.pdf",plot=pAvgInf,width=width,height=height)
 
 
 ## average infection spatial
@@ -127,7 +127,7 @@ pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","g
                                           name = "Log-Probability of Infection\n")
 pAvgInf = pAvgInf + ggtitle("Spatial Average Infection")
 print(pAvgInf)
-ggsave("average_infection_spatial_col.pdf",plot=pAvgInf,width=width,height=height)
+ggsave("../../data/plotting/average_infection_spatial_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection edge
 pAvgInf = ggplot()
@@ -146,7 +146,7 @@ pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","g
                                           name = "Log-Probability of Infection\n")
 pAvgInf = pAvgInf + ggtitle("Edge Average Infection")
 print(pAvgInf)
-ggsave("average_infection_edge_col.pdf",plot=pAvgInf,width=width,height=height)
+ggsave("../../data/plotting/average_infection_edge_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection spatial out-of-sample
 pAvgInf = ggplot()
@@ -165,7 +165,7 @@ pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","g
                                           name = "Log-Probability of Infection\n")
 pAvgInf = pAvgInf + ggtitle("Spatial Out-of-Sample Average Infection")
 plot(pAvgInf)
-ggsave("average_infection_spatial_oos_col.pdf",plot=pAvgInf,width=width,height=height)
+ggsave("../../data/plotting/average_infection_spatial_oos_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection edge out-of-sample
 pAvgInf = ggplot()
@@ -184,4 +184,4 @@ pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","g
                                           name = "Log-Probability of Infection\n")
 pAvgInf = pAvgInf + ggtitle("Edge Out-of-Sample Average Infection")
 print(pAvgInf)
-ggsave("average_infection_edge_oos_col.pdf",plot=pAvgInf,width=width,height=height)
+ggsave("../../data/plotting/average_infection_edge_oos_col.pdf",plot=pAvgInf,width=width,height=height)
