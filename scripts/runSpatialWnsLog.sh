@@ -6,4 +6,4 @@ set -e
 PROJ_ROOT=.
 
 ## runSpatialWns
-./scripts/runSpatialWns.sh 2>&1 | tee >(sed 's/.*\r//'> runSpatialWns.log)
+./scripts/runSpatialWns.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runSpatialWns.log)

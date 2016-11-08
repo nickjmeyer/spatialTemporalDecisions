@@ -6,4 +6,4 @@ set -e
 PROJ_ROOT=.
 
 ## runEdgeToEdgeToy
-./scripts/runEdgeToEdgeToy.sh 2>&1 | tee >(sed 's/.*\r//'> runEdgeToEdgeToy.log)
+./scripts/runEdgeToEdgeToy.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runEdgeToEdgeToy.log)

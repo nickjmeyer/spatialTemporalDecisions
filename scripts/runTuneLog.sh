@@ -6,4 +6,4 @@ set -e
 PROJ_ROOT=.
 
 ## tune
-./scripts/runTune.sh 2>&1 | tee >(sed 's/.*\r//'> runTune.log)
+./scripts/runTune.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runTune.log)
