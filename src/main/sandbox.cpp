@@ -252,14 +252,14 @@ int main(int argc, char ** argv){
             s.modelEst_r = s.modelGen_r;
             s.revert();
 
-            int numReps = 125;
+            int numReps = 500;
             Starts starts(numReps,s.fD.numNodes);
 
             RN rn;
             NT nt;
 
             int r,t;
-
+            RunStats rs;
             for(r=0; r<numReps; r++){
                 njm::resetSeed(r);
                 s.reset(starts[r]);
@@ -273,10 +273,18 @@ int main(int argc, char ** argv){
                     s.nextPoint();
 
                 }
-                std::cout << r << ": "
-                          << std::setprecision(17) << s.value()
-                          << std::endl;
+
+                rs.update(s.value());
+
             }
+
+            std::cout << std::setprecision(17)
+                      << rs.sMean() << std::endl;
+
+            std::cout << std::setprecision(17)
+                      << rn.run(s,nt,numReps,s.fD.finalT,starts).sMean()
+                      << std::endl;
+
         }
 
         njm::sett.clean();

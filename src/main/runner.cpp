@@ -22,9 +22,10 @@ TrainRunner<S,A>
 
             system.nextPoint();
         }
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
+    rs.squash();
     return rs;
 }
 
@@ -69,10 +70,11 @@ PlainRunner<S,A>
             // njm::timer.stop("plain nextPoint");
         }
 
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
 
+    rs.squash();
     return rs;
 }
 
@@ -214,7 +216,7 @@ VanillaRunner<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -228,6 +230,7 @@ VanillaRunner<S,A>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
 
@@ -321,11 +324,13 @@ VanillaRunnerNS<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
     }
+
+    rs.squash();
     return rs;
 }
 
@@ -505,7 +510,7 @@ FitOnlyRunner<S,A>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -527,6 +532,7 @@ FitOnlyRunner<S,A>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
 
@@ -650,7 +656,7 @@ OptimRunner<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -701,7 +707,6 @@ OptimRunner<S,A,Optim>
             njm::toFile("Completed " + njm::toString(done,"",6,0) +
                     " out of " + njm::toString(numReps,"",6,0) +
                     " in " + njm::toString(hours,"",8,4) + " hours" +
-                    " with value " + njm::toString(rs.sMean(),"",6,4) +
                     "\n",
                     njm::sett.datExt(agent.name+"_"+optim.name+"_status_",
                             ".txt"));
@@ -717,7 +722,7 @@ OptimRunner<S,A,Optim>
             njm::sett.datExt(agent.name+"_"+optim.name+
                     "_times_",".txt"));
 
-
+    rs.squash();
     return rs;
 }
 
@@ -937,12 +942,12 @@ OptimRunnerNS<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
     }
-
+    rs.squash();
     return rs;
 }
 
@@ -988,10 +993,10 @@ TuneRunner<S,A,Optim>
         }
         // end rep r
 
-        rs(system.value());
+        rs.update(r,system.value());
         // value += system.value();
     }
-
+    rs.squash();
     return rs;
 }
 
@@ -1225,7 +1230,7 @@ TestRunner<S,A,Optim>
 
 #pragma omp critical
         {
-            rs(system.value());
+            rs.update(r,system.value());
             // value += system.value();
         }
 
@@ -1244,5 +1249,6 @@ TestRunner<S,A,Optim>
     njm::toFile(njm::toString(valueAll,"\n",""),
             njm::sett.datExt(agent.name+"_"+optim.name+
                     "_values_",".txt"));
+    rs.squash();
     return rs;
 }
