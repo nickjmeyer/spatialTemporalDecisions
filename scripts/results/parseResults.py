@@ -22,7 +22,7 @@ def readLog(category,mode):
 
 
 def parseLog(category,mode,log):
-    header = re.compile("hostName: (?P<host>[a-zA-Z0-9-]+)\s*"
+    header = re.compile("hostName: (?P<host>[a-zA-Z0-9-.]+)\s*"
                         "fileName: (?P<file>[a-zA-Z0-9/.]+)\s*"
                         "srcDir: (?P<src>[a-zA-Z0-9/.]+)\s*"
                         "datDir: (?P<dat>[a-zA-Z0-9-/.]+)\s*")
@@ -40,6 +40,7 @@ def parseLog(category,mode,log):
 
         ## wns or toy
         info["category"] = category
+        info["mode"] = mode
 
         ## network information for toy
         if category == "toy":
@@ -52,9 +53,9 @@ def parseLog(category,mode,log):
 
         ## model specification
         if model.search(headerInfo.group("file")):
-            info["model"] = 0
+            info["model"] = "miss"
         else:
-            info["model"] = 1
+            info["model"] = "corr"
 
 
         ## simulation results
@@ -88,23 +89,44 @@ def parseLog(category,mode,log):
     return logInfo
 
 
+def fillMissing(logInfo):
+    ## Fill in values missing for mispecified model.  Policies that do
+    ## not use a dynamics model were not explicitly run.  Need to
+    ## duplicate their correctly specified results.
+    for info in logInfo:
+        if info["model"] == "corr": ## correctly specified
+            for other in logInfo:
+                if (other["model"] == "miss"
+                    and info["category"] == other["category"]
+                    and info["network"] == other["network"]
+                    and info["size"] == other["size"]
+                    and info["mode"] == other["mode"]):
+                    missing = set(info["res"].keys()) - set(other["res"].keys())
+                    for m in missing:
+                        other["res"][m] = info["res"][m]
+
+    return logInfo
+
+
 def formatLogInfo(info):
     category = info["category"]
     network = info["network"]
     size = info["size"]
+    mode = info["mode"]
     model = info["model"]
 
     infoStr = ""
-    infoFmt = "%s, %s, %s, %d, %s, %f, %f"
+    infoFmt = "%s,%s,%s,%s,%s,%s,%f,%f"
     for agent in info["res"]:
-        infoStr += infoFmt % (category,network,size,model,agent,
+        infoStr += infoFmt % (category,mode,network,size,model,agent,
                               info["res"][agent]["mean"],
                               info["res"][agent]["sd"])
         infoStr += "\n"
     return infoStr
 
+
 def writeLogInfo(handle,logInfo):
-    header = "category, network, size, model, agent, mean, sd\n"
+    header = "category,mode,network,size,model,agent,mean,sd\n"
     handle.write(header)
     for info in logInfo:
         handle.write(formatLogInfo(info))
@@ -120,6 +142,8 @@ def main(dryRun,force):
         for mode in modes:
             contents = readLog(category,mode)
             logInfo.extend(parseLog(category,mode,contents))
+
+    logInfo = fillMissing(logInfo)
 
     ## format results and write to file
     if dryRun:
