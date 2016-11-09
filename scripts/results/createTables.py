@@ -38,6 +38,9 @@ def main():
                                         "Trt All","Policy Search"],axis=1)
             # group.columns = group.columns.swaplevel(0,1)
             # group.sortlevel(0,axis=1,inplace=True)
+            fileName = os.path.join("../../data/results","_".join(name)+".tex")
+            with open(fileName,"w") as f:
+                f.write(group.to_latex())
         else:
             group = group.drop(["Mode","Model","Size","Network"],
                                axis=1)
@@ -46,12 +49,13 @@ def main():
                                    aggfunc=lambda x : " ".join(x))
             group = group.reindex_axis(["No Trt","Proximal","Myopic",
                                         "Trt All","Policy Search"],axis=1)
+            group.index = group.index.set_names(["WNS"])
             # group.columns = group.columns.swaplevel(0,1)
             # group.sortlevel(0,axis=1,inplace=True)
 
-        fileName = os.path.join("../../data/results","_".join(name)+".tex")
-        with open(fileName,"w") as f:
-            f.write(group.to_latex())
+            fileName = os.path.join("../../data/results","_".join(name)+".tex")
+            with open(fileName,"w") as f:
+                f.write(group.to_latex(index=False))
 
 
 if __name__ == "__main__":
