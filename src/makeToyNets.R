@@ -844,38 +844,29 @@ saveNet<-function(net,dir=NULL){
 
 
 
-plotNet<-function(net){
-  xlim=range(net$nodes[,1])+c(-.25,.25)
-  ylim=range(net$nodes[,2])+c(-.25,.25)
-
-  plot(net$nodes[,1],net$nodes[,2],pch=2,xlim=xlim,ylim=ylim,
-       xlab="",ylab="",xaxt="n",yaxt="n")
-  n=nrow(net$nodes)
-  dummy=foreach(i=1:n)%do%{
-    neigh=which(net$neigh[i,]==1)
-    nodeCoords=foreach(j=1:length(neigh),.combine=rbind)%do%{
-      if(neigh[j]!=i)
-        lines(rbind(net$nodes[i,],net$nodes[neigh[j],]))
-    }
-    text(net$nodes[i,1]-diff(xlim)/25,net$nodes[i,2]-diff(ylim)/50,labels=i)
-  }
-  return(NULL)
+plotNetNoAdj<-function(net){
+  plot(net$nodes[,1],net$nodes[,2],pch=19,cex=0.5,
+       xlab="",ylab="",xaxt="n",yaxt="n",bty="n")
 }
 
 
 
 plotNet<-function(net,...){
-  neigh=net$neigh
-  diag(neigh)=0
-  neigh=graph.adjacency(neigh)
+  if (length(net$neigh) == 0) {
+    plotNetNoAdj(net)
+  } else {
+    neigh=net$neigh
+    diag(neigh)=0
+    neigh=graph.adjacency(neigh)
 
-  col = rep("skyblue",net$n)
-  col[net$start+1] = "darkorange1"
+    col = rep("skyblue",net$n)
+    col[net$start+1] = "darkorange1"
 
-  set.seed(0)
-  plot(neigh,...,layout=net$nodes,edge.arrow.size=0,
-       vertex.size=10,main=toupper(net$name),vertex.label=NA,
-       vertex.color=col)
+    set.seed(0)
+    plot(neigh,...,layout=net$nodes,edge.arrow.size=0,
+         vertex.size=10,main=toupper(net$name),vertex.label=NA,
+         vertex.color=col)
+  }
 }
 
 
