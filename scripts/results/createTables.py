@@ -8,10 +8,10 @@ def main():
     df.columns = pd.Index([u"Category",u"Mode",u"Network",u"Size",
                            u"Model",u"Treatment Strategy",u"Mean",u"Stddev"],
                           dtype="object")
-    networkNames = {"grid":"Lattice",
-                    "scalefree": "Small World",
-                    "rand": "Random",
-                    "crp": "Clustered"}
+    networkNames = {"grid":"N1",
+                    "scalefree": "N2",
+                    "rand": "N3",
+                    "crp": "N4"}
     strategyNames = {"none": "No Trt",
                      "myopic": "Myopic",
                      "proximal": "Proximal",
