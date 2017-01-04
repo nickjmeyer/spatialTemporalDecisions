@@ -269,10 +269,10 @@ genCrpNet<-function(n) {
     }
   }
 
-  qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-  col_vector = unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
-  cols = sample(col_vector,ngroups)
-  plot(nodes,col=cols[groupId],pch=17,xlim=c(0,1),ylim=c(0,1))
+  ## qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  ## col_vector = unlist(mapply(brewer.pal,qual_col_pals$maxcolors,rownames(qual_col_pals)))
+  ## cols = sample(col_vector,ngroups)
+  ## plot(nodes,col=cols[groupId],pch=17,xlim=c(0,1),ylim=c(0,1))
 
 
   cov=getCov(n,nodes)
