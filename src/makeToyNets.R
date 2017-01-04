@@ -221,12 +221,15 @@ genGridNet<-function(n1,n2){
 genCrpNet<-function(n) {
   set.seed(0)
   theta = 2
-  alpha = 0.5
 
-  expNumTables<-function(parTheta) {
-    numer = lgamma(parTheta+n+alpha) + gamma(parTheta+1)
-    denom = alpha + lgamma(parTheta+n) + lgamma(parTheta+alpha)
-    return((exp(numer - denom) - parTheta/alpha - log(n)^2)^2)
+  expNumTablesOptim<-function(parTheta) {
+    return ((parTheta * (digamma(parTheta + n) - digamma(parTheta)) - log(n))**2)
+  }
+  expNumTablesGrad<-function(parTheta) {
+    inside = parTheta * (digamma(parTheta + n) - digamma(parTheta)) - log(n)
+    chainFirst = parTheta * (trigamma(parTheta + n) - trigamma(parTheta))
+    chainSecond = digamma(parTheta + n) - digamma(parTheta)
+    return (2 * inside * (chainFirst + chainSecond))
   }
 
   out = optim(par=theta,expNumTables,lower=0.1,method="L-BFGS-B")
