@@ -223,16 +223,17 @@ genCrpNet<-function(n) {
   theta = 2
 
   expNumTablesOptim<-function(parTheta) {
-    return ((parTheta * (digamma(parTheta + n) - digamma(parTheta)) - log(n))**2)
+    return ((parTheta * (digamma(parTheta + n) - digamma(parTheta)) - 2*log(n))**2)
   }
   expNumTablesGrad<-function(parTheta) {
-    inside = parTheta * (digamma(parTheta + n) - digamma(parTheta)) - log(n)
+    inside = parTheta * (digamma(parTheta + n) - digamma(parTheta)) - 2*log(n)
     chainFirst = parTheta * (trigamma(parTheta + n) - trigamma(parTheta))
     chainSecond = digamma(parTheta + n) - digamma(parTheta)
     return (2 * inside * (chainFirst + chainSecond))
   }
 
-  out = optim(par=theta,expNumTables,lower=0.1,method="L-BFGS-B")
+  out = optim(par=theta,fn=expNumTablesOptim,gr=expNumTablesGrad,
+              lower=0.1,method="L-BFGS-B")
 
   stopifnot(out$convergence == 0)
 
@@ -244,7 +245,7 @@ genCrpNet<-function(n) {
   groups = list()
   ngroups = 0
   for(i in 1:n) {
-    newProb = (theta + ngroups*alpha)/(theta + i -1)
+    newProb = theta/(theta + i - 1)
     draw = runif(1)
     if(draw <= newProb || ngroups == 0) {
       ngroups = ngroups + 1
@@ -255,7 +256,7 @@ genCrpNet<-function(n) {
     } else {
       joinProbs = c()
       for(j in 1:ngroups) {
-        joinProbs = c(joinProbs,(length(groups[[j]]) - alpha)/
+        joinProbs = c(joinProbs,length(groups[[j]])/
                                 (theta + i - 1))
       }
       joinProbs = joinProbs/sum(joinProbs)
