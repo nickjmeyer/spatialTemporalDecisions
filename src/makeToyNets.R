@@ -219,6 +219,7 @@ genGridNet<-function(n1,n2){
 
 
 genCrpNet<-function(n) {
+  set.seed(0)
   theta = 2
   alpha = 0.5
 
