@@ -7,16 +7,18 @@ import argparse
 def readLog(category,mode):
     ## read the contents of the logs
 
-    logFiles = {"wns": {"edge": "runEdgeToEdgeWns.log",
-                        "spatial": "runSpatialWns.log"},
-                "toy": {"edge": "runEdgeToEdgeToy.log",
-                        "spatial": "runSpatialToy.log"} }
+    logFiles = {"wns": {"edge": ["runEdgeToEdgeWns.log"],
+                        "spatial": ["runSpatialWns.log"]},
+                "toy": {"edge": ["runEdgeToEdgeToy.log"],
+                        "spatial": ["runSpatialToy.log"]}}
 
     logDir = "../../data/logs"
 
-    filePath = os.path.join(logDir,logFiles[category][mode])
-    with open(filePath,"r") as f:
-        contents = f.read()
+    contents = ""
+    for logF in logFiles[category][mode]:
+        filePath = os.path.join(logDir,logF)
+        with open(filePath,"r") as f:
+            contents += f.read()
 
     return contents
 
@@ -32,6 +34,8 @@ def parseLog(category,mode,log):
     toy = re.compile("(?:[.a-zA-Z0-9]+/)+"
                      "(?P<network>[a-zA-Z]+)"
                      "(?P<size>[0-9]+)")
+
+    found = set()
 
     logInfo = []
 
@@ -56,6 +60,16 @@ def parseLog(category,mode,log):
             info["model"] = "miss"
         else:
             info["model"] = "corr"
+
+        foundTag = (info["category"], info["mode"], info["network"],
+                    info["size"], info["model"])
+
+        if foundTag in found:
+            print foundTag
+            ## already found results for this setup
+            continue
+        else:
+            found.add(foundTag)
 
 
         ## simulation results
