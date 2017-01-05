@@ -67,7 +67,7 @@ def parseLog(category,mode,log):
                     info["size"], info["model"])
 
         if foundTag in found:
-            print foundTag
+            print "Found old:", foundTag
             ## already found results for this setup
             continue
         else:
