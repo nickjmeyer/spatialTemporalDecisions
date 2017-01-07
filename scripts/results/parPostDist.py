@@ -80,8 +80,9 @@ def main():
     for name, (postMean, postL95, postU95), simVal in zip(edgeParNames,
                                                           edgePostDist,
                                                           edgeSimVals):
-        print "%s & %0.2f & [ %0.2f, %0.2f] & %0.2f" % (name, postMean, postL95,
-                                                        postU95, simVal)
+        print "%s & %0.2f & [ %0.2f, %0.2f] & %0.2f \\\\" % (name, postMean,
+                                                             postL95, postU95,
+                                                             simVal)
 
 
     ## get spatial values
@@ -99,8 +100,9 @@ def main():
     for name, (postMean, postL95, postU95), simVal in zip(spatialParNames,
                                                           spatialPostDist,
                                                           spatialSimVals):
-        print "%s & %0.2f & [ %0.2f, %0.2f] & %0.2f" % (name, postMean, postL95,
-                                                        postU95, simVal)
+        print "%s & %0.2f & [ %0.2f, %0.2f] & %0.2f \\\\" % (name, postMean,
+                                                             postL95, postU95,
+                                                             simVal)
 
 
 if __name__ == "__main__":
