@@ -31,21 +31,12 @@ stopifnot(length(clean_names) == ncol(ss_obs))
 
 for(i in 1:ncol(ss_sim_spat)) {
   rng = range(c(ss_sim_spat[,i], ss_sim_edge[i], ss_obs[,i]))
-  df = as.data.frame(rbind(cbind(ss_sim_spat[,i], 1), cbind(ss_sim_edge[,i], 0)))
-  df[,2] = factor(df[,2], levels = c(1, 0), labels = c("Spatial", "Network"))
-  names(df) = c("value", "model")
 
-  p = ggplot(df, aes(x = model, y = value))
-  p = p + geom_boxplot()
-  p = p + coord_cartesian(ylim = rng)
-  p = p + geom_hline(yintercept = ss_obs[,i])
-  p = p + xlab("")
-  p = p + ylab(clean_names[i])
-  p = p + theme_classic()
-  p = p + theme(text = element_text(size = 15))
-
-  ggsave(filename = paste("../../data/plotting/ppc_", names(ss_obs)[i], ".pdf", sep=""),
-         plot = p)
+  pdf(paste("../../data/plotting/ppc_", names(ss_obs)[i], ".pdf", sep=""))
+  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]),
+          names = c("Spatial", "Network"), ylim = rng)
+  abline(h = ss_obs[,i])
+  dev.off()
 }
 
 
@@ -76,19 +67,10 @@ stopifnot(length(clean_names) == ncol(ss_obs))
 
 for(i in 1:ncol(ss_sim_spat)) {
   rng = range(c(ss_sim_spat[,i], ss_sim_edge[i], ss_obs[,i]))
-  df = as.data.frame(rbind(cbind(ss_sim_spat[,i], 1), cbind(ss_sim_edge[,i], 0)))
-  df[,2] = factor(df[,2], levels = c(1, 0), labels = c("Spatial", "Network"))
-  names(df) = c("value", "model")
 
-  p = ggplot(df, aes(x = model, y = value))
-  p = p + geom_boxplot()
-  p = p + coord_cartesian(ylim = rng)
-  p = p + geom_hline(yintercept = ss_obs[,i])
-  p = p + xlab("")
-  p = p + ylab(clean_names[i])
-  p = p + theme_classic()
-  p = p + theme(text = element_text(size = 15))
-
-  ggsave(filename = paste("../../data/plotting/ppc_oos_", names(ss_obs)[i], ".pdf", sep=""),
-         plot = p)
+  pdf(paste("../../data/plotting/ppc_oos_", names(ss_obs)[i], ".pdf", sep=""))
+  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]),
+          names = c("Spatial", "Network"), ylim = rng)
+  abline(h = ss_obs[,i])
+  dev.off()
 }
