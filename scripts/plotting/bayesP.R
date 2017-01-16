@@ -33,7 +33,7 @@ for(i in 1:ncol(ss_sim_spat)) {
   rng = range(c(ss_sim_spat[,i], ss_sim_edge[i], ss_obs[,i]))
 
   pdf(paste("../../data/plotting/ppc_", names(ss_obs)[i], ".pdf", sep=""))
-  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]),
+  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]), ylab = clean_names[i],
           names = c("Spatial", "Network"), ylim = rng)
   abline(h = ss_obs[,i])
   dev.off()
@@ -69,7 +69,7 @@ for(i in 1:ncol(ss_sim_spat)) {
   rng = range(c(ss_sim_spat[,i], ss_sim_edge[i], ss_obs[,i]))
 
   pdf(paste("../../data/plotting/ppc_oos_", names(ss_obs)[i], ".pdf", sep=""))
-  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]),
+  boxplot(cbind(ss_sim_spat[,i], ss_sim_edge[,i]), ylab = clean_names[i],
           names = c("Spatial", "Network"), ylim = rng)
   abline(h = ss_obs[,i])
   dev.off()
