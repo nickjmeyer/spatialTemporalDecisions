@@ -9,9 +9,9 @@ def main():
                            u"Model",u"Treatment Strategy",u"Mean",u"Stddev"],
                           dtype="object")
     networkNames = {"grid":"N1",
-                    "scalefree": "N2",
-                    "rand": "N3",
-                    "crp": "N4"}
+                    "scalefree": "N4",
+                    "rand": "N2",
+                    "crp": "N3"}
     strategyNames = {"none": "No Trt",
                      "myopic": "Myopic",
                      "proximal": "Proximal",
