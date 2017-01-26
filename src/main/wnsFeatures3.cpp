@@ -122,8 +122,34 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
 
     // feature 0
     // probability of infection or infecting
-    infFeat.col(featNum) = 1 - arma::prod(weightMat,1);
     notFeat.col(featNum) = 1 - arma::prod(weightMat,0).t();
+    // infFeat.col(featNum) = 1 - arma::prod(weightMat,1);
+    for(i=0; i<sD.numInfected; i++){
+        int node0 = sD.infected.at(i);
+
+        if(tp.getEdgeToEdge()) {
+            int count = 0;
+            int total = 0;
+            for(j=0; j<sD.numNotInfec; j++){
+                if(fD.network.at(node0*fD.numNodes + sD.notInfec.at(j))){
+                    total+=notFeat(j,0);
+                    count++;
+                }
+            }
+            infFeat(i,featNum) = total/((double)count);
+        } else {
+            double weightProb = 0;
+            double weightTot = 0;
+            for (j = 0; j < sD.numNotInfec; ++j) {
+                double weight = fD.expDistWeight.at(
+                        node0 * fD.numNodes + sD.notInfec.at(j));
+                weightProb += weight * notFeat(j,0);
+                weightTot += weight;
+            }
+            infFeat(i,featNum) = weightProb/weightTot;
+        }
+    }
+
 
 
     featNum++;
