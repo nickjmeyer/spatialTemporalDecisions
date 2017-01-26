@@ -21,7 +21,7 @@ add_library(spatioTemporalDecisions agent.cpp allAgent.cpp
   tuneParam.cpp utilities.cpp wnsFeatures3.cpp)
 
 foreach(exec_var tuneGen tuneGenWNS runM1Mles runM1MlesMiss
-    runM1MlesWns runM1MlesWnsMiss sandbox bayesP copyParams)
+    runM1MlesWns runM1MlesWnsMiss sandbox bayesP copyParams myopicAgreement)
   add_executable(${exec_var} ${exec_var}.cpp)
   target_link_libraries(${exec_var} spatioTemporalDecisions ${Boost_LIBRARIES}
     ${GLOG_LIBRARIES} ${GFLAGS_LIBRARIES} ${GSL_LIBRARIES}
