@@ -28,6 +28,8 @@ public:
     double jitterScale;
 
     bool shuffle;
+
+    bool oneChunk;
 };
 
 

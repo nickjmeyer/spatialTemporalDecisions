@@ -10,6 +10,8 @@ RankAgent<F,M>::RankAgent(){
 
     tp.shuffle = false;
 
+    tp.oneChunk = false;
+
     setEdgeToEdge(false);
 
     name="rank";
@@ -61,6 +63,10 @@ void RankAgent<F,M>::applyTrt(const SimData & sD,
     int numChunks = std::log((double)fD.numNodes) + 1.0;
 
     numChunks = std::min(std::max(numPre,numAct),numChunks);
+
+    if (tp.oneChunk) {
+        numChunks = 1;
+    }
 
     const double jitterVal = calcJitter();
 
