@@ -24,7 +24,7 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
 
     int i,j,node0;
 
-    m.modFill(sD,tD,fD,dD);
+    m.setFill(sD,tD,fD,dD);
     m.infProbs(sD,tD,fD,dD);
 
     notFeat = arma::conv_to<arma::colvec>::from(m.infProbs());
