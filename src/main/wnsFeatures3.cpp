@@ -136,7 +136,11 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
                     count++;
                 }
             }
-            infFeat(i,featNum) = total/((double)count);
+            if (count > 0) {
+                infFeat(i,featNum) = total/((double)count);
+            } else {
+                infFeat(i,featNum) = 0.;
+            }
         } else {
             double weightProb = 0;
             double weightTot = 0;
@@ -146,7 +150,11 @@ void WnsFeatures3<M>::getFeatures(const SimData & sD,
                 weightProb += weight * notFeat(j,0);
                 weightTot += weight;
             }
-            infFeat(i,featNum) = weightProb/weightTot;
+            if (weightTot > 0) {
+                infFeat(i,featNum) = weightProb/weightTot;
+            } else {
+                infFeat(i,featNum) = 0.;
+            }
         }
     }
 

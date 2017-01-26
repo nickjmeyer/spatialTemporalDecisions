@@ -42,7 +42,11 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
                     count++;
                 }
             }
-            infFeat(i) = total/((double)count);
+            if (count > 0) {
+                infFeat(i) = total/((double)count);
+            } else {
+                infFeat(i) = 0.;
+            }
         } else {
             double weightProb = 0;
             double weightTot = 0;
@@ -52,7 +56,11 @@ void MyopicAgent<M>::applyTrt(const SimData & sD,
                 weightProb += weight * notFeat(j);
                 weightTot += weight;
             }
-            infFeat(i) = weightProb/weightTot;
+            if (weightTot > 0) {
+                infFeat(i) = weightProb/weightTot;
+            } else {
+                infFeat(i) = 0.;
+            }
         }
     }
 
