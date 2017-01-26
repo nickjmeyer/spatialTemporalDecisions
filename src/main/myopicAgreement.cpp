@@ -43,6 +43,7 @@ int main(int argc, char ** argv){
     RA ra;
 
     ra.tp.jitterScale = -1;
+    ra.tp.oneChunk = true;
     ra.setEdgeToEdge(false);
 
     ra.tp.putPar({1.,0.,0.});
@@ -53,6 +54,7 @@ int main(int argc, char ** argv){
     std::vector<std::vector<int> > myopicTrt;
 
     for (int i = 0; i < numReps; ++i) {
+        std::cout << "\r" << i << std::flush;
         njm::resetSeed(i);
         s.revert();
         for (int j = 0; j < s.fD.finalT; ++j) {
@@ -76,6 +78,7 @@ int main(int argc, char ** argv){
             s.nextPoint();
         }
     }
+    std::cout << "\r" << numReps << std::endl;
 
     njm::toFile(njm::toString(rankTrt, "\n", ""),
             njm::sett.datExt("rank_trt_",".txt"));
