@@ -10,9 +10,7 @@ def readLog(category,mode):
     logFiles = {"wns": {"edge": ["runEdgeToEdgeWns.log"],
                         "spatial": ["runSpatialWns.log"]},
                 "toy": {"edge": ["runEdgeToEdgeToy.log"],
-                        "spatial": ["runCrp_1.log",
-                                    "runCrp_2.log",
-                                    "runSpatialToy.log"]}}
+                        "spatial": ["runSpatialToy.log"]}}
 
     logDir = "../../data/logs"
 
