@@ -27,9 +27,11 @@ pEdge = pEdge + geom_point(data = resEdge, aes(y = agent, x = mean, color = mode
 pEdge = pEdge + scale_shape_manual("Model Specification", values = c(1, 3))
 pEdge = pEdge + scale_size_manual("Model Specification", values = c(2, 1.25))
 pEdge = pEdge + facet_grid(network ~ size)
+pEdge = pEdge + scale_color_hue("Model Specification")
+pEdge = pEdge + scale_y_discrete(limits = c("None", "Myopic", "Proximal", "Policy Search", "All"))
+pEdge = pEdge + scale_x_continuous(breaks = pretty(resEdge$mean, n = 4))
 pEdge = pEdge + xlab("Estimated Mean Value")
 pEdge = pEdge + ylab("Treatment Strategy")
-pEdge = pEdge + scale_color_hue("Model Specification")
 pEdge = pEdge + theme(legend.position = "bottom")
 
 
@@ -41,9 +43,11 @@ pSpatial = pSpatial + geom_point(data = resSpatial, aes(y = agent, x = mean, col
 pSpatial = pSpatial + scale_shape_manual("Model Specification", values = c(1, 3))
 pSpatial = pSpatial + scale_size_manual("Model Specification", values = c(2, 1.25))
 pSpatial = pSpatial + facet_grid(network ~ size)
+pSpatial = pSpatial + scale_color_hue("Model Specification")
+pSpatial = pSpatial + scale_y_discrete(limits = c("None", "Myopic", "Proximal", "Policy Search", "All"))
+pSpatial = pSpatial + scale_x_continuous(breaks = pretty(resSpatial$mean, n = 3))
 pSpatial = pSpatial + xlab("Estimated Mean Value")
 pSpatial = pSpatial + ylab("Treatment Strategy")
-pSpatial = pSpatial + scale_color_hue("Model Specification")
 pSpatial = pSpatial + theme(legend.position = "bottom")
 
 ggsave("../../data/plotting/results_plot_spatial.pdf", pSpatial)
