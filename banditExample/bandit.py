@@ -2,6 +2,13 @@
 
 import numpy as np
 
+import matplotlib.pyplot as plt
+
+import multiprocessing as mp
+
+import cPickle as pickle
+
+import traceback
 
 class Bandit(object):
     def __init__(self, handle_means = (0, 0), handle_sds = (1, 1)):
@@ -18,7 +25,7 @@ class Bandit(object):
     def pull_handle(self, arm_number):
         ## pull handle and return the value
         assert isinstance(arm_number, int)
-        assert arm_number == 0 || arm_number == 0
+        assert (arm_number == 0 or arm_number == 1)
 
         return np.random.normal(loc = self.handle_means_[arm_number],
                                 scale = self.handle_sds_[arm_number])
@@ -38,14 +45,14 @@ class KstepAlternatingAgent(object):
 
 
     def choose_handle(self):
-        if self.nsteps_ < ksteps:
+        if self.nsteps_ < self.ksteps_:
             ## if still eploring, return alternating handle
-            return self.nsteps_ %% 2
+            return self.nsteps_ % 2
         else:
             ## if done exploring, return the best or choose randomly if tied
             if np.mean(self.history_[0]) > np.mean(self.history_[1]):
                 return 0
-            else if np.mean(self.history_[0]) < np.mean(self.history_[1]):
+            elif np.mean(self.history_[0]) < np.mean(self.history_[1]):
                 return 1
             else:
                 return np.random.binomial(1,0.5)
@@ -53,7 +60,7 @@ class KstepAlternatingAgent(object):
 
     def feedback(self, value):
         ## record history
-        self.history_[self.nsteps %% 2].append(value)
+        self.history_[self.nsteps_ % 2].append(value)
 
 
     def turn_clock(self):
@@ -85,13 +92,16 @@ class TsExploreAgent(object):
 
         if beliefs[0] > beliefs[1]:
             ## if belief for 0 is larger than 1, return 0
+            self.last_handle_ = 0
             return 0
         elif beliefs[0] < beliefs[1]:
             ## if belief for 0 is smaller than 1, return 1
+            self.last_handle_ = 1
             return 1
         else:
             ## if beliefs are tied, choose randomly
-            return np.random.binomial(1, 0.5)
+            self.last_handle_ = np.random.binomial(1, 0.5)
+            return self.last_handle_
 
 
     def draw_beliefs(self):
@@ -128,7 +138,7 @@ class TsExploreAgent(object):
 
     def feedback(self, value):
         ## record history
-        self.history[self.last_handle_].append(value)
+        self.history_[self.last_handle_].append(value)
 
 
     def turn_clock(self):
@@ -152,33 +162,94 @@ class Runner(object):
     def turn_clock(self):
         ## get handle from the agent
         handle = self.agent_.choose_handle()
+        self.pull_history_.append(handle)
 
         ## pull the handle and get the value
-        value = self.bandit.pull_handle(handle)
+        value = self.bandit_.pull_handle(handle)
+        self.value_history_.append(value)
 
         ## provide feedback to the agent
         self.agent_.feedback(value)
 
         ## increment clock
-        self.agent.turn_clock()
+        self.agent_.turn_clock()
 
 
     def run(self):
         ## run for max_steps
-        for steps in range(self.max_steps):
+        for steps in range(self.max_steps_):
             self.turn_clock()
 
         ## return histories
         return self.pull_history_, self.value_history_
 
 
+def create_agent(kind, *args):
+    if kind == "TsExploreAgent":
+        return TsExploreAgent(*args)
+    elif kind == "KstepAlternatingAgent":
+        return KstepAlternatingAgent(*args)
+    else:
+        raise ValueError("Don't know how to create agent of type: "
+                         + str(kind))
+
+
+def run_experiment_for_agent(a_args, num_reps,
+                             handle_means, handle_sds,
+                             final_t):
+    a_res_pull = []
+    a_res_value = []
+    for rep in range(num_reps):
+        agent = create_agent(*a_args)
+        bandit = Bandit(handle_means, handle_sds)
+        runner = Runner(bandit, agent, final_t)
+
+        pull_history, value_history = runner.run()
+
+        a_res_pull.append(np.mean([pull == 0 for pull in pull_history]))
+
+        a_res_value.append(np.mean(value_history))
+
+    return a_res_pull, a_res_value
+
+
+def wrapper(args):
+    try :
+        return run_experiment_for_agent(*args)
+    except Exception as e:
+        print traceback.format_exc()
+        print e
+        raise e
 
 
 
 def run_experiment():
-    pass
+    num_reps = 100
+
+    final_t = 100
+
+    handle_means = (2, 0)
+    handle_sds = (5, 1)
+
+    ## create arguments for map
+    arg_list = []
+    for i in range(50):
+        arg_list.append((("KstepAlternatingAgent", 2 * (i + 1)),
+                         num_reps, handle_means, handle_sds, final_t))
+
+    arg_list.append((("TsExploreAgent",),
+                         num_reps, handle_means, handle_sds, final_t))
 
 
+    ## run sims
+    pool = mp.Pool()
+
+    all_res = pool.map(wrapper, arg_list)
+
+
+    ## save data
+    with open("all_res.p", "w") as f:
+        f.write(pickle.dumps(all_res))
 
 
 if __name__ == "__main__":
