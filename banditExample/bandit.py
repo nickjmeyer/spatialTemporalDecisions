@@ -10,15 +10,14 @@ import cPickle as pickle
 
 import traceback
 
+import pandas
+
 class Bandit(object):
-    def __init__(self, handle_means = (0, 0), handle_sds = (1, 1)):
+    def __init__(self, handle_means = (0, 0)):
         assert isinstance(handle_means, tuple)
-        assert isinstance(handle_sds, tuple)
 
         assert len(handle_means) == 2
-        assert len(handle_sds) == 2
 
-        self.handle_sds_ = handle_sds
         self.handle_means_ = handle_means
 
 
@@ -28,7 +27,7 @@ class Bandit(object):
         assert (arm_number == 0 or arm_number == 1)
 
         return np.random.normal(loc = self.handle_means_[arm_number],
-                                scale = self.handle_sds_[arm_number])
+                                scale = 1.0)
 
 
 class KstepAlternatingAgent(object):
@@ -60,7 +59,8 @@ class KstepAlternatingAgent(object):
 
     def feedback(self, value):
         ## record history
-        self.history_[self.nsteps_ % 2].append(value)
+        if self.nsteps_ < self.ksteps_:
+            self.history_[self.nsteps_ % 2].append(value)
 
 
     def turn_clock(self):
@@ -82,9 +82,6 @@ class TsExploreAgent(object):
         self.history_ = [[], []]
 
         self.last_handle_ = None
-
-        self.default_mean_ = 0
-        self.default_se_ = 1
 
 
     def choose_handle(self):
@@ -112,19 +109,17 @@ class TsExploreAgent(object):
             handle_mean = None
             handle_se = None
 
-            if len(self.history_[i]) == 0:
-                ## use defaults when no data are available
-                handle_mean = self.default_mean_
-                handle_se = self.default_se_
-            elif len(self.history_[i]) == 1:
-                ## use default se when only one observation is available
-                handle_mean = self.history_[i][0]
-                handle_se = self.default_se_
+            n_obs = len(self.history_[i])
+
+            if n_obs == 0:
+                ## use prior
+                handle_mean = 0.0
+                handle_se = 1.0
             else:
-                ## use sample mean and sample se
-                handle_mean = np.mean(self.history_[i])
-                handle_se = (np.std(self.history_[i])
-                             / np.sqrt(len(self.history_[i])))
+                ## use posterior
+                handle_mean = sum(self.history_[i]) / (1. / 100. + n_obs)
+                handle_se = np.sqrt(1. / (1. / 100. + n_obs))
+
 
             assert handle_mean is not None
             assert handle_se is not None
@@ -194,62 +189,64 @@ def create_agent(kind, *args):
                          + str(kind))
 
 
-def run_experiment_for_agent(a_args, num_reps,
-                             handle_means, handle_sds,
-                             final_t):
+def run_experiment_for_agent(a_name, a_args, num_reps,
+                             handle_means, final_t):
+    res = {"pull": [],
+           "value": [],
+           "time": [],
+           "rep": [],
+           "name": []}
+
     a_res_pull = []
     a_res_value = []
     for rep in range(num_reps):
         agent = create_agent(*a_args)
-        bandit = Bandit(handle_means, handle_sds)
+        bandit = Bandit(handle_means)
         runner = Runner(bandit, agent, final_t)
 
         pull_history, value_history = runner.run()
 
-        a_res_pull.append(np.mean([pull == 0 for pull in pull_history]))
+        assert len(pull_history) == final_t
+        assert len(value_history) == final_t
 
-        a_res_value.append(np.mean(value_history))
+        res["pull"].extend(pull_history)
+        res["value"].extend(value_history)
+        res["time"].extend(range(1, final_t + 1))
 
-    return a_res_pull, a_res_value
+        res["rep"].extend([rep] * final_t)
+        res["name"].extend([a_name] * final_t)
+
+
+    return pandas.DataFrame.from_dict(res)
 
 
 def wrapper(args):
-    try :
-        return run_experiment_for_agent(*args)
-    except Exception as e:
-        print traceback.format_exc()
-        print e
-        raise e
-
+    return run_experiment_for_agent(*args)
 
 
 def run_experiment():
-    num_reps = 100
+    num_reps = 1000
 
     final_t = 100
 
-    handle_means = (2, 0)
-    handle_sds = (5, 1)
+    handle_means = (1, 0)
 
     ## create arguments for map
     arg_list = []
-    for i in range(50):
-        arg_list.append((("KstepAlternatingAgent", 2 * (i + 1)),
-                         num_reps, handle_means, handle_sds, final_t))
+    for i in [1, 5, 10]:
+        arg_list.append(("%d-Step Alternating" % (2 * i),
+                         ("KstepAlternatingAgent", 2 * i),
+                         num_reps, handle_means, final_t))
 
-    arg_list.append((("TsExploreAgent",),
-                         num_reps, handle_means, handle_sds, final_t))
+    arg_list.append(("Thompson Sampling", ("TsExploreAgent",),
+                     num_reps, handle_means, final_t))
 
 
     ## run sims
-    pool = mp.Pool()
-
-    all_res = pool.map(wrapper, arg_list)
-
+    df = pandas.concat(map(wrapper, arg_list))
 
     ## save data
-    with open("all_res.p", "w") as f:
-        f.write(pickle.dumps(all_res))
+    df.to_csv("all_res.csv", index = False)
 
 
 if __name__ == "__main__":
