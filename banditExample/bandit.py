@@ -20,14 +20,24 @@ class Bandit(object):
 
         self.handle_means_ = handle_means
 
+        self.values_ = None
+
+    def set_values(self):
+        self.values_ = [np.random.normal(loc = self.handle_means_[i],
+                                         scale = 1.0)
+                        for i in range(2)]
+
 
     def pull_handle(self, arm_number):
         ## pull handle and return the value
         assert isinstance(arm_number, int)
         assert (arm_number == 0 or arm_number == 1)
 
-        return np.random.normal(loc = self.handle_means_[arm_number],
-                                scale = 1.0)
+        return self.values_[arm_number]
+
+
+    def regret(self, value):
+        return max(self.values_) - value
 
 
 class KstepAlternatingAgent(object):
@@ -42,11 +52,13 @@ class KstepAlternatingAgent(object):
 
         self.history_ = [[], []]
 
+        self.offset_ = np.random.binomial(1, 0.5)
+
 
     def choose_handle(self):
         if self.nsteps_ < self.ksteps_:
             ## if still eploring, return alternating handle
-            return self.nsteps_ % 2
+            return (self.nsteps_ + self.offset_) % 2
         else:
             ## if done exploring, return the best or choose randomly if tied
             if np.mean(self.history_[0]) > np.mean(self.history_[1]):
@@ -60,7 +72,7 @@ class KstepAlternatingAgent(object):
     def feedback(self, value):
         ## record history
         if self.nsteps_ < self.ksteps_:
-            self.history_[self.nsteps_ % 2].append(value)
+            self.history_[(self.nsteps_ + self.offset_) % 2].append(value)
 
 
     def turn_clock(self):
@@ -149,12 +161,16 @@ class Runner(object):
 
         self.pull_history_ = []
         self.value_history_ = []
+        self.regret_history_ = []
 
         self.nsteps_ = 0
         self.max_steps_ = max_steps
 
 
     def turn_clock(self):
+        ## bandit selects values for each arm
+        self.bandit_.set_values()
+
         ## get handle from the agent
         handle = self.agent_.choose_handle()
         self.pull_history_.append(handle)
@@ -162,6 +178,7 @@ class Runner(object):
         ## pull the handle and get the value
         value = self.bandit_.pull_handle(handle)
         self.value_history_.append(value)
+        self.regret_history_.append(self.bandit_.regret(value))
 
         ## provide feedback to the agent
         self.agent_.feedback(value)
@@ -176,7 +193,7 @@ class Runner(object):
             self.turn_clock()
 
         ## return histories
-        return self.pull_history_, self.value_history_
+        return self.pull_history_, self.value_history_, self.regret_history_
 
 
 def create_agent(kind, *args):
@@ -193,6 +210,7 @@ def run_experiment_for_agent(a_name, a_args, num_reps,
                              handle_means, final_t):
     res = {"pull": [],
            "value": [],
+           "regret": [],
            "time": [],
            "rep": [],
            "name": []}
@@ -200,17 +218,20 @@ def run_experiment_for_agent(a_name, a_args, num_reps,
     a_res_pull = []
     a_res_value = []
     for rep in range(num_reps):
+        np.random.seed(rep)
+
         agent = create_agent(*a_args)
         bandit = Bandit(handle_means)
         runner = Runner(bandit, agent, final_t)
 
-        pull_history, value_history = runner.run()
+        pull_history, value_history, regret_history = runner.run()
 
         assert len(pull_history) == final_t
         assert len(value_history) == final_t
 
         res["pull"].extend(pull_history)
         res["value"].extend(value_history)
+        res["regret"].extend(regret_history)
         res["time"].extend(range(1, final_t + 1))
 
         res["rep"].extend([rep] * final_t)
