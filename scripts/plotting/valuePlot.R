@@ -10,9 +10,9 @@ res$agent = factor(res$agent,
                    levels = c("ps", "proximal", "none", "myopic", "all"),
                    labels = c("Policy Search", "Proximal", "None", "Myopic",
                               "All"))
-res$network = factor(res$network,
-                     levels = c("grid", "rand", "crp", "scalefree"),
-                     labels = c("N1", "N2", "N3", "N4"))
+## res$network = factor(res$network,
+##                      levels = c("grid", "rand", "crp", "scalefree"),
+##                      labels = c("N1", "N2", "N3", "N4"))
 res$model = factor(res$model,
                    levels = c("corr", "miss"),
                    labels = c("Correct", "Misspecified"))
@@ -21,6 +21,20 @@ resEdgeMiss = subset(res, res$mode == "edge" & res$model == "Correct")
 resSpatialMiss = subset(res, res$mode == "spatial" & res$model == "Misspecified")
 resEdgeCorr = subset(res, res$mode == "edge" & res$model == "Correct")
 resSpatialCorr = subset(res, res$mode == "spatial" & res$model == "Misspecified")
+
+resEdgeMiss$network = factor(resEdgeMiss$network,
+                             levels = c("grid", "rand", "scalefree"),
+                             labels = c("N1", "N2", "N3"))
+resEdgeCorr$network = factor(resEdgeCorr$network,
+                             levels = c("grid", "rand", "scalefree"),
+                             labels = c("N1", "N2", "N3"))
+
+resSpatialMiss$network = factor(resSpatialMiss$network,
+                             levels = c("grid", "rand", "crp"),
+                             labels = c("S1", "S2", "S3"))
+resSpatialCorr$network = factor(resSpatialCorr$network,
+                             levels = c("grid", "rand", "crp"),
+                             labels = c("S1", "S2", "S3"))
 
 
 pEdgeMiss = ggplot(data = resEdgeMiss, aes(y = agent, x = mean, pch = model,
