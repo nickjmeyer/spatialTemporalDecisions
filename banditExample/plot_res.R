@@ -41,7 +41,7 @@ p = p + scale_linetype_manual("Strategy",
                                          "10-Step Alternating" = "solid",
                                          "20-Step Alternating" = "solid",
                                          "Thompson Sampling" = "dashed"))
-p = p + ylab("Cumulative regret")
+p = p + ylab("Expected cumulative regret")
 p = p + xlab("Time")
 p = p + theme(legend.position = "bottom")
 
