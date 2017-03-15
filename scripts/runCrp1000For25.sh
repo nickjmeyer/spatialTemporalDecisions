@@ -7,6 +7,7 @@ PROJ_ROOT=.
 
 EXEC_PATH=${PROJ_ROOT}/build/src/main
 
+WNS=${PROJ_ROOT}/data/wns
 TOY=${PROJ_ROOT}/data/toy
 
 DRY=--nodryRun
