@@ -17,10 +17,10 @@ res$model = factor(res$model,
                    levels = c("corr", "miss"),
                    labels = c("Correct", "Misspecified"))
 
-resEdgeMiss = subset(res, res$mode == "edge" & res$model == "Correct")
+resEdgeMiss = subset(res, res$mode == "edge" & res$model == "Misspecified")
 resSpatialMiss = subset(res, res$mode == "spatial" & res$model == "Misspecified")
 resEdgeCorr = subset(res, res$mode == "edge" & res$model == "Correct")
-resSpatialCorr = subset(res, res$mode == "spatial" & res$model == "Misspecified")
+resSpatialCorr = subset(res, res$mode == "spatial" & res$model == "Correct")
 
 resEdgeMiss$network = factor(resEdgeMiss$network,
                              levels = c("grid", "rand", "scalefree"),
