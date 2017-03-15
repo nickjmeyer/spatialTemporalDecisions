@@ -9,6 +9,7 @@ library(grid)
 library(gridExtra)
 library(RColorBrewer)
 library(dplyr)
+library(viridis)
 
 data(county.fips)
 
@@ -85,9 +86,9 @@ settings = theme(axis.line=element_blank(), axis.text.x=element_blank(),
     plot.background=element_blank(),
     legend.position=c(.89,.2),
     ## legend.background=element_rect(colour="black"),
-    legend.text=element_text(size=20),
+    legend.text=element_text(size=18),
     legend.key.size=unit(.5,"in"),
-    legend.title=element_text(size=15))
+    legend.title=element_text(size=20))
 
 width=20.16
 height=11.13
@@ -97,91 +98,96 @@ cex=10
 
 ## average infection observed
 pAvgInf = ggplot()
-pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group,
-                         order=order),color="black",fill="gray80")
+pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group),
+                                color="black",fill="gray80")
 pAvgInf = pAvgInf + geom_polygon(data=dWNS, aes(x=long,y=lat,group=group,
-                         fill=as.factor(Observed.Year.2013),order=order),color="black")
+                         fill=Observed.Year.2013),color="black")
 pAvgInf = pAvgInf + settings
-pAvgInf = pAvgInf +  scale_fill_manual(values=c("dodgerblue4","green"),
-                                          na.value="transparent",
-                                          name = "Probability of Infection\n")
-pAvgInf = pAvgInf + ggtitle("Observed Average Infection")
+## pAvgInf = pAvgInf +  scale_fill_manual(values=c("dodgerblue4","green"),
+##                                           na.value="transparent",
+##                                           name = "Probability of Infection\n")
+pAvgInf = pAvgInf + scale_fill_viridis(name = "Probability of Infection\n")
+## pAvgInf = pAvgInf + ggtitle("Observed Average Infection")
 print(pAvgInf)
 ggsave("../../data/plotting/average_observed_col.pdf",plot=pAvgInf,width=width,height=height)
 
 
 ## average infection spatial
 pAvgInf = ggplot()
-pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group,
-                         order=order),color="black",fill="gray80")
+pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group),
+                         color="black",fill="gray80")
 pAvgInf = pAvgInf + geom_polygon(data=dWNS, aes(x=long,y=lat,group=group,
-                         fill=log(Spatial.Year.2013+0.001),order=order),color="black")
+                         fill=log(Spatial.Year.2013+0.001)),color="black")
 pAvgInf = pAvgInf + settings
-pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
-                                          values=rescale(
-                                                   c(min(log(dWNS$Spatial.Year.2013+0.001)),
-                                                     quantile(log(dWNS$Spatial.Year.2013+0.001),
-                                                              probs=0.75),
-                                                     max(log(dWNS$Spatial.Year.2013)))),
-                                          na.value="transparent",
-                                          name = "Log-Probability of Infection\n")
-pAvgInf = pAvgInf + ggtitle("Spatial Average Infection")
+## pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
+##                                           values=rescale(
+##                                                    c(min(log(dWNS$Spatial.Year.2013+0.001)),
+##                                                      quantile(log(dWNS$Spatial.Year.2013+0.001),
+##                                                               probs=0.75),
+##                                                      max(log(dWNS$Spatial.Year.2013)))),
+##                                           na.value="transparent",
+##                                           name = "Log-Probability of Infection\n")
+pAvgInf = pAvgInf + scale_fill_viridis(name = "Log-Probability of Infection\n")
+## pAvgInf = pAvgInf + ggtitle("Spatial Average Infection")
 print(pAvgInf)
 ggsave("../../data/plotting/average_infection_spatial_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection edge
 pAvgInf = ggplot()
-pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group,
-                         order=order),color="black",fill="gray80")
+pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group),
+                         color="black",fill="gray80")
 pAvgInf = pAvgInf + geom_polygon(data=dWNS, aes(x=long,y=lat,group=group,
-                         fill=log(Edge.Year.2013+0.001),order=order),color="black")
+                         fill=log(Edge.Year.2013+0.001)),color="black")
 pAvgInf = pAvgInf + settings
-pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
-                                          values=rescale(
-                                                   c(min(log(dWNS$Edge.Year.2013+0.001)),
-                                                     quantile(log(dWNS$Edge.Year.2013+0.001),
-                                                              probs=0.75),
-                                                     max(log(dWNS$Edge.Year.2013)))),
-                                          na.value="transparent",
-                                          name = "Log-Probability of Infection\n")
-pAvgInf = pAvgInf + ggtitle("Edge Average Infection")
+## pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
+##                                           values=rescale(
+##                                                    c(min(log(dWNS$Edge.Year.2013+0.001)),
+##                                                      quantile(log(dWNS$Edge.Year.2013+0.001),
+##                                                               probs=0.75),
+##                                                      max(log(dWNS$Edge.Year.2013)))),
+##                                           na.value="transparent",
+##                                           name = "Log-Probability of Infection\n")
+pAvgInf = pAvgInf + scale_fill_viridis(name = "Log-Probability of Infection\n")
+## pAvgInf = pAvgInf + ggtitle("Edge Average Infection")
 print(pAvgInf)
 ggsave("../../data/plotting/average_infection_edge_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection spatial out-of-sample
 pAvgInf = ggplot()
-pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group,
-                         order=order),color="black",fill="gray80")
+pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group),
+                         color="black",fill="gray80")
 pAvgInf = pAvgInf + geom_polygon(data=dWNS, aes(x=long,y=lat,group=group,
-                         fill=log(Spatial.Oos.Year.2013+0.001),order=order),color="black")
+                         fill=log(Spatial.Oos.Year.2013+0.001)),color="black")
 pAvgInf = pAvgInf + settings
-pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
-                                          values=rescale(
-                                                   c(min(log(dWNS$Spatial.Oos.Year.2013+0.001)),
-                                                     quantile(log(dWNS$Spatial.Oos.Year.2013+0.001),
-                                                              probs=0.5),
-                                                     max(log(dWNS$Spatial.Oos.Year.2013)))),
-                                          na.value="transparent",
-                                          name = "Log-Probability of Infection\n")
-pAvgInf = pAvgInf + ggtitle("Spatial Out-of-Sample Average Infection")
+## pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
+##                                           values=rescale(
+##                                                    c(min(log(dWNS$Spatial.Oos.Year.2013+0.001)),
+##                                                      quantile(log(dWNS$Spatial.Oos.Year.2013+0.001),
+##                                                               probs=0.5),
+##                                                      max(log(dWNS$Spatial.Oos.Year.2013)))),
+##                                           na.value="transparent",
+##                                           name = "Log-Probability of Infection\n")
+pAvgInf = pAvgInf + scale_fill_viridis(name = "Log-Probability of Infection\n")
+## pAvgInf = pAvgInf + ggtitle("Spatial Out-of-Sample Average Infection")
 plot(pAvgInf)
 ggsave("../../data/plotting/average_infection_spatial_oos_col.pdf",plot=pAvgInf,width=width,height=height)
 
 ## average infection edge out-of-sample
 pAvgInf = ggplot()
-pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group,
-                         order=order),color="black",fill="gray80")
+pAvgInf = pAvgInf + geom_polygon(data=usaData, aes(x=long,y=lat,group=group),
+                         color="black",fill="gray80")
 pAvgInf = pAvgInf + geom_polygon(data=dWNS, aes(x=long,y=lat,group=group,
-                         fill=log(Edge.Oos.Year.2013+0.001),order=order),color="black")
+                         fill=log(Edge.Oos.Year.2013+0.001)),color="black")
 pAvgInf = pAvgInf + settings
-pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
-                                          values=rescale(
-                                                   c(min(log(dWNS$Edge.Oos.Year.2013+0.001)),
-                                                     quantile(log(dWNS$Edge.Oos.Year.2013+0.001),
-                                                              probs=0.75),
-                                                     max(log(dWNS$Edge.Oos.Year.2013)))),
-                                          na.value="transparent",
-                                          name = "Log-Probability of Infection\n")
-pAvgInf = pAvgInf + ggtitle("Edge Out-of-Sample Average Infection")
+## pAvgInf = pAvgInf +  scale_fill_gradientn(colours=c("dodgerblue4","firebrick","green"),
+##                                           values=rescale(
+##                                                    c(min(log(dWNS$Edge.Oos.Year.2013+0.001)),
+##                                                      quantile(log(dWNS$Edge.Oos.Year.2013+0.001),
+##                                                               probs=0.75),
+##                                                      max(log(dWNS$Edge.Oos.Year.2013)))),
+##                                           na.value="transparent",
+##                                           name = "Log-Probability of Infection\n")
+pAvgInf = pAvgInf + scale_fill_viridis(name = "Log-Probability of Infection\n")
+## pAvgInf = pAvgInf + ggtitle("Edge Out-of-Sample Average Infection")
 print(pAvgInf)
 ggsave("../../data/plotting/average_infection_edge_oos_col.pdf",plot=pAvgInf,width=width,height=height)

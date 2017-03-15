@@ -5,3 +5,6 @@ build
 .build_debug/
 data
 Makefile.local
+banditExample/*.png
+banditExample/*.p
+banditExample/*.csv
