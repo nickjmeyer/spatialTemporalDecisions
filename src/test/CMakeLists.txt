@@ -16,7 +16,7 @@ foreach(src_file ${test_src})
   add_executable(${src_file_base} ${src_file})
   target_link_libraries(${src_file_base} spatioTemporalDecisions
     ${Boost_LIBRARIES} ${GLOG_LIBRARIES} ${GFLAGS_LIBRARIES} ${GSL_LIBRARIES}
-    ${ARMADILLO_LIBRARIES} ${GTEST_LIBRARIES})
+    ${ARMADILLO_LIBRARIES} gtest)
   add_test(NAME ${src_file_base}
     COMMAND ${src_file_base})
 endforeach(src_file)
