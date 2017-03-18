@@ -792,10 +792,6 @@ saveNet<-function(net,dir=NULL){
   file=paste(dir,"period.txt",sep="")
   write.table(2,file,col.names=FALSE,row.names=FALSE)
 
-  ## finalT
-  file=paste(dir,"finalT.txt",sep="")
-  write.table(15,file,col.names=FALSE,row.names=FALSE)
-
   if(net$hasNetwork) {
     ## get betweenness connectivity
     betweenness = betweenness(graph.adjacency(net$neigh),nobigint=FALSE)
