@@ -5,4 +5,4 @@ set -e
 
 PROJ_ROOT=.
 
-./scripts/runWnsEdgeCorrLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runWnsEdgeCorrLog.log)
+./scripts/individualRunners/runWnsEdgeCorrLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runWnsEdgeCorrLog.log)

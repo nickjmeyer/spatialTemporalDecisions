@@ -5,4 +5,4 @@ set -e
 
 PROJ_ROOT=.
 
-./scripts/runScalefreeEdgeMissLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runScalefreeEdgeMissLog.log)
+./scripts/individualRunners/runScalefreeEdgeMissLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runScalefreeEdgeMissLog.log)

@@ -5,4 +5,4 @@ set -e
 
 PROJ_ROOT=.
 
-./scripts/runGridSpatialMissLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runGridSpatialMissLog.log)
+./scripts/individualRunners/runGridSpatialMissLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runGridSpatialMissLog.log)
