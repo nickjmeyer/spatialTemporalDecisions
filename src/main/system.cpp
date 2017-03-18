@@ -320,7 +320,7 @@ void System<MG,
     // only update every period steps
     njm::fromFile(fD.period,njm::sett.srcExt("period.txt"));
     // final time step in simulation
-    njm::fromFile(fD.finalT,njm::sett.srcExt("finalT.txt"));
+    fD.finalT = 25;
 
     fD.forecastFlat = false;
 
