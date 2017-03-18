@@ -5,7 +5,6 @@ find_package(GSL REQUIRED)
 find_package(Armadillo REQUIRED)
 find_package(Glog REQUIRED)
 find_package(GFlags REQUIRED)
-find_package(GTest REQUIRED)
 
 include_directories(${GTEST_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/src/main)
