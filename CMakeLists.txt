@@ -23,4 +23,5 @@ add_definitions(-DPROJECT_ROOT_DIR=${CMAKE_SOURCE_DIR})
 
 
 add_subdirectory(src/main)
+add_subdirectory(libs/googletest)
 add_subdirectory(src/test)
