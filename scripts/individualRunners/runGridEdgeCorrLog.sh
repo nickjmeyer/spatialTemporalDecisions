@@ -5,4 +5,4 @@ set -e
 
 PROJ_ROOT=.
 
-./scripts/individualRunners/runGridEdgeCorrLog.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runGridEdgeCorrLog.log)
+./scripts/individualRunners/runGridEdgeCorr.sh 2>&1 | tee >(sed 's/.*\r//'> ./data/logs/runGridEdgeCorrLog.log)
