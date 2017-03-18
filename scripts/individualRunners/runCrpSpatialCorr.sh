@@ -15,24 +15,22 @@ DRY=--nodryRun
 SPATIAL="--noedgeToEdge ${DRY}"
 EDGE="--edgeToEdge ${DRY}"
 
-########################################
-## run sims {correctly specified}
 
-## toy spatial spread
+## copy params
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp100 ${SPATIAL}
 
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp500 ${SPATIAL}
 
 ${EXEC_PATH}/copyParams --srcDir ${WNS} --outDir ${TOY}/crp1000 ${SPATIAL}
 
-
+## tune params
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp100 ${SPATIAL}
 
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp500 ${SPATIAL}
 
 ${EXEC_PATH}/tuneGen --srcDir ${TOY}/crp1000 ${SPATIAL}
 
-
+## run sims
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp100 ${SPATIAL}
 
 ${EXEC_PATH}/runM1Mles --srcDir ${TOY}/crp500 ${SPATIAL}
