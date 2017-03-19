@@ -1,0 +1,18 @@
+| sim                        | server                                     |
+|----------------------------+--------------------------------------------|
+| runCrpSpatialCorrLog.sh    | opal3                                      |
+| runCrpSpatialMissLog.sh    | ec2-34-205-2-202.compute-1.amazonaws.com   |
+| runGridEdgeCorrLog.sh      | lnx3                                       |
+| runGridEdgeMissLog.sh      | ec2-34-205-15-150.compute-1.amazonaws.com  |
+| runGridSpatialCorrLog.sh   | ec2-34-205-89-216.compute-1.amazonaws.com  |
+| runGridSpatialMissLog.sh   | ec2-34-205-89-78.compute-1.amazonaws.com   |
+| runRandEdgeCorrLog.sh      | ec2-52-3-231-100.compute-1.amazonaws.com   |
+| runRandEdgeMissLog.sh      | ec2-34-205-27-197.compute-1.amazonaws.com  |
+| runRandSpatialCorrLog.sh   | ec2-54-236-34-16.compute-1.amazonaws.com   |
+| runRandSpatialMissLog.sh   | ec2-34-205-26-201.compute-1.amazonaws.com  |
+| runScalefreeEdgeCorrLog.sh | ec2-107-23-87-37.compute-1.amazonaws.com   |
+| runScalefreeEdgeMissLog.sh | ec2-34-205-252-188.compute-1.amazonaws.com |
+| runWnsEdgeCorrLog.sh       | ec2-54-91-37-220.compute-1.amazonaws.com   |
+| runWnsEdgeMissLog.sh       | ec2-54-236-241-108.compute-1.amazonaws.com |
+| runWnsSpatialCorrLog.sh    | ec2-52-205-46-127.compute-1.amazonaws.com  |
+| runWnsSpatialMissLog.sh    | ec2-34-205-135-127.compute-1.amazonaws.com |
