@@ -6,43 +6,35 @@ library(plyr)
 
 df = read.csv("all_res.csv", header = TRUE)
 
-df$name = factor(df$name, levels = c("2-Step Alternating",
-                                     "10-Step Alternating",
-                                     "20-Step Alternating",
-                                     "Thompson Sampling"))
 
-df = aggregate(df[,c("pull", "value", "regret")], by = list("name" = df$name, "time" = df$time), FUN = mean)
+df$name = factor(df$name,
+                 levels = c("2-Step Alternating",
+                            "10-Step Alternating",
+                            "20-Step Alternating",
+                            "Thompson Sampling"),
+                 labels = c("k = 1",
+                            "k = 5",
+                            "k = 10",
+                            "Thompson Sampling"))
 
-df = ddply(df, .(name), transform, cum_regret = cumsum(regret))
+df = aggregate(df[,c("pull", "value", "regret")], by = list("name" = df$name, "time" = df$time,
+                                                            "eta" = df$eta), FUN = mean)
+df$eta = as.factor(df$eta)
+
+df = ddply(df, .(name, eta), transform, cum_regret = cumsum(regret))
+
+df = ddply(df, .(name, eta), transform, cum_value = cumsum(value))
+
+df$avg_cum_value = df$cum_value / df$time
 
 
-p = ggplot()
-p = p + geom_line(data = df,
-                  aes(x = time, y = pull, color = name, lty = name))
+
+p = ggplot(data = df, aes(x = time, y = avg_cum_value, color = name))
+p = p + geom_line()
+p = p + facet_wrap( ~ eta, nrow = 1)
 p = p + scale_color_discrete("Strategy")
-p = p + scale_linetype_manual("Strategy",
-                              values = c("2-Step Alternating" = "solid",
-                                         "10-Step Alternating" = "solid",
-                                         "20-Step Alternating" = "solid",
-                                         "Thompson Sampling" = "dashed"))
-p = p + ylab("Probability of selecting the wrong arm")
 p = p + xlab("Time")
-p = p + theme(legend.position = "bottom")
+p = p + ylab("Average cumulative value")
+print(p)
 
-ggsave("../data/plotting/bandit_example_mistakes.pdf", p)
-
-
-p = ggplot()
-p = p + geom_line(data = df,
-                  aes(x = time, y = cum_regret, color = name, lty = name))
-p = p + scale_color_discrete("Strategy")
-p = p + scale_linetype_manual("Strategy",
-                              values = c("2-Step Alternating" = "solid",
-                                         "10-Step Alternating" = "solid",
-                                         "20-Step Alternating" = "solid",
-                                         "Thompson Sampling" = "dashed"))
-p = p + ylab("Expected cumulative regret")
-p = p + xlab("Time")
-p = p + theme(legend.position = "bottom")
-
-ggsave("../data/plotting/bandit_example_regret.pdf", p)
+ggsave("../data/plotting/bandit_example.pdf", p)

@@ -250,23 +250,29 @@ def run_experiment():
 
     final_t = 100
 
-    handle_means = (1, 0)
+    df_list = []
+    for eta in [0.2, 0.4, 0.8, 1.0]:
+        handle_means = (1, 1 - eta)
 
-    ## create arguments for map
-    arg_list = []
-    for i in [1, 5, 10]:
-        arg_list.append(("%d-Step Alternating" % (2 * i),
-                         ("KstepAlternatingAgent", 2 * i),
+        ## create arguments for map
+        arg_list = []
+        for i in [1, 5, 10]:
+            arg_list.append(("%d-Step Alternating" % (2 * i),
+                             ("KstepAlternatingAgent", 2 * i),
+                             num_reps, handle_means, final_t))
+
+        arg_list.append(("Thompson Sampling", ("TsExploreAgent",),
                          num_reps, handle_means, final_t))
 
-    arg_list.append(("Thompson Sampling", ("TsExploreAgent",),
-                     num_reps, handle_means, final_t))
 
+        ## run sims
+        df = pandas.concat(map(wrapper, arg_list))
+        df["eta"] = eta
 
-    ## run sims
-    df = pandas.concat(map(wrapper, arg_list))
+        df_list.append(df)
 
     ## save data
+    df = pandas.concat(df_list, axis = 0)
     df.to_csv("all_res.csv", index = False)
 
 
