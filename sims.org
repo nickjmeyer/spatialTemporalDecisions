@@ -12,7 +12,7 @@
 | runRandSpatialMissLog.sh   | ec2-34-205-26-201.compute-1.amazonaws.com  | X         | X          |
 | runScalefreeEdgeCorrLog.sh | ec2-107-23-87-37.compute-1.amazonaws.com   | X         | X          |
 | runScalefreeEdgeMissLog.sh | ec2-34-205-252-188.compute-1.amazonaws.com | X         | X          |
-| runWnsEdgeCorrLog.sh       | ec2-54-91-37-220.compute-1.amazonaws.com   |           |            |
+| runWnsEdgeCorrLog.sh       | ec2-54-91-37-220.compute-1.amazonaws.com   | X         | X          |
 | runWnsEdgeMissLog.sh       | ec2-54-236-241-108.compute-1.amazonaws.com | X         | X          |
 | runWnsSpatialCorrLog.sh    | lnx3                                       |           |            |
 | runWnsSpatialMissLog.sh    | lnx4                                       |           |            |
