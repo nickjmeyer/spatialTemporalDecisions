@@ -8,7 +8,7 @@
 | runGridSpatialMissLog.sh   | ec2-34-205-89-78.compute-1.amazonaws.com   |           | X          |
 | runRandEdgeCorrLog.sh      | ec2-52-3-231-100.compute-1.amazonaws.com   | X         | X          |
 | runRandEdgeMissLog.sh      | ec2-34-205-27-197.compute-1.amazonaws.com  | X         | X          |
-| runRandSpatialCorrLog.sh   | ec2-54-236-34-16.compute-1.amazonaws.com   |           |            |
+| runRandSpatialCorrLog.sh   | ec2-54-236-34-16.compute-1.amazonaws.com   | X         | X          |
 | runRandSpatialMissLog.sh   | ec2-34-205-26-201.compute-1.amazonaws.com  | X         | X          |
 | runScalefreeEdgeCorrLog.sh | ec2-107-23-87-37.compute-1.amazonaws.com   | X         | X          |
 | runScalefreeEdgeMissLog.sh | ec2-34-205-252-188.compute-1.amazonaws.com | X         | X          |
