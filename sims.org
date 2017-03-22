@@ -1,11 +1,11 @@
 | sim                        | server                                     | completed | terminated |
 |----------------------------+--------------------------------------------+-----------+------------|
-| runCrpSpatialCorrLog.sh    | opal3                                      |           |            |
+| runCrpSpatialCorrLog.sh    | opal3                                      | X         |            |
 | runCrpSpatialMissLog.sh    | ec2-34-205-2-202.compute-1.amazonaws.com   | X         | X          |
 | runGridEdgeCorrLog.sh      | lnx3                                       | X         |            |
 | runGridEdgeMissLog.sh      | ec2-34-205-15-150.compute-1.amazonaws.com  | X         | X          |
-| runGridSpatialCorrLog.sh   | ec2-34-205-89-216.compute-1.amazonaws.com  |           |            |
-| runGridSpatialMissLog.sh   | ec2-34-205-89-78.compute-1.amazonaws.com   |           | X          |
+| runGridSpatialCorrLog.sh   | ec2-34-205-89-216.compute-1.amazonaws.com  | X         |            |
+| runGridSpatialMissLog.sh   | opal3                                      |           |            |
 | runRandEdgeCorrLog.sh      | ec2-52-3-231-100.compute-1.amazonaws.com   | X         | X          |
 | runRandEdgeMissLog.sh      | ec2-34-205-27-197.compute-1.amazonaws.com  | X         | X          |
 | runRandSpatialCorrLog.sh   | ec2-54-236-34-16.compute-1.amazonaws.com   | X         | X          |
