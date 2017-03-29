@@ -7,10 +7,25 @@ import argparse
 def readLog(category,mode):
     ## read the contents of the logs
 
-    logFiles = {"wns": {"edge": ["runEdgeToEdgeWns.log"],
-                        "spatial": ["runSpatialWns.log"]},
-                "toy": {"edge": ["runEdgeToEdgeToy.log"],
-                        "spatial": ["runSpatialToy.log"]}}
+    logFiles = {"wns": {"edge": ["runWnsEdgeCorrLog.log",
+                                 "runWnsEdgeMissLog.log"],
+
+                        "spatial": ["runWnsSpatialCorrLog.log",
+                                    "runWnsSpatialMissLog.log"]},
+
+                "toy": {"edge": ["runGridEdgeCorrLog.log",
+                                 "runGridEdgeMissLog.log",
+                                 "runRandEdgeCorrLog.log",
+                                 "runRandEdgeMissLog.log",
+                                 "runScalefreeEdgeCorrLog.log",
+                                 "runScalefreeEdgeMissLog.log"],
+
+                        "spatial": ["runGridSpatialCorrLog.log",
+                                    "runGridSpatialMissLog.log",
+                                    "runRandSpatialCorrLog.log",
+                                    "runRandSpatialMissLog.log",
+                                    "runCrpSpatialCorr.log",
+                                    "runCrpSpatialMissLog.log"]}}
 
     logDir = "../../data/logs"
 
@@ -29,6 +44,8 @@ def parseLog(category,mode,log):
                         "srcDir: (?P<src>[a-zA-Z0-9/.]+)\s*"
                         "datDir: (?P<dat>[a-zA-Z0-9-/.]+)\s*")
 
+    checkFile = re.compile(".*runM1Mles.*")
+
     model = re.compile("Miss")
 
     toy = re.compile("(?:[.a-zA-Z0-9]+/)+"
@@ -40,6 +57,10 @@ def parseLog(category,mode,log):
     logInfo = []
 
     for headerInfo in header.finditer(log):
+        ## check to make sure its a run file
+        if not checkFile.match(headerInfo.group("file")):
+            continue
+
         info = {}
 
         ## wns or toy
