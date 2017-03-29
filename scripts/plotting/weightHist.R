@@ -1,6 +1,6 @@
 rm(list=ls(all=TRUE))
 
-dirName = "../../data/wns/2017-01-26-10-33-30/"
+dirName = "../../data/wns/2017-03-20-11-15-53/"
 
 allFiles = dir(dirName)
 
@@ -14,7 +14,7 @@ for(f in allFiles) {
 weights = c()
 for(f in weightsFiles) {
   w = read.table(paste(dirName, f, sep = ""), header = FALSE)
-  stopifnot(nrow(w) == 8)
+  stopifnot(nrow(w) == 18)
   weights = rbind(weights, w[nrow(w),])
 }
 weights = as.matrix(weights)
