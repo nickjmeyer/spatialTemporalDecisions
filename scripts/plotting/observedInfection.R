@@ -104,3 +104,4 @@ pObsInf = pObsInf + settings
 print(pObsInf)
 
 ggsave("../../data/plotting/observed_infection_col.pdf",plot=pObsInf,width=width,height=height)
+ggsave("../../data/plotting/observed_infection_col.png",plot=pObsInf,width=width,height=height)
